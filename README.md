@@ -1,6 +1,8 @@
 # Prova Finale Ingegneria del Software 2020
-## Gruppo AM
+## 20
+## Scaglione Margara
 
-- ###   10531049   Jitendra Abey Gunawardena([@Jitendra-Abey-Polimi](https://github.com/Jitendra-Abey-Polimi))<br>jitendra.abey@mail.polimi.it
-- ###   10528065  866506   Matteo Baragioli ([@MatteoBaragioli](https://github.com/MatteoBaragioli))<br>matteo.baragioli@mail.polimi.it
-- ###   10582040   Francesca Carone ([@Bluevers](https://github.com/Bluevers))<br>francesca.carone@mail.polimi.it
+- ###   Abey Gunawardena Jitendra 866524  10531049  ([@Jitendra-Abey-Polimi](https://github.com/Jitendra-Abey-Polimi))<br>jitendra.abey@mail.polimi.it
+- ###   Baragioli Matteo 866506  10528065 ([@MatteoBaragioli](https://github.com/MatteoBaragioli))
+<br>matteo.baragioli@mail.polimi.it
+- ###   Carone Francesca  866457 10582040 ([@Bluevers](https://github.com/Bluevers))<br>francesca.carone@mail.polimi.it
