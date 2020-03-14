@@ -5,6 +5,15 @@ public class Box {
     private boolean dome=false;
     private int[] position = new int[2];
 
+    public Box(int[] position) {
+        this.position = position;
+    }
+    public Box(int level, boolean dome, int[] position) {
+        this.level = level;
+        this.dome = dome;
+        this.position = position;
+    }
+
     public int getLevel() {
         return level;
     }
@@ -25,8 +34,7 @@ public class Box {
         return position;
     }
 
-    public void setPosition(int x, int y) {
-        position[0] = x;
-        position[1] = y;
+    public void setPosition(int[] position) {
+        this.position = position;
     }
 }
