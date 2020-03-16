@@ -1,9 +1,12 @@
 package it.polimi.ingsw.Server;
 
+import java.util.ArrayList;
+
 public class Box {
     private int level=0;
     private boolean dome=false;
     private int[] position = new int[2];
+    private ArrayList<Box> adjacentBoxes;
 
     public Box(int[] position) {
         this.position = position;
@@ -36,5 +39,13 @@ public class Box {
 
     public void setPosition(int[] position) {
         this.position = position;
+    }
+
+    public ArrayList<Box> getAdjacentBoxes() {
+        return adjacentBoxes;
+    }
+
+    public void setAdjacentBoxes(ArrayList<Box> adjacentBoxes) {
+        this.adjacentBoxes = adjacentBoxes;
     }
 }

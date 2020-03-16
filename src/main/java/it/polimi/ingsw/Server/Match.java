@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Match {
     private int turn;
-    private ArrayList<Player> GamePlayers;
-    private Map GameMap;
+    private ArrayList<Player> gamePlayers;
+    private Map gameMap;
     /** TODO
      add deck attribute, deck getter?
      **/
 
     public Match(ArrayList<Player> gamePlayers) {
-        GamePlayers = gamePlayers;
+        this.gamePlayers = gamePlayers;
     }
 
     public Match(int turn, ArrayList<Player> gamePlayers) {
         this.turn = turn;
-        GamePlayers = gamePlayers;
+        this.gamePlayers = gamePlayers;
     }
 
     public int getTurn() {
@@ -28,15 +28,15 @@ public class Match {
     }
 
     public Map getGameMap() {
-        return GameMap;
+        return gameMap;
     }
 
     public ArrayList<Player> getGamePlayers() {
-        return GamePlayers;
+        return gamePlayers;
     }
 
     public void setGamePlayers(ArrayList<Player> gamePlayers) {
-        GamePlayers = gamePlayers;
+        this.gamePlayers = gamePlayers;
     }
 }
 
