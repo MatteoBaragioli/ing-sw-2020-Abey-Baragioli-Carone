@@ -1,22 +1,23 @@
 package it.polimi.ingsw.Server;
 
 import java.util.ArrayList;
+import java.util.Deque;
 
 public class Match {
     private int turn;
     private ArrayList<Player> gamePlayers;
     private Map gameMap;
-    /** TODO
-     add deck attribute, deck getter?
-     **/
+    private Deque<GodCard> cards;
 
-    public Match(ArrayList<Player> gamePlayers) {
+    public Match(ArrayList<Player> gamePlayers, Deque<GodCard> cards) {
         this.gamePlayers = gamePlayers;
+        this.cards = cards;
     }
 
-    public Match(int turn, ArrayList<Player> gamePlayers) {
+    public Match(int turn, ArrayList<Player> gamePlayers, Deque<GodCard> cards) {
         this.turn = turn;
         this.gamePlayers = gamePlayers;
+        this.cards = cards;
     }
 
     public int getTurn() {
@@ -37,6 +38,14 @@ public class Match {
 
     public void setGamePlayers(ArrayList<Player> gamePlayers) {
         this.gamePlayers = gamePlayers;
+    }
+
+    public Deque<GodCard> getCards() {
+        return cards;
+    }
+
+    public void setCards(Deque<GodCard> cards) {
+        this.cards = cards;
     }
 }
 
