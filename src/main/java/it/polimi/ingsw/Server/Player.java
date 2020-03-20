@@ -6,6 +6,7 @@ public class Player {
     private String nickname;
     private Colour colour;
     private ArrayList<Worker> workers;
+    private ArrayList<Player> opponents;
     private GodCard card;
 
     public Player(String nickname, Colour colour, ArrayList<Worker> workers, GodCard card) {
@@ -31,6 +32,14 @@ public class Player {
         this.colour = colour;
     }
 
+    public ArrayList<Player> getOpponents() {
+        return opponents;
+    }
+
+    public void setOpponents(ArrayList<Player> opponents) {
+        this.opponents = opponents;
+    }
+
     public ArrayList<Worker> getWorkers() {
         return workers;
     }
@@ -43,7 +52,12 @@ public class Player {
         return card;
     }
 
-    public void setCard(GodCard card) {
+    private void setCard(GodCard card) {
         this.card = card;
+    }
+
+    public void giveCard(GodCard card)
+    {
+        setCard(card);
     }
 }

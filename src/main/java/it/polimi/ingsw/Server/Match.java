@@ -48,4 +48,3 @@ public class Match {
         this.cards = cards;
     }
 }
-

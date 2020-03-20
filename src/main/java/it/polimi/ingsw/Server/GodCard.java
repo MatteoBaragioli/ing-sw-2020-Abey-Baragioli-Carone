@@ -16,4 +16,5 @@ public class GodCard {
     public void setId(int id) {
         this.id = id;
     }
+
 }
