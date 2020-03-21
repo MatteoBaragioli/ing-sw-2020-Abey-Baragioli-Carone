@@ -2,7 +2,6 @@ package it.polimi.ingsw.Server;
 
 public class Worker {
     private Box position;
-    private int allowedLevelDifference = 1;
 
     public Worker(Box position) {
         this.position = position;
@@ -14,14 +13,6 @@ public class Worker {
 
     private void setPosition(Box position) {
         this.position = position;
-    }
-
-    public int getAllowedLevelDifference() {
-        return allowedLevelDifference;
-    }
-
-    public void setAllowedLevelDifference(int allowedLevelDifference) {
-        this.allowedLevelDifference = allowedLevelDifference;
     }
 
     /**
@@ -38,9 +29,9 @@ public class Worker {
      * This method moves the worker to a new position that respects the level difference
      * @param destination new position
      */
-    public void leveledMove(Box destination)
+    public void leveledMove(Box destination, int levelDifference)
     {
-        if (destination.levelDifference(getPosition()) <= getAllowedLevelDifference())
+        if (destination.levelDifference(getPosition()) <= levelDifference)
             move(destination);
     }
 }

@@ -8,6 +8,7 @@ public class Player {
     private ArrayList<Worker> workers;
     private ArrayList<Player> opponents;
     private GodCard card;
+    private int allowedLevelDifference = 1;
 
     public Player(String nickname, Colour colour, ArrayList<Worker> workers, GodCard card) {
         this.nickname = nickname;
@@ -54,6 +55,14 @@ public class Player {
 
     private void setCard(GodCard card) {
         this.card = card;
+    }
+
+    public int getAllowedLevelDifference() {
+        return allowedLevelDifference;
+    }
+
+    public void setAllowedLevelDifference(int allowedLevelDifference) {
+        this.allowedLevelDifference = allowedLevelDifference;
     }
 
     public void giveCard(GodCard card)
