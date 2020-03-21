@@ -1,20 +1,35 @@
 package it.polimi.ingsw.Server;
 
 public class GodCard {
-    private String name;
-    private int id;
+    private final int id;
+    private final String name;
+    private GodPower godPower;
+    private final TurnPhase turnPhase;
 
-    public GodCard(String name, int id) {
-        this.name = name;
+    public GodCard(int id, String name, GodPower godPower, TurnPhase turnPhase) {
         this.id = id;
+        this.name = name;
+        this.turnPhase = turnPhase;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getName() {
+        return name;
+    }
+
+    public GodPower getGodPower() {
+        return godPower;
+    }
+
+    public void setGodPower(GodPower godPower){
+        this.godPower = godPower;
+    }
+
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
     }
 
 }
