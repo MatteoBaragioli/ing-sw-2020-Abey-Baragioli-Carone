@@ -34,4 +34,8 @@ public class Worker {
         if (destination.levelDifference(getPosition()) <= levelDifference)
             move(destination);
     }
+
+    public Box position(){
+        return getPosition();
+    }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -110,4 +111,22 @@ public class Box {
     {
         return getLevel() - position.getLevel();
     }
+
+    public List<Box> adjacentFree( List<Player> gamePlayers) {
+        List<Box> free= new ArrayList();
+        for(int i=0; i<getAdjacentBoxes().length; i++){
+            if (getAdjacentBoxes()[i].isFree(gamePlayers))
+                free.add(getAdjacentBoxes()[i]);
+        }
+        return free;
+    }
+    public List<Box> adjacentOpponent( List<Player> gamePlayers) {
+        List<Box> occupied = new ArrayList();
+        for (int i = 0; i < getAdjacentBoxes().length; i++) {
+            if (!getAdjacentBoxes()[i].isFree(gamePlayers) && !getAdjacentBoxes()[i].hasDome())
+                occupied.add(getAdjacentBoxes()[i]);
+        }
+        return occupied;
+    }
+
 }

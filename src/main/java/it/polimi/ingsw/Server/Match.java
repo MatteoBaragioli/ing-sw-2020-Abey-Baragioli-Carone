@@ -2,19 +2,20 @@ package it.polimi.ingsw.Server;
 
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 public class Match {
     private int turn;
-    private ArrayList<Player> gamePlayers;
+    private List<Player> gamePlayers;
     private Map gameMap;
     private Deque<GodCard> cards;
 
-    public Match(ArrayList<Player> gamePlayers, Deque<GodCard> cards) {
+    public Match(List<Player> gamePlayers, Deque<GodCard> cards) {
         this.gamePlayers = gamePlayers;
         this.cards = cards;
     }
 
-    public Match(int turn, ArrayList<Player> gamePlayers, Deque<GodCard> cards) {
+    public Match(int turn, List<Player> gamePlayers, Deque<GodCard> cards) {
         this.turn = turn;
         this.gamePlayers = gamePlayers;
         this.cards = cards;
@@ -32,11 +33,11 @@ public class Match {
         return gameMap;
     }
 
-    public ArrayList<Player> getGamePlayers() {
+    public List<Player> getGamePlayers() {
         return gamePlayers;
     }
 
-    public void setGamePlayers(ArrayList<Player> gamePlayers) {
+    public void setGamePlayers(List<Player> gamePlayers) {
         this.gamePlayers = gamePlayers;
     }
 
