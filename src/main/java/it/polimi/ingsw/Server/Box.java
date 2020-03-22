@@ -112,6 +112,11 @@ public class Box {
         return getLevel() - position.getLevel();
     }
 
+    /**
+     * this method finds the free boxes that are adjacent to this
+     * @param gamePlayers
+     * @return list of boxes
+     */
     public List<Box> adjacentFree( List<Player> gamePlayers) {
         List<Box> free= new ArrayList();
         for(int i=0; i<getAdjacentBoxes().length; i++){
@@ -120,6 +125,12 @@ public class Box {
         }
         return free;
     }
+
+    /**
+     * this method finds the adjacent boxes that are occupied by opponent workers
+     * @param gamePlayers
+     * @return list of boxes
+     */
     public List<Box> adjacentOpponent( List<Player> gamePlayers) {
         List<Box> occupied = new ArrayList();
         for (int i = 0; i < getAdjacentBoxes().length; i++) {
