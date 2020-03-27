@@ -21,7 +21,7 @@ public class Box {
         this.position = position;
     }
 
-    public int Level() {
+    public int level() {
         return level;
     }
 
@@ -37,7 +37,7 @@ public class Box {
         this.dome = dome;
     }
 
-    public int[] Position() {
+    public int[] position() {
         return position;
     }
 
@@ -45,9 +45,6 @@ public class Box {
         this.position = position;
     }
 
-    public int level() {
-        return this.level();
-    }
 
     /**
      * This method tells if the Box is free (not occupied by neither workers nor domes).
