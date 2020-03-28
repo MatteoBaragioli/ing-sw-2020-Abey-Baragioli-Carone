@@ -9,7 +9,6 @@ public class TurnSequence {
     private List<Box> buildOnBox = new ArrayList<>();
     private List<Worker> movedWorkers;
     private int allowedLevelDifference;
-    private Phase phase;
     private List<Box> possibleDestinations = new ArrayList<>();
     private List<Box> possibleBuilds = new ArrayList<>();
     private List<Worker> movableWorkers = new ArrayList<>();
@@ -59,14 +58,6 @@ public class TurnSequence {
 
     public void setAllowedLevelDifference(int allowedLevelDifference) {
         this.allowedLevelDifference = allowedLevelDifference;
-    }
-
-    public Phase phase() {
-        return phase;
-    }
-
-    public void setPhase(Phase phase) {
-        this.phase = phase;
     }
 
     public List<Box> possibleDestinations(){
