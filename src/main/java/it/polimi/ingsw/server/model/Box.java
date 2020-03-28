@@ -62,10 +62,10 @@ public class Box {
         //If there is a player, look at his/her workers
         while (iterator.hasNext())
         {
-            workerIterator = iterator.next().getWorkers().iterator();
+            workerIterator = iterator.next().Workers().iterator();
             //if the player has workers in game, look at their position
             while (workerIterator.hasNext())
-                if (workerIterator.next().getPosition().equals(this))
+                if (workerIterator.next().position().equals(this))
                     return false;
         }
 
@@ -90,10 +90,10 @@ public class Box {
         ListIterator<Player> iterator = players.listIterator();
         Iterator<Worker> workersIterator;
         while (iterator.hasNext()) {
-            workersIterator = iterator.next().getWorkers().iterator();
+            workersIterator = iterator.next().Workers().iterator();
             //if the player has workers in game, look at their position
             while (workersIterator.hasNext())
-                if (workersIterator.next().getPosition().equals(this))
+                if (workersIterator.next().position().equals(this))
                     return true;
 
         }
@@ -141,8 +141,6 @@ public class Box {
      * @return boolean (true if on edge)
      */
     public boolean isOnEdge(){
-        if (position[0]==0 || position[1]==0 || position[0]==4 ||position[1]==4)
-            return true;
-        return false;
+        return position[0] == 0 || position[1] == 0 || position[0] == 4 || position[1] == 4;
     }
 }

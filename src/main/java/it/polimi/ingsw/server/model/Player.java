@@ -1,17 +1,16 @@
-package it.polimi.ingsw.Server;
+package it.polimi.ingsw.server.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Player {
     private String nickname;
     private Colour colour;
     private List<Worker> workers;
-    private List<Player> opponents;
     private GodCard card;
-    private int allowedLevelDifference = 1;
 
-    public Player(String nickname, Colour colour,List<Worker> workers, GodCard card) {
+    public Player(String nickname, Colour colour, List<Worker> workers, GodCard card) {
         this.nickname = nickname;
         this.colour = colour;
         this.workers = workers;
@@ -34,15 +33,7 @@ public class Player {
         this.colour = colour;
     }
 
-    public List<Player> getOpponents() {
-        return opponents;
-    }
-
-    public void setOpponents(List<Player> opponents) {
-        this.opponents = opponents;
-    }
-
-    public List<Worker> getWorkers() {
+    private List<Worker> getWorkers() {
         return workers;
     }
 
@@ -50,7 +41,7 @@ public class Player {
         this.workers = workers;
     }
 
-    public GodCard getCard() {
+    private GodCard getCard() {
         return card;
     }
 
@@ -58,26 +49,30 @@ public class Player {
         this.card = card;
     }
 
-    public int getAllowedLevelDifference() {
-        return allowedLevelDifference;
-    }
 
-    public void setAllowedLevelDifference(int allowedLevelDifference) {
-        this.allowedLevelDifference = allowedLevelDifference;
-    }
-
-    public void giveCard(GodCard card)
-    {
+    public void giveCard(GodCard card) {
         setCard(card);
     }
 
-    public List<Worker> Workers(){ //method that returns the player's workers for usage outside the 'player' class
+    public List<Worker> Workers() {  //method that returns the player's workers for usage outside the 'player' class
         List<Worker> workers = getWorkers();
         return workers;
     }
 
-    public List<Player> opponents() {
-        return getOpponents();
+    public GodCard godCard() {
+        return card;
     }
 
+    public List<Player> getOpponents(List<Player> gamePlayers) {
+        List<Player> opponents = new ArrayList<>();
+        Player target;
+        ListIterator<Player> iterator = gamePlayers.listIterator();
+        while (iterator.hasNext()) {
+            target=iterator.next();
+            if(!target.equals(this)){
+                opponents.add(target);
+            }
+        }
+        return opponents;
+    }
 }

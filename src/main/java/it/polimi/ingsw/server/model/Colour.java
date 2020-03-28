@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Server;
+package it.polimi.ingsw.server.model;
 
 public enum Colour {
     WHITE('W'), GREY('G'), BLUE('B');

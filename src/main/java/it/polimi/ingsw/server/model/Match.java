@@ -1,6 +1,5 @@
-package it.polimi.ingsw.Server;
+package it.polimi.ingsw.server.model;
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
