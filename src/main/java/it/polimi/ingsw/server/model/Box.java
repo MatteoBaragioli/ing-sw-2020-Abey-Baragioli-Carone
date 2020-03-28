@@ -11,6 +11,7 @@ public class Box {
     private int level=0;
     private boolean dome=false;
     private int[] position = new int[2];
+    private Worker occupier=null;
 
     public Box(int[] position) {
         this.position = position;
@@ -48,55 +49,29 @@ public class Box {
 
     /**
      * This method tells if the Box is free (not occupied by neither workers nor domes).
-     * @param players The list of all players
      * @return Boolean (true if free)
      */
-    boolean isFree(List<Player> players){
-        ListIterator<Player> iterator = players.listIterator();
-        Iterator<Worker> workerIterator;
-
-        //If the box has a dome it can't be free
-        if (hasDome())
-            return false;
-
-        //If there is a player, look at his/her workers
-        while (iterator.hasNext())
-        {
-            workerIterator = iterator.next().Workers().iterator();
-            //if the player has workers in game, look at their position
-            while (workerIterator.hasNext())
-                if (workerIterator.next().position().equals(this))
-                    return false;
-        }
-
-        return true;
+    boolean isFree(){
+        if (occupier==null || hasDome())
+            return true;
+    return false;
     }
 
     /**
      * this method tells if a box is occupied by any worker in the game or a dome
-     * @param players list of all players in the game
      * @return boolean (true if occupied, false otherwise)
      */
-    boolean isOccupied(List<Player> players){
-        return !this.isFree(players);
+    boolean isOccupied(){
+        return !this.isFree();
     }
 
     /**
      * this method tells if a box is occupied by any of the workers of the players passed as parameter
-     * @param players list of players
      * @return boolean (true if occupied)
      */
-    boolean isOccupiedByWorkers(List<Player> players) {
-        ListIterator<Player> iterator = players.listIterator();
-        Iterator<Worker> workersIterator;
-        while (iterator.hasNext()) {
-            workersIterator = iterator.next().Workers().iterator();
-            //if the player has workers in game, look at their position
-            while (workersIterator.hasNext())
-                if (workersIterator.next().position().equals(this))
-                    return true;
-
-        }
+    boolean isOccupiedByWorkers() {
+        if(occupier==null)
+            return true;
         return false;
     }
 
@@ -132,7 +107,7 @@ public class Box {
      * this method decreases the level attribute of 1
      */
     public void removeBlock() {
-        if (level()>0 && !hasDome())
+        if (level()>0 && level()<=3 && !hasDome())
             setLevel(level() - 1);
     }
 
