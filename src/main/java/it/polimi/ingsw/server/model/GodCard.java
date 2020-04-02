@@ -9,10 +9,10 @@ public class GodCard {
     private List<TurnSequenceModifier> actions = new ArrayList<>();
     private WinCondition winCondition;
     private SetUpCondition setUpCondition;
-    private TurnSequenceModifier effectOnOpponent;
+    private List<TurnSequenceModifier> effectOnOpponent = new ArrayList<>();
 
 
-    public GodCard(String name, int id, List<TurnSequenceModifier> actions, WinCondition winCondition, SetUpCondition setUpCondition, TurnSequenceModifier effectOnOpponent) {
+    public GodCard(String name, int id, List<TurnSequenceModifier> actions, WinCondition winCondition, SetUpCondition setUpCondition, List<TurnSequenceModifier> effectOnOpponent) {
         this.name = name;
         this.id = id;
         this.actions = actions;
@@ -41,7 +41,7 @@ public class GodCard {
         this.setUpCondition = setUpCondition;
     }
 
-    public void setEffectOnOpponent(TurnSequenceModifier effectOnOpponent) {
+    public void setEffectOnOpponent(List<TurnSequenceModifier> effectOnOpponent) {
         this.effectOnOpponent = effectOnOpponent;
     }
 
@@ -65,7 +65,7 @@ public class GodCard {
         return setUpCondition;
     }
 
-    public TurnSequenceModifier effectOnOpponent() {
+    public List<TurnSequenceModifier> effectOnOpponent() {
         return effectOnOpponent;
     }
 }

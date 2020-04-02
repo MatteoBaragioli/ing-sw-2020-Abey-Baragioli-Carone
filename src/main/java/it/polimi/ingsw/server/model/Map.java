@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Map {
     private Box[][] ground = new Box[5][5];
+    private int completeTowers = 0;
 
     public Map(Box[][] ground) {
         this.ground = ground;
@@ -19,7 +20,7 @@ public class Map {
      * @param box Examined Box
      * @return List of Boxes
      */
-    private List<Box> adjacent(Box box){
+    public List<Box> adjacent(Box box){
         List<Box> adjacentList = new ArrayList<>();
         int x = box.position()[0];
         int y = box.position()[1];
