@@ -46,13 +46,17 @@ public class Box {
         this.position = position;
     }
 
+    public void occupy(Worker occupier){this.occupier=occupier;}
+
+    public Worker Occupier(){ return occupier;}
+
 
     /**
      * This method tells if the Box is free (not occupied by neither workers nor domes).
      * @return Boolean (true if free)
      */
-    boolean isFree(){
-        if (occupier==null || hasDome())
+     public boolean isFree(){
+        if (occupier==null || !hasDome())
             return true;
     return false;
     }
@@ -61,18 +65,18 @@ public class Box {
      * this method tells if a box is occupied by any worker in the game or a dome
      * @return boolean (true if occupied, false otherwise)
      */
-    boolean isOccupied(){
+    public boolean isOccupied(){
         return !this.isFree();
     }
 
     /**
-     * this method tells if a box is occupied by any of the workers of the players passed as parameter
+     * this method tells if a box is occupied by any of the workers of the players
      * @return boolean (true if occupied)
      */
-    boolean isOccupiedByWorkers() {
+    public boolean isOccupiedByWorkers() {
         if(occupier==null)
-            return true;
-        return false;
+            return false;
+        return true;
     }
 
     /**
@@ -83,12 +87,12 @@ public class Box {
         if (!hasDome())
             if (level() < 3 && level()>0)
                 buildBlock();
-            else
+            else if(level()>3)
                 buildDome();
     }
 
     /**
-     * this method increases the level attribute of one
+     * this method increases the level of one
      */
     private void buildBlock()
     {
@@ -98,10 +102,15 @@ public class Box {
     /**
      * this method sets the dome attribute of the box to true
      */
-    private void buildDome()
+    public void buildDome()
     {
         setDome(true);
     }
+
+    /**
+     * this method sets the dome attribute of the box to false
+     */
+    public void removeDome() {setDome(false); }
 
     /**
      * this method decreases the level attribute of 1

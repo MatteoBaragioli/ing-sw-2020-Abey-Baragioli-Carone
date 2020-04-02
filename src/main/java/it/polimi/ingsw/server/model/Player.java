@@ -9,12 +9,15 @@ public class Player {
     private Colour colour;
     private List<Worker> workers;
     private GodCard card;
+    private TurnSequence turnSequence;
 
-    public Player(String nickname, Colour colour, List<Worker> workers, GodCard card) {
+
+    public Player(String nickname, Colour colour, List<Worker> workers, GodCard card, TurnSequence turnSequence) {
         this.nickname = nickname;
         this.colour = colour;
         this.workers = workers;
         this.card = card;
+        this.turnSequence = turnSequence;
     }
 
     public String getNickname() {
@@ -49,30 +52,20 @@ public class Player {
         this.card = card;
     }
 
+    private void setTurnSequence (TurnSequence turnSequence){this.turnSequence= turnSequence; }
+
+    public TurnSequence TurnSequence() { return turnSequence; }
 
     public void giveCard(GodCard card) {
         setCard(card);
     }
 
     public List<Worker> Workers() {  //method that returns the player's workers for usage outside the 'player' class
-        List<Worker> workers = getWorkers();
-        return workers;
+        return getWorkers();
     }
 
     public GodCard godCard() {
         return card;
     }
 
-    public List<Player> getOpponents(List<Player> gamePlayers) {
-        List<Player> opponents = new ArrayList<>();
-        Player target;
-        ListIterator<Player> iterator = gamePlayers.listIterator();
-        while (iterator.hasNext()) {
-            target=iterator.next();
-            if(!target.equals(this)){
-                opponents.add(target);
-            }
-        }
-        return opponents;
-    }
 }

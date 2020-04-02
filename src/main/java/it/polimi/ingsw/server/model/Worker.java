@@ -20,18 +20,32 @@ public class Worker {
         this.position = position;
     }
 
+
+
     public Box position(){
         return getPosition();
     }
 
     /**
-     * This method changes the position of a worker
+     * This method changes the position of a worker and sets it as the occupier of the destination
      * @param destination The new value of the worker's position
      */
-    public void move(Box destination)
-    {
-        if (!destination.hasDome() && destination.level() <= 3)
+
+    public void move(Box destination) {
+        if (!destination.hasDome() && destination.level() <= 3) {
             setPosition(destination);
+            destination.occupy(this);
+        }
+    }
+
+    /**
+     * this method changes the position of a worker according to the allowedLevelDifference value
+     * @param allowedLevelDifference
+     * @param destination
+     */
+    public void levelledMove(int allowedLevelDifference, Box destination){
+        if (destination.level()- position().level()<=allowedLevelDifference)
+            move(destination);
     }
 
 }
