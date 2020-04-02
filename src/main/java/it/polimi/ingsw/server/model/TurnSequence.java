@@ -245,7 +245,6 @@ public class TurnSequence {
         }
     }
 
-
     /**
      * This method undoes the turn sequence
      */

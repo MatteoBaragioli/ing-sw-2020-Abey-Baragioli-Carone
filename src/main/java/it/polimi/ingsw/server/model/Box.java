@@ -1,25 +1,21 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Worker;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 public class Box {
     private int level=0;
     private boolean dome=false;
     private int[] position = new int[2];
     private Worker occupier=null;
 
-    public Box(int[] position) {
-        this.position = position;
+    public Box(int positionX, int positionY) {
+        this.position[0] = positionX;
+        this.position[1] = positionY;
     }
-    public Box(int level, boolean dome, int[] position) {
+
+    public Box(int level, boolean dome, int positionX, int positionY) {
         this.level = level;
         this.dome = dome;
-        this.position = position;
+        this.position[0] = positionX;
+        this.position[1] = positionY;
     }
 
     public int level() {
@@ -42,8 +38,12 @@ public class Box {
         return position;
     }
 
-    public void setPosition(int[] position) {
-        this.position = position;
+    public int positionX() {
+        return position[0];
+    }
+
+    public int positionY() {
+        return position[1];
     }
 
     public void occupy(Worker occupier){this.occupier=occupier;}
@@ -125,6 +125,6 @@ public class Box {
      * @return boolean (true if on edge)
      */
     public boolean isOnEdge(){
-        return position[0] == 0 || position[1] == 0 || position[0] == 4 || position[1] == 4;
+        return positionX() == 0 || positionY() == 0 || positionX() == 4 || positionY() == 4;
     }
 }

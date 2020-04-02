@@ -7,8 +7,14 @@ public class Map {
     private Box[][] ground = new Box[5][5];
     private int completeTowers = 0;
 
-    public Map(Box[][] ground) {
-        this.ground = ground;
+    public Map() {
+        for (int i = 0; i<ground.length; i++)
+            for (int j=0; j<ground[i].length; j++)
+                this.ground[i][j] = new Box(i, j);
+    }
+
+    public Box[][] ground() {
+        return ground;
     }
 
     public void setGround(Box[][] ground) {
