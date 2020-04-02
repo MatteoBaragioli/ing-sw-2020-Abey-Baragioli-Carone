@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class TurnSequence {
@@ -97,6 +98,19 @@ public class TurnSequence {
     }
 
     /**
+     * This method undoes the builds that took place in this turn
+     */
+    private void undoBuilds()
+    {
+        for (Box box: builtOnBoxes) {
+            if (box.hasDome())
+                box.removeDome();
+            else
+                box.removeBlock();
+        }
+    }
+
+    /**
      * This method records one block removal
      * @param box
      */
@@ -111,6 +125,22 @@ public class TurnSequence {
     public void clearRemovedBlocks()
     {
         removedBlocks.clear();
+    }
+
+    /**
+     * This method rebuiulds the removed blocks
+     */
+    public void undoRemovals()
+    {
+        for (Box box:removedBlocks)
+            box.buildBlock();
+    }
+    /**
+     * This method resets the allowed level difference
+     */
+    public void resetAllowedLevelDifference()
+    {
+        allowedLevelDifference = 1;
     }
 
     /**
@@ -173,7 +203,7 @@ public class TurnSequence {
      * @param worker
      */
     public void recordMovedWorkers(Worker worker){
-        if (movedWorkers.contains(worker))
+        if (!movedWorkers.contains(worker))
             movedWorkers.add(worker);
     }
 
@@ -205,10 +235,31 @@ public class TurnSequence {
         if (!movedWorkers.isEmpty())
             clearMovedWorkers();
     }
-    public void clearTurnSequence(){
-        //apply turn
 
+    /**
+     * This method moves the workers to their new location
+     */
+    public void confirmTurnSequence() {
+        for (Worker worker: movedWorkers) {
+            worker.move(newPositions.get(worker));
+        }
+    }
+
+
+    /**
+     * This method undoes the turn sequence
+     */
+    public void undo()
+    {
+        undoBuilds();
+        undoRemovals();
         reset();
-        //reset builtOnBoxes, phase
+    }
+    /**
+     * This method resets the variables when a player has finished its turn
+     */
+    public void clearTurnSequence(){
+        resetAllowedLevelDifference();
+        reset();
     }
 }

@@ -94,7 +94,7 @@ public class Box {
     /**
      * this method increases the level of one
      */
-    private void buildBlock()
+    public void buildBlock()
     {
         setLevel(level() + 1);
     }
