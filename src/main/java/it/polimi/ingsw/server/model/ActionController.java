@@ -1,9 +1,6 @@
 package it.polimi.ingsw.server.model;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static it.polimi.ingsw.server.model.Target.*;
 
 public class ActionController {
 
@@ -55,7 +52,7 @@ public class ActionController {
 
     public void applyOpponentsCondition(Worker chosenWorker, Player currentPlayer, List<Player> opponents, int phaseIndex, Map map){
         for(Player currentOpponent : opponents){
-            currentOpponent.godCard().effectOnOpponent().get(phaseIndex).changePossibleOptions(chosenWorker, currentPlayer, this, map);
+            currentOpponent.godCard().effectOnOpponent().get(phaseIndex).changePossibleOptions(currentPlayer, this, map);
         }
     }
 
