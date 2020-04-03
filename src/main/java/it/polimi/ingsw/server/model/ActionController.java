@@ -10,11 +10,10 @@ public class ActionController {
     /**
      * This method updates the new worker's position in currentTurnSequence
      * @param currentTurnSequence Current player's TurnSequence
-     * @param chosenWorker Moved Worker
      * @param chosenBox Chosen worker's new position
      */
-    public void updateNewPositions(TurnSequence currentTurnSequence, Worker chosenWorker, Box chosenBox){
-        currentTurnSequence.recordNewPosition(chosenWorker, chosenBox);
+    public void updateNewPositions(TurnSequence currentTurnSequence, Box chosenBox){
+        currentTurnSequence.recordNewPosition(currentTurnSequence.chosenWorker(), chosenBox);
     }
 
     /**
@@ -29,28 +28,35 @@ public class ActionController {
     /**
      * This method adds a box in PossibleDestinations list if it's possible for the chosen worker to move on it
      * @param currentTurnSequence Current player's TurnSequence
-     * @param chosenWorker Chosen Worker
      * @param map Map of the match
      */
 
-    public void initialisePossibleDestinations(TurnSequence currentTurnSequence, Worker chosenWorker, Map map){
-        Box workerBox = chosenWorker.position();
+    public void initialisePossibleDestinations(TurnSequence currentTurnSequence, Map map){
+        Box workerBox = currentTurnSequence.chosenWorker().position();
         for(Box box : map.adjacent(workerBox)){
             if(box.isFree()&&map.levelDifference(workerBox, box)<currentTurnSequence.allowedLevelDifference())
                 currentTurnSequence.addPossibleDestination(box);
         }
     }
 
+
+    public void initialisePossibleBuilds(TurnSequence currentTurnSequence, Map map){
+        Box workerBox = currentTurnSequence.chosenWorker().position();
+        for(Box box : map.adjacent(workerBox)){
+            if(box.isFree())
+                currentTurnSequence.addPossibleBuild(box);
+        }
+    }
+
     /**
      * This method calls changePossibleOptions method, based on current phase, for each opponents
-     * @param chosenWorker Chosen worker
      * @param currentPlayer Current player
      * @param opponents List of opponents
      * @param phaseIndex Index of the current phase
      * @param map Map of the match
      */
 
-    public void applyOpponentsCondition(Worker chosenWorker, Player currentPlayer, List<Player> opponents, int phaseIndex, Map map){
+    public void applyOpponentsCondition(Player currentPlayer, List<Player> opponents, int phaseIndex, Map map){
         for(Player currentOpponent : opponents){
             currentOpponent.godCard().effectOnOpponent().get(phaseIndex).changePossibleOptions(currentPlayer, this, map);
         }
