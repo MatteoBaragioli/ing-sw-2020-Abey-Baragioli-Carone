@@ -1,13 +1,15 @@
 package it.polimi.ingsw.server.model.godPowers;
 
-import it.polimi.ingsw.server.model.MoveModifier;
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Worker;
+import it.polimi.ingsw.server.model.*;
 
 public class SwapPower implements MoveModifier {
+    @Override
+    public void changePossibleOptions(Worker worker, Player player, ActionController actionController, Map map) {
+
+    }
 
     @Override
-    public void executeAction(Worker worker, Player player) {
-        //Apollo Power
+    public void executeAction(Worker worker, Player player, CommunicationController communicationController, ActionController actionController) {
+
     }
 }

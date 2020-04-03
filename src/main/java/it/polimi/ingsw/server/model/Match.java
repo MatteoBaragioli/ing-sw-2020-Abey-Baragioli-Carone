@@ -49,7 +49,7 @@ public class Match {
         this.cards = cards;
     }
 
-    public List<WinCondition> WinConditions(){ return this.winConditions;}
+    public List<WinCondition> winConditions(){ return this.winConditions;}
 
     public void setWinConditions(List<WinCondition> winConditions){ this.winConditions=winConditions; }
 
@@ -77,6 +77,5 @@ public class Match {
     public void startMatch(CommunicationController communicationController){
 
     }
-
 
 }

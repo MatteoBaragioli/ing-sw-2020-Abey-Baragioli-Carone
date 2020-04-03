@@ -1,12 +1,15 @@
 package it.polimi.ingsw.server.model.godPowers;
 
-import it.polimi.ingsw.server.model.BuildModifier;
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Worker;
+import it.polimi.ingsw.server.model.*;
 
 public class AddBuildNotSameBoxPower implements BuildModifier {
     @Override
-    public void executeAction(Worker worker, Player player) {
-        //Demeter Power
+    public void changePossibleOptions(Worker worker, Player player, ActionController actionController, Map map) {
+
+    }
+
+    @Override
+    public void executeAction(Worker worker, Player player, CommunicationController communicationController, ActionController actionController) {
+
     }
 }
