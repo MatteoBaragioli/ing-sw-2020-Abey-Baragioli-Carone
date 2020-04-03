@@ -22,6 +22,18 @@ public class Map {
     }
 
     /**
+     * This method returns a box depending on the given coordinates
+     * @param x longitude
+     * @param y latitude
+     * @return box
+     */
+    public Box position(int x, int y) {
+        if (x>=0 && x<=4 && y>=0 && y<=4)
+            return ground[x][y];
+        return null;
+    }
+
+    /**
      * This method returns a list of Boxes that are adjacent to a Box
      * @param box Examined Box
      * @return List of Boxes

@@ -96,7 +96,8 @@ public class Box {
      */
     public void buildBlock()
     {
-        setLevel(level() + 1);
+        if(level() < 3)
+            setLevel(level() + 1);
     }
 
     /**
@@ -116,8 +117,16 @@ public class Box {
      * this method decreases the level attribute of 1
      */
     public void removeBlock() {
-        if (level()>0 && level()<=3 && !hasDome())
+        if (level()>0 && !hasDome())
             setLevel(level() - 1);
+    }
+
+    /**
+     * This method removes the occupier
+     */
+    public void removeOccupier()
+    {
+        occupier = null;
     }
 
     /**

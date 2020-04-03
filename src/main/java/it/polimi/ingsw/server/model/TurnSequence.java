@@ -2,14 +2,13 @@ package it.polimi.ingsw.server.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class TurnSequence {
     private HashMap<Worker,Box> newPositions = new HashMap<>();
     private List<Box> builtOnBoxes = new ArrayList<>();
     private List<Box> removedBlocks = new ArrayList<>();
-    private int allowedLevelDifference;
+    private int allowedLevelDifference = 1;
     private List<Box> possibleDestinations = new ArrayList<>();
     private List<Box> possibleBuilds = new ArrayList<>();
     private List<Worker> movableWorkers = new ArrayList<>();
