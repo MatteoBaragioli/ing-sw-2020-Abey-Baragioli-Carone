@@ -48,7 +48,9 @@ public class Box {
 
     public void occupy(Worker occupier){this.occupier=occupier;}
 
-    public Worker Occupier(){ return occupier;}
+    public void deoccupy() {this.occupier=null;}
+
+    public Worker occupier(){ return occupier;}
 
 
     /**
@@ -56,7 +58,7 @@ public class Box {
      * @return Boolean (true if free)
      */
      public boolean isFree(){
-        if (occupier==null || !hasDome())
+        if (occupier==null && !hasDome())
             return true;
     return false;
     }
@@ -66,7 +68,7 @@ public class Box {
      * @return boolean (true if occupied, false otherwise)
      */
     public boolean isOccupied(){
-        return !this.isFree();
+        return !isFree();
     }
 
     /**
@@ -85,9 +87,9 @@ public class Box {
     public void build()
     {
         if (!hasDome())
-            if (level() < 3 && level()>0)
+            if (level() < 3 && level()>=0)
                 buildBlock();
-            else if(level()>3)
+            else if(level()>=3)
                 buildDome();
     }
 

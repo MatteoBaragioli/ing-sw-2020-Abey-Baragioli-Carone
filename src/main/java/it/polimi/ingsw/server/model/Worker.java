@@ -6,10 +6,12 @@ public class Worker {
 
     public Worker(Box position) {
         this.position = position;
+        this.position.occupy(this);
     }
     public Worker(boolean gender, Box position){
         this.gender=gender;
         this.position=position;
+        this.position.occupy(this);
     }
 
     private Box getPosition() {
@@ -32,7 +34,8 @@ public class Worker {
      */
 
     public void move(Box destination) {
-        if (!destination.hasDome() && destination.level() <= 3) {
+        if (destination.isFree() && destination.level() <= 3) {
+            position.deoccupy();
             setPosition(destination);
             destination.occupy(this);
         }

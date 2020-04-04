@@ -34,7 +34,7 @@ public class ActionController {
     public void initialisePossibleDestinations(TurnSequence currentTurnSequence, Map map){
         Box workerBox = currentTurnSequence.chosenWorker().position();
         for(Box box : map.adjacent(workerBox)){
-            if(box.isFree()&&map.levelDifference(workerBox, box)<currentTurnSequence.allowedLevelDifference())
+            if(box.isFree() && map.levelDifference(workerBox, box)<currentTurnSequence.allowedLevelDifference())
                 currentTurnSequence.addPossibleDestination(box);
         }
     }
