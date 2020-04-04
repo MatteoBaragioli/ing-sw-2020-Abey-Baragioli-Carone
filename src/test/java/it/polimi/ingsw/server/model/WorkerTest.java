@@ -35,9 +35,10 @@ public class WorkerTest {
         secondBox=new Box(3, false,1, 1);
         Box thirdBox=new Box(1,3);
         opponentsWorker=new Worker(secondBox);
+        opponentsWorker.move(thirdBox);
         worker=new Worker(box);
         worker.move(secondBox);
-        assertFalse(worker.position().equals(secondBox));
+        assertTrue(worker.position().equals(secondBox));
 
 
     }
