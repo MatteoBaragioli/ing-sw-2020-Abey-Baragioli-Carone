@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TurnSequence {
+    private Box chosenBox = null;
     private HashMap<Worker,Box> newPositions = new HashMap<>();
     private List<Box> builtOnBoxes = new ArrayList<>();
     private List<Box> removedBlocks = new ArrayList<>();
@@ -15,6 +16,13 @@ public class TurnSequence {
     private List<Worker> movedWorkers = new ArrayList<>();
     private Worker chosenWorker = null;
 
+    public Box chosenBox() {
+        return chosenBox;
+    }
+
+    public void setChosenBox(Box box) {
+        chosenBox = box;
+    }
 
     public HashMap<Worker,Box> newPositions(){
         return newPositions;
@@ -63,16 +71,28 @@ public class TurnSequence {
     }
 
     /**
-     * This method records the new position of the worker
+     * This method tells the location of a worker during the turn sequence
+     * @param worker
+     * @return Box
+     */
+    public Box workersCurrentPosition(Worker worker) {
+        if (newPositions.containsKey(worker))
+            return newPositions.get(worker);
+        return worker.position();
+    }
+
+    /**
+     * This method records the new position of the worker updating the boxes' occupiers
      * @param worker Chosen worker
      * @param box Target box
      */
-    public void recordNewPosition(Worker worker, Box box){
+    public void recordNewPosition(Worker worker, Box box) {
+        Box previousLocation = workersCurrentPosition(worker);
 
-        if (newPositions.containsKey(worker) && newPositions.get(worker).occupier().equals(worker))
-            newPositions.get(worker).removeOccupier();
-        else
-            worker.position().removeOccupier();
+        if (previousLocation.occupier().equals(worker))
+            previousLocation.removeOccupier();
+
+        box.occupy(worker);
         newPositions.put(worker, box);
         recordMovedWorkers(worker);
     }
@@ -85,14 +105,21 @@ public class TurnSequence {
     }
 
     /**
-     * This method tells the location of a worker during the turn sequence
-     * @param worker
-     * @return Box
+     * This method undoes the movements and the occupations taken in the turn sequence
      */
-    public Box workersCurrentPosition(Worker worker) {
-        if (newPositions.containsKey(worker))
-            return newPositions.get(worker);
-        return worker.position();
+    public void undoNewPositions() {
+        for (Worker worker: movedWorkers)
+            newPositions.get(worker).removeOccupier();
+        for (Worker worker: movedWorkers)
+            worker.position().occupy(worker);
+    }
+
+    /**
+     * This method executes the workers' moves
+     */
+    public void getTheMovesDone() {
+        for (Worker worker: movedWorkers)
+            worker.move(newPositions.get(worker));
     }
     /**
      * This method records one new build
@@ -248,6 +275,7 @@ public class TurnSequence {
      * This method undoes the turn sequence
      */
     public void undo() {
+        undoNewPositions();
         undoBuilds();
         undoRemovals();
         reset();
@@ -265,10 +293,7 @@ public class TurnSequence {
      * This method moves the workers to their new location
      */
     public void confirmTurnSequence() {
-        for (Worker worker: movedWorkers)
-            worker.position().removeOccupier();
-        for (Worker worker: movedWorkers)
-            worker.move(newPositions.get(worker));
+        getTheMovesDone();
         clearTurnSequence();
     }
 }
