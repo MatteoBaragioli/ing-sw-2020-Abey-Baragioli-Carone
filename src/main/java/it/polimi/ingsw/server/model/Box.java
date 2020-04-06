@@ -137,4 +137,12 @@ public class Box {
     public boolean isOnEdge(){
         return positionX() == 0 || positionY() == 0 || positionX() == 4 || positionY() == 4;
     }
+
+    /**
+     * This method tells if the box has a complete tower
+     * @return boolean
+     */
+    public boolean isCompleteTower() {
+        return hasDome() && level==3;
+    }
 }

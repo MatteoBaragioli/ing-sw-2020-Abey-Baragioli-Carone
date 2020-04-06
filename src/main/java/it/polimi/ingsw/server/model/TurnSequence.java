@@ -16,7 +16,7 @@ public class TurnSequence {
     private Worker chosenWorker = null;
 
 
-    public HashMap<Worker,Box> newPosition(){
+    public HashMap<Worker,Box> newPositions(){
         return newPositions;
     }
 
@@ -68,6 +68,11 @@ public class TurnSequence {
      * @param box Target box
      */
     public void recordNewPosition(Worker worker, Box box){
+
+        if (newPositions.containsKey(worker) && newPositions.get(worker).occupier().equals(worker))
+            newPositions.get(worker).removeOccupier();
+        else
+            worker.position().removeOccupier();
         newPositions.put(worker, box);
         recordMovedWorkers(worker);
     }
@@ -75,33 +80,44 @@ public class TurnSequence {
     /**
      * Reset new positions' list
      */
-    public void clearNewPositions()
-    {
+    public void clearNewPositions() {
         newPositions.clear();
     }
 
     /**
+     * This method tells the location of a worker during the turn sequence
+     * @param worker
+     * @return Box
+     */
+    public Box workersCurrentPosition(Worker worker) {
+        if (newPositions.containsKey(worker))
+            return newPositions.get(worker);
+        return worker.position();
+    }
+    /**
      * This method records one new build
      * @param target Target box
      */
-    public void recordBuiltOnBox(Box target){
-        builtOnBoxes.add(target);
+    public void recordBuiltOnBox(Box target) {
+        if (target.hasDome() || target.level() > 0)
+            if (removedBlocks().contains(target) && !target.hasDome())
+                removedBlocks.remove(target);
+            else
+                builtOnBoxes.add(target);
     }
 
     /**
      * Reset new builds' list
      */
-    public void clearBuiltOnBoxes()
-    {
+    public void clearBuiltOnBoxes() {
         builtOnBoxes.clear();
     }
 
     /**
      * This method undoes the builds that took place in this turn
      */
-    private void undoBuilds()
-    {
-        for (Box box: builtOnBoxes) {
+    private void undoBuilds() {
+        for (Box box : builtOnBoxes) {
             if (box.hasDome())
                 box.removeDome();
             else
@@ -113,32 +129,34 @@ public class TurnSequence {
      * This method records one block removal
      * @param box
      */
-    public void recordRemovedBlock(Box box)
-    {
-        removedBlocks.add(box);
+    public void recordRemovedBlock(Box box) {
+        if (box.level() < 3 && !box.hasDome()) {
+            if (builtOnBoxes.contains(box))
+                builtOnBoxes.remove(box);
+            else
+                removedBlocks.add(box);
+        }
     }
 
     /**
      * Reset removed blocks' list
      */
-    public void clearRemovedBlocks()
-    {
+    public void clearRemovedBlocks() {
         removedBlocks.clear();
     }
 
     /**
      * This method rebuiulds the removed blocks
      */
-    public void undoRemovals()
-    {
-        for (Box box:removedBlocks)
+    public void undoRemovals() {
+        for (Box box : removedBlocks)
             box.buildBlock();
     }
+
     /**
      * This method resets the allowed level difference
      */
-    public void resetAllowedLevelDifference()
-    {
+    public void resetAllowedLevelDifference() {
         allowedLevelDifference = 1;
     }
 
@@ -146,8 +164,7 @@ public class TurnSequence {
      * This method makes a box available for moving
      * @param destination box
      */
-    public void addPossibleDestination(Box destination)
-    {
+    public void addPossibleDestination(Box destination) {
         if (!possibleDestinations.contains(destination))
             possibleDestinations.add(destination);
     }
@@ -155,8 +172,7 @@ public class TurnSequence {
     /**
      * Reset possible destinations' list
      */
-    public void clearPossibleDestinations()
-    {
+    public void clearPossibleDestinations() {
         possibleDestinations.clear();
     }
 
@@ -164,18 +180,15 @@ public class TurnSequence {
      * This method makes a box available for building
      * @param box
      */
-    public void addPossibleBuild(Box box)
-    {
-        if (!possibleBuilds.contains(box))
+    public void addPossibleBuild(Box box) {
+        if (!possibleBuilds.contains(box) && !box.isCompleteTower())
             possibleBuilds.add(box);
-
     }
 
     /**
      * Reset possible builds' list
      */
-    public void clearPossibleBuilds()
-    {
+    public void clearPossibleBuilds() {
         possibleBuilds.clear();
     }
 
@@ -183,8 +196,7 @@ public class TurnSequence {
      * This method makes a worker available for moving
      * @param worker
      */
-    public void addMovableWorker(Worker worker)
-    {
+    public void addMovableWorker(Worker worker) {
         if (!movableWorkers.contains(worker))
             movableWorkers.add(worker);
     }
@@ -192,8 +204,7 @@ public class TurnSequence {
     /**
      * Reset movable workers' list
      */
-    public void clearMovableWorkers()
-    {
+    public void clearMovableWorkers() {
         movableWorkers.clear();
     }
 
@@ -209,16 +220,14 @@ public class TurnSequence {
     /**
      * Reset moved workers' list
      */
-    public void clearMovedWorkers()
-    {
+    public void clearMovedWorkers() {
         movedWorkers.clear();
     }
 
     /**
      * This method restarts the parameters
      */
-    public void reset()
-    {
+    public void reset() {
         if (!newPositions.isEmpty())
             clearNewPositions();
         if (!builtOnBoxes.isEmpty())
@@ -236,28 +245,30 @@ public class TurnSequence {
     }
 
     /**
-     * This method moves the workers to their new location
-     */
-    public void confirmTurnSequence() {
-        for (Worker worker: movedWorkers) {
-            worker.move(newPositions.get(worker));
-        }
-    }
-
-    /**
      * This method undoes the turn sequence
      */
-    public void undo()
-    {
+    public void undo() {
         undoBuilds();
         undoRemovals();
         reset();
     }
+
     /**
      * This method resets the variables when a player has finished its turn
      */
-    public void clearTurnSequence(){
+    public void clearTurnSequence() {
         resetAllowedLevelDifference();
         reset();
+    }
+
+    /**
+     * This method moves the workers to their new location
+     */
+    public void confirmTurnSequence() {
+        for (Worker worker: movedWorkers)
+            worker.position().removeOccupier();
+        for (Worker worker: movedWorkers)
+            worker.move(newPositions.get(worker));
+        clearTurnSequence();
     }
 }
