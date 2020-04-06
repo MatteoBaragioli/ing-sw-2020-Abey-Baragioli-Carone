@@ -22,8 +22,6 @@ public class Worker {
         this.position = position;
     }
 
-
-
     public Box position(){
         return getPosition();
     }
@@ -35,7 +33,7 @@ public class Worker {
 
     public void move(Box destination) {
         if (destination.isFree() && destination.level() <= 3) {
-            position.deoccupy();
+            position.removeOccupier();
             setPosition(destination);
             destination.occupy(this);
         }

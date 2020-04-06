@@ -13,8 +13,8 @@ public class End implements TurnPhase {
         int phaseIndex = 4;
         currentPlayer.godCard().actions().get(phaseIndex).changePossibleOptions(currentPlayer, actionController, map);
         currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map);
-        currentPlayer.TurnSequence().confirmTurnSequence();
-        currentPlayer.TurnSequence().clearTurnSequence();
+        currentPlayer.turnSequence().confirmTurnSequence();
+        currentPlayer.turnSequence().clearTurnSequence();
         actionController.verifyWinCondition(BUILD, winConditions, currentPlayer);
     }
 }

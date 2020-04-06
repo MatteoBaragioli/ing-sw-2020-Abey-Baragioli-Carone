@@ -48,7 +48,13 @@ public class Box {
 
     public void occupy(Worker occupier){this.occupier=occupier;}
 
-    public void deoccupy() {this.occupier=null;}
+
+    /**
+     * This method removes the occupier
+     */
+    public void removeOccupier() {this.occupier=null;}
+
+
 
     public Worker occupier(){ return occupier;}
 
@@ -86,10 +92,10 @@ public class Box {
      */
     public void build()
     {
-        if (!hasDome())
+        if (!hasDome() && occupier==null)
             if (level() < 3 && level()>=0)
                 buildBlock();
-            else if(level()>=3)
+            else if(level()>=3 && occupier==null)
                 buildDome();
     }
 
@@ -119,17 +125,10 @@ public class Box {
      * this method decreases the level attribute of 1
      */
     public void removeBlock() {
-        if (level()>0 && !hasDome())
+        if (level()>0 && isFree())
             setLevel(level() - 1);
     }
 
-    /**
-     * This method removes the occupier
-     */
-    public void removeOccupier()
-    {
-        occupier = null;
-    }
 
     /**
      * this method tells if the box is on the edge of the board

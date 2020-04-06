@@ -54,13 +54,13 @@ public class Player {
 
     private void setTurnSequence (TurnSequence turnSequence){this.turnSequence= turnSequence; }
 
-    public TurnSequence TurnSequence() { return turnSequence; }
+    public TurnSequence turnSequence() { return turnSequence; }
 
     public void giveCard(GodCard card) {
         setCard(card);
     }
 
-    public List<Worker> Workers() {  //method that returns the player's workers for usage outside the 'player' class
+    public List<Worker> workers() {  //method that returns the player's workers for usage outside the 'player' class
         return getWorkers();
     }
 
