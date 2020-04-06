@@ -33,22 +33,10 @@ public class Worker {
 
     public void move(Box destination) {
         if (destination.isFree() && destination.level() <= 3) {
-            position.removeOccupier();
             setPosition(destination);
             destination.occupy(this);
         }
     }
-
-    /**
-     * this method changes the position of a worker according to the allowedLevelDifference value
-     * @param allowedLevelDifference
-     * @param destination
-     */
-    public void levelledMove(int allowedLevelDifference, Box destination){
-        if (destination.level()- position().level()<=allowedLevelDifference)
-            move(destination);
-    }
-
 }
 
 
