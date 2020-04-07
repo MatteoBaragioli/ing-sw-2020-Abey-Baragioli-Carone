@@ -1,8 +1,17 @@
 package it.polimi.ingsw.server.model;
 
+import static it.polimi.ingsw.server.model.Phase.*;
+import static it.polimi.ingsw.server.model.Target.*;
+
 public class StandardWin extends WinCondition {
-    @Override
-    public void establishWinCondition() {
-        //Win Condition
+
+    public StandardWin(){
+        super(MOVE,SELF);
     }
+
+    @Override
+    public boolean establishWinCondition(Player currentPlayer, Map map) {
+        return true;
+    }
+
 }
