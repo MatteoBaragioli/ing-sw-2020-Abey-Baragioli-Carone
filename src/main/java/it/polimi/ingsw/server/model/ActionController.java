@@ -67,23 +67,24 @@ public class ActionController {
      * @param phase Current phase
      * @param winConditions List of all active win conditions
      * @param currentPlayer Current player
+     * @param map
      */
-
-    public void verifyWinCondition(Phase phase, List<WinCondition> winConditions, Player currentPlayer){
+//todo implementare il metodo in modo che usando establish winCondition mi restituisca un giocatore, che sarà il giocatore vincente;
+    public void verifyWinCondition(Phase phase, List<WinCondition> winConditions, Player currentPlayer, Map map){
         for(WinCondition currentWinCondition : winConditions){
             if(phase.equals(currentWinCondition.phase())) {
                 switch (currentWinCondition.target()){
                     case ALL:
-                        currentWinCondition.establishWinCondition();
+                        currentWinCondition.establishWinCondition(currentPlayer, map);
                         break;
                     case SELF:
                         if (currentPlayer.godCard().winCondition().equals(currentWinCondition)) {
-                            currentWinCondition.establishWinCondition();
+                            currentWinCondition.establishWinCondition(currentPlayer, map);
                         }
                         break;
                     case OPPONENT:
                         if (!currentPlayer.godCard().winCondition().equals(currentWinCondition)) {
-                            currentWinCondition.establishWinCondition();
+                            currentWinCondition.establishWinCondition(currentPlayer, map);
                         }
                 }
             }

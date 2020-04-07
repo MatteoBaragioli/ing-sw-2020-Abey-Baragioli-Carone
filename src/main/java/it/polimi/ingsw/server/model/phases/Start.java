@@ -15,6 +15,6 @@ public class Start implements TurnPhase {
         communicationController.chooseWorker();
         currentPlayer.godCard().actions().get(phaseIndex).changePossibleOptions(currentPlayer, actionController, map);
         currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map);
-        actionController.verifyWinCondition(START,winConditions, currentPlayer);
+        actionController.verifyWinCondition(START,winConditions, currentPlayer,map );
     }
 }
