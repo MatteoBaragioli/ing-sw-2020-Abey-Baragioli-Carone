@@ -6,6 +6,7 @@ import java.util.List;
 
 public class TurnSequence {
     private Box chosenBox = null;
+    private Box previousBox = null;
     private HashMap<Worker,Box> newPositions = new HashMap<>();
     private List<Box> builtOnBoxes = new ArrayList<>();
     private List<Box> removedBlocks = new ArrayList<>();
@@ -22,6 +23,14 @@ public class TurnSequence {
 
     public void setChosenBox(Box box) {
         chosenBox = box;
+    }
+
+    public Box previousBox() {
+        return previousBox;
+    }
+
+    public void setPreviousBox(Box box) {
+        previousBox = box;
     }
 
     public HashMap<Worker,Box> newPositions(){
@@ -76,7 +85,7 @@ public class TurnSequence {
      * @return Box
      */
     public Box workersCurrentPosition(Worker worker) {
-        if (newPositions.containsKey(worker))
+        if (movedWorkers.contains(worker))
             return newPositions.get(worker);
         return worker.position();
     }
@@ -87,10 +96,10 @@ public class TurnSequence {
      * @param box Target box
      */
     public void recordNewPosition(Worker worker, Box box) {
-        Box previousLocation = workersCurrentPosition(worker);
+        previousBox = workersCurrentPosition(worker);
 
-        if (previousLocation.occupier().equals(worker))
-            previousLocation.removeOccupier();
+        if (worker.equals(previousBox.occupier()))
+            previousBox.removeOccupier();
 
         box.occupy(worker);
         newPositions.put(worker, box);
@@ -173,7 +182,7 @@ public class TurnSequence {
     }
 
     /**
-     * This method rebuiulds the removed blocks
+     * This method rebuilds the removed blocks
      */
     public void undoRemovals() {
         for (Box box : removedBlocks)
@@ -212,6 +221,9 @@ public class TurnSequence {
             possibleBuilds.add(box);
     }
 
+    public void removePossibleBuild(Box box) {
+        possibleBuilds.remove(box);
+    }
     /**
      * Reset possible builds' list
      */
@@ -229,6 +241,14 @@ public class TurnSequence {
     }
 
     /**
+     * This method makes a worker unavailable for moving
+     * @param worker
+     */
+    public void removeMovableWorker(Worker worker) {
+        movableWorkers.remove(worker);
+    }
+
+    /**
      * Reset movable workers' list
      */
     public void clearMovableWorkers() {
@@ -239,7 +259,7 @@ public class TurnSequence {
      * This method records a worker that has been moved
      * @param worker
      */
-    public void recordMovedWorkers(Worker worker){
+    public void recordMovedWorkers(Worker worker) {
         if (!movedWorkers.contains(worker))
             movedWorkers.add(worker);
     }
