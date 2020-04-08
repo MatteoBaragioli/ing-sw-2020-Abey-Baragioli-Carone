@@ -15,6 +15,6 @@ public class End implements TurnPhase {
         currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
         currentPlayer.turnSequence().confirmTurnSequence();
         currentPlayer.turnSequence().clearTurnSequence();
-        actionController.verifyWinCondition(BUILD, winConditions, currentPlayer,map );
+        actionController.verifyWinCondition(BUILD, winConditions, currentPlayer,map,opponents );
     }
 }
