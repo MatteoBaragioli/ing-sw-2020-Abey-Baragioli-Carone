@@ -10,6 +10,7 @@ public class Player {
     private List<Worker> workers;
     private GodCard card;
     private TurnSequence turnSequence;
+    private boolean inGame=true;
 
 
     public Player(String nickname, Colour colour, List<Worker> workers, GodCard card, TurnSequence turnSequence) {
@@ -66,6 +67,18 @@ public class Player {
 
     public GodCard godCard() {
         return card;
+    }
+
+    public boolean isInGame(){
+        return this.inGame;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+
+    public void playerIsOver(){
+        setInGame(false);
     }
 
 }

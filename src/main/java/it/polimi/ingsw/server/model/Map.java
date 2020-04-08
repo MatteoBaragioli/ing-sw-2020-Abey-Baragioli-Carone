@@ -81,4 +81,5 @@ public class Map {
     public int levelDifference(Box startBox, Box targetBox){
         return targetBox.level() - startBox.level();
     }
+
 }

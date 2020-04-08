@@ -10,19 +10,20 @@ public class ActionController {
     /**
      * This method updates the new worker's position in currentTurnSequence
      * @param currentTurnSequence Current player's TurnSequence
-     * @param chosenBox Chosen worker's new position
+     *
      */
-    public void updateNewPositions(TurnSequence currentTurnSequence, Box chosenBox){
-        currentTurnSequence.recordNewPosition(currentTurnSequence.chosenWorker(), chosenBox);
+    public void updateNewPositions(TurnSequence currentTurnSequence){
+        currentTurnSequence.recordNewPosition(currentTurnSequence.chosenWorker(), currentTurnSequence.chosenBox());
     }
 
     /**
      * This method updates the building position in currentTurnSequence
      * @param currentTurnSequence Current player's TurnSequence
-     * @param targetBox Chosen box for building
+     *
      */
-    public void updateBuiltOnBox(TurnSequence currentTurnSequence, Box targetBox){
-        currentTurnSequence.recordBuiltOnBox(targetBox);
+    public void updateBuiltOnBox(TurnSequence currentTurnSequence){
+        currentTurnSequence.chosenBox().build();
+        currentTurnSequence.recordBuiltOnBox(currentTurnSequence.chosenBox());
     }
 
     /**
@@ -32,15 +33,22 @@ public class ActionController {
      */
 
     public void initialisePossibleDestinations(TurnSequence currentTurnSequence, Map map){
-        Box workerBox = currentTurnSequence.chosenWorker().position();
+        currentTurnSequence.clearPossibleDestinations();
+        Box workerBox = currentTurnSequence.workersCurrentPosition(currentTurnSequence.chosenWorker());
         for(Box box : map.adjacent(workerBox)){
-            if(box.isFree() && map.levelDifference(workerBox, box)<currentTurnSequence.allowedLevelDifference())
+            if(box.isFree() && map.levelDifference(workerBox, box)<=currentTurnSequence.allowedLevelDifference())
                 currentTurnSequence.addPossibleDestination(box);
         }
     }
 
+    /**
+     * This method adds a box in PossibleBuilds list if it's possible for the chosen worker to build on it
+     * @param currentTurnSequence Current player's TurnSequence
+     * @param map Map of the match
+     */
 
     public void initialisePossibleBuilds(TurnSequence currentTurnSequence, Map map){
+        currentTurnSequence.clearPossibleBuilds();
         Box workerBox = currentTurnSequence.chosenWorker().position();
         for(Box box : map.adjacent(workerBox)){
             if(box.isFree())
