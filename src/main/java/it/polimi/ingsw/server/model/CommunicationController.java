@@ -4,13 +4,19 @@ import java.util.List;
 
 public class CommunicationController {
 
-    public void chooseWorker(){
-
+    public Worker chooseWorker(Map map){
+        return new Worker(map.position(1,1));
     }
 
-    public Box chooseBox(){
-        Box box = null;
-        return  box;
+    public Box chooseBox(Map map){
+        return map.position(3,4);
     }
 
+    public void youLost(){
+        System.out.println("Hai perso");
+    }
+
+    public boolean chooseToUsePower(){
+        return true;
+    }
 }
