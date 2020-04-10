@@ -17,8 +17,12 @@ public class Map {
         return ground;
     }
 
-    public void setGround(Box[][] ground) {
-        this.ground = ground;
+    public int completeTowers() {
+        return completeTowers;
+    }
+
+    public void setCompleteTowers(int completeTowers) {
+        this.completeTowers = completeTowers;
     }
 
     /**
@@ -31,6 +35,20 @@ public class Map {
         if (x>=0 && x<=4 && y>=0 && y<=4)
             return ground[x][y];
         return null;
+    }
+
+    /**
+     * This method converts the whole map ground into a box list
+     * @return A List of boxes
+     */
+    public List<Box> groundToList() {
+        List<Box> out = new ArrayList<>();
+
+        for (int x = 0; x<ground.length; x++)
+            for (int y = 0; y<ground[x].length; y++)
+                out.add(position(x,y));
+
+        return out;
     }
 
     /**
