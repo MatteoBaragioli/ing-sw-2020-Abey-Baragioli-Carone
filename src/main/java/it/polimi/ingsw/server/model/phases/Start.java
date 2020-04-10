@@ -12,9 +12,9 @@ public class Start implements TurnPhase {
     public void executePhase(Player currentPlayer, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         int phaseIndex = 1;
         actionController.applyOpponentsCondition(currentPlayer, opponents, phaseIndex, map);
-        communicationController.chooseWorker();
+        communicationController.chooseWorker(map);
         currentPlayer.godCard().actions().get(phaseIndex).changePossibleOptions(currentPlayer, actionController, map);
-        currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map);
+        currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
         actionController.verifyWinCondition(START,winConditions, currentPlayer,map,opponents );
     }
 }

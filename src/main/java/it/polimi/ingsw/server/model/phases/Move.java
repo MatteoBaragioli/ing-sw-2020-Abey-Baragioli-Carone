@@ -17,8 +17,7 @@ public class Move implements TurnPhase {
         Box chosenBox = communicationController.chooseBox(map);
         currentPlayer.turnSequence().setChosenBox(chosenBox);
         actionController.updateNewPositions(currentPlayer.turnSequence());
-        actionController.verifyWinCondition(MOVE, winConditions, currentPlayer, map);
         currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
-
+        actionController.verifyWinCondition(MOVE, winConditions, currentPlayer, map, opponents);
     }
 }

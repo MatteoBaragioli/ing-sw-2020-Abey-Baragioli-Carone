@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.*;
 import java.util.List;
 
 import static it.polimi.ingsw.server.model.Phase.BUILD;
+import static it.polimi.ingsw.server.model.Phase.END;
 
 public class End implements TurnPhase {
 
@@ -15,6 +16,6 @@ public class End implements TurnPhase {
         currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
         currentPlayer.turnSequence().confirmTurnSequence();
         currentPlayer.turnSequence().clearTurnSequence();
-        actionController.verifyWinCondition(BUILD, winConditions, currentPlayer,map,opponents );
+        actionController.verifyWinCondition(END, winConditions, currentPlayer,map,opponents );
     }
 }
