@@ -2,6 +2,8 @@ package it.polimi.ingsw.server.model;
 
 import java.util.List;
 
+import static it.polimi.ingsw.server.model.Phase.*;
+
 public class ActionController {
 
     public ActionController() {
@@ -77,31 +79,60 @@ public class ActionController {
      * @param currentPlayer Current player
      * @param map
      * @param opponents
-     * @return
      */
 //todo implementare il metodo in modo che usando establish winCondition mi restituisca un giocatore, che sarà il giocatore vincente;
-    public Player verifyWinCondition(Phase phase, List<WinCondition> winConditions, Player currentPlayer, Map map, List<Player> opponents){
-        for(WinCondition currentWinCondition : winConditions){
-            if(phase.equals(currentWinCondition.phase())) {
-                switch (currentWinCondition.target()){
-                    case ALL:
-                        if (currentWinCondition.establishWinCondition(currentPlayer, map));
-
-                        break;
-                    case SELF:
-                        if (currentPlayer.godCard().winCondition().equals(currentWinCondition)) {
-                           if(currentWinCondition.establishWinCondition(currentPlayer, map))
-                               return currentPlayer;
-                        }
-                        break;
-                    case OPPONENT:
-                        if (!currentPlayer.godCard().winCondition().equals(currentWinCondition)) {
-                            currentWinCondition.establishWinCondition(currentPlayer, map);
-                        }
+    public void verifyWinCondition(Phase phase, List<WinCondition> winConditions, Player currentPlayer, Map map, List<Player> opponents) {
+        if (phase.equals(MOVE)) {
+            currentPlayer.turnSequence().registerPossibleWinner(verifyStandardWin(currentPlayer, map));
+        }
+        if (currentPlayer.turnSequence().possibleWinner()== null) {
+            for (WinCondition currentWinCondition : winConditions) {
+                if (phase.equals(currentWinCondition.phase()) && currentPlayer.turnSequence().possibleWinner()== null) {
+                    switch (currentWinCondition.target()) {
+                        case ALL: //if this win condition applies to all the player's phases (such as chronus' win condition)
+                            if (currentWinCondition.establishWinCondition(currentPlayer, map)) {
+                                if(currentPlayer.godCard().winCondition().equals(currentWinCondition))
+                                    currentPlayer.turnSequence().registerPossibleWinner(currentPlayer);
+                                else {
+                                    for (Player opponent : opponents) {
+                                        if (opponent.godCard().winCondition().equals(currentWinCondition))
+                                            currentPlayer.turnSequence().registerPossibleWinner(opponent);
+                                    }
+                                }
+                            }
+                            break;
+                        case SELF:
+                            if (currentPlayer.godCard().winCondition().equals(currentWinCondition)) {
+                                if (currentWinCondition.establishWinCondition(currentPlayer, map))
+                                    currentPlayer.turnSequence().registerPossibleWinner(currentPlayer);
+                            }
+                            break;
+                        case OPPONENT:
+                            if (!currentPlayer.godCard().winCondition().equals(currentWinCondition)) {
+                                if (currentWinCondition.establishWinCondition(currentPlayer, map))
+                                    for (Player opponent : opponents) {
+                                        if (opponent.godCard().winCondition().equals(currentWinCondition))
+                                            currentPlayer.turnSequence().registerPossibleWinner(opponent);
+                                    }
+                            }
+                    }
                 }
             }
         }
     }
 
+    public Player verifyStandardWin(Player currentPlayer, Map map){
+        WinCondition standardWin=new StandardWin();
+        if(standardWin.establishWinCondition(currentPlayer, map))
+            return currentPlayer;
+        return null;
+    }
+
+    public boolean currentPlayerHasWon(Player currentPlayer){
+        if (currentPlayer.equals(currentPlayer.turnSequence().possibleWinner()))
+            return true;
+        return false;
+
+    }
 
 }
