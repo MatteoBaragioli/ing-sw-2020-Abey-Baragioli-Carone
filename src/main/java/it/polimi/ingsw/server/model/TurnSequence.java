@@ -16,6 +16,7 @@ public class TurnSequence {
     private List<Worker> movableWorkers = new ArrayList<>();
     private List<Worker> movedWorkers = new ArrayList<>();
     private Worker chosenWorker = null;
+    private Player possibleWinner = null;
 
     public Box chosenBox() {
         return chosenBox;
@@ -79,6 +80,30 @@ public class TurnSequence {
         chosenWorker = worker;
     }
 
+    public Player possibleWinner() {
+        return possibleWinner;
+    }
+
+    public void setPossibleWinner(Player player) {
+        possibleWinner = player;
+    }
+
+    public void resetChosenBox() {
+        setChosenBox(null);
+    }
+
+    public void resetPreviousBox() {
+        setPreviousBox(null);
+    }
+
+    public void resetChosenWorker() {
+        setChosenWorker(null);
+    }
+
+    public void resetPossibleWinner() {
+        setPossibleWinner(null);
+    }
+
     /**
      * This method tells the location of a worker during the turn sequence
      * @param worker
@@ -96,10 +121,15 @@ public class TurnSequence {
      * @param box Target box
      */
     public void recordNewPosition(Worker worker, Box box) {
-        previousBox = workersCurrentPosition(worker);
+        Box preBox = workersCurrentPosition(worker);
 
-        if (worker.equals(previousBox.occupier()))
-            previousBox.removeOccupier();
+        //registering the previous position if the player owns the moved worker
+        if (movableWorkers.contains(worker))
+            setPreviousBox(preBox);
+
+        //checking if the box will be free after the worker is moved
+        if (worker.equals(preBox.occupier()))
+            preBox.removeOccupier();
 
         box.occupy(worker);
         newPositions.put(worker, box);
@@ -193,7 +223,7 @@ public class TurnSequence {
      * This method resets the allowed level difference
      */
     public void resetAllowedLevelDifference() {
-        allowedLevelDifference = 1;
+        setAllowedLevelDifference(1);
     }
 
     /**
@@ -272,9 +302,21 @@ public class TurnSequence {
     }
 
     /**
+     * This method records a possible possibleWinner if nobody was already winning
+     * @param player
+     */
+    public void registerPossibleWinner(Player player) {
+        if (possibleWinner == null)
+            setPossibleWinner(player);
+    }
+
+    /**
      * This method restarts the parameters
      */
     public void reset() {
+        resetChosenBox();
+        resetPreviousBox();
+        resetChosenWorker();
         if (!newPositions.isEmpty())
             clearNewPositions();
         if (!builtOnBoxes.isEmpty())
@@ -298,6 +340,7 @@ public class TurnSequence {
         undoNewPositions();
         undoBuilds();
         undoRemovals();
+        resetPossibleWinner();
         reset();
     }
 
