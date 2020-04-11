@@ -89,7 +89,7 @@ public class ActionController {
             for (WinCondition currentWinCondition : winConditions) {
                 if (phase.equals(currentWinCondition.phase()) && currentPlayer.turnSequence().possibleWinner()== null) {
                     switch (currentWinCondition.target()) {
-                        case ALL: //if this win condition applies to all the player's phases (such as chronus' win condition)
+                        case ALL: //if this win condition applies to all the player's turns (such as Chronus' win condition)
                             if (currentWinCondition.establishWinCondition(currentPlayer, map)) {
                                 if(currentPlayer.godCard().winCondition().equals(currentWinCondition))
                                     currentPlayer.turnSequence().registerPossibleWinner(currentPlayer);

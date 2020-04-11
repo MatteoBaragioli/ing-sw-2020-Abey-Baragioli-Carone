@@ -15,7 +15,9 @@ public class MoveTwoLevelsDownWin extends WinCondition {
 
     @Override
     public boolean establishWinCondition(Player currentPlayer, Map map) {
-        //Pan Power
-        return true;
+        if(map.levelDifference(currentPlayer.turnSequence().workersCurrentPosition(currentPlayer.turnSequence().chosenWorker()),currentPlayer.turnSequence().previousBox())<-1)
+            return true;
+        else
+            return false;
     }
 }

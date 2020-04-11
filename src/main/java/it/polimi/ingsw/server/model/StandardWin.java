@@ -15,7 +15,6 @@ public class StandardWin extends WinCondition {
             return true;
         else
             return false;
-
     }
 
 }
