@@ -5,9 +5,9 @@ import java.util.*;
 public class Match {
     private int turn;
     private List<Player> gamePlayers;
-    private Map gameMap;
+    private Map gameMap = new Map();
     private Deque<GodCard> cards;
-    private List<WinCondition> winConditions;
+    private List<WinCondition> winConditions = new ArrayList<>();
     private ActionController actionController;
 
     public Match(List<Player> gamePlayers, Deque<GodCard> cards) {
@@ -75,7 +75,21 @@ public class Match {
     }
 
     public void startMatch(CommunicationController communicationController){
-
+        /*
+        while(winner == null){
+            boolean confirm = true;
+            iterator = turnPhases.iterator();
+            while(iterator.hasNext() && confirm){
+                confirm = iterator.executePhase(tante belle cose);
+            }
+            if(!confirm)
+                currentPlayer.turnSequence.undo();
+            else{
+                currentPlayer.turnSequence.confirm();
+                currentPlayer = nextPlayer();
+            }
+        }
+         */
     }
 
 }
