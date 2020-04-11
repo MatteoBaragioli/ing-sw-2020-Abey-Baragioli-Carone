@@ -58,13 +58,13 @@ public class Map {
      */
     public List<Box> adjacent(Box box){
         List<Box> adjacentList = new ArrayList<>();
-        int x = box.position()[0];
-        int y = box.position()[1];
+        int x = box.positionX();
+        int y = box.positionY();
         for(int i=x-1; i<=x+1; i++){
             if(i >= 0 && i <= 4){
                 for(int j=y-1; j<=y+1; j++) {
                     if (j >= 0 && j <= 4 && !(i == x && j == y)) {
-                        adjacentList.add(ground[i][j]);
+                        adjacentList.add(position(i,j));
                     }
                 }
             }
@@ -79,14 +79,15 @@ public class Map {
      * @return List of Boxes
      */
     public List<Box> boxesSameDirection(Box start, Box direction){
-        int x_difference = direction.position()[0] - start.position()[0];
-        int y_difference = direction.position()[1] - start.position()[1];
+        int x_difference = direction.positionX() - start.positionX();
+        int y_difference = direction.positionY() - start.positionY();
         int i, j;
         int pos=0;
         List<Box> directionBoxes = new ArrayList<>();
-        for(i = start.position()[0], j = start.position()[1]; i >= 0 && i <= 4 && j >= 0 && j <= 4; i += x_difference, j += y_difference, pos++){
-            directionBoxes.add(pos,ground[i][j]);
-        }
+
+        if (x_difference != 0 || y_difference != 0)
+            for(i = direction.positionX() + x_difference, j = direction.positionY() + y_difference; i >= 0 && i <= 4 && j >= 0 && j <= 4; i += x_difference, j += y_difference, pos++)
+                directionBoxes.add(pos,position(i,j));
         return directionBoxes;
     }
 
