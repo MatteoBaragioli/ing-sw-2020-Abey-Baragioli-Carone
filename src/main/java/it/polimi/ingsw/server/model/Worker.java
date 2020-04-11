@@ -32,9 +32,8 @@ public class Worker {
      */
 
     public void move(Box destination) {
-        if (destination.isFree() && destination.level() <= 3) {
+        if (!destination.hasDome()  && destination.level() <= 3 && this.equals(destination.occupier()))
             setPosition(destination);
-        }
     }
 }
 

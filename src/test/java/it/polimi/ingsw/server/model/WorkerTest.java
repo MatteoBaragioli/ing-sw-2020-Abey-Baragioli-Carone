@@ -12,6 +12,7 @@ public class WorkerTest {
         //this test tries to do a move of a worker to a common box
         Box secondBox = new Box(0, false, 1, 1);
         Worker worker = new Worker(box);
+        secondBox.occupy(worker);
         worker.move(secondBox);
         assertTrue(worker.position().equals(secondBox));
         //------------------------------------ new test ----------------------------------------
@@ -19,6 +20,7 @@ public class WorkerTest {
         box = new Box(1, 2);// box used as reference
         worker = new Worker(box);
         secondBox = new Box(0, true, 1, 1);
+        secondBox.occupy(worker);
         worker.move(secondBox);
         assertTrue(worker.position().equals(box));
         //------------------------------------ new test ----------------------------------------

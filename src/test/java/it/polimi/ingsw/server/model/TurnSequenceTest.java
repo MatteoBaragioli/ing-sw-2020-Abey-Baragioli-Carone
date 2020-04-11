@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
 
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 public class TurnSequenceTest {
@@ -138,13 +137,13 @@ public class TurnSequenceTest {
         turnSequence.undoNewPositions();
 
         //the stepping boxes should be free of occupiers
-        assertNull(box11.occupier());
-        assertNull(box13.occupier());
-        assertNull(box22.occupier());
-        assertNull(box33.occupier());
-        assertNull(box31.occupier());
-        assertNull(box44.occupier());
-        assertNull(box40.occupier());
+        assertTrue(box11.isFree());
+        assertTrue(box13.isFree());
+        assertTrue(box22.isFree());
+        assertTrue(box33.isFree());
+        assertTrue(box31.isFree());
+        assertTrue(box44.isFree());
+        assertTrue(box40.isFree());
 
         //the workers original positions should be occupied
         assertEquals(worker1, worker1.position().occupier());
@@ -153,9 +152,51 @@ public class TurnSequenceTest {
         assertEquals(worker2, box04.occupier());
     }
 
+    //Done
     @Test
     public void getTheMovesDone() {
+        Map map = new Map();
+        TurnSequence turnSequence = new TurnSequence();
+        Box box00 = map.position(0,0);
+        Box box11 = map.position(1,1);
+        Box box22 = map.position(2, 2);
+        Box box33 = map.position(3,3);
+        Box box44 = map.position(4,4);
 
+        Box box04 = map.position(0,4);
+        Box box13 = map.position(1,3);
+        Box box31 = map.position(3,1);
+        Box box40 = map.position(4,0);
+
+        //making two workers move (crossing paths)
+        Worker worker1 = new Worker(box00);
+        Worker worker2 = new Worker(box04);
+
+        turnSequence.recordNewPosition(worker1, box11);
+        turnSequence.recordNewPosition(worker2, box13);
+        turnSequence.recordNewPosition(worker1, box22);
+        turnSequence.recordNewPosition(worker2, box22);
+        turnSequence.recordNewPosition(worker1, box33);
+        turnSequence.recordNewPosition(worker2, box31);
+        turnSequence.recordNewPosition(worker1, box44);
+        turnSequence.recordNewPosition(worker2, box40);
+
+        turnSequence.getTheMovesDone();
+
+        //the workers' final positions should be updated and occupied
+        assertEquals(worker1, box44.occupier());
+        assertEquals(worker2, box40.occupier());
+        assertEquals(box44, worker1.position());
+        assertEquals(box40, worker2.position());
+
+        //the other positions should be free
+        assertTrue(box00.isFree());
+        assertTrue(box04.isFree());
+        assertTrue(box11.isFree());
+        assertTrue(box13.isFree());
+        assertTrue(box22.isFree());
+        assertTrue(box31.isFree());
+        assertTrue(box33.isFree());
     }
 
     @Test
