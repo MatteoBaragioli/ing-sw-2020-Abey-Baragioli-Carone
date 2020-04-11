@@ -116,7 +116,7 @@ public class TurnSequence {
     }
 
     /**
-     * This method records the new position of the worker updating the boxes' occupiers
+     * This method records the new position of the worker and updates the involved boxes' occupiers
      * @param worker Chosen worker
      * @param box Target box
      */
@@ -160,8 +160,9 @@ public class TurnSequence {
         for (Worker worker: movedWorkers)
             worker.move(newPositions.get(worker));
     }
+
     /**
-     * This method records one new build
+     * This method records one new build (the box must have one contraction)
      * @param target Target box
      */
     public void recordBuiltOnBox(Box target) {

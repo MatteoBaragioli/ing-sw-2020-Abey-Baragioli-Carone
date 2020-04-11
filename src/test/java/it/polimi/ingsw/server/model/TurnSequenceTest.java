@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import org.junit.Test;
+import org.junit.jupiter.*;
 
 import static org.junit.Assert.*;
 
@@ -106,25 +107,55 @@ public class TurnSequenceTest {
     @Test
     public void clearNewPositions() {}
 
-
+    //Done
     @Test
     public void undoNewPositions() {
         Map map = new Map();
         TurnSequence turnSequence = new TurnSequence();
-        Box spawn1 = map.position(0,0);
+        Box box00 = map.position(0,0);
         Box box11 = map.position(1,1);
-        Box spawn2 = map.position(4,4);
-        Box box21 = map.position(3,3);
+        Box box22 = map.position(2, 2);
+        Box box33 = map.position(3,3);
+        Box box44 = map.position(4,4);
 
-        Worker worker1 = new Worker(spawn1);
-        turnSequence.addMovableWorker(worker1);
+        Box box04 = map.position(0,4);
+        Box box13 = map.position(1,3);
+        Box box31 = map.position(3,1);
+        Box box40 = map.position(4,0);
+
+        //making two workers move (crossing paths)
+        Worker worker1 = new Worker(box00);
+        Worker worker2 = new Worker(box04);
 
         turnSequence.recordNewPosition(worker1, box11);
+        turnSequence.recordNewPosition(worker2, box13);
+        turnSequence.recordNewPosition(worker1, box22);
+        turnSequence.recordNewPosition(worker2, box22);
+        turnSequence.recordNewPosition(worker1, box33);
+        turnSequence.recordNewPosition(worker2, box31);
+        turnSequence.recordNewPosition(worker1, box44);
+        turnSequence.recordNewPosition(worker2, box40);
 
-        Worker worker2 = new Worker(spawn2);
+        turnSequence.undoNewPositions();
 
-        turnSequence.recordNewPosition(worker2, box21);
+        //the stepping boxes should be free of occupiers
+        assertNull(box11.occupier());
+        assertNull(box13.occupier());
+        assertNull(box22.occupier());
+        assertNull(box33.occupier());
+        assertNull(box31.occupier());
+        assertNull(box44.occupier());
+        assertNull(box40.occupier());
 
+        //the workers original positions should be occupied
+        assertEquals(worker1, worker1.position().occupier());
+        assertEquals(worker1, box00.occupier());
+        assertEquals(worker2, worker2.position().occupier());
+        assertEquals(worker2, box04.occupier());
+    }
+
+    @Test
+    public void getTheMovesDone() {
         
     }
 
