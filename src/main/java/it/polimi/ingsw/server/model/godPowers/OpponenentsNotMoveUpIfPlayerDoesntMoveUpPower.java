@@ -13,7 +13,7 @@ public class OpponenentsNotMoveUpIfPlayerDoesntMoveUpPower implements MoveModifi
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //movePower - Athena
-        if(map.levelDifference(player.turnSequence().chosenBox(), player.turnSequence().newPositions().get(player.turnSequence().chosenWorker()))>0){
+        if(map.levelDifference(player.turnSequence().chosenBox(), player.turnSequence().newPositions().get(player.turnSequence().chosenWorker()))<=0){
             for(Player opponent : opponents) {
                 opponent.turnSequence().setAllowedLevelDifference(0);
             }

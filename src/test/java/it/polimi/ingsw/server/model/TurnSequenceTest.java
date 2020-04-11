@@ -219,15 +219,44 @@ public class TurnSequenceTest {
         //checking that the same box can be added twice
         turnSequence.recordBuiltOnBox(box1);
         assertTrue(turnSequence.builtOnBoxes().size()>1);
-    }
+        assertEquals(turnSequence.builtOnBoxes().get(0),turnSequence.builtOnBoxes().get(1));
+        //checking that if a removed block is build again, it is removed from both removedBlock and builtOnBoxes
+        turnSequence.recordRemovedBlock(box2);
+        box2.build();
+        turnSequence.recordBuiltOnBox(box2);
+        assertFalse(turnSequence.builtOnBoxes().contains(box2));
+        assertFalse(turnSequence.removedBlocks().contains(box2));
 
+    }
+    //done
     @Test
     public void clearBuiltOnBoxes() {
     }
 
     @Test
     public void recordRemovedBlock() {
+        Map map = new Map();
+        TurnSequence turnSequence = new TurnSequence();
+        Box box1 = map.position(1,1);
+        Box box2 = map.position(2,2);
+        box1.build();
+        turnSequence.recordBuiltOnBox(box1);
+        turnSequence.recordBuiltOnBox(box1);
+        //checking that if a box that was built on two times and that has its two blocks removed has an empty builtOnBox and an empty removedBlocks
+        turnSequence.recordRemovedBlock(box1);
+        assertTrue(turnSequence.builtOnBoxes().size()==1);
+        turnSequence.recordRemovedBlock(box1);
+        assertTrue(turnSequence.builtOnBoxes().isEmpty());
+        //checking that it is not removing block on boxes that have a dome
+        box1.buildDome();
+        turnSequence.recordRemovedBlock(box1);
+        assertTrue(turnSequence.builtOnBoxes().isEmpty());
+        //checking that a box is added correctly
+        turnSequence.recordRemovedBlock(box2);
+        assertTrue(turnSequence.removedBlocks().contains(box2));
+        assertTrue(turnSequence.removedBlocks().size()==1);
     }
+    //done
 
     @Test
     public void clearRemovedBlocks() {
@@ -275,6 +304,41 @@ public class TurnSequenceTest {
 
     @Test
     public void reset() {
+        Map map = new Map();
+        TurnSequence turnSequence = new TurnSequence();
+        Box box1 = map.position(1,1);
+        Box box2 = map.position(2,2);
+        Box box3= map.position(3,3);
+        Box box4= map.position(4,4);
+        Box box5= map.position(1,2);
+        Worker worker1 = new Worker(box1);
+        Worker worker2 = new Worker(box2);
+        //this test resets the values of some attributes of turnSequence that were already null/empty at creation of turnSequence
+        assertTrue(turnSequence.builtOnBoxes().isEmpty());
+        assertTrue(turnSequence.newPositions().isEmpty());
+        turnSequence.reset();
+        assertTrue(turnSequence.builtOnBoxes().isEmpty());
+        assertTrue(turnSequence.newPositions().isEmpty());
+        //this test resets the values of some attributes that are NOT null/empty
+        box3.build();
+        box3.build();
+        box3.build();
+        box4.build();
+        box5.build();
+        turnSequence.recordBuiltOnBox(box3);
+        turnSequence.recordBuiltOnBox(box4);
+        turnSequence.recordBuiltOnBox(box5);
+        turnSequence.recordNewPosition(worker1,box5);
+        turnSequence.recordNewPosition(worker2,box4);
+        assertTrue(turnSequence.builtOnBoxes().contains(box3));
+        assertTrue(turnSequence.builtOnBoxes().contains(box4));
+        assertTrue(turnSequence.builtOnBoxes().contains(box5));
+        assertTrue(turnSequence.newPositions().get(worker1).equals(box5));
+        assertTrue(turnSequence.newPositions().get(worker2).equals(box4));
+        turnSequence.reset();
+        assertTrue(turnSequence.builtOnBoxes().isEmpty());
+        assertTrue(turnSequence.newPositions().isEmpty());
+
     }
 
     @Test
@@ -287,5 +351,30 @@ public class TurnSequenceTest {
 
     @Test
     public void clearTurnSequence() {
+        Map map = new Map();
+        TurnSequence turnSequence = new TurnSequence();
+        Box box1 = map.position(1,1);
+        Box box2 = map.position(2,2);
+        Box box3= map.position(3,3);
+        Worker worker = new Worker(box3);
+        //checking if turn sequence is cleared correctly
+        turnSequence.recordNewPosition(worker,box1);
+        box2.build();
+        box3.build();
+        turnSequence.recordBuiltOnBox(box2);
+        turnSequence.recordBuiltOnBox(box3);
+        turnSequence.recordMovedWorkers(worker);
+        turnSequence.setAllowedLevelDifference(0);
+        assertTrue(turnSequence.builtOnBoxes().contains(box2));
+        assertTrue(turnSequence.builtOnBoxes().contains(box3));
+        assertTrue(turnSequence.workersCurrentPosition(worker).equals(box1));
+        assertTrue(turnSequence.allowedLevelDifference()==0);
+        turnSequence.clearTurnSequence();
+        assertTrue(turnSequence.allowedLevelDifference()==1);
+        assertTrue(turnSequence.builtOnBoxes().isEmpty());
+        assertTrue(turnSequence.workersCurrentPosition(worker).equals(box3));
+        assertTrue(turnSequence.movableWorkers().isEmpty());
+
     }
+    //done
 }

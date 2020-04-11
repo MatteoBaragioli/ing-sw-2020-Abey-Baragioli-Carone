@@ -85,7 +85,7 @@ public class ActionController {
         if (phase.equals(MOVE)) {
             currentPlayer.turnSequence().registerPossibleWinner(verifyStandardWin(currentPlayer, map));
         }
-        if (currentPlayer.turnSequence().possibleWinner()== null) {
+        if (currentPlayer.turnSequence().possibleWinner() == null) {
             for (WinCondition currentWinCondition : winConditions) {
                 if (phase.equals(currentWinCondition.phase()) && currentPlayer.turnSequence().possibleWinner()== null) {
                     switch (currentWinCondition.target()) {
