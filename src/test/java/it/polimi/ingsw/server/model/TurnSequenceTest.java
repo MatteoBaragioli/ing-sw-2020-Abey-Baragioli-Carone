@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
 
 import org.junit.Test;
-import org.junit.jupiter.*;
 
 import static org.junit.Assert.*;
 
@@ -156,7 +155,7 @@ public class TurnSequenceTest {
 
     @Test
     public void getTheMovesDone() {
-        
+
     }
 
     @Test
