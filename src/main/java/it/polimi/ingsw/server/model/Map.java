@@ -101,4 +101,11 @@ public class Map {
         return targetBox.level() - startBox.level();
     }
 
+    public void updateCompletePowers(TurnSequence turnSequence){
+        for(Box builtOnBox: turnSequence.builtOnBoxes()){
+            if(builtOnBox.isCompleteTower())
+                this.completeTowers++;
+        }
+    }
+
 }
