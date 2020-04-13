@@ -122,20 +122,19 @@ public class TurnSequence {
      */
     public void recordNewPosition(Worker worker, Box box) {
         Box preBox = workersCurrentPosition(worker);
-        if(preBox!=null) {
-            //registering the previous position if the player owns the moved worker
-            if (movableWorkers.contains(worker))
-                setPreviousBox(preBox);
+        //registering the previous position if the player owns the moved worker
+        if (movableWorkers.contains(worker))
+            setPreviousBox(preBox);
 
-            //checking if the box will be free after the worker is moved
-            if (worker.equals(preBox.occupier()))
-                preBox.removeOccupier();
-        }
+        //checking if the box will be free after the worker is moved
+        if (worker.equals(preBox.occupier()))
+            preBox.removeOccupier();
 
         if(box.occupier()!=null){
+            newPositions.put(box.occupier(), box);
             recordMovedWorkers(box.occupier());
-            newPositions.put(box.occupier(), null);
         }
+
         box.occupy(worker);
         newPositions.put(worker, box);
         recordMovedWorkers(worker);
