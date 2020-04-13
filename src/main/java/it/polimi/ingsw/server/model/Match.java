@@ -9,6 +9,7 @@ public class Match {
     private Deque<GodCard> cards;
     private List<WinCondition> winConditions = new ArrayList<>();
     private ActionController actionController;
+    private Player winner=null;
 
     public Match(List<Player> gamePlayers, Deque<GodCard> cards) {
         this.gamePlayers = gamePlayers;
@@ -56,6 +57,11 @@ public class Match {
     public void setActionController(ActionController actionController){
         this.actionController=actionController;
     }
+
+    public Player winner(){return winner;}
+
+    private void setWinner(Player winner){this.winner=winner;}
+
 
     /**
      * this method returns the opponents of the player given as a parameter
