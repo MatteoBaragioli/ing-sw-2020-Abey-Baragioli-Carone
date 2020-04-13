@@ -132,19 +132,20 @@ public class TurnSequence {
 
         if(box.occupier()!=null){
             newPositions.put(box.occupier(), box);
-            recordMovedWorkers(box.occupier());
+            recordMovedWorker(box.occupier());
         }
 
         box.occupy(worker);
         newPositions.put(worker, box);
-        recordMovedWorkers(worker);
+        recordMovedWorker(worker);
     }
 
     /**
      * Reset new positions' list
      */
     public void clearNewPositions() {
-        newPositions.clear();
+        if (!newPositions().isEmpty())
+            newPositions.clear();
     }
 
     /**
@@ -181,13 +182,14 @@ public class TurnSequence {
      * Reset new builds' list
      */
     public void clearBuiltOnBoxes() {
-        builtOnBoxes.clear();
+        if (!builtOnBoxes().isEmpty())
+            builtOnBoxes.clear();
     }
 
     /**
      * This method undoes the builds that took place in this turn
      */
-    private void undoBuilds() {
+    public void undoBuilds() {
         for (Box box : builtOnBoxes) {
             if (box.hasDome())
                 box.removeDome();
@@ -213,7 +215,8 @@ public class TurnSequence {
      * Reset removed blocks' list
      */
     public void clearRemovedBlocks() {
-        removedBlocks.clear();
+        if (!removedBlocks().isEmpty())
+            removedBlocks.clear();
     }
 
     /**
@@ -241,10 +244,19 @@ public class TurnSequence {
     }
 
     /**
+     * This method makes a box unavailable for moving
+     * @param destination box
+     */
+    public void removePossibleDestination(Box destination) {
+        possibleDestinations.remove(destination);
+    }
+
+    /**
      * Reset possible destinations' list
      */
     public void clearPossibleDestinations() {
-        possibleDestinations.clear();
+        if (!possibleDestinations().isEmpty())
+            possibleDestinations.clear();
     }
 
     /**
@@ -256,13 +268,19 @@ public class TurnSequence {
             possibleBuilds.add(box);
     }
 
+    /**
+     * This method makes a box unavailable for building
+     * @param box
+     */
     public void removePossibleBuild(Box box) {
         possibleBuilds.remove(box);
     }
+
     /**
      * Reset possible builds' list
      */
     public void clearPossibleBuilds() {
+        if (!possibleBuilds().isEmpty())
         possibleBuilds.clear();
     }
 
@@ -287,14 +305,15 @@ public class TurnSequence {
      * Reset movable workers' list
      */
     public void clearMovableWorkers() {
-        movableWorkers.clear();
+        if (!movableWorkers().isEmpty())
+            movableWorkers.clear();
     }
 
     /**
      * This method records a worker that has been moved
      * @param worker
      */
-    public void recordMovedWorkers(Worker worker) {
+    public void recordMovedWorker(Worker worker) {
         if (!movedWorkers.contains(worker))
             movedWorkers.add(worker);
     }
@@ -303,7 +322,9 @@ public class TurnSequence {
      * Reset moved workers' list
      */
     public void clearMovedWorkers() {
-        movedWorkers.clear();
+        if (!movedWorkers().isEmpty()) {
+            movedWorkers.clear();
+        }
     }
 
     /**
@@ -311,7 +332,7 @@ public class TurnSequence {
      * @param player
      */
     public void registerPossibleWinner(Player player) {
-        if (possibleWinner == null)
+        if (possibleWinner() == null)
             setPossibleWinner(player);
     }
 
@@ -322,20 +343,13 @@ public class TurnSequence {
         resetChosenBox();
         resetPreviousBox();
         resetChosenWorker();
-        if (!newPositions.isEmpty())
-            clearNewPositions();
-        if (!builtOnBoxes.isEmpty())
-            clearBuiltOnBoxes();
-        if (!removedBlocks.isEmpty())
-            clearRemovedBlocks();
-        if (!possibleDestinations.isEmpty())
-            clearPossibleDestinations();
-        if (!possibleBuilds.isEmpty())
-            clearPossibleBuilds();
-        if (!movableWorkers.isEmpty())
-            clearMovableWorkers();
-        if (!movedWorkers.isEmpty())
-            clearMovedWorkers();
+        clearNewPositions();
+        clearBuiltOnBoxes();
+        clearRemovedBlocks();
+        clearPossibleDestinations();
+        clearPossibleBuilds();
+        clearMovableWorkers();
+        clearMovedWorkers();
     }
 
     /**
