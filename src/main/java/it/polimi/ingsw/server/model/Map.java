@@ -104,7 +104,7 @@ public class Map {
     public void updateCompletePowers(TurnSequence turnSequence){
         for(Box builtOnBox: turnSequence.builtOnBoxes()){
             if(builtOnBox.isCompleteTower())
-                this.completeTowers++;
+                setCompleteTowers(completeTowers + 1);
         }
     }
 

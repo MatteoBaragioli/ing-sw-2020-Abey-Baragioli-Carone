@@ -2,23 +2,20 @@ package it.polimi.ingsw.server.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class Player {
     private String nickname;
     private Colour colour;
-    private List<Worker> workers;
+    private List<Worker> workers = new ArrayList<>();
     private GodCard card;
-    private TurnSequence turnSequence;
+    private TurnSequence turnSequence = new TurnSequence();
     private boolean inGame=true;
 
 
-    public Player(String nickname, Colour colour, List<Worker> workers, GodCard card, TurnSequence turnSequence) {
+    public Player(String nickname, Colour colour, GodCard card) {
         this.nickname = nickname;
         this.colour = colour;
-        this.workers = workers;
         this.card = card;
-        this.turnSequence = turnSequence;
     }
 
     public String getNickname() {
