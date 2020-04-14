@@ -78,4 +78,10 @@ public class Player {
         setInGame(false);
     }
 
+    public void assignWorker(Worker worker){
+        if(workers.size()<2){
+            workers.add(worker);
+        }
+    }
+
 }

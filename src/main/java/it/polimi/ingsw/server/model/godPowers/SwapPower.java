@@ -17,8 +17,10 @@ public class SwapPower implements MoveModifier {
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //movePower-Apollo
-        if(player.turnSequence().chosenBox().isOccupiedByWorkers()){
-            player.turnSequence().recordNewPosition(player.turnSequence().chosenBox().occupier(), player.turnSequence().chosenWorker().position());
+        for(Worker worker : player.turnSequence().movedWorkers()){
+            if(!player.workers().contains(worker) && player.turnSequence().workersCurrentPosition(worker).equals(player.turnSequence().workersCurrentPosition(player.turnSequence().chosenWorker()))){
+                player.turnSequence().recordNewPosition(worker, player.turnSequence().previousBox());
+            }
         }
     }
 }

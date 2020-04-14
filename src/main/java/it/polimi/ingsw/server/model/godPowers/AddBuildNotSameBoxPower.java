@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.godPowers;
 
 import it.polimi.ingsw.server.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.server.model.Phase.BUILD;
@@ -21,13 +22,17 @@ public class AddBuildNotSameBoxPower implements BuildModifier {
             if(actionController.currentPlayerHasWon(player)){
                 return;
             }
+            actionController.initialisePossibleBuilds(player.turnSequence(), map);
+            actionController.applyOpponentsCondition(player, opponents, 2, map);
+            List<Box> previousBuilds = new ArrayList<>();
             for(Box builtOnBox : player.turnSequence().possibleBuilds()) {
                 if (player.turnSequence().builtOnBoxes().contains(builtOnBox)) {
-                    player.turnSequence().possibleBuilds().remove(builtOnBox);
+                    previousBuilds.add(builtOnBox);
                 }
             }
+            player.turnSequence().possibleBuilds().removeAll(previousBuilds);
             if(!player.turnSequence().possibleBuilds().isEmpty()) {
-                Box chosenBox = communicationController.chooseBox(map);
+                Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
                 player.turnSequence().setChosenBox(chosenBox);
                 actionController.updateBuiltOnBox(player.turnSequence());
             } else {

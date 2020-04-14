@@ -27,7 +27,7 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
                 //todo comunicare all'utente che non può usare il suo potere aggiuntivo
                 return;
             }
-            Box chosenBox = communicationController.chooseBox(map);
+            Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleDestinations());
             player.turnSequence().setChosenBox(chosenBox);
             actionController.updateNewPositions(player.turnSequence());
         }

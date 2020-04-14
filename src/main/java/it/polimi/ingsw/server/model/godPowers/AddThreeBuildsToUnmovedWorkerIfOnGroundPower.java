@@ -15,7 +15,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifi
 
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
-        //endPower - Poseidon
+        //buildPower - Poseidon
         boolean usePower = true;
         int i;
         Worker unmovedWorker = null;
@@ -35,7 +35,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifi
                     if(actionController.currentPlayerHasWon(player)){
                         return;
                     }
-                    Box chosenBox = communicationController.chooseBox(map);
+                    Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
                     player.turnSequence().setChosenBox(chosenBox);
                     actionController.updateBuiltOnBox(player.turnSequence());
                     actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
