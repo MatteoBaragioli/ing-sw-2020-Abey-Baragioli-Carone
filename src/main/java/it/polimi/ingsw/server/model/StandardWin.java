@@ -11,7 +11,7 @@ public class StandardWin extends WinCondition {
 
     @Override
     public boolean establishWinCondition(Player currentPlayer, Map map) {
-        if(map.levelDifference(currentPlayer.turnSequence().workersCurrentPosition(currentPlayer.turnSequence().chosenWorker()),currentPlayer.turnSequence().previousBox())==1 && currentPlayer.turnSequence().workersCurrentPosition(currentPlayer.turnSequence().chosenWorker()).level()==3)
+        if(map.levelDifference(currentPlayer.turnSequence().previousBox(),currentPlayer.turnSequence().workersCurrentPosition(currentPlayer.turnSequence().chosenWorker()))==1 && currentPlayer.turnSequence().workersCurrentPosition(currentPlayer.turnSequence().chosenWorker()).level()==3)
             return true;
         else
             return false;
