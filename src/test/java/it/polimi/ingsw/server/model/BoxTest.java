@@ -11,26 +11,26 @@ public class BoxTest {
         // this test tries to do 4 consecutive builds on the same box
         Box box=new Box(1,3);
         box.build();
-        assertTrue(box.level()==1 && box.hasDome()==false);
+        assertTrue(box.level()==1 && !box.hasDome());
         box.build();
-        assertTrue(box.level()==2 && box.hasDome()==false);
+        assertTrue(box.level()==2 && !box.hasDome());
         box.build();
-        assertTrue(box.level()==3 && box.hasDome()==false);
+        assertTrue(box.level()==3 && !box.hasDome());
         box.build();
-        assertTrue(box.level()==3 && box.hasDome()==true);
+        assertTrue(box.level()==3 && box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to do a build on a box that has a dome
         box=new Box(0,true, 1,3);
         box.build();
-        assertTrue(box.level()==0);
+        assertEquals(0, box.level());
         //------------------------------------ new test ----------------------------------------
         // this test tries to do a build on a box that has an occupier
         box=new Box(0,false, 1,3);
         Worker worker=new Worker(box);
         box.build();
-        assertTrue(box.level()==0);
-        assertTrue(box.hasDome()==false);
-        assertTrue( box.occupier().equals(worker));
+        assertEquals(0, box.level());
+        assertFalse(box.hasDome());
+        assertEquals(box.occupier(), worker);
     }
 
     @Test
@@ -39,13 +39,13 @@ public class BoxTest {
         // this test tries to build 4 consecutive blocks on the same box
         Box box=new Box(0,false,1,3);
         box.buildBlock();
-        assertTrue(box.level()==1 && box.hasDome()==false);
+        assertTrue(box.level()==1 && !box.hasDome());
         box.buildBlock();
-        assertTrue(box.level()==2 && box.hasDome()==false);
+        assertTrue(box.level()==2 && !box.hasDome());
         box.buildBlock();
-        assertTrue(box.level()==3 && box.hasDome()==false);
+        assertTrue(box.level()==3 && !box.hasDome());
         box.buildBlock();
-        assertTrue(box.level()==3 && box.hasDome()==false);
+        assertTrue(box.level()==3 && !box.hasDome());
     }
 
     @Test
@@ -54,18 +54,18 @@ public class BoxTest {
         // this test tries to build  a dome on a block
         Box box=new Box(0,false,1,3);
         box.buildDome();
-        assertTrue(box.level()==0 && box.hasDome()==true);
+        assertTrue(box.level()==0 && box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to build a block and a dome consecutively
         box=new Box(0,false,1,3);
         box.buildBlock();
         box.buildDome();
-        assertTrue(box.level()==1 && box.hasDome()==true);
+        assertTrue(box.level()==1 && box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to build  a dome on a block that already has a dome
         box=new Box(0,true,1,3);
         box.buildDome();
-        assertTrue(box.hasDome()==true);
+        assertTrue(box.hasDome());
     }
 
     @Test
@@ -73,36 +73,32 @@ public class BoxTest {
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a block on a box that has none
         Box box=new Box(0,false,1,3);
-        Box paragonBox=box;
         box.removeBlock();
-        assertTrue(box.equals(paragonBox));
+        assertTrue(box.level()==0 && !box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a block on a box that has a dome
         box=new Box(0,true,1,3);
-        paragonBox=box;
         box.removeBlock();
-        assertTrue(box.equals(paragonBox));
+        assertTrue(box.level()==0 && box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a block on a complete tower
         box=new Box(3,true,1,3);
-        paragonBox=box;
         box.removeBlock();
-        assertTrue(box.equals(paragonBox));
+        assertTrue(box.level()==3 && box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a block on a tower that has two blocks and a dome
         box=new Box(2,true,1,3);
-        paragonBox=box;
         box.removeBlock();
-        assertTrue(box.equals(paragonBox));
+        assertTrue(box.level()==2 && box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a block 3 times consecutively on a box that has 3 blocks
         box=new Box(3,false,1,3);
         box.removeBlock();
-        assertTrue(box.level()==2);
+        assertEquals(2, box.level());
         box.removeBlock();
-        assertTrue(box.level()==1);
+        assertEquals(1, box.level());
         box.removeBlock();
-        assertTrue(box.level()==0);
+        assertEquals(0, box.level());
     }
 
 
@@ -111,19 +107,18 @@ public class BoxTest {
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a dome on a box that does not have one
         Box box=new Box(0,false,1,3);
-        Box paragonBox=box;
         box.removeDome();
-        assertTrue(box.equals(paragonBox));
+        assertTrue(box.level()==0 && !box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a dome on a box that has zero level and a dome
         box=new Box(0,true,1,3);
         box.removeDome();
-        assertTrue(box.hasDome()==false);
+        assertFalse(box.hasDome());
         //------------------------------------ new test ----------------------------------------
         // this test tries to remove a dome on a box that has two levels and a dome
         box=new Box(3,true,1,3);
         box.removeDome();
-        assertTrue(box.hasDome()==false);
+        assertFalse(box.hasDome());
     }
 
     @Test
@@ -131,13 +126,13 @@ public class BoxTest {
         //------------------------------------ new test ----------------------------------------
         //given a box that is not on the edge of the board this test verifies the correct result of the method
         Map map=new Map();
-        assertTrue(map.position(1,1).isOnEdge()==false);
-        assertTrue(map.position(3,3).isOnEdge()==false);
+        assertFalse(map.position(1, 1).isOnEdge());
+        assertFalse(map.position(3, 3).isOnEdge());
         //------------------------------------ new test ----------------------------------------
         //given a box that is on the edge of the board this test verifies the correct result of the method
-        assertTrue(map.position(0,0).isOnEdge()==true);
-        assertTrue(map.position(4,4).isOnEdge()==true);
-        assertTrue(map.position(4,3).isOnEdge()==true);
+        assertTrue(map.position(0,0).isOnEdge());
+        assertTrue(map.position(4,4).isOnEdge());
+        assertTrue(map.position(4,3).isOnEdge());
     }
 
     @Test
@@ -146,11 +141,11 @@ public class BoxTest {
         //given a box that is occupied by a worker the test asserts the method returns the right value
         Box box = new Box(0, false, 1, 3);
         Worker worker=new Worker(box);
-        assertTrue(box.isFree()==false);
+        assertFalse(box.isFree());
         box.removeOccupier(); //then we remove the occupier
-        assertTrue(box.isFree()==true);
+        assertTrue(box.isFree());
         box.buildDome(); //then we build a dome on the box
-        assertTrue(box.isFree()==false);
+        assertFalse(box.isFree());
     }
     @Test
     public void isOccupiedByWorkers() {
@@ -158,10 +153,10 @@ public class BoxTest {
         //given a box that is occupied by a worker the test asserts the method returns the right value
         Box box = new Box(0, false, 1, 3);
         Worker worker=new Worker(box);
-        assertTrue(box.isOccupiedByWorkers()==true);
+        assertTrue(box.isOccupiedByWorkers());
         box.removeOccupier(); //then we remove the occupier
-        assertTrue(box.isOccupiedByWorkers()==false);
+        assertFalse(box.isOccupiedByWorkers());
         box.buildDome(); //then we build a dome on the box
-        assertTrue(box.isOccupiedByWorkers()==false);
+        assertFalse(box.isOccupiedByWorkers());
     }
 }
