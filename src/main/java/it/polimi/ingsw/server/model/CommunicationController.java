@@ -5,11 +5,15 @@ import java.util.List;
 public class CommunicationController {
 
     public Worker chooseWorker(Map map){
-        return new Worker(map.position(1,1));
+        return new Worker(map.position(3,3));
     }
 
-    public Box chooseBox(Map map){
-        return map.position(3,4);
+    public Box chooseBox(List<Box> chosableBoxes){
+        if(chosableBoxes != null){
+            return chosableBoxes.get(1);
+        }
+        else
+            return null;
     }
 
     public void youLost(){
