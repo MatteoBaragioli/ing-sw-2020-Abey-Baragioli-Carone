@@ -3,17 +3,17 @@ package it.polimi.ingsw.server.model.godPowers;
 import it.polimi.ingsw.server.model.*;
 import org.junit.Test;
 
-import static it.polimi.ingsw.server.model.Colour.GREY;
+import static it.polimi.ingsw.server.model.Colour.*;
 import static org.junit.Assert.*;
 
-public class CounterTowersBuiltWinTest {
+public class TowerCountWinTest {
 
     @Test
     public void establishWinCondition() {
         //this test tries to establish the count of towers Win of a player that has to have 4 towers built on the map
         Map map=new Map();
         map.setCompleteTowers(2);
-        WinCondition countTowersWin=new CounterTowersBuiltWin(4);
+        WinCondition countTowersWin=new TowerCountWin(4);
         Player player= new Player("blue", GREY, null);
         Box box1=map.position(0,0);
         Box box2=map.position(0,1);
@@ -32,7 +32,7 @@ public class CounterTowersBuiltWinTest {
         ////this test tries to establish the count of towers Win of a player that has to have 3 towers built on the map
         map=new Map();
         map.setCompleteTowers(0);
-        countTowersWin=new CounterTowersBuiltWin(3);
+        countTowersWin=new TowerCountWin(3);
         player= new Player("blue", GREY, null);
         box1=map.position(0,0);
         box2=map.position(0,1);
