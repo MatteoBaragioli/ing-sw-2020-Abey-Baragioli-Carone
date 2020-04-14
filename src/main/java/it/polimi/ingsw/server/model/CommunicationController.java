@@ -9,10 +9,6 @@ public class CommunicationController {
     }
 
     public Box chooseBox(List<Box> chosableBoxes){
-        if(chosableBoxes != null){
-            return chosableBoxes.get(1);
-        }
-        else
             return null;
     }
 
