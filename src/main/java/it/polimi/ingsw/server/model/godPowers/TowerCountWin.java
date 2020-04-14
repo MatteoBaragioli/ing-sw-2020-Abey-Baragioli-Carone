@@ -8,10 +8,10 @@ import it.polimi.ingsw.server.model.WinCondition;
 import static it.polimi.ingsw.server.model.Phase.*;
 import static it.polimi.ingsw.server.model.Target.*;
 
-public class CounterTowersBuiltWin extends WinCondition {
+public class TowerCountWin extends WinCondition {
     int numOfTowers;
 
-    public CounterTowersBuiltWin(int towers) {
+    public TowerCountWin(int towers) {
         super(BUILD, ALL);
         this.numOfTowers = towers;
     }
