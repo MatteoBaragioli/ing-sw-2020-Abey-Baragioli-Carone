@@ -22,7 +22,7 @@ public class MoveTwoLevelsDownWinTest {
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);
-        assertTrue(map.levelDifference(box1,box2)==-2);
+        assertEquals(map.levelDifference(box1, box2), -2);
         player.turnSequence().recordNewPosition(worker, box2);
         assertTrue(win.establishWinCondition(player, map));
         //this test tries to establish the win of a player that moves from a third level box to a ground level box
@@ -37,7 +37,7 @@ public class MoveTwoLevelsDownWinTest {
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);
-        assertTrue(map.levelDifference(box1,box2)==-3);
+        assertEquals(map.levelDifference(box1, box2), -3);
         player.turnSequence().recordNewPosition(worker, box2);
         assertTrue(win.establishWinCondition(player, map));
         //this test tries to establish the win of a player that moves from a first level box to a ground level box
@@ -50,7 +50,7 @@ public class MoveTwoLevelsDownWinTest {
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);
-        assertTrue(map.levelDifference(box1,box2)==-1);
+        assertEquals(map.levelDifference(box1, box2), -1);
         player.turnSequence().recordNewPosition(worker, box2);
         assertFalse(win.establishWinCondition(player, map));
     }
