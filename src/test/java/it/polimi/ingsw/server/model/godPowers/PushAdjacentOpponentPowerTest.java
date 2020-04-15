@@ -12,17 +12,17 @@ public class PushAdjacentOpponentPowerTest {
 
     @Test
     public void changePossibleOptions() {
-        /*
-        //-------------------------- Test 1 ----------- edgeBox
+
+        //-------------------------- Test 1 -----------
+        // edgeBox
         Map map = new  Map();
         ActionController actionController = new ActionController();
         Worker chosenWorker = new Worker(false, map.position(3,3));
         Worker worker = new Worker(true, map.position(2,2));
         Worker targetWorker = new Worker(true, map.position(3,4));
-        List<Worker> workers = new ArrayList<>();
-        workers.add(chosenWorker);
-        workers.add(worker);
-        Player player = new Player("player1", Colour.BLUE, workers, new GodCard("Minotaur", 8, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()), new TurnSequence());
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Minotaur", 8, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        player.assignWorker(chosenWorker);
+        player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
         player.turnSequence().addMovableWorker(chosenWorker);
         actionController.initialisePossibleDestinations(player.turnSequence(), map);
@@ -38,25 +38,23 @@ public class PushAdjacentOpponentPowerTest {
         testList.add(map.position(4, 3));
         testList.add(map.position(4,4));
         assertEquals(player.turnSequence().possibleDestinations(), testList);
-*/
+
 
         //-------------------------- Test 2 ---------------
-        Map map = new  Map();
-        ActionController actionController = new ActionController();
-        Worker chosenWorker = new Worker(false, map.position(2,2));
-        Worker worker = new Worker(true, map.position(0,0));
-        Worker targetWorker = new Worker(true, map.position(2,3));
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Minotaur", 8, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        map = new  Map();
+        chosenWorker = new Worker(false, map.position(2,2));
+        worker = new Worker(true, map.position(0,0));
+        targetWorker = new Worker(true, map.position(2,3));
+        player = new Player("player1", Colour.BLUE, new GodCard("Minotaur", 8, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
         player.turnSequence().addMovableWorker(chosenWorker);
         actionController.initialisePossibleDestinations(player.turnSequence(), map);
-        TurnSequenceModifier minotaurOptions = new PushAdjacentOpponentPower();
         minotaurOptions.changePossibleOptions(player, actionController, map);
 
         assertTrue(player.turnSequence().possibleDestinations().contains(targetWorker.position()));
-        List<Box> testList = new ArrayList<>();
+        testList = new ArrayList<>();
         testList.add(map.position(1,1));
         testList.add(map.position(1, 2));
         testList.add(map.position(1,3));
@@ -67,10 +65,10 @@ public class PushAdjacentOpponentPowerTest {
         testList.add(map.position(2,3));
         assertEquals(player.turnSequence().possibleDestinations(), testList);
     }
-
     @Test
     public void executeAction() {
-        //-------------------------- Test 1 --------- CommunicationController --> chooseBox returns element 7
+        //-------------------------- Test 1 ---------
+        //chosenWorker in (2,2) moves on (2,3) pushing the opponent's worker on (2,4)
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
@@ -82,11 +80,11 @@ public class PushAdjacentOpponentPowerTest {
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
         player.turnSequence().addMovableWorker(chosenWorker);
+
         actionController.initialisePossibleDestinations(player.turnSequence(), map);
         TurnSequenceModifier minotaurPower = new PushAdjacentOpponentPower();
         minotaurPower.changePossibleOptions(player, actionController, map);
-        Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleDestinations());
-        player.turnSequence().setChosenBox(chosenBox);
+        player.turnSequence().setChosenBox(map.position(2,3));
         actionController.updateNewPositions(player.turnSequence());
         minotaurPower.executeAction(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>());
 

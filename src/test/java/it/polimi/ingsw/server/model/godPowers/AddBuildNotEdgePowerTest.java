@@ -12,7 +12,8 @@ public class AddBuildNotEdgePowerTest {
 
     @Test
     public void executeAction() {
-        //-------------------------- Test 1 --------- CommunicationController --> chooseBox returns element 1
+        //-------------------------- Test 1 ---------
+        //chosenWorker in (2,3) builds on (1,3)
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();

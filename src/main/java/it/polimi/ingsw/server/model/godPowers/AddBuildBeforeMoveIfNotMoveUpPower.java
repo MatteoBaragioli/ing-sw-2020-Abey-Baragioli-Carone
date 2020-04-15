@@ -21,7 +21,8 @@ public class AddBuildBeforeMoveIfNotMoveUpPower implements BuildModifier {
             actionController.initialisePossibleBuilds(player.turnSequence(), map);
             actionController.applyOpponentsCondition(player, opponents, 2, map);
             Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
-            player.turnSequence().setChosenBox(chosenBox);
+            if(chosenBox!=null)
+                player.turnSequence().setChosenBox(chosenBox);
             actionController.updateBuiltOnBox(player.turnSequence());
             actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
             if(actionController.currentPlayerHasWon(player)){

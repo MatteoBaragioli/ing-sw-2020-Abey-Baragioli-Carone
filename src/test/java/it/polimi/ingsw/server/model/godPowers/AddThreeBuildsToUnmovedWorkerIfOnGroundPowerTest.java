@@ -13,7 +13,8 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPowerTest {
     @Test
     public void executeAction() {
 
-        //-------------------------- Test 1 --------- CommunicationController --> chooseBox returns element 1
+        //-------------------------- Test 1 ---------
+        //unmovedWorker in (0,0) builds three times on (1,0)
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
@@ -29,6 +30,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPowerTest {
 
         actionController.initialisePossibleDestinations(player.turnSequence(), map);
         actionController.updateNewPositions(player.turnSequence());
+        player.turnSequence().setChosenBox(map.position(1,0));
         poseidonPower.executeAction(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>());
 
         List<Box> expectedPossibleBuilds = new ArrayList<>();

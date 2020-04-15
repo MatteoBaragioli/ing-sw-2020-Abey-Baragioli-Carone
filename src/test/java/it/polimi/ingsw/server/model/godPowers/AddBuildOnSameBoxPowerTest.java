@@ -13,6 +13,7 @@ public class AddBuildOnSameBoxPowerTest {
     @Test
     public void executeAction() {
         //-------------------------- Test 1 ---------
+        //chosenWorker in (2,3) builds on (1,3) two times
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();

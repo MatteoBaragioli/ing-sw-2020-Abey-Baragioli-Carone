@@ -36,7 +36,8 @@ public class AddBuildNotEdgePower implements BuildModifier {
                 return;
             }
             Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
-            player.turnSequence().setChosenBox(chosenBox);
+            if(chosenBox!=null)
+                player.turnSequence().setChosenBox(chosenBox);
             actionController.updateBuiltOnBox(player.turnSequence());
         }
     }

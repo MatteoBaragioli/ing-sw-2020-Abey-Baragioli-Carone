@@ -12,7 +12,8 @@ public class AddBuildBeforeMoveIfNotMoveUpPowerTest {
 
     @Test
     public void executeAction() {
-        //-------------------------- Test 1 --------- CommunicationController --> chooseBox returns element 2
+        //-------------------------- Test 1 ---------
+        //chosenWorker in (2,2) builds on (1,3)
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
@@ -22,6 +23,7 @@ public class AddBuildBeforeMoveIfNotMoveUpPowerTest {
         player.assignWorker(chosenWorker);
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
+        player.turnSequence().setChosenBox(map.position(1,3));
         TurnSequenceModifier prometheusPower = new AddBuildBeforeMoveIfNotMoveUpPower();
 
         assertTrue(player.turnSequence().possibleDestinations().isEmpty());

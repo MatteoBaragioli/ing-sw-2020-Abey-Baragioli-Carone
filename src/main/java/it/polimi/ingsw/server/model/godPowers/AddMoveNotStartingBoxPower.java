@@ -28,7 +28,8 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
                 return;
             }
             Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleDestinations());
-            player.turnSequence().setChosenBox(chosenBox);
+            if(chosenBox!=null)
+                player.turnSequence().setChosenBox(chosenBox);
             actionController.updateNewPositions(player.turnSequence());
         }
     }

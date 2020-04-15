@@ -12,7 +12,7 @@ public class SwapPowerTest {
 
     @Test
     public void changePossibleOptions() {
-
+        //---------------Test 1-------------
         Map map = new  Map();
         ActionController actionController = new ActionController();
         Worker chosenWorker = new Worker(false, map.position(3,3));
@@ -48,6 +48,8 @@ public class SwapPowerTest {
 
     @Test
     public void executeAction() {
+        //-------------------------- Test 1 ---------
+        //chosenWorker in (3,3) moves on (3,4) swapping the opponent's worker on (3,3)
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();

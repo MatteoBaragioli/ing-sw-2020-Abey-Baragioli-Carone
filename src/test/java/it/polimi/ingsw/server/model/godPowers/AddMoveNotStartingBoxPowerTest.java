@@ -13,7 +13,8 @@ public class AddMoveNotStartingBoxPowerTest {
     @Test
     public void executeAction() {
 
-        //-------------------------- Test 1 --------- CommunicationController --> chooseBox returns element 0
+        //-------------------------- Test 1 ---------
+        //chosenWorker in (4,3) moves on (3,3) and then on (2,2)
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
@@ -34,7 +35,7 @@ public class AddMoveNotStartingBoxPowerTest {
 
         TurnSequenceModifier artemisPower = new AddMoveNotStartingBoxPower();
         //check first move and update possible destinations
-
+        player.turnSequence().setChosenBox(map.position(2,2));
         artemisPower.executeAction(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>());
 
         assertFalse(player.turnSequence().newPositions().isEmpty());
@@ -53,15 +54,12 @@ public class AddMoveNotStartingBoxPowerTest {
         assertEquals(expectedList, player.turnSequence().possibleDestinations());
 
 
-        //-------------------------- Test 2 --------- CommunicationController --> chooseBox returns element 0
-/*
-        Map map = new  Map();
-        ActionController actionController = new ActionController();
-        CommunicationController communicationController = new CommunicationController();
-        Worker chosenWorker = new Worker(false, map.position(3,3));
-        Worker worker2 = new Worker(false, map.position(0,0));
+        //-------------------------- Test 2 ---------
+        //chosenWorker in (3,3) moves on (4,4) and then on (3,4) ---- opponent worker in (4,3)
+        chosenWorker = new Worker(false, map.position(3,3));
+        worker2 = new Worker(false, map.position(0,0));
         Worker opponentWorker = new Worker(false, map.position(4, 3));
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        player = new Player("player1", Colour.BLUE, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.assignWorker(worker2);
         player.turnSequence().setChosenWorker(chosenWorker);
@@ -74,8 +72,7 @@ public class AddMoveNotStartingBoxPowerTest {
         assertEquals(map.position(4,4), player.turnSequence().newPositions().get(chosenWorker));
         assertEquals(map.position(3,3), player.turnSequence().previousBox());
 
-        TurnSequenceModifier artemisPower = new AddMoveNotStartingBoxPower();
-        //check first move and update possible destinations
+        player.turnSequence().setChosenBox(map.position(3,4));
 
         artemisPower.executeAction(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>());
 
@@ -84,9 +81,9 @@ public class AddMoveNotStartingBoxPowerTest {
 
         assertEquals(player.turnSequence().newPositions().get(player.turnSequence().chosenWorker()), map.position(3,4));
         assertEquals(1, player.turnSequence().newPositions().size());
-        List<Box> expectedList = new ArrayList<>();
+        expectedList = new ArrayList<>();
         expectedList.add(map.position(3,4));
         assertEquals(expectedList, player.turnSequence().possibleDestinations());
-*/
+
     }
 }
