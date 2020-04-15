@@ -22,7 +22,7 @@ public class StandardWinTest {
         box2.build();
         Worker worker=new Worker(box1,Colour.GREY );
         player.workers().add(worker);
-        player.turnSequence().movableWorkers().add(worker);
+        player.turnSequence().addMovableWorker(worker);
         player.turnSequence().setChosenWorker(worker);
         player.turnSequence().recordNewPosition(worker, box2);
         assertTrue(standardWin.establishWinCondition(player,map));
@@ -38,10 +38,10 @@ public class StandardWinTest {
         box2.build();
         worker=new Worker(box1,Colour.GREY );
         player.workers().add(worker);
-        player.turnSequence().movableWorkers().add(worker);
+        player.turnSequence().addMovableWorker(worker);
         player.turnSequence().setChosenWorker(worker);
         player.turnSequence().recordNewPosition(worker, box2);
         assertFalse(standardWin.establishWinCondition(player,map));
-
     }
+    //Done
 }

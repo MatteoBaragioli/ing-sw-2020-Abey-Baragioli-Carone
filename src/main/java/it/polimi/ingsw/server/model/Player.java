@@ -38,11 +38,7 @@ public class Player {
         return workers;
     }
 
-    public void setWorkers(List<Worker> workers) {
-        this.workers = workers;
-    }
-
-    private GodCard getCard() {
+    public GodCard godCard() {
         return card;
     }
 
@@ -50,20 +46,14 @@ public class Player {
         this.card = card;
     }
 
-    private void setTurnSequence (TurnSequence turnSequence){this.turnSequence= turnSequence; }
-
     public TurnSequence turnSequence() { return turnSequence; }
 
-    public void giveCard(GodCard card) {
+    public void assignCard(GodCard card) {
         setCard(card);
     }
 
     public List<Worker> workers() {  //method that returns the player's workers for usage outside the 'player' class
         return getWorkers();
-    }
-
-    public GodCard godCard() {
-        return card;
     }
 
     public boolean isInGame(){
@@ -78,10 +68,12 @@ public class Player {
         setInGame(false);
     }
 
+    /**
+     * This method adds a worker to the player's list if he isn't owning it
+     * @param worker assigned worker
+     */
     public void assignWorker(Worker worker){
-        if(workers.size()<2){
+        if(worker!=null && workers().size()<2 && !workers().contains(worker))
             workers.add(worker);
-        }
     }
-
 }

@@ -36,13 +36,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifi
                         return;
                     }
                     Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
-                    if(chosenBox!=null)
-                        player.turnSequence().setChosenBox(chosenBox);
-                    actionController.updateBuiltOnBox(player.turnSequence());
-                    actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
-                    if(actionController.currentPlayerHasWon(player)){
-                        return;
-                    }
+                    buildOnThisBox(player, opponents, actionController, winConditions, map, chosenBox);
                     actionController.initialisePossibleBuilds(player.turnSequence(), map);
                     actionController.applyOpponentsCondition(player, opponents, 2, map);
                 }
@@ -54,5 +48,14 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifi
             //todo comunicare all'utente che non può usare il suo potere aggiuntivo
             return;
         }
+    }
+
+    public void buildOnThisBox(Player player, List<Player> opponents, ActionController actionController, List<WinCondition> winConditions, Map map, Box chosenBox) {
+        if(chosenBox!=null)
+            player.turnSequence().setChosenBox(chosenBox);
+        actionController.updateBuiltOnBox(player.turnSequence());
+        actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
+        if(actionController.currentPlayerHasWon(player)){
+            return;
     }
 }

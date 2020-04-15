@@ -48,26 +48,30 @@ public class Box {
 
     public void occupy(Worker occupier){this.occupier=occupier;}
 
-
     /**
      * This method removes the occupier
      */
-    public void removeOccupier() {this.occupier=null;}
+    public void removeOccupier() {occupy(null);}
 
 
 
     public Worker occupier(){ return occupier;}
 
+    /**
+     * this method tells if a box is occupied by any of the workers of the players
+     * @return boolean (true if occupied)
+     */
+    public boolean isOccupiedByWorkers() {
+        return occupier != null;
+    }
 
     /**
      * This method tells if the Box is free (not occupied by neither workers nor domes).
      * @return Boolean (true if free)
      */
      public boolean isFree(){
-        if (occupier==null && !hasDome())
-            return true;
-    return false;
-    }
+         return !isOccupiedByWorkers() && !hasDome();
+     }
 
     /**
      * this method tells if a box is occupied by any worker in the game or a dome
@@ -78,20 +82,9 @@ public class Box {
     }
 
     /**
-     * this method tells if a box is occupied by any of the workers of the players
-     * @return boolean (true if occupied)
-     */
-    public boolean isOccupiedByWorkers() {
-        if(occupier==null)
-            return false;
-        return true;
-    }
-
-    /**
      * this method increases the level of the box or sets the dome attribute of box to true
      */
-    public void build()
-    {
+    public void build() {
         if (!hasDome() && occupier==null)
             if (level() < 3 && level()>=0)
                 buildBlock();
@@ -100,10 +93,9 @@ public class Box {
     }
 
     /**
-     * this method increases the level of one
+     * this method increases the level by one
      */
-    public void buildBlock()
-    {
+    public void buildBlock() {
         if(level() < 3)
             setLevel(level() + 1);
     }
@@ -111,8 +103,7 @@ public class Box {
     /**
      * this method sets the dome attribute of the box to true
      */
-    public void buildDome()
-    {
+    public void buildDome() {
         setDome(true);
     }
 
@@ -122,10 +113,10 @@ public class Box {
     public void removeDome() {setDome(false); }
 
     /**
-     * this method decreases the level attribute of 1
+     * this method decreases the level attribute by 1
      */
     public void removeBlock() {
-        if (level()>0 && isFree())
+        if (level()>0)
             setLevel(level() - 1);
     }
 

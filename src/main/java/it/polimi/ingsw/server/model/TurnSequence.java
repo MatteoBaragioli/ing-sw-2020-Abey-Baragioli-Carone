@@ -106,7 +106,7 @@ public class TurnSequence {
 
     /**
      * This method tells the location of a worker during the turn sequence
-     * @param worker
+     * @param worker requested worker
      * @return Box
      */
     public Box workersCurrentPosition(Worker worker) {
@@ -261,7 +261,7 @@ public class TurnSequence {
 
     /**
      * This method makes a box available for building
-     * @param box
+     * @param box new building location
      */
     public void addPossibleBuild(Box box) {
         if (!possibleBuilds.contains(box) && !box.isCompleteTower())
@@ -270,7 +270,7 @@ public class TurnSequence {
 
     /**
      * This method makes a box unavailable for building
-     * @param box
+     * @param box unavailable building location
      */
     public void removePossibleBuild(Box box) {
         possibleBuilds.remove(box);
@@ -286,7 +286,7 @@ public class TurnSequence {
 
     /**
      * This method makes a worker available for moving
-     * @param worker
+     * @param worker movable worker
      */
     public void addMovableWorker(Worker worker) {
         if (!movableWorkers.contains(worker))
@@ -295,7 +295,7 @@ public class TurnSequence {
 
     /**
      * This method makes a worker unavailable for moving
-     * @param worker
+     * @param worker unmovable worker
      */
     public void removeMovableWorker(Worker worker) {
         movableWorkers.remove(worker);
@@ -311,7 +311,7 @@ public class TurnSequence {
 
     /**
      * This method records a worker that has been moved
-     * @param worker
+     * @param worker moved worker
      */
     public void recordMovedWorker(Worker worker) {
         if (!movedWorkers.contains(worker))
@@ -329,7 +329,7 @@ public class TurnSequence {
 
     /**
      * This method records a possible possibleWinner if nobody was already winning
-     * @param player
+     * @param player possible winner
      */
     public void registerPossibleWinner(Player player) {
         if (possibleWinner() == null)

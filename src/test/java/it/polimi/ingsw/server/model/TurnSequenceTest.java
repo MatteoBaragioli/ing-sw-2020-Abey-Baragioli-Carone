@@ -274,22 +274,28 @@ public class TurnSequenceTest {
         TurnSequence turnSequence = new TurnSequence();
         Box box1 = map.position(1,1);
         Box box2 = map.position(2,2);
+
         box1.build();
-        turnSequence.recordBuiltOnBox(box1);
-        turnSequence.recordBuiltOnBox(box1);
+
         //checking that if a box that was built on two times and that has its two blocks removed has an empty builtOnBox and an empty removedBlocks
+        turnSequence.recordBuiltOnBox(box1);
+        turnSequence.recordBuiltOnBox(box1);
         turnSequence.recordRemovedBlock(box1);
-        assertTrue(turnSequence.builtOnBoxes().size()==1);
+        assertEquals(1, turnSequence.builtOnBoxes().size());
+        assertTrue(turnSequence.removedBlocks().isEmpty());
         turnSequence.recordRemovedBlock(box1);
         assertTrue(turnSequence.builtOnBoxes().isEmpty());
+        assertTrue(turnSequence.removedBlocks().isEmpty());
+
         //checking that it is not removing block on boxes that have a dome
         box1.buildDome();
         turnSequence.recordRemovedBlock(box1);
         assertTrue(turnSequence.builtOnBoxes().isEmpty());
+
         //checking that a box is added correctly
         turnSequence.recordRemovedBlock(box2);
         assertTrue(turnSequence.removedBlocks().contains(box2));
-        assertTrue(turnSequence.removedBlocks().size()==1);
+        assertEquals(1, turnSequence.removedBlocks().size());
     }
     //Done
 

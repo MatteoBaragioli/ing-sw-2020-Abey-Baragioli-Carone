@@ -1,11 +1,10 @@
 package it.polimi.ingsw.server.model;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 
 public class MapTest {
 
@@ -17,16 +16,17 @@ public class MapTest {
         for (int i = 0; i<map.ground().length; i++) {
             for (int j = 0; j < map.ground().length; j++) {
                 box1 = map.position(i, j);
-                assertTrue(box1.positionX() == i);
-                assertTrue(box1.positionY() == j);
+                assertEquals(box1.positionX(), i);
+                assertEquals(box1.positionY(), j);
                 assertTrue(map.groundToList().contains(box1));
             }
         }
         //checking this method returns null when given positions that do not exist in the map
         box1=map.position(6,6);
-        assertEquals(box1, null);
+        assertNull(box1);
     }
-    //done
+    //Done
+
     @Test
     public void groundToList() {
         Map map=new Map();
@@ -38,8 +38,9 @@ public class MapTest {
                 assertTrue(map.groundToList().contains(box1));
             }
         }
-        assertTrue(map.groundToList().size()==25);
+        assertEquals(25, map.groundToList().size());
     }
+    //Done
 
     @Test
     public void adjacent() {
@@ -62,6 +63,7 @@ public class MapTest {
             }
         }
     }
+    //Done
 
     @Test
     public void boxesSameDirection() {
@@ -82,11 +84,11 @@ public class MapTest {
                     if (x_difference != 0 || y_difference != 0)
                         for (h = direction.positionX() + x_difference, k = direction.positionY() + y_difference; h >= 0 && h <= 4 && k >= 0 && k <= 4; h += x_difference, k += y_difference)
                             assertTrue(sameDirection.contains(map.position(h, k)));
-
                 }
             }
         }
     }
+    //Done
 
     @Test
     public void levelDifference() {
@@ -103,6 +105,7 @@ public class MapTest {
 
 
     }
+    //Done
 
     @Test
     public void updateCompleteTowers(){
@@ -116,10 +119,10 @@ public class MapTest {
         box1.build();
         box1.build();
         box1.build(); //complete tower;
-        turnSequence.builtOnBoxes().add(box1);
-        turnSequence.builtOnBoxes().add(box2);
+        turnSequence.recordBuiltOnBox(box1);
+        turnSequence.recordBuiltOnBox(box2);
         map.updateCompletePowers(turnSequence);
-        assertTrue(map.completeTowers()==1);
+        assertEquals(1, map.completeTowers());
         //checking that if 2 complete towers are built and added in turnSequence.builtOnBoxes the method returns 2
         turnSequence.reset();
         map.setCompleteTowers(0);
@@ -133,9 +136,10 @@ public class MapTest {
         box1.build();
         box1.build();
         box1.build();//complete tower;
-        turnSequence.builtOnBoxes().add(box1);
-        turnSequence.builtOnBoxes().add(box2);
+        turnSequence.recordBuiltOnBox(box1);
+        turnSequence.recordBuiltOnBox(box2);
         map.updateCompletePowers(turnSequence);
-        assertTrue(map.completeTowers()==2);
+        assertEquals(2, map.completeTowers());
     }
+    //Done
 }

@@ -13,8 +13,11 @@ public class RemoveAdjacentBlockPower implements BuildModifier {
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //buildPower - Ares
-        int i;
         boolean usePower = communicationController.chooseToUsePower();
+        usePower(player, communicationController, actionController, map, usePower);
+    }
+
+    public void usePower(Player player,CommunicationController communicationController, ActionController actionController, Map map, boolean usePower) {
         if(usePower) {
             for (Worker worker : player.workers()) {
                 if (!player.turnSequence().movedWorkers().contains(worker)) {
