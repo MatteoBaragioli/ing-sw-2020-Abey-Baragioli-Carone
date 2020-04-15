@@ -61,6 +61,16 @@ public class StartTest {
             assertEquals(1, map.position(3, 4).level());
             assertEquals(currentPlayer.turnSequence().possibleBuilds(),map.adjacent(map.position(3,3)));
         }
+        currentPlayer.turnSequence().undo();
+        //-------------------------- Test 1 ------------------------------------------------------------------------
+        //this test tries a start for a doNothing
+        actions.set(0,new DoNothing());
+        assertTrue(currentPlayer.turnSequence().builtOnBoxes().isEmpty());
+        assertTrue(currentPlayer.turnSequence().newPositions().isEmpty());
+        start=new Start();
+        start.executePhase(currentPlayer, communicationController, actionController, map, opponents, new ArrayList<WinCondition>());
+        assertTrue(currentPlayer.turnSequence().builtOnBoxes().isEmpty());
+        assertTrue(currentPlayer.turnSequence().newPositions().isEmpty());
 
     }
 }
