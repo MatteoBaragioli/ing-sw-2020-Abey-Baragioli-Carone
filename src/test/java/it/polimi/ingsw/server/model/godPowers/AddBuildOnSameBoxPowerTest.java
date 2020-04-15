@@ -1,12 +1,10 @@
 package it.polimi.ingsw.server.model.godPowers;
 
-import it.polimi.ingsw.server.model.*;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.*;
+
+import it.polimi.ingsw.server.model.*;
+import java.util.ArrayList;
 
 public class AddBuildOnSameBoxPowerTest {
 

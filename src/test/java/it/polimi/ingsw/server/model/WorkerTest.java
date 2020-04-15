@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
 
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 public class WorkerTest {

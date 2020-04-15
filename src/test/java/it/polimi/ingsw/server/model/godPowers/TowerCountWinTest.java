@@ -1,10 +1,10 @@
 package it.polimi.ingsw.server.model.godPowers;
 
-import it.polimi.ingsw.server.model.*;
 import org.junit.Test;
-
-import static it.polimi.ingsw.server.model.Colour.*;
 import static org.junit.Assert.*;
+
+import it.polimi.ingsw.server.model.*;
+import static it.polimi.ingsw.server.model.Colour.*;
 
 public class TowerCountWinTest {
 
