@@ -251,6 +251,7 @@ public class ActionControllerTest {
 
     @Test
     public void applyOpponentsCondition() {
+
     }
 
     @Test
