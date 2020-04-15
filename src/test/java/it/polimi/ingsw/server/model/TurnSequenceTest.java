@@ -11,7 +11,7 @@ public class TurnSequenceTest {
         TurnSequence turnSequence = new TurnSequence();
         Box box1 = map.position(1,1);
         Box box2 = map.position(2,2);
-        Worker worker = new Worker(box1);
+        Worker worker = new Worker(box1,Colour.GREY );
 
         //checking that with an unmoved worker the return has the same position
         assertEquals(worker.position(), turnSequence.workersCurrentPosition(worker));
@@ -35,7 +35,7 @@ public class TurnSequenceTest {
         TurnSequence turnSequence = new TurnSequence();
         Box spawn1 = map.position(0,0);
         Box box1 = map.position(1,1);
-        Worker worker1 = new Worker(spawn1);
+        Worker worker1 = new Worker(spawn1,Colour.GREY );
 
         //the record must be empty at the start
         assertTrue(turnSequence.newPositions().isEmpty());
@@ -72,7 +72,7 @@ public class TurnSequenceTest {
 
         //making an opponent worker move
         Box spawn2 = map.position(0, 1);
-        Worker worker2 = new Worker(spawn2);
+        Worker worker2 = new Worker(spawn2,Colour.GREY );
         Box box2 = map.position(1,0);
 
         turnSequence.recordNewPosition(worker2, box2);
@@ -126,8 +126,8 @@ public class TurnSequenceTest {
         Box box40 = map.position(4,0);
 
         //making two workers move (crossing paths)
-        Worker worker1 = new Worker(box00);
-        Worker worker2 = new Worker(box04);
+        Worker worker1 = new Worker(box00,Colour.GREY );
+        Worker worker2 = new Worker(box04,Colour.GREY );
 
         turnSequence.recordNewPosition(worker1, box11);
         turnSequence.recordNewPosition(worker2, box13);
@@ -173,8 +173,8 @@ public class TurnSequenceTest {
         Box box40 = map.position(4,0);
 
         //making two workers move (crossing paths)
-        Worker worker1 = new Worker(box00);
-        Worker worker2 = new Worker(box04);
+        Worker worker1 = new Worker(box00,Colour.GREY );
+        Worker worker2 = new Worker(box04, Colour.GREY);
 
         turnSequence.recordNewPosition(worker1, box11);
         turnSequence.recordNewPosition(worker2, box13);
@@ -391,7 +391,7 @@ public class TurnSequenceTest {
     public void addMovableWorker() {
         TurnSequence turnSequence = new TurnSequence();
         Box box1 = new Box(1,1);
-        Worker worker = new Worker(box1);
+        Worker worker = new Worker(box1,Colour.GREY );
 
         turnSequence.addMovableWorker(worker);
         assertTrue(turnSequence.movableWorkers().contains(worker));
@@ -405,8 +405,8 @@ public class TurnSequenceTest {
         TurnSequence turnSequence = new TurnSequence();
         Box box1 = new Box(1,1);
         Box box2 = new Box(2,2);
-        Worker worker1 = new Worker(box1);
-        Worker worker2 = new Worker(box2);
+        Worker worker1 = new Worker(box1,Colour.GREY );
+        Worker worker2 = new Worker(box2,Colour.GREY );
 
         turnSequence.addMovableWorker(worker1);
         assertTrue(turnSequence.movableWorkers().contains(worker1));
@@ -425,7 +425,7 @@ public class TurnSequenceTest {
     public void recordMovedWorkers() {
         TurnSequence turnSequence = new TurnSequence();
         Box box = new Box(1,1);
-        Worker worker = new Worker(box);
+        Worker worker = new Worker(box,Colour.GREY );
 
         turnSequence.recordMovedWorker(worker);
         assertTrue(turnSequence.movedWorkers().contains(worker));
@@ -446,7 +446,7 @@ public class TurnSequenceTest {
         Box box2 = map.position(2,2);
         Box box3= map.position(3,3);
         Box box4= map.position(4,4);
-        Worker worker1 = new Worker(box1);
+        Worker worker1 = new Worker(box1,Colour.GREY );
 
         turnSequence.setChosenWorker(worker1);
         turnSequence.setChosenBox(box1);
@@ -524,8 +524,8 @@ public class TurnSequenceTest {
         turnSequence.recordRemovedBlock(removedBox2);
 
         //making two workers move (crossing paths)
-        Worker worker1 = new Worker(box00);
-        Worker worker2 = new Worker(box04);
+        Worker worker1 = new Worker(box00,Colour.GREY );
+        Worker worker2 = new Worker(box04,Colour.GREY );
 
         turnSequence.recordNewPosition(worker1, box11);
         turnSequence.recordNewPosition(worker2, box13);
@@ -579,7 +579,7 @@ public class TurnSequenceTest {
         Box box2 = map.position(2,2);
         Box box3= map.position(3,3);
         Box box4= map.position(4,4);
-        Worker worker = new Worker(box1);
+        Worker worker = new Worker(box1,Colour.GREY );
 
         turnSequence.setAllowedLevelDifference(0);
         turnSequence.setChosenWorker(worker);
@@ -633,8 +633,8 @@ public class TurnSequenceTest {
         Box box31 = map.position(3,1);
         Box box40 = map.position(4,0);
 
-        Worker worker1 = new Worker(box00);
-        Worker worker2 = new Worker(box04);
+        Worker worker1 = new Worker(box00,Colour.GREY );
+        Worker worker2 = new Worker(box04,Colour.GREY );
 
         turnSequence.setAllowedLevelDifference(0);
         turnSequence.setChosenWorker(worker1);

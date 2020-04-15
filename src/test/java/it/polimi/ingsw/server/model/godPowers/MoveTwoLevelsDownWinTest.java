@@ -18,7 +18,7 @@ public class MoveTwoLevelsDownWinTest {
         Box box2 = map.position(0, 1);
         box1.build();
         box1.build();
-        Worker worker = new Worker(box1);
+        Worker worker = new Worker(box1,Colour.GREY );
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);
@@ -33,7 +33,7 @@ public class MoveTwoLevelsDownWinTest {
         box1.build();
         box1.build();
         box1.build();
-        worker = new Worker(box1);
+        worker = new Worker(box1,Colour.GREY );
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);
@@ -46,7 +46,7 @@ public class MoveTwoLevelsDownWinTest {
         box1 = map.position(0, 0);
         box2 = map.position(0, 1);
         box1.build();
-        worker = new Worker(box1);
+        worker = new Worker(box1,Colour.GREY );
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);

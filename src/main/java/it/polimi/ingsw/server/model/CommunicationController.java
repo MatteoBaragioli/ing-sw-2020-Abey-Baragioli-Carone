@@ -5,7 +5,7 @@ import java.util.List;
 public class CommunicationController {
 
     public Worker chooseWorker(Map map){
-        return new Worker(map.position(3,3));
+        return new Worker(map.position(3,3), null);
     }
 
     public Box chooseBox(List<Box> chosableBoxes){

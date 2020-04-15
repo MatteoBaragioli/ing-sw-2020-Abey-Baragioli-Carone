@@ -3,8 +3,9 @@ package it.polimi.ingsw.server.model;
 public class Worker {
     private Box position;
     private boolean gender;
+    private Colour colour;
 
-    public Worker(Box position) {
+    public Worker(Box position, Colour colour) {
         this.position = position;
         this.position.occupy(this);
     }
@@ -13,6 +14,10 @@ public class Worker {
         this.position=position;
         this.position.occupy(this);
     }
+
+    public Colour colour(){return this.colour;}
+
+    private void SetColour(Colour colour){this.colour=colour;}
 
     private Box getPosition() {
         return position;

@@ -26,7 +26,7 @@ public class BoxTest {
         //------------------------------------ new test ----------------------------------------
         // this test tries to do a build on a box that has an occupier
         box=new Box(0,false, 1,3);
-        Worker worker=new Worker(box);
+        Worker worker=new Worker(box,Colour.GREY );
         box.build();
         assertEquals(0, box.level());
         assertFalse(box.hasDome());
@@ -140,7 +140,7 @@ public class BoxTest {
         //------------------------------------ new test ----------------------------------------
         //given a box that is occupied by a worker the test asserts the method returns the right value
         Box box = new Box(0, false, 1, 3);
-        Worker worker=new Worker(box);
+        Worker worker=new Worker(box,Colour.GREY );
         assertFalse(box.isFree());
         box.removeOccupier(); //then we remove the occupier
         assertTrue(box.isFree());
@@ -152,7 +152,7 @@ public class BoxTest {
         //------------------------------------ new test ----------------------------------------
         //given a box that is occupied by a worker the test asserts the method returns the right value
         Box box = new Box(0, false, 1, 3);
-        Worker worker=new Worker(box);
+        Worker worker=new Worker(box,Colour.GREY );
         assertTrue(box.isOccupiedByWorkers());
         box.removeOccupier(); //then we remove the occupier
         assertFalse(box.isOccupiedByWorkers());

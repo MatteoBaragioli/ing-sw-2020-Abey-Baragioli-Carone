@@ -11,14 +11,14 @@ public class WorkerTest {
         Box box = new Box(1, 2);// box used as reference
         //this test tries to do a move of a worker to a common box
         Box secondBox = new Box(0, false, 1, 1);
-        Worker worker = new Worker(box);
+        Worker worker = new Worker(box,Colour.GREY );
         secondBox.occupy(worker);
         worker.move(secondBox);
         assertTrue(worker.position().equals(secondBox));
         //------------------------------------ new test ----------------------------------------
         //this test tries to do a move of a worker to a box that has a dome
         box = new Box(1, 2);// box used as reference
-        worker = new Worker(box);
+        worker = new Worker(box,Colour.GREY );
         secondBox = new Box(0, true, 1, 1);
         secondBox.occupy(worker);
         worker.move(secondBox);
@@ -27,8 +27,8 @@ public class WorkerTest {
         //this test tries to do a move of a worker to a box occupied by another worker
         box = new Box(1, 2);// box used as reference
         secondBox = new Box(3, false, 1, 1);
-        Worker opponentsWorker = new Worker(secondBox);
-        worker = new Worker(box);
+        Worker opponentsWorker = new Worker(secondBox,Colour.GREY );
+        worker = new Worker(box,Colour.GREY );
         worker.move(secondBox);
         assertFalse(worker.position().equals(secondBox));
     }

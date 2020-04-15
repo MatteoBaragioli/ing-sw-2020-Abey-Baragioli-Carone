@@ -93,7 +93,7 @@ public class ActionControllerTest {
         TurnSequence turnSequence = new TurnSequence();
         Map map = new Map();
         Box workerPosition = map.position(3, 3); //level 0 no dome
-        Worker chosenWorker = new Worker(workerPosition);
+        Worker chosenWorker = new Worker(workerPosition,Colour.GREY );
         turnSequence.setChosenWorker(chosenWorker);
 
 
@@ -118,7 +118,7 @@ public class ActionControllerTest {
         map = new Map();
         workerPosition = map.position(3, 3); //level 1 no dome
         workerPosition.build();                         //level 1 no dome
-        chosenWorker = new Worker(workerPosition);
+        chosenWorker = new Worker(workerPosition,Colour.GREY );
         turnSequence.setChosenWorker(chosenWorker);
 
 
@@ -153,7 +153,7 @@ public class ActionControllerTest {
         workerPosition.build();                         //level 3 no dome
         workerPosition.build();
         workerPosition.build();
-        chosenWorker = new Worker(workerPosition);
+        chosenWorker = new Worker(workerPosition,Colour.GREY );
         turnSequence.setChosenWorker(chosenWorker);
 
 
@@ -177,7 +177,7 @@ public class ActionControllerTest {
 
         map.position(3, 4).build(); //level 1
         testList.add(map.position(3,4));
-        map.position(4,2).occupy(new Worker(map.position(4,2))); //occupier
+        map.position(4,2).occupy(new Worker(map.position(4,2),Colour.GREY )); //occupier
         testList.add(map.position(4, 3));
         testList.add(map.position(4,4));
 
@@ -193,7 +193,7 @@ public class ActionControllerTest {
         TurnSequence turnSequence = new TurnSequence();
         Map map = new Map();
         Box workerPosition = map.position(3, 3); //level 0 no dome
-        Worker chosenWorker = new Worker(workerPosition);
+        Worker chosenWorker = new Worker(workerPosition,Colour.GREY );
         turnSequence.setChosenWorker(chosenWorker);
 
 
@@ -216,7 +216,7 @@ public class ActionControllerTest {
         //-------------------------------New Test--------------------------------------------------
         map = new Map();
         workerPosition = map.position(3, 3);
-        chosenWorker = new Worker(workerPosition);
+        chosenWorker = new Worker(workerPosition,Colour.GREY );
         turnSequence.setChosenWorker(chosenWorker);
 
 
@@ -240,7 +240,7 @@ public class ActionControllerTest {
 
         map.position(3, 4).build(); //level 1
         testList.add(map.position(3,4));
-        map.position(4,2).occupy(new Worker(map.position(4,2))); //occupier
+        map.position(4,2).occupy(new Worker(map.position(4,2),Colour.GREY )); //occupier
         testList.add(map.position(4, 3));
         testList.add(map.position(4,4));
 

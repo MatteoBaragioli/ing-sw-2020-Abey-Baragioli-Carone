@@ -20,7 +20,7 @@ public class StandardWinTest {
         box2.build();
         box2.build();
         box2.build();
-        Worker worker=new Worker(box1);
+        Worker worker=new Worker(box1,Colour.GREY );
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);
@@ -36,7 +36,7 @@ public class StandardWinTest {
         box2.build();
         box2.build();
         box2.build();
-        worker=new Worker(box1);
+        worker=new Worker(box1,Colour.GREY );
         player.workers().add(worker);
         player.turnSequence().movableWorkers().add(worker);
         player.turnSequence().setChosenWorker(worker);
