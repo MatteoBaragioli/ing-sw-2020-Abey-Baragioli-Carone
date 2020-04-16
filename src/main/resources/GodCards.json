@@ -1,115 +1,115 @@
 [
   {
     "name": "APOLLO",
-    "id": 0,
-    "actions": ["Swap"],
+    "id": 1,
+    "actions": ["DoNothing", "Swap", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ARTEMIS",
-    "id": 1,
-    "actions": ["AddMoveNotStartingBox"],
+    "id": 2,
+    "actions": ["DoNothing","AddMoveNotStartingBox", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ATHENA",
-    "id": 2,
-    "actions": ["OpponentsCantMoveUpIfPlayerMovesUp"],
+    "id": 3,
+    "actions": ["DoNothing", "OpponentsCantMoveUpIfPlayerMovesUp", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ATLAS",
-    "id": 3,
-    "actions": ["BuildDomeEverywhere"],
+    "id": 4,
+    "actions": ["DoNothing", "DoNothing", "BuildDomeEverywhere", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "DEMETER",
-    "id": 4,
-    "actions": ["AddBuildNotSameBox"],
+    "id": 5,
+    "actions": ["DoNothing", "DoNothing", "AddBuildNotSameBox", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "HEPHAESTUS",
-    "id": 5,
-    "actions": ["AddBuildOnSameBox"],
+    "id": 6,
+    "actions": ["DoNothing", "DoNothing", "AddBuildOnSameBox", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "MINOTAUR",
-    "id": 6,
-    "actions": ["PushAdjacentOpponent"],
+    "id": 8,
+    "actions": ["DoNothing", "PushAdjacentOpponent", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "PAN",
-    "id": 7,
-    "actions": ["DoNothing"],
+    "id": 9,
+    "actions": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "MoveTwoLevelsDown",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "PROMETHEUS",
-    "id": 8,
-    "actions": ["AddBuildBeforeIfNotMoveUp"],
+    "id": 10,
+    "actions": ["AddBuildBeforeIfNotMoveUp", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ARES",
-    "id": 9,
-    "actions": ["RemoveAdjacentBlock"],
+    "id": 12,
+    "actions": ["DoNothing", "DoNothing", "RemoveAdjacentBlock", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "CHRONUS",
-    "id": 10,
-    "actions": ["DoNothing"],
+    "id": 16,
+    "actions": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "TowerCountWin",
     "winParameter": 5,
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "HESTIA",
-    "id": 11,
-    "actions": ["AddBuildNotEdge"],
+    "id": 21,
+    "actions": ["DoNothing", "DoNothing", "AddBuildNotEdge", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "POSEIDON",
-    "id": 12,
-    "actions": ["AddThreeBuildsToUnmovedWorker"],
+    "id": 27,
+    "actions": ["DoNothing", "DoNothing", "AddThreeBuildsToUnmovedWorker", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ZEUS",
-    "id": 13,
-    "actions": ["BuildUnderYourself"],
+    "id": 30,
+    "actions": ["DoNothing", "DoNothing", "BuildUnderYourself", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing"]
+    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   }
 ]
