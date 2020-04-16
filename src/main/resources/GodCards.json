@@ -1,0 +1,115 @@
+[
+  {
+    "name": "APOLLO",
+    "id": 0,
+    "actions": ["Swap"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "ARTEMIS",
+    "id": 1,
+    "actions": ["AddMoveNotStartingBox"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "ATHENA",
+    "id": 2,
+    "actions": ["OpponentsCantMoveUpIfPlayerMovesUp"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "ATLAS",
+    "id": 3,
+    "actions": ["BuildDomeEverywhere"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "DEMETER",
+    "id": 4,
+    "actions": ["AddBuildNotSameBox"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "HEPHAESTUS",
+    "id": 5,
+    "actions": ["AddBuildOnSameBox"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "MINOTAUR",
+    "id": 6,
+    "actions": ["PushAdjacentOpponent"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "PAN",
+    "id": 7,
+    "actions": ["DoNothing"],
+    "winCondition": "MoveTwoLevelsDown",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "PROMETHEUS",
+    "id": 8,
+    "actions": ["AddBuildBeforeIfNotMoveUp"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "ARES",
+    "id": 9,
+    "actions": ["RemoveAdjacentBlock"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "CHRONUS",
+    "id": 10,
+    "actions": ["DoNothing"],
+    "winCondition": "TowerCountWin",
+    "winParameter": 5,
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "HESTIA",
+    "id": 11,
+    "actions": ["AddBuildNotEdge"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "POSEIDON",
+    "id": 12,
+    "actions": ["AddThreeBuildsToUnmovedWorker"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  },
+  {
+    "name": "ZEUS",
+    "id": 13,
+    "actions": ["BuildUnderYourself"],
+    "winCondition": "Standard",
+    "setupCondition": "NoSetUp",
+    "effectOnOpponent": ["DoNothing"]
+  }
+]

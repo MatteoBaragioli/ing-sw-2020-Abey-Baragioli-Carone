@@ -1,9 +1,9 @@
 package it.polimi.ingsw.server.model;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import static it.polimi.ingsw.server.model.Colour.*;
-import static org.junit.Assert.*;
 
 public class StandardWinTest {
 
