@@ -4,8 +4,8 @@ import java.util.List;
 
 public class CommunicationController {
 
-    public Worker chooseWorker(Map map){
-        return new Worker(map.position(3,3), null);
+    public Worker chooseWorker(List<Worker> movableWorkers){
+        return null;
     }
 
     public Box chooseBox(List<Box> chosableBoxes){
