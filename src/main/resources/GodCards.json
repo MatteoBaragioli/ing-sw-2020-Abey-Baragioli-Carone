@@ -5,7 +5,7 @@
     "actions": ["DoNothing", "Swap", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ARTEMIS",
@@ -13,7 +13,7 @@
     "actions": ["DoNothing","AddMoveNotStartingBox", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ATHENA",
@@ -21,7 +21,7 @@
     "actions": ["DoNothing", "OpponentsCantMoveUpIfPlayerMovesUp", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ATLAS",
@@ -29,7 +29,7 @@
     "actions": ["DoNothing", "DoNothing", "BuildDomeEverywhere", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "DEMETER",
@@ -37,7 +37,7 @@
     "actions": ["DoNothing", "DoNothing", "AddBuildNotSameBox", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "HEPHAESTUS",
@@ -45,7 +45,7 @@
     "actions": ["DoNothing", "DoNothing", "AddBuildOnSameBox", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "MINOTAUR",
@@ -53,7 +53,7 @@
     "actions": ["DoNothing", "PushAdjacentOpponent", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "PAN",
@@ -61,7 +61,7 @@
     "actions": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "MoveTwoLevelsDown",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "PROMETHEUS",
@@ -69,7 +69,7 @@
     "actions": ["AddBuildBeforeIfNotMoveUp", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ARES",
@@ -77,7 +77,7 @@
     "actions": ["DoNothing", "DoNothing", "RemoveAdjacentBlock", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "CHRONUS",
@@ -86,7 +86,7 @@
     "winCondition": "TowerCountWin",
     "winParameter": 5,
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "HESTIA",
@@ -94,7 +94,7 @@
     "actions": ["DoNothing", "DoNothing", "AddBuildNotEdge", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "POSEIDON",
@@ -102,7 +102,7 @@
     "actions": ["DoNothing", "DoNothing", "AddThreeBuildsToUnmovedWorker", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ZEUS",
@@ -110,6 +110,6 @@
     "actions": ["DoNothing", "DoNothing", "BuildUnderYourself", "DoNothing"],
     "winCondition": "Standard",
     "setupCondition": "NoSetUp",
-    "effectOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
+    "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   }
 ]
