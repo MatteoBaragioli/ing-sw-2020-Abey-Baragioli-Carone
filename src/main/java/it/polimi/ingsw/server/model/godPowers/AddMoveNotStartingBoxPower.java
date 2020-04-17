@@ -2,8 +2,10 @@ package it.polimi.ingsw.server.model.godPowers;
 
 import it.polimi.ingsw.server.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.server.model.Phase.BUILD;
 import static it.polimi.ingsw.server.model.Phase.MOVE;
 
 public class AddMoveNotStartingBoxPower implements MoveModifier {
@@ -15,6 +17,10 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //movePower-Artemis
         boolean usePower = communicationController.chooseToUsePower();
+
+    }
+
+    protected void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower){
         if(usePower) {
             actionController.verifyWinCondition(MOVE, winConditions, player, map, opponents);
             if(actionController.currentPlayerHasWon(player)){
@@ -28,9 +34,13 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
                 return;
             }
             Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleDestinations());
-            if(chosenBox!=null)
-                player.turnSequence().setChosenBox(chosenBox);
-            actionController.updateNewPositions(player.turnSequence());
+            executePower(player, actionController, chosenBox);
         }
+    }
+
+    protected void executePower(Player player, ActionController actionController, Box chosenBox){
+        if(chosenBox!=null)
+            player.turnSequence().setChosenBox(chosenBox);
+        actionController.updateNewPositions(player.turnSequence());
     }
 }

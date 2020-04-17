@@ -13,7 +13,7 @@ public class Start implements TurnPhase {
         int phaseIndex = 0;
         actionController.applyOpponentsCondition(currentPlayer, opponents, phaseIndex, map);
         currentPlayer.godCard().actions().get(phaseIndex).changePossibleOptions(currentPlayer, actionController, map);
-        communicationController.chooseWorker(map);
+        communicationController.chooseWorker(currentPlayer.turnSequence().movableWorkers());
         currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
         actionController.verifyWinCondition(START,winConditions, currentPlayer,map,opponents );
     }

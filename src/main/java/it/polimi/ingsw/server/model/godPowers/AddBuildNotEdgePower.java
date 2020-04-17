@@ -18,6 +18,10 @@ public class AddBuildNotEdgePower implements BuildModifier {
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //buildPower-Hestia
         boolean usePower = communicationController.chooseToUsePower();
+        usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
+    }
+
+    protected void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower){
         if(usePower){
             actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
             if(actionController.currentPlayerHasWon(player)){
@@ -32,13 +36,17 @@ public class AddBuildNotEdgePower implements BuildModifier {
             }
             player.turnSequence().possibleBuilds().removeAll(edgeBoxes);
             if(player.turnSequence().possibleBuilds().isEmpty()){
+                Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
+                executePower(player, actionController, chosenBox);
+            } else {
                 //todo comunicare all'utente che non può usare il suo potere aggiuntivo
-                return;
             }
-            Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
-            if(chosenBox!=null)
-                player.turnSequence().setChosenBox(chosenBox);
-            actionController.updateBuiltOnBox(player.turnSequence());
         }
+    }
+
+    protected void executePower(Player player, ActionController actionController, Box chosenBox){
+        if(chosenBox!=null)
+            player.turnSequence().setChosenBox(chosenBox);
+        actionController.updateBuiltOnBox(player.turnSequence());
     }
 }
