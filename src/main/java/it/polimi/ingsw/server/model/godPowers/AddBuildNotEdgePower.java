@@ -36,7 +36,7 @@ public class AddBuildNotEdgePower implements BuildModifier {
             }
             player.turnSequence().possibleBuilds().removeAll(edgeBoxes);
             if(player.turnSequence().possibleBuilds().isEmpty()){
-                Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
+                Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
                 executePower(player, actionController, chosenBox);
             } else {
                 //todo comunicare all'utente che non può usare il suo potere aggiuntivo

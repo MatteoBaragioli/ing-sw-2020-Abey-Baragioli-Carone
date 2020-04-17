@@ -8,7 +8,7 @@ public class CommunicationController {
         return null;
     }
 
-    public Box chooseBox(List<Box> chosableBoxes){
+    public Box chooseBox(Player currentPlayer, List<Box> chosableBoxes){
         //todo if chosableBox.isEmpty();
         return null;
     }

@@ -30,9 +30,11 @@ public class RemoveAdjacentBlockPower implements BuildModifier {
                     player.turnSequence().addPossibleBuild(box);
                 }
             }
-            Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
-            chosenBox.removeBlock();
-            player.turnSequence().recordRemovedBlock(chosenBox);
+            Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
+            if(chosenBox!=null)
+                player.turnSequence().setChosenBox(chosenBox);
+            player.turnSequence().chosenBox().removeBlock();
+            player.turnSequence().recordRemovedBlock(player.turnSequence().chosenBox());
         }
     }
 }

@@ -38,7 +38,7 @@ public class AddBuildNotSameBoxPower implements BuildModifier {
                 //todo comunicare all'utente che non può usare il suo potere aggiuntivo
                 return;
             }
-            Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
+            Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
             executePower(player, actionController, chosenBox);
 
         }

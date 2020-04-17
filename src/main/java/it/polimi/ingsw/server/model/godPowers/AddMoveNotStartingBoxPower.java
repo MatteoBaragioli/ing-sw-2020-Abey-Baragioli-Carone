@@ -2,10 +2,8 @@ package it.polimi.ingsw.server.model.godPowers;
 
 import it.polimi.ingsw.server.model.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.server.model.Phase.BUILD;
 import static it.polimi.ingsw.server.model.Phase.MOVE;
 
 public class AddMoveNotStartingBoxPower implements MoveModifier {
@@ -33,7 +31,7 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
                 //todo comunicare all'utente che non può usare il suo potere aggiuntivo
                 return;
             }
-            Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleDestinations());
+            Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleDestinations());
             executePower(player, actionController, chosenBox);
         }
     }

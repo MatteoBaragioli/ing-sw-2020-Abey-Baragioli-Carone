@@ -14,7 +14,7 @@ public class Build  implements TurnPhase {
         actionController.initialisePossibleBuilds(currentPlayer.turnSequence(), map);
         actionController.applyOpponentsCondition(currentPlayer, opponents, phaseIndex, map);
         currentPlayer.godCard().actions().get(phaseIndex).changePossibleOptions(currentPlayer, actionController, map);
-        Box chosenBox = communicationController.chooseBox(currentPlayer.turnSequence().possibleBuilds());
+        Box chosenBox = communicationController.chooseBox(currentPlayer, currentPlayer.turnSequence().possibleBuilds());
         if(chosenBox!=null)
             currentPlayer.turnSequence().setChosenBox(chosenBox);
         actionController.updateBuiltOnBox(currentPlayer.turnSequence());

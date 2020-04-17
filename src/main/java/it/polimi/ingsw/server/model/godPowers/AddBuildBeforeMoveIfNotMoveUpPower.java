@@ -4,8 +4,6 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-import static it.polimi.ingsw.server.model.Phase.BUILD;
-
 public class AddBuildBeforeMoveIfNotMoveUpPower implements BuildModifier {
 
     @Override
@@ -25,7 +23,7 @@ public class AddBuildBeforeMoveIfNotMoveUpPower implements BuildModifier {
             actionController.initialisePossibleBuilds(player.turnSequence(), map);
             actionController.applyOpponentsCondition(player, opponents, 2, map);
             if(!player.turnSequence().possibleBuilds().isEmpty()) {
-                Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
+                Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
                 executePower(player, actionController, chosenBox);
             } else {
                 //todo comunicare all'utente che non può usare il suo potere aggiuntivo

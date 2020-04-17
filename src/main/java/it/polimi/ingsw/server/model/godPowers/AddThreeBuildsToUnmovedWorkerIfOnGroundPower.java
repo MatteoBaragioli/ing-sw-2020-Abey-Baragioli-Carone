@@ -35,7 +35,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifi
                     if(actionController.currentPlayerHasWon(player)){
                         return;
                     }
-                    Box chosenBox = communicationController.chooseBox(player.turnSequence().possibleBuilds());
+                    Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
                     if(chosenBox!=null)
                         player.turnSequence().setChosenBox(chosenBox);
                     actionController.updateBuiltOnBox(player.turnSequence());
