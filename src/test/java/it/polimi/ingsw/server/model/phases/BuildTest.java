@@ -57,12 +57,13 @@ public class BuildTest {
         assertNotNull(currentPlayer.turnSequence().chosenWorker());
         build.executePhase(currentPlayer, communicationController, actionController, map, opponents, new ArrayList<WinCondition>());
         assertFalse(currentPlayer.turnSequence().builtOnBoxes().isEmpty());
-        assertTrue(currentPlayer.turnSequence().builtOnBoxes().contains(map.position(3,4)));
-        assertEquals(1, map.position(3,4).level());
+        assertTrue(currentPlayer.turnSequence().builtOnBoxes().contains(currentPlayer.turnSequence().chosenBox()));
+        assertEquals(1, currentPlayer.turnSequence().chosenBox().level());
         //end normal build
+        currentPlayer.turnSequence().undo();
 
 
-        //build with hephaestus (box(3,4) now is on level 1 --> it should be on level 3 at the end of this build
+        //build with hephaestus (box(3,4) or chosenBox now is on level 0 again --> it should be on level 2 at the end of this build
         actions = new ArrayList<>();
         actions.add(0, new DoNothing());
         actions.add(1, new DoNothing());
@@ -79,7 +80,7 @@ public class BuildTest {
         assertTrue(currentPlayer.turnSequence().builtOnBoxes().isEmpty());
         build.executePhase(currentPlayer, communicationController, actionController, map, opponents, new ArrayList<WinCondition>());
         assertFalse(currentPlayer.turnSequence().builtOnBoxes().isEmpty());
-        assertTrue(currentPlayer.turnSequence().builtOnBoxes().contains(map.position(3,4)));
-        assertEquals(3, map.position(3,4).level());
+        assertTrue(currentPlayer.turnSequence().builtOnBoxes().contains(currentPlayer.turnSequence().chosenBox()));
+        assertEquals(2, currentPlayer.turnSequence().chosenBox().level());
     }
 }

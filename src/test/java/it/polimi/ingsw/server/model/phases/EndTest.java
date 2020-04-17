@@ -57,18 +57,20 @@ public class EndTest {
         currentPlayer.turnSequence().recordBuiltOnBox(currentPlayer.turnSequence().chosenBox());
         currentPlayer.turnSequence().recordNewPosition(worker1, currentPlayer.turnSequence().chosenBox());
 
-        assertEquals(currentPlayer.turnSequence().possibleWinner(),null);
+        assertNull(currentPlayer.turnSequence().possibleWinner());
         assertEquals(1, currentPlayer.turnSequence().allowedLevelDifference());
-        assertEquals(1, currentPlayer.turnSequence().builtOnBoxes().size());
         assertTrue(currentPlayer.turnSequence().builtOnBoxes().contains(currentPlayer.turnSequence().chosenBox()));
         assertEquals(currentPlayer.turnSequence().newPositions().get(worker1), currentPlayer.turnSequence().chosenBox());
-        End end= new End();
+        End end = new End();
         end.executePhase(currentPlayer, communicationController, actionController, map, opponents, new ArrayList<WinCondition>());
 
        for(Player enemy: opponents){
            assertEquals(0,enemy.turnSequence().allowedLevelDifference());
        }
-        assertEquals(currentPlayer.turnSequence().possibleWinner(),null);
+       assertNull(currentPlayer.turnSequence().possibleWinner());
+       assertTrue(currentPlayer.turnSequence().builtOnBoxes().isEmpty());
+       assertTrue(currentPlayer.turnSequence().movedWorkers().isEmpty());
+       assertTrue(currentPlayer.turnSequence().newPositions().isEmpty());
        //-------------------------------------------------test 2----------------------------------------------------------
        // this test tries a End Phase for OpponentsCantMoveUpIfPlayerMovesUpPower with a winning move changing possible winner
         currentPlayer.turnSequence().setChosenWorker(worker1);
