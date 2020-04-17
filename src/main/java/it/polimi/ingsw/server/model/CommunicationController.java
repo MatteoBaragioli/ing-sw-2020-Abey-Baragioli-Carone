@@ -9,7 +9,8 @@ public class CommunicationController {
     }
 
     public Box chooseBox(List<Box> chosableBoxes){
-            return null;
+        //todo if chosableBox.isEmpty();
+        return null;
     }
 
     public void youLost(){

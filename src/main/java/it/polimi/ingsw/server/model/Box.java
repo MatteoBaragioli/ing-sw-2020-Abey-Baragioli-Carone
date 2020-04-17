@@ -85,7 +85,7 @@ public class Box {
      * this method increases the level of the box or sets the dome attribute of box to true
      */
     public void build() {
-        if (!hasDome() && occupier==null)
+        if (!hasDome())
             if (level() < 3 && level()>=0)
                 buildBlock();
             else if(level()>=3 && occupier==null)

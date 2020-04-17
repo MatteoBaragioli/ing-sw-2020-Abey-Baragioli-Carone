@@ -15,7 +15,8 @@ public class ActionController {
      *
      */
     public void updateNewPositions(TurnSequence currentTurnSequence){
-        currentTurnSequence.recordNewPosition(currentTurnSequence.chosenWorker(), currentTurnSequence.chosenBox());
+        if(currentTurnSequence.chosenBox()!=null)
+            currentTurnSequence.recordNewPosition(currentTurnSequence.chosenWorker(), currentTurnSequence.chosenBox());
     }
 
     /**
@@ -23,9 +24,11 @@ public class ActionController {
      * @param currentTurnSequence Current player's TurnSequence
      *
      */
-    public void updateBuiltOnBox(TurnSequence currentTurnSequence){
-        currentTurnSequence.chosenBox().build();
-        currentTurnSequence.recordBuiltOnBox(currentTurnSequence.chosenBox());
+    public void updateBuiltOnBox(TurnSequence currentTurnSequence) {
+        if (currentTurnSequence.chosenBox() != null) {
+            currentTurnSequence.chosenBox().build();
+            currentTurnSequence.recordBuiltOnBox(currentTurnSequence.chosenBox());
+        }
     }
 
     /**

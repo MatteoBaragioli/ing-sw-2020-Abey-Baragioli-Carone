@@ -11,79 +11,75 @@ import java.util.List;
 public class AddMoveNotStartingBoxPowerTest {
 
     @Test
-    public void executeAction() {
-
+    public void usePower() {
         //-------------------------- Test 1 ---------
-        //chosenWorker in (4,3) moves on (3,3) and then on (2,2)
+
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
-        Worker chosenWorker = new Worker(false, map.position(4,3));
-        Worker worker2 = new Worker(false, map.position(0,0));
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Worker chosenWorker = new Worker(map.position(0,0), Colour.BLUE);
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
-        player.assignWorker(worker2);
         player.turnSequence().setChosenWorker(chosenWorker);
-        player.turnSequence().setChosenBox(map.position(3,3));
-        player.turnSequence().addMovableWorker(chosenWorker);
-        actionController.updateNewPositions(player.turnSequence());
 
-        assertTrue(player.turnSequence().movedWorkers().contains(chosenWorker));
-        assertTrue(player.turnSequence().newPositions().containsKey(chosenWorker));
-        assertEquals(map.position(3,3), player.turnSequence().newPositions().get(chosenWorker));
-        assertEquals(map.position(4,3), player.turnSequence().previousBox());
+        AddMoveNotStartingBoxPower artemisPower = new AddMoveNotStartingBoxPower();
 
-        TurnSequenceModifier artemisPower = new AddMoveNotStartingBoxPower();
-        //check first move and update possible destinations
-        player.turnSequence().setChosenBox(map.position(2,2));
-        artemisPower.executeAction(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>());
+        //User doesn't use the power
+        artemisPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), false);
+        assertTrue(player.turnSequence().possibleDestinations().isEmpty());
+        assertTrue(player.turnSequence().newPositions().isEmpty());
+        assertEquals(1, player.turnSequence().allowedLevelDifference());
 
-        assertFalse(player.turnSequence().newPositions().isEmpty());
-        assertFalse(player.turnSequence().possibleDestinations().isEmpty());
+        //User uses the power
+        //for the test the worker is in "position" (for each position in the map) and has a previous box that shouldn't be in possibleDestinations
+        for(Box position : map.groundToList()){
+            player.turnSequence().recordNewPosition(player.workers().get(0), position);
+            player.turnSequence().confirmTurnSequence();
+            player.turnSequence().setPreviousBox(map.position(position.positionX()-1,position.positionY()));
+            if(player.turnSequence().previousBox()==null)
+                player.turnSequence().setPreviousBox(map.position(position.positionX()+1,position.positionY()));
+            player.turnSequence().setChosenWorker(player.workers().get(0));
 
-        assertEquals(player.turnSequence().newPositions().get(player.turnSequence().chosenWorker()), map.position(2,2));
-        assertEquals(1, player.turnSequence().newPositions().size());
-        List<Box> expectedList = new ArrayList<>();
-        expectedList.add(map.position(2,2));
-        expectedList.add(map.position(2,3));
-        expectedList.add(map.position(2,4));
-        expectedList.add(map.position(3,2));
-        expectedList.add(map.position(3,4));
-        expectedList.add(map.position(4,2));
-        expectedList.add(map.position(4,4));
-        assertEquals(expectedList, player.turnSequence().possibleDestinations());
+            player.turnSequence().setChosenBox(position); //I put a casual chosenBox only to make method executePower work
+            artemisPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), true);
+            assertFalse(player.turnSequence().possibleDestinations().contains(player.turnSequence().previousBox()));
+        }
+    }
 
+    @Test
+    public void executePower() {
+        //-------------------------- Test 1 ---------
 
-        //-------------------------- Test 2 ---------
-        //chosenWorker in (3,3) moves on (4,4) and then on (3,4) ---- opponent worker in (4,3)
-        chosenWorker = new Worker(false, map.position(3,3));
-        worker2 = new Worker(false, map.position(0,0));
-        Worker opponentWorker = new Worker(false, map.position(4, 3));
-        player = new Player("player1", Colour.BLUE, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Map map = new  Map();
+        ActionController actionController = new ActionController();
+        Worker chosenWorker = new Worker(false, map.position(2,2));
+        Worker worker = new Worker(true, map.position(0,0));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
-        player.assignWorker(worker2);
+        player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
-        player.turnSequence().setChosenBox(map.position(4,4));
         player.turnSequence().addMovableWorker(chosenWorker);
-        actionController.updateNewPositions(player.turnSequence());
 
-        assertTrue(player.turnSequence().movedWorkers().contains(chosenWorker));
-        assertTrue(player.turnSequence().newPositions().containsKey(chosenWorker));
-        assertEquals(map.position(4,4), player.turnSequence().newPositions().get(chosenWorker));
-        assertEquals(map.position(3,3), player.turnSequence().previousBox());
+        AddMoveNotStartingBoxPower artemisPower = new AddMoveNotStartingBoxPower();
 
-        player.turnSequence().setChosenBox(map.position(3,4));
+        assertTrue(player.turnSequence().possibleDestinations().isEmpty());
+        assertTrue(player.turnSequence().newPositions().isEmpty());
+        assertTrue(player.turnSequence().possibleBuilds().isEmpty());
+        assertTrue(player.turnSequence().builtOnBoxes().isEmpty());
+        assertEquals(1, player.turnSequence().allowedLevelDifference());
 
-        artemisPower.executeAction(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>());
+        actionController.initialisePossibleDestinations(player.turnSequence(), map);
 
-        assertFalse(player.turnSequence().newPositions().isEmpty());
-        assertFalse(player.turnSequence().possibleDestinations().isEmpty());
-
-        assertEquals(player.turnSequence().newPositions().get(player.turnSequence().chosenWorker()), map.position(3,4));
-        assertEquals(1, player.turnSequence().newPositions().size());
-        expectedList = new ArrayList<>();
-        expectedList.add(map.position(3,4));
-        assertEquals(expectedList, player.turnSequence().possibleDestinations());
-
+        //for each Box in possibleDestinations
+        for(Box chosenBox : player.turnSequence().possibleDestinations()) {
+            artemisPower.executePower(player, actionController,  chosenBox);
+            assertFalse(player.turnSequence().possibleDestinations().isEmpty());
+            assertFalse(player.turnSequence().newPositions().isEmpty());
+            assertEquals(player.turnSequence().newPositions().get(player.turnSequence().chosenWorker()), chosenBox);
+            assertEquals(1, player.turnSequence().newPositions().size());
+            player.turnSequence().clearNewPositions();
+            player.turnSequence().resetPreviousBox();
+            player.turnSequence().clearMovedWorkers();
+        }
     }
 }
