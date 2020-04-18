@@ -15,6 +15,11 @@ import java.util.Map;
 public class CardConstructor {
     private List<ProtoCard> protoCards = loadCardsFromFile();
 
+
+    public List<ProtoCard> protoCards() {
+        return protoCards;
+    }
+
     /**
      * This method loads a Protocard List from a file
      * @return List of Protocards

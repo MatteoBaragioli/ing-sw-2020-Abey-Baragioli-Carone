@@ -8,18 +8,13 @@ public class Match {
     private Map gameMap = new Map();
     private Deque<GodCard> cards;
     private List<WinCondition> winConditions = new ArrayList<>();
-    private ActionController actionController;
+    private ActionController actionController = new ActionController();
     private Player winner=null;
+    private CommunicationController communicationController;
 
-    public Match(List<Player> gamePlayers, Deque<GodCard> cards) {
+    public Match(List<Player> gamePlayers, CommunicationController communicationController) {
         this.gamePlayers = gamePlayers;
-        this.cards = cards;
-    }
-
-    public Match(int turn, List<Player> gamePlayers, Deque<GodCard> cards) {
-        this.turn = turn;
-        this.gamePlayers = gamePlayers;
-        this.cards = cards;
+        this.communicationController = communicationController;
     }
 
     public int getTurn() {
@@ -79,24 +74,87 @@ public class Match {
         }
         return opponents;
     }
+/*
+
+    public void match(){
+        //START MATCH
+        assignColour();
+        Collections.shuffle(gamePlayers);
+        List<GodCard> matchCards = chooseCards();
+            //creazione carte
+            createCards();
+            //assegnazione carte
+            assignCards();
+        setUpWorkers();
 
 
-    public void startMatch(CommunicationController communicationController){
-        /*
-        while(winner == null){
-            boolean confirm = true;
-            iterator = turnPhases.iterator();
-            while(iterator.hasNext() && confirm){
-                confirm = iterator.executePhase(tante belle cose);
-            }
-            if(!confirm)
-                currentPlayer.turnSequence.undo();
-            else{
-                currentPlayer.turnSequence.confirm();
-                currentPlayer = nextPlayer();
-            }
-        }
-         */
+        gameTurns();
+
+        endMatch();
     }
+
+    private void gameTurns(){
+        //ciclo dei giocatori
+        //ciclo delle fasi
+        //finchè non vince qualcuno
+    }
+
+    private void endMatch(){
+        //dico vincitore
+        //dico gg a tutti
+    }
+
+    protected void assignColour(){
+        List<Colour> colours = new ArrayList<>();
+        colours.add(Colour.BLUE);
+        colours.add(Colour.WHITE);
+        colours.add(Colour.GREY);
+
+        Random rand = new Random();
+        for (Player gamePlayer : gamePlayers) {
+            int randomIndex = rand.nextInt(colours.size());
+            Colour randomElement = colours.get(randomIndex);
+            colours.remove(randomIndex);
+            gamePlayer.setColour(randomElement);
+        }
+    }
+
+    protected void chooseCards(){
+        CardConstructor cardConstructor = new CardConstructor();
+        List<ProtoCard> matchProtoCards = new ArrayList<>();
+        List<ProtoCard> deckProtocards = cardConstructor.protoCards();
+        for(Player player : gamePlayers) {
+            ProtoCard chosenCard = CommunicationController.chooseCard(gamePlayers.get(0), deckProtocards);
+            matchProtoCards.add(chosenCard);
+            deckProtocards.remove(chosenCard);
+        }
+        for(ProtoCard cardToCreate : matchProtoCards){
+            GodCard newCard = cardConstructor.createCard(cardToCreate);
+            cards.add(newCard);
+        }
+    }
+
+    protected void setUpWorkers(){
+        List<Box> freeMap = new ArrayList<>(gameMap.groundToList());
+        List<Box> possibleSetUpPosition;
+        Box position;
+        List<Player> setUpOrder = new ArrayList<>(gamePlayers);
+        for(Player player : gamePlayers){
+            player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
+        }
+        for(Player player : setUpOrder){
+            possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
+            position = communicationController.chooseBox(player, possibleSetUpPosition);
+            Worker worker1 = new Worker(position, player.getColour());
+            freeMap.remove(position);
+            player.assignWorker(worker1);
+
+            possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
+            position = communicationController.chooseBox(player, possibleSetUpPosition);
+            Worker worker2 = new Worker(position, player.getColour());
+            freeMap.remove(position);
+            player.assignWorker(worker2);
+        }
+    }*/
 
 }
