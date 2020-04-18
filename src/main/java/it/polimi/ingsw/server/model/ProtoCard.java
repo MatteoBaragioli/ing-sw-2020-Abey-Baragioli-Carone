@@ -9,7 +9,7 @@ public class ProtoCard {
     private final String setUpCondition;
     private final String[] fxOnOpponent;
 
-    public ProtoCard(String name, int id, String[] actions, String winCondition, int winParameter, String setUpCondition, String[] fxOnOpponent, int[] opponentParameters) {
+    public ProtoCard(String name, int id, String[] actions, String winCondition, int winParameter, String setUpCondition, String[] fxOnOpponent) {
         this.name = name;
         this.id = id;
         this.actions = actions;

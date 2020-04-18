@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import java.util.List;
+import java.util.Random;
 
 public class CommunicationController {
 
@@ -19,5 +20,11 @@ public class CommunicationController {
 
     public boolean chooseToUsePower(){
         return true;
+    }
+
+    public ProtoCard chooseCard(Player challenger, List<ProtoCard> deckProtocards){
+        //todo chiedo a utente una carta
+        int i = new Random().nextInt(deckProtocards.size());
+        return deckProtocards.get(i);
     }
 }

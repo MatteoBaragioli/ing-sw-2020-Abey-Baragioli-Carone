@@ -74,15 +74,13 @@ public class Match {
         }
         return opponents;
     }
-/*
+
 
     public void match(){
         //START MATCH
         assignColour();
         Collections.shuffle(gamePlayers);
-        List<GodCard> matchCards = chooseCards();
-            //creazione carte
-            createCards();
+        chooseCards();
             //assegnazione carte
             assignCards();
         setUpWorkers();
@@ -123,8 +121,9 @@ public class Match {
         CardConstructor cardConstructor = new CardConstructor();
         List<ProtoCard> matchProtoCards = new ArrayList<>();
         List<ProtoCard> deckProtocards = cardConstructor.protoCards();
-        for(Player player : gamePlayers) {
-            ProtoCard chosenCard = CommunicationController.chooseCard(gamePlayers.get(0), deckProtocards);
+        Player challenger = gamePlayers.get(0);
+        for(int i =0; i < gamePlayers.size(); i++) {
+            ProtoCard chosenCard = communicationController.chooseCard(challenger, deckProtocards);
             matchProtoCards.add(chosenCard);
             deckProtocards.remove(chosenCard);
         }
@@ -132,6 +131,10 @@ public class Match {
             GodCard newCard = cardConstructor.createCard(cardToCreate);
             cards.add(newCard);
         }
+    }
+
+    protected void assignCards(){
+
     }
 
     protected void setUpWorkers(){
@@ -155,6 +158,6 @@ public class Match {
             freeMap.remove(position);
             player.assignWorker(worker2);
         }
-    }*/
+    }
 
 }
