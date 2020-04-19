@@ -15,7 +15,6 @@ import java.util.Map;
 public class CardConstructor {
     private List<ProtoCard> protoCards = loadCardsFromFile();
 
-
     public List<ProtoCard> protoCards() {
         return protoCards;
     }
@@ -32,7 +31,6 @@ public class CardConstructor {
             protoCards = new Gson().fromJson(new FileReader(filename), listType);
             String jsonObject = new Gson().toJson(protoCards);
             protoCards = new Gson().fromJson(jsonObject, listType);
-
         } catch (Exception FileNotFoundException) {
             //
         }

@@ -4,7 +4,7 @@
     "id": 1,
     "actions": ["DoNothing", "Swap", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -12,15 +12,15 @@
     "id": 2,
     "actions": ["DoNothing","AddMoveNotStartingBox", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
     "name": "ATHENA",
     "id": 3,
-    "actions": ["DoNothing", "OpponentsCantMoveUpIfPlayerMovesUp", "DoNothing", "DoNothing"],
+    "actions": ["DoNothing", "DoNothing", "DoNothing", "OpponentsCantMoveUpIfPlayerMovesUp"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -28,7 +28,7 @@
     "id": 4,
     "actions": ["DoNothing", "DoNothing", "BuildDomeEverywhere", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -36,7 +36,7 @@
     "id": 5,
     "actions": ["DoNothing", "DoNothing", "AddBuildNotSameBox", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -44,7 +44,7 @@
     "id": 6,
     "actions": ["DoNothing", "DoNothing", "AddBuildOnSameBox", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -52,7 +52,7 @@
     "id": 8,
     "actions": ["DoNothing", "PushAdjacentOpponent", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -60,7 +60,7 @@
     "id": 9,
     "actions": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "MoveTwoLevelsDown",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -68,7 +68,7 @@
     "id": 10,
     "actions": ["AddBuildBeforeIfNotMoveUp", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -76,7 +76,7 @@
     "id": 12,
     "actions": ["DoNothing", "DoNothing", "RemoveAdjacentBlock", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -85,7 +85,7 @@
     "actions": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "TowerCountWin",
     "winParameter": 5,
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -93,7 +93,7 @@
     "id": 21,
     "actions": ["DoNothing", "DoNothing", "AddBuildNotEdge", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -101,7 +101,7 @@
     "id": 27,
     "actions": ["DoNothing", "DoNothing", "AddThreeBuildsToUnmovedWorker", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
@@ -109,7 +109,7 @@
     "id": 30,
     "actions": ["DoNothing", "DoNothing", "BuildUnderYourself", "DoNothing"],
     "winCondition": "Standard",
-    "setupCondition": "NoSetUp",
+    "setUpCondition": "NoSetUp",
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   }
 ]

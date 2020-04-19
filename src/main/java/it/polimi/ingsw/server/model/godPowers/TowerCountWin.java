@@ -9,7 +9,7 @@ import static it.polimi.ingsw.server.model.Phase.*;
 import static it.polimi.ingsw.server.model.Target.*;
 
 public class TowerCountWin extends WinCondition {
-    int numOfTowers;
+    private int numOfTowers;
 
     public TowerCountWin(int towers) {
         super(BUILD, ALL);
@@ -26,10 +26,6 @@ public class TowerCountWin extends WinCondition {
                 completedInTurn++; //number of towers completed in turn ++
         }
         totalCompleteTowers = totalCompleteTowers + completedInTurn;
-        if (totalCompleteTowers >= numOfTowers)
-            return true;
-        else
-            return false;
-
+        return totalCompleteTowers >= numOfTowers;
     }
 }
