@@ -61,22 +61,17 @@ public class MoveTest {
         assertNotNull(currentPlayer.turnSequence().chosenWorker());
         move.executePhase(currentPlayer, communicationController, actionController, map, opponents, new ArrayList<WinCondition>());
         assertFalse(currentPlayer.turnSequence().newPositions().isEmpty());
-        assertEquals(map.position(3, 4), currentPlayer.turnSequence().newPositions().get(currentPlayer.turnSequence().chosenWorker()));
+        assertEquals(currentPlayer.turnSequence().chosenBox(), currentPlayer.turnSequence().newPositions().get(currentPlayer.turnSequence().chosenWorker()));
         //end normal move
 
-        //move with swapPower
+        //move with swapPower //todo fix test scorri moved workers
         currentPlayer.turnSequence().clearMovedWorkers();
         currentPlayer.turnSequence().clearNewPositions();
-        currentPlayer.turnSequence().setChosenBox(map.position(2,4));
         move.executePhase(currentPlayer, communicationController, actionController, map, opponents, new ArrayList<WinCondition>());
         assertFalse(currentPlayer.turnSequence().newPositions().isEmpty());
-        assertEquals(map.position(2, 4), currentPlayer.turnSequence().newPositions().get(currentPlayer.turnSequence().chosenWorker()));
-        System.out.println(currentPlayer.turnSequence().newPositions().get(opponentWorker).positionX());
-        System.out.println(currentPlayer.turnSequence().newPositions().get(opponentWorker).positionY());
+        assertEquals(currentPlayer.turnSequence().chosenBox(), currentPlayer.turnSequence().newPositions().get(currentPlayer.turnSequence().chosenWorker()));
         assertTrue(currentPlayer.turnSequence().newPositions().containsKey(opponentWorker));
         assertEquals(map.position(3,3), currentPlayer.turnSequence().newPositions().get(opponentWorker));
-
-
         //end swapPower
 
     }

@@ -14,11 +14,14 @@ public class Move implements TurnPhase {
         actionController.initialisePossibleDestinations(currentPlayer.turnSequence(), map);
         actionController.applyOpponentsCondition(currentPlayer, opponents, phaseIndex, map);
         currentPlayer.godCard().actions().get(phaseIndex).changePossibleOptions(currentPlayer, actionController, map);
-        Box chosenBox = communicationController.chooseBox(currentPlayer, currentPlayer.turnSequence().possibleDestinations());
-        if(chosenBox!=null)
-            currentPlayer.turnSequence().setChosenBox(chosenBox);
-        actionController.updateNewPositions(currentPlayer.turnSequence());
-        currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
-        actionController.verifyWinCondition(MOVE, winConditions, currentPlayer, map, opponents);
+        if(!currentPlayer.turnSequence().possibleDestinations().isEmpty()) {
+            Box chosenBox = communicationController.chooseBox(currentPlayer, currentPlayer.turnSequence().possibleDestinations());
+            if (chosenBox != null) {
+                currentPlayer.turnSequence().setChosenBox(chosenBox);
+                actionController.updateNewPositions(currentPlayer.turnSequence());
+                currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
+                actionController.verifyWinCondition(MOVE, winConditions, currentPlayer, map, opponents);
+            }
+        }
     }
 }

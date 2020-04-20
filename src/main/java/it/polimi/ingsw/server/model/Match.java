@@ -8,7 +8,7 @@ public class Match {
     private int currentPlayerIndex;
     private List<Player> gamePlayers;
     private Map gameMap = new Map();
-    private Deque<GodCard> cards;
+    private List<GodCard> cards = new ArrayList<>();
     private List<WinCondition> winConditions = new ArrayList<>();
     private ActionController actionController = new ActionController();
     private Player winner=null;
@@ -41,9 +41,9 @@ public class Match {
         this.gamePlayers = gamePlayers;
     }
 
-    public Deque<GodCard> getCards() { return cards; }
+    public List<GodCard> getCards() { return cards; }
 
-    public void setCards(Deque<GodCard> cards) {
+    public void setCards(List<GodCard> cards) {
         this.cards = cards;
     }
 
@@ -96,7 +96,7 @@ public class Match {
         for(currentPlayerIndex = firstPlayerIndex; currentPlayerIndex<gamePlayers.size()&&winner==null;){
             Player currentPlayer = gamePlayers.get(currentPlayerIndex);
             int undoCounter = 0;
-            for(int phaseIndex = 0; phaseIndex < phasesSequence.size();){
+            for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && currentPlayer.isInGame();){
                 boolean confirm = true;
                 phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
                 if(undoCounter<3 && phaseIndex<3) {
@@ -109,12 +109,19 @@ public class Match {
                 else phaseIndex++;
             }
             winner = currentPlayer.turnSequence().possibleWinner();
-            if(currentPlayerIndex==gamePlayers.size()){
+            if(!currentPlayer.isInGame()){
+                removePlayer(currentPlayer);
+                if(gamePlayers.size()==1)
+                    winner=gamePlayers.get(0);
+            }
+            if(currentPlayerIndex>=gamePlayers.size()-1){
                 currentPlayerIndex=0;
             } else {
                 currentPlayerIndex++;
             }
         }
+        if(winner!=null)
+            System.out.println(winner.getNickname());
 
         //END MATCH
         //todo dire chi ha vinto
@@ -181,6 +188,14 @@ public class Match {
             freeMap.remove(position);
             player.assignWorker(worker2);
         }
+    }
+
+    protected void removePlayer(Player loser){
+        for(Worker worker : loser.workers()){
+            worker.position().removeOccupier();
+        }
+        loser.workers().clear();
+        gamePlayers.remove(loser);
     }
 
 }

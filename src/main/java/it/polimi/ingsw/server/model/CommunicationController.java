@@ -7,7 +7,7 @@ import java.util.Random;
 public class CommunicationController {
 
     public Worker chooseWorker(List<Worker> movableWorkers){
-        return null;
+        return movableWorkers.get(new Random().nextInt(movableWorkers.size()));
     }
 
     public Box chooseBox(Player currentPlayer, List<Box> chosableBoxes){
@@ -46,9 +46,6 @@ public class CommunicationController {
     }
 
     public boolean confirmPhase(){
-        int i = new Random().nextInt(1);
-        if(i==0)
-            return false;
-        return true;
+        return new Random().nextBoolean();
     }
 }

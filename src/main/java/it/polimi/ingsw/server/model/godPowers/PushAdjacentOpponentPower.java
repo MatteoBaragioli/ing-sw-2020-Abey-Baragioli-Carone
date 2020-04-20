@@ -19,7 +19,7 @@ public class PushAdjacentOpponentPower implements MoveModifier {
         //movePower - Minotaur
         for(Worker worker : player.turnSequence().movedWorkers()){
             if(!player.workers().contains(worker) && player.turnSequence().workersCurrentPosition(worker).equals(player.turnSequence().workersCurrentPosition(player.turnSequence().chosenWorker()))){
-                player.turnSequence().recordNewPosition(worker, map.boxesSameDirection(player.turnSequence().previousBox(), player.turnSequence().chosenBox()).get(0));
+                player.turnSequence().recordNewPosition(worker, map.boxesSameDirection(player.turnSequence().previousBox(), player.turnSequence().workersCurrentPosition(player.turnSequence().chosenWorker())).get(0));
             }
         }
     }

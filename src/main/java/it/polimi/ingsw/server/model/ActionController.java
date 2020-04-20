@@ -138,4 +138,14 @@ public class ActionController {
 
     }
 
+    public void initialiseMovableWorker(Player currentPlayer, Map map){
+        for(Worker worker : currentPlayer.workers()){
+            currentPlayer.turnSequence().setChosenWorker(worker);
+            initialisePossibleDestinations(currentPlayer.turnSequence(), map);
+            if(!currentPlayer.turnSequence().possibleDestinations().isEmpty())
+                currentPlayer.turnSequence().addMovableWorker(worker);
+            currentPlayer.turnSequence().resetChosenWorker();
+        }
+    }
+
 }
