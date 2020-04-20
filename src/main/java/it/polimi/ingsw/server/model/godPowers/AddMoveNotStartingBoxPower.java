@@ -15,7 +15,7 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //movePower-Artemis
         boolean usePower = communicationController.chooseToUsePower();
-
+        usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
     }
 
     protected void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower){

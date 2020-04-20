@@ -19,40 +19,52 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifi
         boolean usePower = true;
         int i;
         Worker unmovedWorker = null;
-        for(Worker worker : player.workers()){
-            if(!player.turnSequence().movedWorkers().contains(worker)) {
+        for (Worker worker : player.workers()) {
+            if (!player.turnSequence().movedWorkers().contains(worker)) {
                 unmovedWorker = worker;
             }
         }
-        if(unmovedWorker!=null && unmovedWorker.position().level()==0){
+        if (unmovedWorker != null && unmovedWorker.position().level() == 0) {
             player.turnSequence().setChosenWorker(unmovedWorker);
             actionController.initialisePossibleBuilds(player.turnSequence(), map);
             actionController.applyOpponentsCondition(player, opponents, 2, map);
-            for(i=0; i<3 && !player.turnSequence().possibleBuilds().isEmpty() && usePower; i++){
+            for (i = 0; i < 3 && !player.turnSequence().possibleBuilds().isEmpty() && usePower; i++) {
                 usePower = communicationController.chooseToUsePower();
-                if(usePower){
-                    actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
-                    if(actionController.currentPlayerHasWon(player)){
+                usePower(player,communicationController, actionController, map, opponents, winConditions,usePower);
+                    if (actionController.currentPlayerHasWon(player) && usePower) {
                         return;
                     }
-                    Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
-                    if(chosenBox!=null)
-                        player.turnSequence().setChosenBox(chosenBox);
-                    actionController.updateBuiltOnBox(player.turnSequence());
-                    actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
-                    if(actionController.currentPlayerHasWon(player)){
-                        return;
-                    }
-                    actionController.initialisePossibleBuilds(player.turnSequence(), map);
-                    actionController.applyOpponentsCondition(player, opponents, 2, map);
+                actionController.initialisePossibleBuilds(player.turnSequence(), map);
+                actionController.applyOpponentsCondition(player, opponents, 2, map);
                 }
-            }
-            if(i<3 && usePower){
+
+            if (i < 3 && usePower) {
                 //todo comunicare all'utente che non può più usare il suo potere
             }
+
         } else {
             //todo comunicare all'utente che non può usare il suo potere aggiuntivo
-            return;
+
         }
+        return;
+    }
+
+
+    protected void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
+        if (usePower) {
+            actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
+            if (actionController.currentPlayerHasWon(player)) {
+                return;
+            }
+            Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
+            executePower(player, actionController, winConditions,chosenBox, map,opponents);
+        }
+    }
+
+    protected void executePower(Player player, ActionController actionController, List<WinCondition> winConditions, Box chosenBox, Map map, List<Player> opponents) {
+        if (chosenBox != null)
+            player.turnSequence().setChosenBox(chosenBox);
+        actionController.updateBuiltOnBox(player.turnSequence());
+        actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
     }
 }

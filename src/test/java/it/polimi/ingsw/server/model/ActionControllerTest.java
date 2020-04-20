@@ -219,7 +219,6 @@ public class ActionControllerTest {
         turnSequence.setChosenWorker(chosenWorker);
 
 
-
         testList = new ArrayList<>();
         map.position(2,2).build();
         map.position(2,2).build(); //level 2
