@@ -1,11 +1,16 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.model.godPowers.*;
+import static it.polimi.ingsw.server.model.Phase.*;
+
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.polimi.ingsw.server.model.Colour.GREY;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class ActionControllerTest {
 
@@ -94,7 +99,6 @@ public class ActionControllerTest {
         Box workerPosition = map.position(3, 3); //level 0 no dome
         Worker chosenWorker = new Worker(workerPosition,Colour.GREY );
         turnSequence.setChosenWorker(chosenWorker);
-
 
 
         List<Box> testList = new ArrayList<>();
@@ -250,9 +254,111 @@ public class ActionControllerTest {
     @Test
     public void applyOpponentsCondition() {
 
+
     }
 
     @Test
     public void verifyWinCondition() {
+        //this test verifies the win of a player that moves from a second level box to a third level box;
+        Map map=new Map();
+        ActionController actionController = new ActionController();
+        CommunicationController communicationController = new CommunicationController();
+        WinCondition standardWin=new StandardWin();
+        //player card
+        List<TurnSequenceModifier> actions = new ArrayList<>();
+        actions.add(0, new DoNothing());
+        actions.add(1, new SwapPower());
+        actions.add(2, new DoNothing());
+        actions.add(3, new DoNothing());
+        List<TurnSequenceModifier> playerEffectsOnOpponents = new ArrayList<>();
+        playerEffectsOnOpponents.add(0, new DoNothing());
+        playerEffectsOnOpponents.add(1, new DoNothing());
+        playerEffectsOnOpponents.add(2, new DoNothing());
+        playerEffectsOnOpponents.add(3, new DoNothing());
+        GodCard generic = new GodCard("generic", 1, actions, new StandardWin(), new NoSetUpCondition(), playerEffectsOnOpponents);
+        Player player= new Player("blue", GREY, generic);
+        //opponent
+        List<TurnSequenceModifier> effectsOnOpponents = new ArrayList<>();
+        effectsOnOpponents.add(0, new DoNothing());
+        effectsOnOpponents.add(1, new DoNothing());
+        effectsOnOpponents.add(2, new DoNothing());
+        effectsOnOpponents.add(3, new DoNothing());
+        Player opponent = new Player("opponent1", Colour.GREY, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), effectsOnOpponents));
+        List<Player> opponents = new ArrayList<>();
+        opponents.add(opponent);
+
+        Box box1=map.position(0,0);
+        Box box2=map.position(0,1);
+        box1.build();
+        box1.build();
+        box2.build();
+        box2.build();
+        box2.build();
+        Worker worker=new Worker(box1,Colour.GREY );
+        player.workers().add(worker);
+        player.turnSequence().addMovableWorker(worker);
+        player.turnSequence().setChosenWorker(worker);
+        player.turnSequence().recordNewPosition(worker, box2);
+
+        actionController.verifyWinCondition(MOVE, new ArrayList<WinCondition>(),player, map, opponents);
+        assertEquals(player.turnSequence().possibleWinner(), player);
+        //-------------------------------------new test----------------------------------
+        //this test verifies the win of a opponent player whoose win condition consists in having three complete towers on the board
+        map=new Map();
+        map.setCompleteTowers(2);
+        actionController = new ActionController();
+        communicationController = new CommunicationController();
+        standardWin=new StandardWin();
+        ArrayList<WinCondition> winConditions= new ArrayList<WinCondition>();
+        WinCondition opponentWin=new TowerCountWin(3);
+        winConditions.add(opponentWin);
+
+        //player card
+        actions = new ArrayList<>();
+        actions.add(0, new DoNothing());
+        actions.add(1, new SwapPower());
+        actions.add(2, new DoNothing());
+        actions.add(3, new DoNothing());
+        playerEffectsOnOpponents = new ArrayList<>();
+        playerEffectsOnOpponents.add(0, new DoNothing());
+        playerEffectsOnOpponents.add(1, new DoNothing());
+        playerEffectsOnOpponents.add(2, new DoNothing());
+        playerEffectsOnOpponents.add(3, new DoNothing());
+        generic = new GodCard("generic", 1, actions, new StandardWin(), new NoSetUpCondition(), playerEffectsOnOpponents);
+        player= new Player("blue", GREY, generic);
+        //opponent
+        effectsOnOpponents = new ArrayList<>();
+        effectsOnOpponents.add(0, new DoNothing());
+        effectsOnOpponents.add(1, new DoNothing());
+        effectsOnOpponents.add(2, new DoNothing());
+        effectsOnOpponents.add(3, new DoNothing());
+        opponent = new Player("opponent1", Colour.GREY, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), opponentWin, new NoSetUpCondition(), effectsOnOpponents));
+        opponents = new ArrayList<>();
+        opponents.add(opponent);
+
+        box1=map.position(0,0);
+        box2=map.position(0,1);
+        Box box3=map.position(0,0);
+        box1.build();
+        box1.build();
+        box1.build();
+        box1.build(); //complete tower
+
+        box2.build();
+        box2.build();
+        box2.build();
+        box2.build();//complete tower
+
+        box3.build();
+        box3.build();
+        box3.build();
+        box3.build();//complete tower
+        player.turnSequence().recordBuiltOnBox(box3);
+        assertTrue(opponentWin.establishWinCondition(player,map));
+        assertNull(player.turnSequence().possibleWinner());
+
+        actionController.verifyWinCondition(BUILD, winConditions,player, map, opponents);
+        assertEquals(player.turnSequence().possibleWinner(), opponent);
+
     }
 }

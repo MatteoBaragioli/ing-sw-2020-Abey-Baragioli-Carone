@@ -83,7 +83,7 @@ public class ActionController {
      * @param map
      * @param opponents
      */
-//todo implementare il metodo in modo che usando establish winCondition mi restituisca un giocatore, che sarà il giocatore vincente;
+
     public void verifyWinCondition(Phase phase, List<WinCondition> winConditions, Player currentPlayer, Map map, List<Player> opponents) {
         if (phase.equals(MOVE)) {
             currentPlayer.turnSequence().registerPossibleWinner(verifyStandardWin(currentPlayer, map));

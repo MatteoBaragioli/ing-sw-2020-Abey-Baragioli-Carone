@@ -7,13 +7,16 @@ public abstract class WinCondition {
     public boolean establishWinCondition(Player currentPlayer, Map map){
         return true;
     };
-    public WinCondition(Phase phase, Target target){ }
+    public WinCondition(Phase phase, Target target){
+        this.phase=phase;
+        this.target=target;
+    }
 
     public Phase phase(){
-        return this.phase;
+        return phase;
     }
 
     public Target target(){
-        return this.target;
+        return target;
     }
 }
