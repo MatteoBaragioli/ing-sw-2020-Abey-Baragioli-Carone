@@ -101,7 +101,7 @@ public class Map {
         return targetBox.level() - startBox.level();
     }
 
-    public void updateCompletePowers(TurnSequence turnSequence){
+    public void updateCompleteTowers(TurnSequence turnSequence){
         for(Box builtOnBox: turnSequence.builtOnBoxes()){
             if(builtOnBox.isCompleteTower())
                 setCompleteTowers(completeTowers + 1);

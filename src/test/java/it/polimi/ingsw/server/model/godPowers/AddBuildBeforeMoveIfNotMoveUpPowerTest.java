@@ -24,7 +24,7 @@ public class AddBuildBeforeMoveIfNotMoveUpPowerTest {
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddBuildBeforeMoveIfNotMoveUpPower prometheusPower = new AddBuildBeforeMoveIfNotMoveUpPower();
+        TurnSequenceModifier prometheusPower = new AddBuildBeforeMoveIfNotMoveUpPower();
 
         assertTrue(player.turnSequence().possibleDestinations().isEmpty());
         assertTrue(player.turnSequence().newPositions().isEmpty());
@@ -64,7 +64,7 @@ public class AddBuildBeforeMoveIfNotMoveUpPowerTest {
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddBuildBeforeMoveIfNotMoveUpPower prometheusPower = new AddBuildBeforeMoveIfNotMoveUpPower();
+        TurnSequenceModifier prometheusPower = new AddBuildBeforeMoveIfNotMoveUpPower();
 
         assertTrue(player.turnSequence().possibleDestinations().isEmpty());
         assertTrue(player.turnSequence().newPositions().isEmpty());

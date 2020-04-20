@@ -18,11 +18,11 @@ public class AddBuildNotSameBoxPowerTest {
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
         Worker chosenWorker = new Worker(map.position(0,0), Colour.BLUE);
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Demeter", 5, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddBuildNotSameBoxPower demeterPower = new AddBuildNotSameBoxPower();
+        TurnSequenceModifier demeterPower = new AddBuildNotSameBoxPower();
 
         //User doesn't use the power
         demeterPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), false);
@@ -39,17 +39,15 @@ public class AddBuildNotSameBoxPowerTest {
                 player.turnSequence().setChosenBox(map.position(position.positionX()-1,position.positionY()));
             player.turnSequence().setChosenWorker(player.workers().get(0));
             Box firstBuild = player.turnSequence().chosenBox();
+            int firstLevel = player.turnSequence().chosenBox().level();
             actionController.updateBuiltOnBox(player.turnSequence());
-            player.turnSequence().setChosenBox(position);
             assertEquals(1, player.turnSequence().builtOnBoxes().size());
-            assertNotNull(player.turnSequence().chosenBox());
             demeterPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), true);
             assertFalse(player.turnSequence().possibleBuilds().contains(firstBuild));
             assertTrue(player.turnSequence().builtOnBoxes().contains(player.turnSequence().chosenBox()));
             assertTrue(player.turnSequence().builtOnBoxes().contains(firstBuild));
             assertEquals(2, player.turnSequence().builtOnBoxes().size());
-            assertEquals(1, firstBuild.level());
-            assertEquals(1, player.turnSequence().chosenBox().level());
+            assertEquals(firstLevel+1, firstBuild.level());
             player.turnSequence().clearBuiltOnBoxes();
             firstBuild.removeBlock();
             position.removeBlock();
@@ -67,12 +65,12 @@ public class AddBuildNotSameBoxPowerTest {
         ActionController actionController = new ActionController();
         Worker chosenWorker = new Worker(false, map.position(2,2));
         Worker worker = new Worker(true, map.position(3,3));
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Demeter", 5, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddBuildNotSameBoxPower demeterPower = new AddBuildNotSameBoxPower();
+        TurnSequenceModifier demeterPower = new AddBuildNotSameBoxPower();
 
         assertTrue(player.turnSequence().possibleDestinations().isEmpty());
         assertTrue(player.turnSequence().newPositions().isEmpty());

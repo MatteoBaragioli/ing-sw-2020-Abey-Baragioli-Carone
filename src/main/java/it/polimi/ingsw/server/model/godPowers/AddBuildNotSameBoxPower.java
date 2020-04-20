@@ -20,7 +20,8 @@ public class AddBuildNotSameBoxPower implements BuildModifier {
         usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
     }
 
-    protected void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower){
+    @Override
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
         if(usePower){
             actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
             if(actionController.currentPlayerHasWon(player)){
@@ -39,14 +40,18 @@ public class AddBuildNotSameBoxPower implements BuildModifier {
                 return;
             }
             Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
-            executePower(player, actionController, chosenBox);
+            if(chosenBox!=null)
+                executePower(player, actionController, chosenBox);
+            else{
+                //todo errore chosenBox
+            }
 
         }
     }
 
-    protected void executePower(Player player, ActionController actionController, Box chosenBox){
-        if(chosenBox!=null)
-            player.turnSequence().setChosenBox(chosenBox);
+    @Override
+    public void executePower(Player player, ActionController actionController, Box chosenBox) {
+        player.turnSequence().setChosenBox(chosenBox);
         actionController.updateBuiltOnBox(player.turnSequence());
     }
 }

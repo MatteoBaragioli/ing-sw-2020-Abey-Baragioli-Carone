@@ -19,11 +19,11 @@ public class AddBuildNotEdgePowerTest {
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
         Worker chosenWorker = new Worker(map.position(0,0), Colour.BLUE);
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Hestia", 21, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddBuildNotEdgePower hestiaPower = new AddBuildNotEdgePower();
+        TurnSequenceModifier hestiaPower = new AddBuildNotEdgePower();
 
         //User doesn't use the power
         hestiaPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), false);
@@ -52,12 +52,12 @@ public class AddBuildNotEdgePowerTest {
         ActionController actionController = new ActionController();
         Worker chosenWorker = new Worker(false, map.position(2,2));
         Worker worker = new Worker(true, map.position(3,3));
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Hestia", 21, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddBuildNotEdgePower hestiaPower = new AddBuildNotEdgePower();
+        TurnSequenceModifier hestiaPower = new AddBuildNotEdgePower();
 
         assertTrue(player.turnSequence().possibleDestinations().isEmpty());
         assertTrue(player.turnSequence().newPositions().isEmpty());

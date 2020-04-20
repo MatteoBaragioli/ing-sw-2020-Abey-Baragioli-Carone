@@ -15,4 +15,14 @@ public class DoNothing implements TurnSequenceModifier {
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
 
     }
+
+    @Override
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
+
+    }
+
+    @Override
+    public void executePower(Player player, ActionController actionController, Box chosenBox) {
+
+    }
 }

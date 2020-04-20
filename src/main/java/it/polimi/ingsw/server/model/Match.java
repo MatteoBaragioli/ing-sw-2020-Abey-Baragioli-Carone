@@ -1,9 +1,11 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.model.phases.*;
+
 import java.util.*;
 
 public class Match {
-    private int turn;
+    private int currentPlayerIndex;
     private List<Player> gamePlayers;
     private Map gameMap = new Map();
     private Deque<GodCard> cards;
@@ -17,12 +19,12 @@ public class Match {
         this.communicationController = communicationController;
     }
 
-    public int getTurn() {
-        return turn;
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
     }
 
-    public void setTurn(int turn) {
-        this.turn = turn;
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 
     public Map getGameMap() {
@@ -81,25 +83,41 @@ public class Match {
         assignColour();
         Collections.shuffle(gamePlayers);
         chooseCards();
-            //assegnazione carte
-            assignCards();
+        assignCards();
         setUpWorkers();
+        int firstPlayerIndex = communicationController.chooseFirstPlayer(gamePlayers);
 
+        //MATCH
+        List<TurnPhase> phasesSequence = new ArrayList<>();
+        phasesSequence.add(new Start());
+        phasesSequence.add(new Move());
+        phasesSequence.add(new Build());
+        phasesSequence.add(new End());
+        for(currentPlayerIndex = firstPlayerIndex; currentPlayerIndex<gamePlayers.size()&&winner==null;){
+            Player currentPlayer = gamePlayers.get(currentPlayerIndex);
+            int undoCounter = 0;
+            for(int phaseIndex = 0; phaseIndex < phasesSequence.size();){
+                boolean confirm = true;
+                phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
+                if(undoCounter<3 && phaseIndex<3) {
+                    confirm = communicationController.confirmPhase();
+                }
+                if(!confirm){
+                    phaseIndex = 0;
+                    undoCounter++;
+                }
+                else phaseIndex++;
+            }
+            winner = currentPlayer.turnSequence().possibleWinner();
+            if(currentPlayerIndex==gamePlayers.size()){
+                currentPlayerIndex=0;
+            } else {
+                currentPlayerIndex++;
+            }
+        }
 
-        gameTurns();
-
-        endMatch();
-    }
-
-    private void gameTurns(){
-        //ciclo dei giocatori
-        //ciclo delle fasi
-        //finchè non vince qualcuno
-    }
-
-    private void endMatch(){
-        //dico vincitore
-        //dico gg a tutti
+        //END MATCH
+        //todo dire chi ha vinto
     }
 
     protected void assignColour(){
@@ -122,8 +140,8 @@ public class Match {
         List<ProtoCard> matchProtoCards = new ArrayList<>();
         List<ProtoCard> deckProtocards = cardConstructor.protoCards();
         Player challenger = gamePlayers.get(0);
-        for(int i =0; i < gamePlayers.size(); i++) {
-            ProtoCard chosenCard = communicationController.chooseCard(challenger, deckProtocards);
+        for(Player player : gamePlayers) {
+            ProtoCard chosenCard = communicationController.chooseProtoCard(challenger, deckProtocards);
             matchProtoCards.add(chosenCard);
             deckProtocards.remove(chosenCard);
         }
@@ -134,7 +152,12 @@ public class Match {
     }
 
     protected void assignCards(){
-
+        List<GodCard> availableCards = new ArrayList<>(cards);
+        for(int i = gamePlayers.size()-1; i>=0; i--){
+            GodCard chosenCard = communicationController.chooseCard(gamePlayers.get(i), availableCards);
+            gamePlayers.get(i).assignCard(chosenCard);
+            availableCards.remove(chosenCard);
+        }
     }
 
     protected void setUpWorkers(){

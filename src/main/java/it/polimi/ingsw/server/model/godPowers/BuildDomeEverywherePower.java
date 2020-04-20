@@ -15,13 +15,19 @@ public class  BuildDomeEverywherePower implements BuildModifier {
         //buildPower - Atlas
         if(!player.turnSequence().chosenBox().hasDome()) {
             boolean usePower = communicationController.chooseToUsePower();
-            usePower(player, usePower);
+            usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
         }
     }
-    protected void usePower(Player player, boolean usePower){
+
+    @Override
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
         if (usePower) {
             player.turnSequence().chosenBox().removeBlock();
             player.turnSequence().chosenBox().buildDome();
         }
+    }
+
+    @Override
+    public void executePower(Player player, ActionController actionController, Box chosenBox) {
     }
 }
