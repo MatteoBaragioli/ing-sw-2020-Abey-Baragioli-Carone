@@ -49,22 +49,26 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifi
         return;
     }
 
-
-    protected void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
+    @Override
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
         if (usePower) {
             actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
             if (actionController.currentPlayerHasWon(player)) {
                 return;
             }
             Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
-            executePower(player, actionController, winConditions,chosenBox, map,opponents);
+            if(chosenBox!=null) {
+                executePower(player, actionController, chosenBox);
+                actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
+            }
+            else { //todo errore chosenBox
+            }
         }
     }
 
-    protected void executePower(Player player, ActionController actionController, List<WinCondition> winConditions, Box chosenBox, Map map, List<Player> opponents) {
-        if (chosenBox != null)
-            player.turnSequence().setChosenBox(chosenBox);
+    public void executePower(Player player, ActionController actionController, Box chosenBox) {
+        player.turnSequence().setChosenBox(chosenBox);
         actionController.updateBuiltOnBox(player.turnSequence());
-        actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
+
     }
 }
