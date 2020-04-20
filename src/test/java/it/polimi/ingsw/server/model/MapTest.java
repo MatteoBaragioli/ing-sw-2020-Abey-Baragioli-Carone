@@ -121,7 +121,7 @@ public class MapTest {
         box1.build(); //complete tower;
         turnSequence.recordBuiltOnBox(box1);
         turnSequence.recordBuiltOnBox(box2);
-        map.updateCompletePowers(turnSequence);
+        map.updateCompleteTowers(turnSequence);
         assertEquals(1, map.completeTowers());
         //checking that if 2 complete towers are built and added in turnSequence.builtOnBoxes the method returns 2
         turnSequence.reset();
@@ -138,7 +138,7 @@ public class MapTest {
         box1.build();//complete tower;
         turnSequence.recordBuiltOnBox(box1);
         turnSequence.recordBuiltOnBox(box2);
-        map.updateCompletePowers(turnSequence);
+        map.updateCompleteTowers(turnSequence);
         assertEquals(2, map.completeTowers());
     }
     //Done

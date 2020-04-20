@@ -18,11 +18,11 @@ public class AddMoveNotStartingBoxPowerTest {
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
         Worker chosenWorker = new Worker(map.position(0,0), Colour.BLUE);
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddMoveNotStartingBoxPower artemisPower = new AddMoveNotStartingBoxPower();
+        TurnSequenceModifier artemisPower = new AddMoveNotStartingBoxPower();
 
         //User doesn't use the power
         artemisPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), false);
@@ -54,13 +54,13 @@ public class AddMoveNotStartingBoxPowerTest {
         ActionController actionController = new ActionController();
         Worker chosenWorker = new Worker(false, map.position(2,2));
         Worker worker = new Worker(true, map.position(0,0));
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Artemis", 2, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.assignWorker(worker);
         player.turnSequence().setChosenWorker(chosenWorker);
         player.turnSequence().addMovableWorker(chosenWorker);
 
-        AddMoveNotStartingBoxPower artemisPower = new AddMoveNotStartingBoxPower();
+        TurnSequenceModifier artemisPower = new AddMoveNotStartingBoxPower();
 
         assertTrue(player.turnSequence().possibleDestinations().isEmpty());
         assertTrue(player.turnSequence().newPositions().isEmpty());

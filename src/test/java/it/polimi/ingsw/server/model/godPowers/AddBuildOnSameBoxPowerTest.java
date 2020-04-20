@@ -16,14 +16,14 @@ public class AddBuildOnSameBoxPowerTest {
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();
         Worker chosenWorker = new Worker(map.position(0,0), Colour.BLUE);
-        Player player = new Player("player1", Colour.BLUE, new GodCard("Prometheus", 10, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
+        Player player = new Player("player1", Colour.BLUE, new GodCard("Hephaestus", 6, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>()));
         player.assignWorker(chosenWorker);
         player.turnSequence().setChosenWorker(chosenWorker);
 
-        AddBuildOnSameBoxPower hephaestusPower = new AddBuildOnSameBoxPower();
+        TurnSequenceModifier hephaestusPower = new AddBuildOnSameBoxPower();
 
         //User doesn't use the power
-        hephaestusPower.usePower(player, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), false);
+        hephaestusPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>() , false);
         assertTrue(player.turnSequence().possibleBuilds().isEmpty());
         assertTrue(player.turnSequence().builtOnBoxes().isEmpty());
         assertEquals(1, player.turnSequence().allowedLevelDifference());
@@ -39,7 +39,7 @@ public class AddBuildOnSameBoxPowerTest {
             actionController.updateBuiltOnBox(player.turnSequence());
             assertEquals(1, player.turnSequence().builtOnBoxes().size());
             assertNotNull(player.turnSequence().chosenBox());
-            hephaestusPower.usePower(player, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), true);
+            hephaestusPower.usePower(player, communicationController, actionController, map, new ArrayList<Player>(), new ArrayList<WinCondition>(), true);
             assertTrue(player.turnSequence().builtOnBoxes().contains(player.turnSequence().chosenBox()));
             assertEquals(2, player.turnSequence().builtOnBoxes().size());
             assertTrue(player.turnSequence().builtOnBoxes().contains(player.turnSequence().chosenBox()));

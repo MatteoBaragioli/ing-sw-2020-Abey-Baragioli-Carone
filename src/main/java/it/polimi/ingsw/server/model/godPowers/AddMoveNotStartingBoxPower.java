@@ -13,12 +13,13 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
 
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
-        //movePower-Artemis
+        //endPower-Artemis
         boolean usePower = communicationController.chooseToUsePower();
         usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
     }
 
-    protected void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower){
+    @Override
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
         if(usePower) {
             actionController.verifyWinCondition(MOVE, winConditions, player, map, opponents);
             if(actionController.currentPlayerHasWon(player)){
@@ -32,13 +33,17 @@ public class AddMoveNotStartingBoxPower implements MoveModifier {
                 return;
             }
             Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleDestinations());
-            executePower(player, actionController, chosenBox);
+            if(chosenBox!=null)
+                executePower(player, actionController, chosenBox);
+            else{
+                //todo errore chosenBox
+            }
         }
     }
 
-    protected void executePower(Player player, ActionController actionController, Box chosenBox){
-        if(chosenBox!=null)
-            player.turnSequence().setChosenBox(chosenBox);
+    @Override
+    public void executePower(Player player, ActionController actionController, Box chosenBox) {
+        player.turnSequence().setChosenBox(chosenBox);
         actionController.updateNewPositions(player.turnSequence());
     }
 }

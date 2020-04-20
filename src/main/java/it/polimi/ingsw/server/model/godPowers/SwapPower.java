@@ -23,4 +23,14 @@ public class SwapPower implements MoveModifier {
             }
         }
     }
+
+    @Override
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
+
+    }
+
+    @Override
+    public void executePower(Player player, ActionController actionController, Box chosenBox) {
+
+    }
 }
