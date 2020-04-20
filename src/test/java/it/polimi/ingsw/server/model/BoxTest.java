@@ -68,7 +68,13 @@ public class BoxTest {
         box=new Box(0,false, 1,3);
         Worker worker=new Worker(box, GREY);
         box.build();
-        assertEquals(0, box.level());
+        assertEquals(1, box.level());
+        assertFalse(box.hasDome());
+        box.build();
+        box.build();
+        assertEquals(3, box.level());
+        assertFalse(box.hasDome());
+        box.build();
         assertFalse(box.hasDome());
         assertEquals(worker, box.occupier());
     }
