@@ -11,7 +11,10 @@ public class CommunicationController {
 
     public Box chooseBox(Player currentPlayer, List<Box> chosableBoxes){
         //todo if chosableBox.isEmpty();
-        return null;
+        if (new Random().nextBoolean())
+            return chosableBoxes.get(new Random().nextInt(chosableBoxes.size()));
+        else
+            return null;
     }
 
     public void youLost(){
@@ -26,5 +29,9 @@ public class CommunicationController {
         //todo chiedo a utente una carta
         int i = new Random().nextInt(deckProtocards.size());
         return deckProtocards.get(i);
+    }
+
+    public void updateView(List<Player> players, Map map) {
+        //todo view communication to each player
     }
 }
