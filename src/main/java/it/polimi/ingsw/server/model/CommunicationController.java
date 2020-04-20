@@ -11,10 +11,7 @@ public class CommunicationController {
 
     public Box chooseBox(Player currentPlayer, List<Box> chosableBoxes){
         //todo if chosableBox.isEmpty();
-        if (new Random().nextBoolean())
-            return chosableBoxes.get(new Random().nextInt(chosableBoxes.size()));
-        else
-            return null;
+        return chosableBoxes.get(new Random().nextInt(chosableBoxes.size()));
     }
 
     public void youLost(){
