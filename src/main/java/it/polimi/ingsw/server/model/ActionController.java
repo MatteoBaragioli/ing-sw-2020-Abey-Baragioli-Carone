@@ -54,7 +54,7 @@ public class ActionController {
 
     public void initialisePossibleBuilds(TurnSequence currentTurnSequence, Map map){
         currentTurnSequence.clearPossibleBuilds();
-        Box workerBox = currentTurnSequence.chosenWorker().position();
+        Box workerBox = currentTurnSequence.workersCurrentPosition(currentTurnSequence.chosenWorker());
         for(Box box : map.adjacent(workerBox)){
             if(box.isFree())
                 currentTurnSequence.addPossibleBuild(box);

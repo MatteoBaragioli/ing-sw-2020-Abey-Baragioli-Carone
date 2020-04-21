@@ -144,7 +144,7 @@ public class MatchTest {
 
     @Test
     public void setUpWinConditions() {
-        GodCard card1 = new GodCard("Apollo", 1, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>());
+        GodCard card1 = new GodCard("Apollo", 1, new ArrayList<TurnSequenceModifier>(), null, new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>());
         GodCard card2 = new GodCard("Pan", 9, new ArrayList<TurnSequenceModifier>(), new MoveTwoLevelsDownWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>());
         GodCard card3 = new GodCard("Chronus",16 , new ArrayList<TurnSequenceModifier>(), new TowerCountWin(5), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>());
         List<GodCard> godCards = new ArrayList<>();

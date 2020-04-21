@@ -201,7 +201,7 @@ public class Match {
 
     protected  void setUpWinConditions(){
         for(GodCard godCard : cards){
-            if(!(godCard.winCondition() instanceof StandardWin) && godCard.winCondition()!=null){
+            if(godCard.winCondition()!=null){
                 winConditions.add(godCard.winCondition());
             }
         }
