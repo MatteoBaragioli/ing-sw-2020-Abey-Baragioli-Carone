@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 public enum Phase {
-    START('S'), MOVE('M'), BUILD('B'), UNDO('U'), END('E');
+    START('S'), MOVE('M'), BUILD('B'), END('E');
 
     private char abbreviation;
 
