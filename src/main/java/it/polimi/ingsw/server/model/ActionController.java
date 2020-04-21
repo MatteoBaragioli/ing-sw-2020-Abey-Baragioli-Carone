@@ -148,4 +148,31 @@ public class ActionController {
         }
     }
 
+    /**
+     * This method tells if the player is able play a normal turn
+     * @param player examined player
+     * @param opponents examined player's opponents
+     * @param map map
+     * @return boolean
+     */
+    public boolean canPlayerPlay(Player player, List<Player> opponents, Map map) {
+        initialiseMovableWorker(player, map);
+        if (!player.turnSequence().movableWorkers().isEmpty())
+            for (Worker worker: player.turnSequence().movableWorkers()) {
+                player.turnSequence().setChosenWorker(worker);
+                initialisePossibleDestinations(player.turnSequence(), map);
+                applyOpponentsCondition(player, opponents, 1, map);
+                if (!player.turnSequence().possibleDestinations().isEmpty()) {
+                    int i = 0;
+                    while (i<player.turnSequence().possibleDestinations().size()) {
+                        player.turnSequence().setChosenBox(player.turnSequence().possibleDestinations().get(i));
+                        initialisePossibleBuilds(player.turnSequence(), map);
+                        applyOpponentsCondition(player, opponents, 2, map);
+                        if (!player.turnSequence().possibleBuilds().isEmpty())
+                            return true;
+                    }
+                }
+            }
+        return false;
+    }
 }
