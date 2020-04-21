@@ -26,14 +26,15 @@ public class StartTest {
         actions.add(1, new DoNothing());
         actions.add(2, new DoNothing());
         actions.add(3, new DoNothing());
+
         List<TurnSequenceModifier> playerEffectsOnOpponents = new ArrayList<>();
         playerEffectsOnOpponents.add(0, new DoNothing());
         playerEffectsOnOpponents.add(1, new DoNothing());
         playerEffectsOnOpponents.add(2, new DoNothing());
         playerEffectsOnOpponents.add(3, new DoNothing());
-        GodCard none = new GodCard("none", 0, actions, new StandardWin(), new NoSetUpCondition(), playerEffectsOnOpponents);
+        GodCard prometheus = new GodCard("none", 0, actions, new StandardWin(), new NoSetUpCondition(), playerEffectsOnOpponents);
         //player
-        Player currentPlayer = new Player("santoreene97", Colour.BLUE, none);
+        Player currentPlayer = new Player("santoreene97", Colour.BLUE, prometheus);
         currentPlayer.assignWorker(worker1);
         currentPlayer.assignWorker(worker2);
         //opponents
@@ -59,7 +60,6 @@ public class StartTest {
         if(currentPlayer.turnSequence().builtOnBoxes().contains(currentPlayer.turnSequence().chosenBox())) {
             assertEquals(0, currentPlayer.turnSequence().allowedLevelDifference());
             assertEquals(1,currentPlayer.turnSequence().chosenBox().level());
-            assertEquals(currentPlayer.turnSequence().possibleBuilds(),map.adjacent(map.position(3,3)));
         }
         if(currentPlayer.turnSequence().builtOnBoxes().isEmpty()){
             assertEquals(1, currentPlayer.turnSequence().allowedLevelDifference());
