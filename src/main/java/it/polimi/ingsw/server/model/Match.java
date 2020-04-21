@@ -78,6 +78,10 @@ public class Match {
     }
 
 
+    /**
+     * This method executes a match
+     */
+
     public void match(){
         //START MATCH
         assignColour();
@@ -128,6 +132,10 @@ public class Match {
         //todo dire chi ha vinto
     }
 
+
+    /**
+     * This method assignes a colour to every player
+     */
     protected void assignColour(){
         List<Colour> colours = new ArrayList<>();
         colours.add(Colour.BLUE);
@@ -143,6 +151,9 @@ public class Match {
         }
     }
 
+    /**
+     * This method makes the challenger choose the match cards
+     */
     protected void chooseCards(){
         CardConstructor cardConstructor = new CardConstructor();
         List<ProtoCard> matchProtoCards = new ArrayList<>();
@@ -159,6 +170,10 @@ public class Match {
         }
     }
 
+    /**
+     * This method makes every player choose their own GodCard
+     */
+
     protected void assignCards(){
         List<GodCard> availableCards = new ArrayList<>(cards);
         for(int i = gamePlayers.size()-1; i>=0; i--){
@@ -167,6 +182,11 @@ public class Match {
             availableCards.remove(chosenCard);
         }
     }
+
+
+    /**
+     * This method assignes two workers to every player. Every player chooses the starting position of their workers
+     */
 
     protected void setUpWorkers(){
         List<Box> freeMap = new ArrayList<>(gameMap.groundToList());
@@ -191,6 +211,11 @@ public class Match {
         }
     }
 
+    /**
+     * This method removes a player from the list of gamePlayers
+     * @param loser
+     */
+
     protected void removePlayer(Player loser){
         for(Worker worker : loser.workers()){
             worker.position().removeOccupier();
@@ -198,6 +223,11 @@ public class Match {
         loser.workers().clear();
         gamePlayers.remove(loser);
     }
+
+
+    /**
+     * This method adds every Non-Standard win condition to the list of WinConditions
+     */
 
     protected  void setUpWinConditions(){
         for(GodCard godCard : cards){
