@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.model.godPowers.MoveTwoLevelsDownWin;
 import it.polimi.ingsw.server.model.godPowers.NoSetUpCondition;
+import it.polimi.ingsw.server.model.godPowers.TowerCountWin;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -138,6 +140,27 @@ public class MatchTest {
         assertNotEquals(player2.workers().get(0), player3.workers().get(1));
         assertNotEquals(player2.workers().get(1), player3.workers().get(0));
         assertNotEquals(player2.workers().get(1), player3.workers().get(1));
+    }
+
+    @Test
+    public void setUpWinConditions() {
+        GodCard card1 = new GodCard("Apollo", 1, new ArrayList<TurnSequenceModifier>(), new StandardWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>());
+        GodCard card2 = new GodCard("Pan", 9, new ArrayList<TurnSequenceModifier>(), new MoveTwoLevelsDownWin(), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>());
+        GodCard card3 = new GodCard("Chronus",16 , new ArrayList<TurnSequenceModifier>(), new TowerCountWin(5), new NoSetUpCondition(), new ArrayList<TurnSequenceModifier>());
+        List<GodCard> godCards = new ArrayList<>();
+        godCards.add(card1);
+        godCards.add(card2);
+        godCards.add(card3);
+        Match match = new Match(new ArrayList<Player>(), new CommunicationController());
+
+        match.setCards(godCards);
+
+        match.setUpWinConditions();
+
+        assertFalse(match.winConditions().isEmpty());
+        assertEquals(2, match.winConditions().size());
+        assertTrue(match.winConditions().get(0) instanceof MoveTwoLevelsDownWin);
+        assertTrue(match.winConditions().get(1) instanceof TowerCountWin);
     }
 
     @Test

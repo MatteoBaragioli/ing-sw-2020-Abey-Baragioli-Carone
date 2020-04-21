@@ -85,6 +85,7 @@ public class Match {
         chooseCards();
         assignCards();
         setUpWorkers();
+        setUpWinConditions();
         int firstPlayerIndex = communicationController.chooseFirstPlayer(gamePlayers);
 
         //MATCH
@@ -196,6 +197,14 @@ public class Match {
         }
         loser.workers().clear();
         gamePlayers.remove(loser);
+    }
+
+    protected  void setUpWinConditions(){
+        for(GodCard godCard : cards){
+            if(!(godCard.winCondition() instanceof StandardWin) && godCard.winCondition()!=null){
+                winConditions.add(godCard.winCondition());
+            }
+        }
     }
 
 }
