@@ -13,17 +13,17 @@ import java.util.List;
 import java.util.Map;
 
 public class CardConstructor {
-    private List<ProtoCard> protoCards = loadCardsFromFile();
+    private List<GodCard> cards = loadCards();
 
-    public List<ProtoCard> protoCards() {
-        return protoCards;
+    public List<GodCard> cards() {
+        return cards;
     }
 
     /**
-     * This method loads a Protocard List from a file
-     * @return List of Protocards
+     * This method loads the ProtoCard List from a file
+     * @return List of ProtoCards
      */
-    public List<ProtoCard> loadCardsFromFile(){
+    public List<ProtoCard> loadProtoCardsFromFile(){
         String filename = "src" + File.separator + "main" + File.separator + "resources"+ File.separator + "GodCards.json";
         List<ProtoCard> protoCards = null;
         try {
@@ -121,5 +121,17 @@ public class CardConstructor {
      */
     public GodCard createCard(ProtoCard protoCard) {
         return new GodCard(protoCard.name(), protoCard.id(), loadActions(protoCard), loadWinCondition(protoCard), loadSetUpCondition(protoCard), loadFXOnOpponents(protoCard));
+    }
+
+    /**
+     * This method loads the GodCard deck from a file
+     * @return List of GodCards
+     */
+    public List<GodCard> loadCards() {
+        List<GodCard> cards = new ArrayList<>();
+        List<ProtoCard> protoCards = loadProtoCardsFromFile();
+        for (ProtoCard protoCard: protoCards)
+            cards.add(createCard(protoCard));
+        return cards;
     }
 }

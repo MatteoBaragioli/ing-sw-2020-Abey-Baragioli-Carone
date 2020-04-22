@@ -11,12 +11,12 @@ import static org.junit.Assert.*;
 public class CardConstructorTest {
 
     @Test
-    public void loadCardsFromFile() {
-        CardConstructor cardConstructor = new CardConstructor();
-        assertTrue(cardConstructor.protoCards().size() > 0);
+    public void loadProtoCardsFromFile() {
+        List<ProtoCard> protoCards = new CardConstructor().loadProtoCardsFromFile();
+        assertTrue(protoCards.size() > 0);
 
         //Checking if APOLLO is generated correctly
-        ProtoCard protoCard = cardConstructor.protoCards().get(0);
+        ProtoCard protoCard = protoCards.get(0);
 
         assertEquals("APOLLO", protoCard.name());
         assertEquals(1, protoCard.id());
@@ -34,7 +34,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if ARTEMIS is generated correctly
-        protoCard = cardConstructor.protoCards().get(1);
+        protoCard = protoCards.get(1);
 
         assertEquals("ARTEMIS", protoCard.name());
         assertEquals(2, protoCard.id());
@@ -52,7 +52,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if ATHENA is generated correctly
-        protoCard = cardConstructor.protoCards().get(2);
+        protoCard = protoCards.get(2);
 
         assertEquals("ATHENA", protoCard.name());
         assertEquals(3, protoCard.id());
@@ -70,7 +70,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if ATLAS is generated correctly
-        protoCard = cardConstructor.protoCards().get(3);
+        protoCard = protoCards.get(3);
 
         assertEquals("ATLAS", protoCard.name());
         assertEquals(4, protoCard.id());
@@ -88,7 +88,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if DEMETER is generated correctly
-        protoCard = cardConstructor.protoCards().get(4);
+        protoCard = protoCards.get(4);
 
         assertEquals("DEMETER", protoCard.name());
         assertEquals(5, protoCard.id());
@@ -106,7 +106,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if HEPHAESTUS is generated correctly
-        protoCard = cardConstructor.protoCards().get(5);
+        protoCard = protoCards.get(5);
 
         assertEquals("HEPHAESTUS", protoCard.name());
         assertEquals(6, protoCard.id());
@@ -124,7 +124,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if MINOTAUR is generated correctly
-        protoCard = cardConstructor.protoCards().get(6);
+        protoCard = protoCards.get(6);
 
         assertEquals("MINOTAUR", protoCard.name());
         assertEquals(8, protoCard.id());
@@ -142,7 +142,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if PAN is generated correctly
-        protoCard = cardConstructor.protoCards().get(7);
+        protoCard = protoCards.get(7);
 
         assertEquals("PAN", protoCard.name());
         assertEquals(9, protoCard.id());
@@ -157,7 +157,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if PROMETHEUS is generated correctly
-        protoCard = cardConstructor.protoCards().get(8);
+        protoCard = protoCards.get(8);
 
         assertEquals("PROMETHEUS", protoCard.name());
         assertEquals(10, protoCard.id());
@@ -175,7 +175,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if ARES is generated correctly
-        protoCard = cardConstructor.protoCards().get(9);
+        protoCard = protoCards.get(9);
 
         assertEquals("ARES", protoCard.name());
         assertEquals(12, protoCard.id());
@@ -193,7 +193,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if CHRONUS is generated correctly
-        protoCard = cardConstructor.protoCards().get(10);
+        protoCard = protoCards.get(10);
 
         assertEquals("CHRONUS", protoCard.name());
         assertEquals(16, protoCard.id());
@@ -209,7 +209,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if HESTIA is generated correctly
-        protoCard = cardConstructor.protoCards().get(11);
+        protoCard = protoCards.get(11);
 
         assertEquals("HESTIA", protoCard.name());
         assertEquals(21, protoCard.id());
@@ -227,7 +227,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if POSEIDON is generated correctly
-        protoCard = cardConstructor.protoCards().get(12);
+        protoCard = protoCards.get(12);
 
         assertEquals("POSEIDON", protoCard.name());
         assertEquals(27, protoCard.id());
@@ -245,7 +245,7 @@ public class CardConstructorTest {
             assertEquals("DoNothing", opponentFX);
 
         //Checking if ZEUS is generated correctly
-        protoCard = cardConstructor.protoCards().get(13);
+        protoCard = protoCards.get(13);
 
         assertEquals("ZEUS", protoCard.name());
         assertEquals(30, protoCard.id());
@@ -313,10 +313,10 @@ public class CardConstructorTest {
     @Test
     public void loadActions() {
         CardConstructor cardConstructor = new CardConstructor();
-        assertTrue(cardConstructor.protoCards().size() > 0);
+        assertTrue(cardConstructor.cards().size() > 0);
 
         //Checking if APOLLO's actions are generated correctly
-        List<TurnSequenceModifier> actions = cardConstructor.loadActions(cardConstructor.protoCards().get(0));
+        List<TurnSequenceModifier> actions = cardConstructor.cards().get(0).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==1)
@@ -325,7 +325,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if ARTEMIS' actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(1));
+        actions = cardConstructor.cards().get(1).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==1)
@@ -334,7 +334,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if ATHENA's actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(2));
+        actions = cardConstructor.cards().get(2).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==3)
@@ -343,7 +343,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if ATLAS' actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(3));
+        actions = cardConstructor.cards().get(3).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==2)
@@ -352,7 +352,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if DEMETER's actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(4));
+        actions = cardConstructor.cards().get(4).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==2)
@@ -361,7 +361,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if HEPHAESTUS' actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(5));
+        actions = cardConstructor.cards().get(5).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==2)
@@ -370,7 +370,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if MINOTAUR's actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(6));
+        actions = cardConstructor.cards().get(6).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==1)
@@ -379,13 +379,13 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if PAN's actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(7));
+        actions = cardConstructor.cards().get(7).actions();
 
         for (TurnSequenceModifier action: actions)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if PROMETHEUS' actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(8));
+        actions = cardConstructor.cards().get(8).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i == 0)
@@ -394,7 +394,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if ARES' actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(9));
+        actions = cardConstructor.cards().get(9).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==2)
@@ -403,13 +403,13 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if CHRONUS' actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(10));
+        actions = cardConstructor.cards().get(10).actions();
 
         for (TurnSequenceModifier action: actions)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if HESTIA's actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(11));
+        actions = cardConstructor.cards().get(11).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==2)
@@ -418,7 +418,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if POSEIDON's actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(12));
+        actions = cardConstructor.cards().get(12).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==2)
@@ -427,7 +427,7 @@ public class CardConstructorTest {
                 assertTrue(actions.get(i).getClass().isInstance(new DoNothing()));
 
         //Checking if ZEUS' actions are generated correctly
-        actions = cardConstructor.loadActions(cardConstructor.protoCards().get(13));
+        actions = cardConstructor.cards().get(13).actions();
 
         for (int i = 0; i<actions.size(); i++)
             if (i==2)
@@ -442,46 +442,46 @@ public class CardConstructorTest {
         CardConstructor cardConstructor = new CardConstructor();
 
         //Checking APOLLO's win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(0)));
+        assertNull(cardConstructor.cards().get(0).winCondition());
 
         //Checking ARTEMIS' win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(1)));
+        assertNull(cardConstructor.cards().get(1).winCondition());
 
         //Checking ATHENA's win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(2)));
+        assertNull(cardConstructor.cards().get(2).winCondition());
 
         //Checking ATLAS' win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(3)));
+        assertNull(cardConstructor.cards().get(3).winCondition());
 
         //Checking DEMETER's win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(4)));
+        assertNull(cardConstructor.cards().get(4).winCondition());
 
         //Checking HEPHAESTUS' win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(5)));
+        assertNull(cardConstructor.cards().get(5).winCondition());
 
         //Checking MINOTAUR'S win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(6)));
+        assertNull(cardConstructor.cards().get(6).winCondition());
 
         //Checking PAN' win condition
-        assertTrue(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(7)).getClass().isInstance(new MoveTwoLevelsDownWin()));
+        assertTrue(cardConstructor.cards().get(7).winCondition().getClass().isInstance(new MoveTwoLevelsDownWin()));
 
         //Checking PROMETHEUS' win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(8)));
+        assertNull(cardConstructor.cards().get(8).winCondition());
 
         //Checking ARES' win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(9)));
+        assertNull(cardConstructor.cards().get(9).winCondition());
 
         //Checking CHRONUS' win condition
-        assertTrue(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(10)).getClass().isInstance(new TowerCountWin(cardConstructor.protoCards().get(10).winParameter())));
+        assertTrue(cardConstructor.cards().get(10).winCondition().getClass().isInstance(new TowerCountWin(5)));
 
         //Checking HESTIA's win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(11)));
+        assertNull(cardConstructor.cards().get(11).winCondition());
 
         //Checking POSEIDON's win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(12)));
+        assertNull(cardConstructor.cards().get(12).winCondition());
 
         //Checking ZEUS' win condition
-        assertNull(cardConstructor.loadWinCondition(cardConstructor.protoCards().get(13)));
+        assertNull(cardConstructor.cards().get(13).winCondition());
     }
     //Done
 
@@ -490,46 +490,46 @@ public class CardConstructorTest {
         CardConstructor cardConstructor = new CardConstructor();
 
         //Checking APOLLO's setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(0)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(0).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking ARTEMIS' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(1)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(1).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking ATHENA's setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(2)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(2).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking ATLAS' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(3)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(3).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking DEMETER's setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(4)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(4).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking HEPHAESTUS' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(5)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(5).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking MINOTAUR'S setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(6)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(6).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking PAN' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(7)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(7).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking PROMETHEUS' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(8)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(8).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking ARES' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(9)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(9).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking CHRONUS' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(10)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(10).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking HESTIA's setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(11)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(11).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking POSEIDON's setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(12)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(12).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         //Checking ZEUS' setup condition
-        assertTrue(cardConstructor.loadSetUpCondition(cardConstructor.protoCards().get(13)).getClass().isInstance(new NoSetUpCondition()));
+        assertTrue(cardConstructor.cards().get(13).setUpCondition().getClass().isInstance(new NoSetUpCondition()));
     }
     //Done
 
@@ -538,85 +538,85 @@ public class CardConstructorTest {
         CardConstructor cardConstructor = new CardConstructor();
 
         //Checking if APOLLO's fx are generated correctly
-        List<TurnSequenceModifier> fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(0));
+        List<TurnSequenceModifier> fx = cardConstructor.cards().get(0).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if ARTEMIS' fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(1));
+        fx = cardConstructor.cards().get(1).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if ATHENA's fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(2));
+        fx = cardConstructor.cards().get(2).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if ATLAS' fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(3));
+        fx = cardConstructor.cards().get(3).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if DEMETER's fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(4));
+        fx = cardConstructor.cards().get(4).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if HEPHAESTUS' fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(5));
+        fx = cardConstructor.cards().get(5).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if MINOTAUR's fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(6));
+        fx = cardConstructor.cards().get(6).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if PAN's fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(7));
+        fx = cardConstructor.cards().get(7).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if PROMETHEUS' fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(8));
+        fx = cardConstructor.cards().get(8).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if ARES' fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(9));
+        fx = cardConstructor.cards().get(9).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if CHRONUS' fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(10));
+        fx = cardConstructor.cards().get(10).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if HESTIA's fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(11));
+        fx = cardConstructor.cards().get(11).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if POSEIDON's fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(12));
+        fx = cardConstructor.cards().get(12).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
         //Checking if ZEUS' fx are generated correctly
-        fx = cardConstructor.loadFXOnOpponents(cardConstructor.protoCards().get(13));
+        fx = cardConstructor.cards().get(13).effectOnOpponent();
 
         for (TurnSequenceModifier action: fx)
             assertTrue(action.getClass().isInstance(new DoNothing()));
@@ -628,7 +628,7 @@ public class CardConstructorTest {
         CardConstructor cardConstructor = new CardConstructor();
 
         //Generating APOLLO
-        GodCard godCard = cardConstructor.createCard(cardConstructor.protoCards().get(0));
+        GodCard godCard = cardConstructor.cards().get(0);
 
         assertEquals("APOLLO", godCard.name());
         assertEquals(1, godCard.id());
@@ -646,7 +646,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating ARTEMIS
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(1));
+        godCard = cardConstructor.cards().get(1);
 
         assertEquals("ARTEMIS", godCard.name());
         assertEquals(2, godCard.id());
@@ -664,7 +664,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating ATHENA
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(2));
+        godCard = cardConstructor.cards().get(2);
 
         assertEquals("ATHENA", godCard.name());
         assertEquals(3, godCard.id());
@@ -682,7 +682,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating ATLAS
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(3));
+        godCard = cardConstructor.cards().get(3);
 
         assertEquals("ATLAS", godCard.name());
         assertEquals(4, godCard.id());
@@ -700,7 +700,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating DEMETER
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(4));
+        godCard = cardConstructor.cards().get(4);
 
         assertEquals("DEMETER", godCard.name());
         assertEquals(5, godCard.id());
@@ -718,7 +718,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating HEPHAESTUS
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(5));
+        godCard = cardConstructor.cards().get(5);
 
         assertEquals("HEPHAESTUS", godCard.name());
         assertEquals(6, godCard.id());
@@ -736,7 +736,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating MINOTAUR
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(6));
+        godCard = cardConstructor.cards().get(6);
 
         assertEquals("MINOTAUR", godCard.name());
         assertEquals(8, godCard.id());
@@ -754,7 +754,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating PAN
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(7));
+        godCard = cardConstructor.cards().get(7);
 
         assertEquals("PAN", godCard.name());
         assertEquals(9, godCard.id());
@@ -769,7 +769,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating PROMETHEUS
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(8));
+        godCard = cardConstructor.cards().get(8);
 
         assertEquals("PROMETHEUS", godCard.name());
         assertEquals(10, godCard.id());
@@ -787,7 +787,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating ARES
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(9));
+        godCard = cardConstructor.cards().get(9);
 
         assertEquals("ARES", godCard.name());
         assertEquals(12, godCard.id());
@@ -805,7 +805,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating CHRONUS
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(10));
+        godCard = cardConstructor.cards().get(10);
 
         assertEquals("CHRONUS", godCard.name());
         assertEquals(16, godCard.id());
@@ -813,14 +813,14 @@ public class CardConstructorTest {
         for (TurnSequenceModifier action: godCard.actions())
             assertTrue(action.getClass().isInstance(new DoNothing()));
 
-        assertTrue(godCard.winCondition().getClass().isInstance(new TowerCountWin(cardConstructor.protoCards().get(10).winParameter())));
+        assertTrue(godCard.winCondition().getClass().isInstance(new TowerCountWin(5)));
         assertTrue(godCard.setUpCondition().getClass().isInstance(new NoSetUpCondition()));
 
         for (TurnSequenceModifier effect: godCard.effectOnOpponent())
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating HESTIA
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(11));
+        godCard = cardConstructor.cards().get(11);
 
         assertEquals("HESTIA", godCard.name());
         assertEquals(21, godCard.id());
@@ -838,7 +838,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating POSEIDON
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(12));
+        godCard = cardConstructor.cards().get(12);
 
         assertEquals("POSEIDON", godCard.name());
         assertEquals(27, godCard.id());
@@ -856,7 +856,7 @@ public class CardConstructorTest {
             assertTrue(effect.getClass().isInstance(new DoNothing()));
 
         //Generating ZEUS
-        godCard = cardConstructor.createCard(cardConstructor.protoCards().get(13));
+        godCard = cardConstructor.cards().get(13);
 
         assertEquals("ZEUS", godCard.name());
         assertEquals(30, godCard.id());
