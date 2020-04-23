@@ -36,7 +36,7 @@ public class AddBuildNotEdgePower implements BuildModifier {
                     edgeBoxes.add(box);
             }
             player.turnSequence().possibleBuilds().removeAll(edgeBoxes);
-            if(player.turnSequence().possibleBuilds().isEmpty()){
+            if(!player.turnSequence().possibleBuilds().isEmpty()){
                 Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
                 if(chosenBox!=null)
                     executePower(player, actionController, chosenBox);
