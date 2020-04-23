@@ -156,17 +156,12 @@ public class Match {
      */
     protected void chooseCards(){
         CardConstructor cardConstructor = new CardConstructor();
-        List<ProtoCard> matchProtoCards = new ArrayList<>();
-        List<ProtoCard> deckProtocards = cardConstructor.protoCards();
+        List<GodCard> deck = cardConstructor.cards();
         Player challenger = gamePlayers.get(0);
         for(Player player : gamePlayers) {
-            ProtoCard chosenCard = communicationController.chooseProtoCard(challenger, deckProtocards);
-            matchProtoCards.add(chosenCard);
-            deckProtocards.remove(chosenCard);
-        }
-        for(ProtoCard cardToCreate : matchProtoCards){
-            GodCard newCard = cardConstructor.createCard(cardToCreate);
-            cards.add(newCard);
+            GodCard chosenCard = communicationController.chooseCard(challenger, deck);
+            cards.add(chosenCard);
+            deck.remove(chosenCard);
         }
     }
 
