@@ -7,18 +7,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.server.model.Phase.BUILD;
 
-public class AddBuildNotSameBoxPower implements BuildModifier {
-    @Override
-    public void changePossibleOptions(Player player, ActionController actionController, Map map) {
-
-    }
-
-    @Override
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
-        //buildPower - Demeter
-        boolean usePower = communicationController.chooseToUsePower();
-        usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
-    }
+public class AddBuildNotSameBoxPower extends BuildModifier {
 
     @Override
     public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {

@@ -4,11 +4,7 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-public class OpponenentsCantMoveUpIfPlayerMovesUpPower implements MoveModifier {
-    @Override
-    public void changePossibleOptions(Player player, ActionController actionController, Map map) {
-
-    }
+public class OpponenentsCantMoveUpIfPlayerMovesUpPower extends MoveModifier {
 
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
@@ -18,15 +14,5 @@ public class OpponenentsCantMoveUpIfPlayerMovesUpPower implements MoveModifier {
                 opponent.turnSequence().setAllowedLevelDifference(0);
             }
         }
-    }
-
-    @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
-
-    }
-
-    @Override
-    public void executePower(Player player, ActionController actionController, Box chosenBox) {
-
     }
 }

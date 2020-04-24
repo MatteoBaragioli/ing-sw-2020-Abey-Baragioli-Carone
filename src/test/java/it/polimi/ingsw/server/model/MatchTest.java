@@ -175,4 +175,5 @@ public class MatchTest {
         Match match = new Match(players, new CommunicationController());
         match.match();
     }
+
 }

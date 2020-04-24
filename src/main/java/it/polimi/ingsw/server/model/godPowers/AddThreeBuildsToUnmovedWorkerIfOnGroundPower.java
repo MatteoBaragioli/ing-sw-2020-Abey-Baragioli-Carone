@@ -4,14 +4,10 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-import static it.polimi.ingsw.server.model.Phase.BUILD;
+import static it.polimi.ingsw.server.model.Phase.*;
 
-public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower implements BuildModifier {
+public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier {
 
-    @Override
-    public void changePossibleOptions(Player player, ActionController actionController, Map map) {
-
-    }
 
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {

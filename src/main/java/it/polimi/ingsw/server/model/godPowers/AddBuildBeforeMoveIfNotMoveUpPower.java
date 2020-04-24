@@ -4,19 +4,7 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-public class AddBuildBeforeMoveIfNotMoveUpPower implements BuildModifier {
-
-    @Override
-    public void changePossibleOptions(Player player, ActionController actionController, Map map) {
-
-    }
-
-    @Override
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
-        //startPower-Prometheus
-        boolean usePower = communicationController.chooseToUsePower();
-        usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
-    }
+public class AddBuildBeforeMoveIfNotMoveUpPower extends BuildModifier {
 
     @Override
     public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {

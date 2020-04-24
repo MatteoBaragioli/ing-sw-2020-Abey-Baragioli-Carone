@@ -6,17 +6,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.server.model.Phase.MOVE;
 
-public class AddMoveNotStartingBoxPower implements MoveModifier {
-    @Override
-    public void changePossibleOptions(Player player, ActionController actionController, Map map) {
-    }
-
-    @Override
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
-        //endPower-Artemis
-        boolean usePower = communicationController.chooseToUsePower();
-        usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
-    }
+public class AddMoveNotStartingBoxPower extends MoveModifier {
 
     @Override
     public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {

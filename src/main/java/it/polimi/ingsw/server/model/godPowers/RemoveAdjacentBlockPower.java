@@ -4,11 +4,7 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-public class RemoveAdjacentBlockPower implements BuildModifier {
-    @Override
-    public void changePossibleOptions(Player player, ActionController actionController, Map map) {
-
-    }
+public class RemoveAdjacentBlockPower extends BuildModifier {
 
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {

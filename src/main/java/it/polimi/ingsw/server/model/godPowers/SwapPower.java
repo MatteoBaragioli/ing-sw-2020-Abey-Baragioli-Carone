@@ -4,7 +4,7 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-public class SwapPower implements MoveModifier {
+public class SwapPower extends MoveModifier {
     @Override
     public void changePossibleOptions(Player player, ActionController actionController, Map map) {
         Box workerBox = player.turnSequence().chosenWorker().position();
@@ -22,15 +22,5 @@ public class SwapPower implements MoveModifier {
                 player.turnSequence().recordNewPosition(worker, player.turnSequence().previousBox());
             }
         }
-    }
-
-    @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
-
-    }
-
-    @Override
-    public void executePower(Player player, ActionController actionController, Box chosenBox) {
-
     }
 }

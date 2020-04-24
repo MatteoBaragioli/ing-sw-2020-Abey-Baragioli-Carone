@@ -4,11 +4,8 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-public class  BuildDomeEverywherePower implements BuildModifier {
-    @Override
-    public void changePossibleOptions(Player player, ActionController actionController, Map map) {
+public class  BuildDomeEverywherePower extends BuildModifier {
 
-    }
 
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
@@ -27,7 +24,4 @@ public class  BuildDomeEverywherePower implements BuildModifier {
         }
     }
 
-    @Override
-    public void executePower(Player player, ActionController actionController, Box chosenBox) {
-    }
 }
