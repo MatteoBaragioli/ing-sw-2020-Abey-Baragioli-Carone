@@ -98,7 +98,7 @@ public class ActionController {
                                     currentPlayer.turnSequence().registerPossibleWinner(currentPlayer);
                                 else {
                                     for (Player opponent : opponents) {
-                                        if (opponent.godCard().winCondition().equals(currentWinCondition))
+                                        if (currentWinCondition.equals(opponent.godCard().winCondition()))
                                             currentPlayer.turnSequence().registerPossibleWinner(opponent);
                                     }
                                 }
@@ -124,6 +124,13 @@ public class ActionController {
         }
     }
 
+    /**
+     * this method verifies if the standard win condition occurs given the current player and the map
+     * @param currentPlayer
+     * @param map
+     * @return
+     */
+
     public Player verifyStandardWin(Player currentPlayer, Map map){
         WinCondition standardWin=new StandardWin();
         if(standardWin.establishWinCondition(currentPlayer, map))
@@ -131,6 +138,11 @@ public class ActionController {
         return null;
     }
 
+    /**
+     * this method tells if the current player has won
+     * @param currentPlayer
+     * @return boolean returns true if the current player has won
+     */
     public boolean currentPlayerHasWon(Player currentPlayer){
         if (currentPlayer.equals(currentPlayer.turnSequence().possibleWinner()))
             return true;
@@ -138,6 +150,11 @@ public class ActionController {
 
     }
 
+    /**
+     * given a player this method establishes which one of their workers can be moved during their turn
+     * @param currentPlayer
+     * @param map
+     */
     public void initialiseMovableWorker(Player currentPlayer, Map map){
         for(Worker worker : currentPlayer.workers()){
             currentPlayer.turnSequence().setChosenWorker(worker);

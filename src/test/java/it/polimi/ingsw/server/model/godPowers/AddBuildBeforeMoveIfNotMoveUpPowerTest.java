@@ -12,7 +12,7 @@ public class AddBuildBeforeMoveIfNotMoveUpPowerTest {
 
     @Test
     public void usePower() {
-        //-------------------------- Test 1 ---------
+        //-------------------------- Test 1 -------------------------------------------
 
         Map map = new  Map();
         ActionController actionController = new ActionController();
