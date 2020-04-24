@@ -9,7 +9,7 @@ public abstract class MoveModifier implements TurnSequenceModifier {
 
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //startPower-Prometheus
-        boolean usePower = communicationController.chooseToUsePower();
+        boolean usePower = communicationController.chooseToUsePower(player);
         usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
 
     }

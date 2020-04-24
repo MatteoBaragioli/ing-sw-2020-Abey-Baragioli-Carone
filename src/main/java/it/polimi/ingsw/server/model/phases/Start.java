@@ -19,7 +19,7 @@ public class Start implements TurnPhase {
             currentPlayer.setInGame(false);
             return;
         }
-        Worker chosenWorker = communicationController.chooseWorker(currentPlayer.turnSequence().movableWorkers());
+        Worker chosenWorker = communicationController.chooseWorker(currentPlayer, currentPlayer.turnSequence().movableWorkers());
         currentPlayer.turnSequence().setChosenWorker(chosenWorker);
         currentPlayer.godCard().actions().get(phaseIndex).executeAction(currentPlayer, communicationController, actionController, map, opponents, winConditions);
         actionController.verifyWinCondition(START,winConditions, currentPlayer,map,opponents);

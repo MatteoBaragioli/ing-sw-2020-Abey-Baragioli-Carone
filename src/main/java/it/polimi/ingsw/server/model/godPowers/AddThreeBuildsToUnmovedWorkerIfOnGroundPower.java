@@ -25,7 +25,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier 
             actionController.initialisePossibleBuilds(player.turnSequence(), map);
             actionController.applyOpponentsCondition(player, opponents, 2, map);
             for (i = 0; i < 3 && !player.turnSequence().possibleBuilds().isEmpty() && usePower; i++) {
-                usePower = communicationController.chooseToUsePower();
+                usePower = communicationController.chooseToUsePower(player);
                 usePower(player,communicationController, actionController, map, opponents, winConditions,usePower);
                     if (actionController.currentPlayerHasWon(player) && usePower) {
                         return;

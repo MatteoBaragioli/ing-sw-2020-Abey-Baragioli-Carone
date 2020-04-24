@@ -11,7 +11,7 @@ public class  BuildDomeEverywherePower extends BuildModifier {
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //buildPower - Atlas
         if(!player.turnSequence().chosenBox().hasDome()) {
-            boolean usePower = communicationController.chooseToUsePower();
+            boolean usePower = communicationController.chooseToUsePower(player);
             usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
         }
     }

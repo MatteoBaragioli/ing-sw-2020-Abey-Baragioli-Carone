@@ -82,12 +82,11 @@ public class Map {
         int x_difference = direction.positionX() - start.positionX();
         int y_difference = direction.positionY() - start.positionY();
         int i, j;
-        int pos=0;
         List<Box> directionBoxes = new ArrayList<>();
 
         if (x_difference != 0 || y_difference != 0)
-            for(i = direction.positionX() + x_difference, j = direction.positionY() + y_difference; i >= 0 && i <= 4 && j >= 0 && j <= 4; i += x_difference, j += y_difference, pos++)
-                directionBoxes.add(pos,position(i,j));
+            for(i = direction.positionX() + x_difference, j = direction.positionY() + y_difference; i >= 0 && i <= 4 && j >= 0 && j <= 4; i += x_difference, j += y_difference)
+                directionBoxes.add(position(i,j));
         return directionBoxes;
     }
 

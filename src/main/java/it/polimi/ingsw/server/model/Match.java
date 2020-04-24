@@ -90,7 +90,7 @@ public class Match {
         assignCards();
         setUpWorkers();
         setUpWinConditions();
-        int firstPlayerIndex = communicationController.chooseFirstPlayer(gamePlayers);
+        int firstPlayerIndex = communicationController.chooseFirstPlayer(winner, gamePlayers);
 
         //MATCH
         List<TurnPhase> phasesSequence = new ArrayList<>();

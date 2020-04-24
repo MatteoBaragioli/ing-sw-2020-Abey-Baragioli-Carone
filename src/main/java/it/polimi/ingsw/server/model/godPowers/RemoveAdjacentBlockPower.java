@@ -9,7 +9,7 @@ public class RemoveAdjacentBlockPower extends BuildModifier {
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
         //buildPower - Ares
-        boolean usePower = communicationController.chooseToUsePower();
+        boolean usePower = communicationController.chooseToUsePower(player);
         for (Worker worker : player.workers()) {
             if (!player.turnSequence().movedWorkers().contains(worker)) {
                 player.turnSequence().setChosenWorker(worker);
