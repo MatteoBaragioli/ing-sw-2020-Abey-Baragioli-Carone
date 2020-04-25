@@ -7,42 +7,58 @@ import java.util.Scanner;
 
 public class SocketServer extends Thread {
     private Socket socket;
-    private Scanner inLine = null;
-    private PrintWriter outLine = null;
-    private boolean close = false;
+    private Scanner reader = null;
+    private PrintWriter writer = null;
+    private boolean closed = false;
 
     public SocketServer(Socket socket) {
         this.socket = socket;
     }
 
+    public Socket socket() {
+        return socket;
+    }
+
     public String read() {
-        return inLine.nextLine();
+        return reader.nextLine();
     }
 
     public void write(String message) {
-        outLine.println(message);
-        outLine.flush();
+        writer.println(message);
+        writer.flush();
     }
 
-    public boolean closed() {
-        return close;
+    public boolean isClosed() {
+        return closed;
     }
 
-    public void setClose(boolean close) {
-        this.close = close;
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public void close() {
-        setClose(true);
+        setClosed(true);
+        notifyAll();
     }
 
     public void run() {
         try {
-            inLine = new Scanner(socket.getInputStream());
-            outLine = new PrintWriter(socket.getOutputStream());
-            while (!closed()) {}
+            while (!socket().isConnected()) {
+                System.out.println("ServerSocket Not connected");
+                wait(1000);
+            }
+            reader = new Scanner(socket().getInputStream());
+            writer = new PrintWriter(socket().getOutputStream());
+            while (!isClosed()) {
+                wait();
+            }
+            reader.close();
+            writer.close();
+            socket.close();
+        } catch (InterruptedException e) {
+            //Nani
         } catch (IOException e) {
-            e.printStackTrace();
+            //inform user
         }
     }
 }

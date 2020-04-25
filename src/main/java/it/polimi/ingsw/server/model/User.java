@@ -2,38 +2,55 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.socket.SocketServer;
 
-import java.net.ServerSocket;
-
 public class User {
     private SocketServer socket;
-    private String name;
-    private String ip;
+    final private String name;
 
     public User(String name, SocketServer socket){
-        this.name = name;
         this.socket = socket;
+        this.name = name;
     }
 
-    private String getName() {
-        return name;
+    public SocketServer socket() {
+        return socket;
     }
 
-    public void setName( String name){
-        this.name=name;
-    }
-    private String getIp(){
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setSocket(SocketServer socket) {
+        this.socket = socket;
     }
 
     public String name(){
         return name;
     }
 
-    public String ip(){
-        return ip;
+    public void removeSocket() {
+        setSocket(null);
+    }
+
+    public boolean hasSocket() {
+        return socket() != null;
+    }
+
+    public String hear() {
+        return socket().read();
+    }
+
+    public void tell(String message) {
+        socket().write(message);
+    }
+
+    public boolean askTwoOrThreePlayerQueue() {
+        tell("MATCHTYPE");
+        String answer = hear();
+        boolean valid = false;
+        while (!valid) {
+            if (answer.equals(3) || answer.equals(2))
+                valid = true;
+            tell("MATCHTYPE");
+            answer = hear();
+        }
+        if (answer.equals(3))
+            return true;
+        return false;
     }
 }

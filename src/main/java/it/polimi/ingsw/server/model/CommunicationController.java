@@ -1,14 +1,12 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.socket.SocketServer;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.Random;
 
 public class CommunicationController {
-    private Map <Player, SocketServer> playerToSocket = new HashMap<>();
+    private Map <Player, User> playerToSocket = new HashMap<>();
 
     public Worker chooseWorker(Player chooser, List<Worker> movableWorkers){
         return movableWorkers.get(new Random().nextInt(movableWorkers.size()));

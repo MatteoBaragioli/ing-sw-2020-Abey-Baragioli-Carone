@@ -7,6 +7,6 @@ public class ClientController {
         SocketClient socketClient = new SocketClient("127.0.0.1", 4321);
         socketClient.start();
         socketClient.write("Hi");
-        while (!socketClient.closed()) {}
+        while (!socketClient.isClosed()) {}
     }
 }
