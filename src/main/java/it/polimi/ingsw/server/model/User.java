@@ -39,7 +39,7 @@ public class User {
         socket().write(message);
     }
 
-    public boolean askTwoOrThreePlayerQueue() {
+    public int askTwoOrThreePlayerMatch() {
         tell("MATCHTYPE");
         String answer = hear();
         boolean valid = false;
@@ -50,7 +50,7 @@ public class User {
             answer = hear();
         }
         if (answer.equals(3))
-            return true;
-        return false;
+            return 3;
+        return 2;
     }
 }

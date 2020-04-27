@@ -27,6 +27,11 @@ public class SocketClient extends Thread {
         writer.flush();
     }
 
+    public void write(int message) {
+        writer.println(message);
+        writer.flush();
+    }
+
     public boolean isClosed() {
         return closed;
     }

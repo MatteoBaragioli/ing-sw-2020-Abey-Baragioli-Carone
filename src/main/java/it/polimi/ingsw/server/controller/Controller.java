@@ -12,11 +12,11 @@ import java.util.Map;
 public class Controller {
     List<Match> matches = new ArrayList<>();
     List<User> activeUsers = new ArrayList<>();
+    List<Lobby> lobbies = new ArrayList<>();
     Map<User, Match> userToMatch = new HashMap<>();
 
     public void start() {
         Server server = new Server(1024);
         server.start();
-
     }
 }

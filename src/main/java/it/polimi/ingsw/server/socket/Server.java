@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.socket;
 
+import it.polimi.ingsw.server.controller.Lobby;
 import it.polimi.ingsw.server.model.User;
 
 import java.io.IOException;
@@ -14,8 +15,8 @@ public class Server extends Thread{
     private int port;
     private List<String> userNames = new ArrayList<>();
     private Map<String, User> users = new HashMap<>();
-    private List<User> twoPlayerQueue = new ArrayList<>();
-    private List<User> threePlayerQueue = new ArrayList<>();
+    private List<Lobby> lobbies = new ArrayList<>();
+    private List<Lobby> completeLobbies = new ArrayList<>();
 
     public Server(int port) {
         this.port = port;
@@ -33,16 +34,16 @@ public class Server extends Thread{
         return users;
     }
 
-    public List<User> twoPlayerQueue() {
-        return twoPlayerQueue;
+    public List<Lobby> lobbies() {
+        return lobbies;
     }
 
-    public List<User> threePlayerQueue() {
-        return threePlayerQueue;
+    public List<Lobby> completeLobbies() {
+        return completeLobbies;
     }
 
     public void manageSocket(Socket socket) {
-        new UserManager(socket, userNames(), users(), twoPlayerQueue(), threePlayerQueue()).start();
+        new UserManager(socket, userNames(), users(), lobbies(), completeLobbies()).start();
     }
 
     @Override

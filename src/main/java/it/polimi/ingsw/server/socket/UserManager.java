@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.socket;
 
+import it.polimi.ingsw.server.controller.Lobby;
 import it.polimi.ingsw.server.model.User;
 
 import java.net.Socket;
@@ -10,15 +11,15 @@ public class UserManager extends Thread{
     private SocketServer socketServer;
     private List<String> userNames;
     private Map<String, User> users;
-    private List<User> twoPlayerQueue;
-    private List<User> threePlayerQueue;
+    private List<Lobby> lobbies;
+    private List<Lobby> completeLobbies;
 
-    public UserManager(Socket socket, List<String> userNames, Map<String, User> users, List<User> twoPlayerQueue, List<User> threePlayerQueue) {
+    public UserManager(Socket socket, List<String> userNames, Map<String, User> users, List<Lobby> lobbies, List<Lobby> completeLobbies) {
         this.socketServer = new SocketServer(socket);
         this.userNames = userNames;
         this.users = users;
-        this.twoPlayerQueue = twoPlayerQueue;
-        this.threePlayerQueue = threePlayerQueue;
+        this.lobbies = this.lobbies;
+        this.completeLobbies = completeLobbies;
         socketServer.start();
     }
 
@@ -34,12 +35,12 @@ public class UserManager extends Thread{
         return users;
     }
 
-    public List<User> twoPlayerQueue() {
-        return twoPlayerQueue;
+    public List<Lobby> lobbies() {
+        return lobbies;
     }
 
-    public List<User> threePlayerQueue() {
-        return threePlayerQueue;
+    public List<Lobby> completeLobbies() {
+        return completeLobbies;
     }
 
     /**
@@ -62,15 +63,35 @@ public class UserManager extends Thread{
         return null;
     }
 
+    private synchronized void registerCompleteLobby(Lobby lobby) {
+        completeLobbies().add(lobby);
+        lobbies().remove(lobby);
+    }
+
     /**
      * This method puts a user in the queue chosen by him
      * @param user User
      */
-    public void assignQueueToUser(User user) {
-        if (user.askTwoOrThreePlayerQueue())
-            threePlayerQueue().add(user);
-        else
-            twoPlayerQueue().add(user);
+    public synchronized void assignUserToLobby(User user) {
+        boolean found = false;
+        for (int i = 0; i < lobbies().size() && !found; i++) {
+            Lobby lobby = lobbies().get(i);
+            if (lobby.isFree()) {
+                found = true;
+                lobby.addUser(user);
+            }
+        }
+        if (!found) {
+            Lobby lobby = new Lobby(user);
+            lobbies().add(lobby);
+            lobby.start();
+            try {
+                lobby.join();
+                registerCompleteLobby(lobby);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void run() {
@@ -91,6 +112,6 @@ public class UserManager extends Thread{
         }
         else
             findUser(message).setSocket(socketServer());
-        assignQueueToUser(findUser(message));
+        assignUserToLobby(findUser(message));
     }
 }
