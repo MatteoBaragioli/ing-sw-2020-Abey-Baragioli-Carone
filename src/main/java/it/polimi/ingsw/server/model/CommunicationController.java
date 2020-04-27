@@ -8,6 +8,12 @@ import java.util.Random;
 public class CommunicationController {
     private Map <Player, User> playerToSocket = new HashMap<>();
 
+    public CommunicationController(List<User>users, List<Player> gamePlayers){
+        for(int i=0; i<gamePlayers.size();i++){
+            playerToSocket.put(gamePlayers.get(i), users.get(i));
+        }
+    }
+
     public Worker chooseWorker(Player chooser, List<Worker> movableWorkers){
         return movableWorkers.get(new Random().nextInt(movableWorkers.size()));
     }

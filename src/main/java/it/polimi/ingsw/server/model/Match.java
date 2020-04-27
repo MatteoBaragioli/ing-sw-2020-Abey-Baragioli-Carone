@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Match {
     private int currentPlayerIndex;
-    private List<Player> gamePlayers;
+    private List<Player> gamePlayers=new ArrayList<>();
     private Map gameMap = new Map();
     private List<GodCard> cards = new ArrayList<>();
     private List<WinCondition> winConditions = new ArrayList<>();
@@ -14,10 +14,19 @@ public class Match {
     private Player winner=null;
     private CommunicationController communicationController;
 
+    public Match(List<User>  users) {
+        for (User user : users) {
+            Player player = new Player(user);
+            gamePlayers.add(player);
+        }
+        this.communicationController=new CommunicationController(users, this.gamePlayers);
+    }
+
     public Match(List<Player> gamePlayers, CommunicationController communicationController) {
         this.gamePlayers = gamePlayers;
         this.communicationController = communicationController;
     }
+
 
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;

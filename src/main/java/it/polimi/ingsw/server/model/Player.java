@@ -18,6 +18,10 @@ public class Player {
         this.card = card;
     }
 
+    public Player(User user){
+        this.nickname=user.name();
+    }
+
     public String getNickname() {
         return nickname;
     }
