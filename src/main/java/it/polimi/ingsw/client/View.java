@@ -9,4 +9,7 @@ public interface View {
     public int askBox(List<Box> boxes);
     public int askWorker(List<Worker> workers);
     public int askCards(List<GodCard> cards);
+    public boolean askConfirmation(String string);
+    public void printCommunication();
+
 }
