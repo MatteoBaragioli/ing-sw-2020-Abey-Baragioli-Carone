@@ -42,10 +42,17 @@ public class Server extends Thread{
         return completeLobbies;
     }
 
+    /**
+     * This method activates a sequence to setup the user
+     * @param socket
+     */
     public void manageSocket(Socket socket) {
         new UserManager(socket, userNames(), users(), lobbies(), completeLobbies()).start();
     }
 
+    /**
+     * This method starts a Server Socket that listens and accepts sockets
+     */
     @Override
     public void run() {
         ServerSocket serverSocket;

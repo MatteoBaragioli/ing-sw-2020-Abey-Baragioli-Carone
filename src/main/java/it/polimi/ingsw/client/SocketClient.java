@@ -19,7 +19,7 @@ public class SocketClient extends Thread {
     }
 
     public String read() {
-        return reader.nextLine();
+        return reader.next();
     }
 
     public void write(String message) {
@@ -50,20 +50,38 @@ public class SocketClient extends Thread {
     }
 
     public void run() {
+        Socket socket;
         try {
-            Socket socket = new Socket(ip, port);
-            System.out.println("Connection established");
+            socket = new Socket(ip, port);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Non si connette il socket client");
+            return;
+        }
+        System.out.println("Connection established");
+        try {
             reader = new Scanner(socket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Non imposta lo scanner");
+        }
+        try {
             writer = new PrintWriter(socket.getOutputStream());
-            userLine = new Scanner(System.in);
-            boolean end = false;
-            while (!isClosed()) {}
-            userLine.close();
-            reader.close();
-            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Non imposta il printer");
+        }
+        userLine = new Scanner(System.in);
+        boolean end = false;
+        while (!isClosed()) {}
+        userLine.close();
+        reader.close();
+        writer.close();
+        try {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Non chiude il socket");
         }
     }
 }

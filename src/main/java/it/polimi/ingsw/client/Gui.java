@@ -21,4 +21,19 @@ public class Gui implements View {
     public int askCards(List<GodCard> cards) {
         return 0;
     }
+
+    @Override
+    public boolean askConfirmation() {
+        return false;
+    }
+
+    @Override
+    public void prepareAdditionalCommunication(String message) {
+
+    }
+
+    @Override
+    public void updateMap(List<Box> boxes) {
+
+    }
 }

@@ -10,10 +10,11 @@ public class Lobby extends Thread{
     final private int nPlayers;
     private List<User> users = new ArrayList<>();
     boolean readyToGo=false;
+    private Match match;
 
-    public Lobby(User firstPlayer) {
+    public Lobby(User firstPlayer, int nPlayers) {
         this.users.add(firstPlayer);
-        nPlayers = firstPlayer.askTwoOrThreePlayerMatch();
+        this.nPlayers = nPlayers;
     }
 
     public int nPlayers() {
@@ -30,6 +31,14 @@ public class Lobby extends Thread{
 
     public void setReadyToGo(boolean readyToGo) {
         this.readyToGo = readyToGo;
+    }
+
+    public Match match() {
+        return match;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
     }
 
     public boolean isReady() {
@@ -56,6 +65,6 @@ public class Lobby extends Thread{
                 e.printStackTrace();
             }
         }
-        Match Match=new Match(users);
+        setMatch(new Match(users));
     }
 }

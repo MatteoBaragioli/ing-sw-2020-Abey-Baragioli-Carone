@@ -18,7 +18,7 @@ public class UserManager extends Thread{
         this.socketServer = new SocketServer(socket);
         this.userNames = userNames;
         this.users = users;
-        this.lobbies = this.lobbies;
+        this.lobbies = lobbies;
         this.completeLobbies = completeLobbies;
         socketServer.start();
     }
@@ -63,9 +63,13 @@ public class UserManager extends Thread{
         return null;
     }
 
+    /**
+     * This method moves the lobby from the incomplete lobbies list to the complete ones
+     * @param lobby the lobby created by this user manager
+     */
     private synchronized void registerCompleteLobby(Lobby lobby) {
-        completeLobbies().add(lobby);
         lobbies().remove(lobby);
+        completeLobbies().add(lobby);
     }
 
     /**
@@ -74,15 +78,16 @@ public class UserManager extends Thread{
      */
     public synchronized void assignUserToLobby(User user) {
         boolean found = false;
+        int nPlayers = user.askTwoOrThreePlayerMatch();
         for (int i = 0; i < lobbies().size() && !found; i++) {
             Lobby lobby = lobbies().get(i);
-            if (lobby.isFree()) {
+            if (lobby.isFree() && lobby.nPlayers()==nPlayers) {
                 found = true;
                 lobby.addUser(user);
             }
         }
         if (!found) {
-            Lobby lobby = new Lobby(user);
+            Lobby lobby = new Lobby(user, nPlayers);
             lobbies().add(lobby);
             lobby.start();
             try {
@@ -90,12 +95,16 @@ public class UserManager extends Thread{
                 registerCompleteLobby(lobby);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                System.out.println("La lobby non joina");
             }
         }
     }
 
-    public void run() {
-        socketServer().write("Enter your username to login:");
+    /**
+     * This method
+     */
+    public synchronized void run() {
+        socketServer().write("USERNAME");
         String message = socketServer().read();
         boolean valid = false;
         while (!valid) {

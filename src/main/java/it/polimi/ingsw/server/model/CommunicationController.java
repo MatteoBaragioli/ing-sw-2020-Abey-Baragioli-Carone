@@ -8,6 +8,9 @@ import java.util.Random;
 public class CommunicationController {
     private Map <Player, User> playerToSocket = new HashMap<>();
 
+    public CommunicationController() {
+    }
+
     public CommunicationController(List<User>users, List<Player> gamePlayers){
         for(int i=0; i<gamePlayers.size();i++){
             playerToSocket.put(gamePlayers.get(i), users.get(i));
