@@ -12,4 +12,6 @@ public interface View {
     boolean askConfirmation();
     void prepareAdditionalCommunication(String message);
     void updateMap(List<Box> boxes);
+    String askIp();
+    int askPort();
 }

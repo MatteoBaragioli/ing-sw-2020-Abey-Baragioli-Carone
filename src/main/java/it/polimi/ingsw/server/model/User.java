@@ -1,45 +1,39 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.socket.SocketServer;
+import it.polimi.ingsw.server.socket.CommunicationChannel;
+
+import java.io.IOException;
 
 public class User {
-    private SocketServer socket;
+    final private CommunicationChannel communicationChannel;
     final private String name;
 
-    public User(String name, SocketServer socket){
-        this.socket = socket;
+    public User(String name, CommunicationChannel communicationChannel){
+        this.communicationChannel = communicationChannel;
         this.name = name;
     }
 
-    public SocketServer socket() {
-        return socket;
-    }
-
-    public void setSocket(SocketServer socket) {
-        this.socket = socket;
+    public CommunicationChannel communicationChannel() {
+        return communicationChannel;
     }
 
     public String name(){
         return name;
     }
 
-    public void removeSocket() {
-        setSocket(null);
+    public boolean hasChannel() {
+        return communicationChannel() != null;
     }
 
-    public boolean hasSocket() {
-        return socket() != null;
-    }
-
-    public String hear() {
-        return socket().read();
+    public String hear() throws IOException {
+        return communicationChannel().read();
     }
 
     public void tell(String message) {
-        socket().write(message);
+        communicationChannel().write(message);
     }
 
-    public int askTwoOrThreePlayerMatch() {
+    public int askTwoOrThreePlayerMatch() throws IOException {
         tell("MATCHTYPE");
         String answer = hear();
         boolean valid = false;

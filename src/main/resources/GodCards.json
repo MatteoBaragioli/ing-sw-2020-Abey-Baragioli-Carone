@@ -1,6 +1,6 @@
 [
   {
-    "name": "APOLLO",
+    "name": "Apollo",
     "id": 1,
     "actions": ["DoNothing", "Swap", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
@@ -8,7 +8,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "ARTEMIS",
+    "name": "Artemis",
     "id": 2,
     "actions": ["DoNothing","AddMoveNotStartingBox", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
@@ -16,7 +16,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "ATHENA",
+    "name": "Athena",
     "id": 3,
     "actions": ["DoNothing", "DoNothing", "DoNothing", "OpponentsCantMoveUpIfPlayerMovesUp"],
     "winCondition": "Standard",
@@ -24,7 +24,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "ATLAS",
+    "name": "Atlas",
     "id": 4,
     "actions": ["DoNothing", "DoNothing", "BuildDomeEverywhere", "DoNothing"],
     "winCondition": "Standard",
@@ -32,7 +32,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "DEMETER",
+    "name": "Demeter",
     "id": 5,
     "actions": ["DoNothing", "DoNothing", "AddBuildNotSameBox", "DoNothing"],
     "winCondition": "Standard",
@@ -40,7 +40,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "HEPHAESTUS",
+    "name": "Hephaestus",
     "id": 6,
     "actions": ["DoNothing", "DoNothing", "AddBuildOnSameBox", "DoNothing"],
     "winCondition": "Standard",
@@ -48,7 +48,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "MINOTAUR",
+    "name": "Minotaur",
     "id": 8,
     "actions": ["DoNothing", "PushAdjacentOpponent", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
@@ -56,7 +56,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "PAN",
+    "name": "Pan",
     "id": 9,
     "actions": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "MoveTwoLevelsDown",
@@ -64,7 +64,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "PROMETHEUS",
+    "name": "Prometheus",
     "id": 10,
     "actions": ["AddBuildBeforeIfNotMoveUp", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "Standard",
@@ -72,7 +72,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "ARES",
+    "name": "Ares",
     "id": 12,
     "actions": ["DoNothing", "DoNothing", "RemoveAdjacentBlock", "DoNothing"],
     "winCondition": "Standard",
@@ -80,7 +80,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "CHRONUS",
+    "name": "Chronus",
     "id": 16,
     "actions": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"],
     "winCondition": "TowerCountWin",
@@ -89,7 +89,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "HESTIA",
+    "name": "Hestia",
     "id": 21,
     "actions": ["DoNothing", "DoNothing", "AddBuildNotEdge", "DoNothing"],
     "winCondition": "Standard",
@@ -97,7 +97,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "POSEIDON",
+    "name": "Poseidon",
     "id": 27,
     "actions": ["DoNothing", "DoNothing", "AddThreeBuildsToUnmovedWorker", "DoNothing"],
     "winCondition": "Standard",
@@ -105,7 +105,7 @@
     "fxOnOpponent": ["DoNothing", "DoNothing", "DoNothing", "DoNothing"]
   },
   {
-    "name": "ZEUS",
+    "name": "Zeus",
     "id": 30,
     "actions": ["DoNothing", "DoNothing", "BuildUnderYourself", "DoNothing"],
     "winCondition": "Standard",

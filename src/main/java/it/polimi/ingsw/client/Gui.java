@@ -36,4 +36,14 @@ public class Gui implements View {
     public void updateMap(List<Box> boxes) {
 
     }
+
+    @Override
+    public String askIp() {
+        return null;
+    }
+
+    @Override
+    public int askPort() {
+        return 0;
+    }
 }
