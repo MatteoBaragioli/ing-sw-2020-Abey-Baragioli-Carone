@@ -1,5 +1,8 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.view.cli.Cli;
+import it.polimi.ingsw.client.view.gui.Gui;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.server.socket.CommunicationChannel;
 
 import java.io.BufferedReader;

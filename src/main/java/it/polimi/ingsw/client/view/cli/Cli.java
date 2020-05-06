@@ -1,5 +1,6 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.client.view.cli;
 
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.server.model.Box;
 import it.polimi.ingsw.server.model.GodCard;
 import it.polimi.ingsw.server.model.Worker;

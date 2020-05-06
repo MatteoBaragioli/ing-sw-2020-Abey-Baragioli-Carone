@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.socket.CommunicationChannel;
 
