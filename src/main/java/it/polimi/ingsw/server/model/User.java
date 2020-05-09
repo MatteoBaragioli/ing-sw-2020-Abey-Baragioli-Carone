@@ -1,8 +1,11 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.socket.CommunicationChannel;
+import it.polimi.ingsw.network.CommunicationChannel;
+import it.polimi.ingsw.network.CommunicationProtocol;
 
 import java.io.IOException;
+
+import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class User {
     final private CommunicationChannel communicationChannel;
@@ -29,21 +32,32 @@ public class User {
         return communicationChannel().read();
     }
 
+    public int hearNumber() throws IOException {
+        return communicationChannel().readNumber();
+    }
+
     public void tell(String message) {
         communicationChannel().write(message);
     }
 
+    private void tell(CommunicationProtocol key) {
+        communicationChannel().writeKeyWord(key);
+    }
+
     public int askTwoOrThreePlayerMatch() throws IOException {
-        tell("MATCHTYPE");
-        String answer = hear();
+        tell(MATCHTYPE);
+        int answer = hearNumber();
+        System.out.println(answer);
         boolean valid = false;
         while (!valid) {
-            if (answer.equals(3) || answer.equals(2))
+            if (answer == 1 || answer == 2)
                 valid = true;
-            tell("MATCHTYPE");
-            answer = hear();
+            else {
+                tell(MATCHTYPE);
+                answer = hearNumber();
+            }
         }
-        if (answer.equals(3))
+        if (answer == 2)
             return 3;
         return 2;
     }

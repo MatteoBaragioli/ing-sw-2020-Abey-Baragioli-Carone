@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.view.gui;
 
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.server.model.Box;
 import it.polimi.ingsw.server.model.GodCard;
 import it.polimi.ingsw.server.model.Worker;
@@ -29,7 +30,7 @@ public class Gui implements View {
     }
 
     @Override
-    public void prepareAdditionalCommunication(String message) {
+    public void prepareAdditionalCommunication(CommunicationProtocol key) {
 
     }
 
@@ -44,7 +45,17 @@ public class Gui implements View {
     }
 
     @Override
+    public int askMatchType() {
+        return 0;
+    }
+
+    @Override
     public int askPort() {
         return 0;
+    }
+
+    @Override
+    public String askUserName() {
+        return null;
     }
 }

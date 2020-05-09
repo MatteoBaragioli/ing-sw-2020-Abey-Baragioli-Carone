@@ -4,9 +4,11 @@ import it.polimi.ingsw.server.model.phases.*;
 
 import java.util.*;
 
-public class Match {
+public class Match extends Thread {
     private int currentPlayerIndex;
-    private List<Player> gamePlayers=new ArrayList<>();
+    private List<User> users;
+    private HashMap<User, Player> userToPlayer = new HashMap<>();
+    private List<Player> gamePlayers = new ArrayList<>();
     private Map gameMap = new Map();
     private List<GodCard> cards = new ArrayList<>();
     private List<WinCondition> winConditions = new ArrayList<>();
@@ -15,18 +17,26 @@ public class Match {
     private CommunicationController communicationController;
 
     public Match(List<User>  users) {
-        for (User user : users) {
-            Player player = new Player(user);
-            gamePlayers.add(player);
-        }
-        this.communicationController=new CommunicationController(users, this.gamePlayers);
+        for (User user : users)
+            addNewPlayer(user);
+        communicationController = new CommunicationController(users, gamePlayers);
+        this.users = users;
+    }
+
+    /**
+     * This method is used in the Match constructor and adds one user to the match
+     * @param user new player
+     */
+    private void addNewPlayer(User user) {
+        Player player = new Player(user);
+        userToPlayer.put(user, player);
+        gamePlayers.add(player);
     }
 
     public Match(List<Player> gamePlayers, CommunicationController communicationController) {
         this.gamePlayers = gamePlayers;
         this.communicationController = communicationController;
     }
-
 
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
@@ -36,13 +46,17 @@ public class Match {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
+    public List<User> users() {
+        return users;
+    }
+
     public Map getGameMap() {
         return gameMap;
     }
 
     public void setGameMap(Map gameMap) { this.gameMap = gameMap; }
 
-    public List<Player> getGamePlayers() {
+    public List<Player> gamePlayers() {
         return gamePlayers;
     }
 
@@ -90,7 +104,6 @@ public class Match {
     /**
      * This method executes a match
      */
-
     public void match(){
         //START MATCH
         assignColour();
@@ -177,7 +190,6 @@ public class Match {
     /**
      * This method makes every player choose their own GodCard
      */
-
     protected void assignCards(){
         List<GodCard> availableCards = new ArrayList<>(cards);
         for(int i = gamePlayers.size()-1; i>=0; i--){
@@ -191,7 +203,6 @@ public class Match {
     /**
      * This method assignes two workers to every player. Every player chooses the starting position of their workers
      */
-
     protected void setUpWorkers(){
         List<Box> freeMap = new ArrayList<>(gameMap.groundToList());
         List<Box> possibleSetUpPosition;
@@ -219,21 +230,53 @@ public class Match {
      * This method removes a player from the list of gamePlayers
      * @param loser
      */
-
     protected void removePlayer(Player loser){
         for(Worker worker : loser.workers()){
             worker.position().removeOccupier();
         }
         loser.workers().clear();
-        gamePlayers.remove(loser);
+        gamePlayers().remove(loser);
     }
 
+    /**
+     * This method tells if a user is in this match
+     * @param user user
+     * @return boolean
+     */
+    public boolean userIsPlayer(User user) {
+        return users().contains(user);
+    }
+
+    /**
+     * This method finds the player related to a user (null if the user isn't part of the match)
+     * @param user user
+     * @return player
+     */
+    public Player findPlayer(User user) {
+        if (userIsPlayer(user))
+            return userToPlayer.get(user);
+        return null;
+    }
+
+    /**
+     * This method removes a user from the match
+     * @param user quitting user
+     */
+    public synchronized void removeUser(User user) {
+        if (userIsPlayer(user)) {
+            Player player = findPlayer(user);
+            if (player.isInGame())
+                removePlayer(player);
+            communicationController.removePlayer(player);
+            userToPlayer.remove(user);
+            users().remove(user);
+        }
+    }
 
     /**
      * This method adds every Non-Standard win condition to the list of WinConditions
      */
-
-    protected  void setUpWinConditions(){
+    protected void setUpWinConditions(){
         for(GodCard godCard : cards){
             if(godCard.winCondition()!=null){
                 winConditions.add(godCard.winCondition());
@@ -241,4 +284,8 @@ public class Match {
         }
     }
 
+    @Override
+    public void run() {
+        match();
+    }
 }

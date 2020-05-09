@@ -10,10 +10,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private int port;
+    final private int port;
+
     public Server(int port) {
         this.port = port;
     }
+
     public void startServer() {
         ExecutorService executor = Executors.newCachedThreadPool();
         ServerSocket serverSocket;
@@ -27,12 +29,17 @@ public class Server {
         Controller controller = new Controller();
 
         System.out.println("Server ready");
-        while (true) {
+        boolean closed = false;
+
+        while (!closed) {
             try {
                 Socket socket = serverSocket.accept();
+                System.out.println(socket + " tried to connect");
                 executor.submit(new ClientHandler(controller, socket));
             } catch(IOException e) {
-                break;
+                closed = true;
+                e.printStackTrace();
+                System.err.println("ServerSocket is not accepting");
             }
         }
         executor.shutdown();

@@ -27,7 +27,7 @@ public class MatchTest {
         gamePlayers.add(player3);
 
         Match match = new Match(gamePlayers, communicationController);
-        for(Player player : match.getGamePlayers()){
+        for(Player player : match.gamePlayers()){
             List<Player> opponents = match.getOpponents(player);
             List<Player> expectedOpponents = new ArrayList<>(gamePlayers);
             expectedOpponents.remove(player);
@@ -72,7 +72,7 @@ public class MatchTest {
         for(GodCard godCard : match.getCards())
             System.out.println(godCard.name());
 
-        assertEquals(match.getGamePlayers().size(), match.getCards().size());
+        assertEquals(match.gamePlayers().size(), match.getCards().size());
 
 
     }
@@ -91,7 +91,7 @@ public class MatchTest {
         match.chooseCards();
         match.assignCards();
 
-        for(Player player : match.getGamePlayers()) {
+        for(Player player : match.gamePlayers()) {
             assertNotNull(player.godCard());
             System.out.println(player.getNickname());
             System.out.println(player.getColour());
@@ -118,7 +118,7 @@ public class MatchTest {
         match.assignCards();
         match.setUpWorkers();
 
-        for(Player player : match.getGamePlayers()){
+        for(Player player : match.gamePlayers()){
             assertNotNull(player.workers());
             assertEquals(2, player.workers().size());
             assertNotEquals(player.workers().get(0), player.workers().get(1));

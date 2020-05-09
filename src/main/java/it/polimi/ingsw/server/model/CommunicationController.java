@@ -6,15 +6,25 @@ import java.util.List;
 import java.util.Random;
 
 public class CommunicationController {
-    private Map <Player, User> playerToSocket = new HashMap<>();
+
+    private Map <Player, User> playerToUser = new HashMap<>();
 
     public CommunicationController() {
     }
 
     public CommunicationController(List<User>users, List<Player> gamePlayers){
         for(int i=0; i<gamePlayers.size();i++){
-            playerToSocket.put(gamePlayers.get(i), users.get(i));
+            playerToUser.put(gamePlayers.get(i), users.get(i));
         }
+    }
+
+    /**
+     * This method removes the connections with a quitting player
+     * @param player quitting player
+     */
+    public synchronized void removePlayer(Player player) {
+        if (playerToUser.containsKey(player))
+            playerToUser.remove(player);
     }
 
     public Worker chooseWorker(Player chooser, List<Worker> movableWorkers){

@@ -3,7 +3,8 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.view.cli.Cli;
 import it.polimi.ingsw.client.view.gui.Gui;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.server.socket.CommunicationChannel;
+import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.CommunicationChannel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+
+import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class Client {
     public static void main(String[] args) {
@@ -65,41 +68,70 @@ public class Client {
         }
 
         CommunicationChannel communicationChannel = new CommunicationChannel(in, out);
-        communicationChannel.write("HI");
+        communicationChannel.writeKeyWord(HI);
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            String message = communicationChannel.read();
-            while (true) {
-                view.prepareAdditionalCommunication(message);
-                /*
-                switch (message) {
-                    case ("deck"):
-                    case("choose your game card"):
-                    case("card"):
-                        manageListOfCards(communicationChannel(), view);
-                        break;
-                    case("possible destinations list of boxes"):
-                    case("possible builds list of boxes"):
-                    case("setup list of boxes"):
-                        manageListOfBoxes(communicationChannel(), view);
-                        break;
-                    case("map as list of boxes"):
-                        manageMapAsListOfBoxes(communicationChannel(), view);
-                        break;
-                    case("list of movable workers"):
-                        manageListOfWorkers(communicationChannel(), view);
-                        break;
-                    case("undo"):
-                    case("use power"):
-                        manageConfirmation(communicationChannel(), view);
-                        break;
-                    default:
-                        communicationChannel().write("WTF?!");
-                }
-                */
+        ClientController clientController = new ClientController();
+        while (!communicationChannel.isClosed()) {
+            CommunicationProtocol key = null;
+            try {
+                key = communicationChannel.nextKey();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            catch (IOException e) {
+                e.printStackTrace();
+                System.err.println("Couldn't read key CLIENT");
+                System.exit(1);
+            }
+            view.prepareAdditionalCommunication(key);
+            switch (key) {
+                case BUILDS:
+                case DESTINATIONS:
+                case STARTPOSITION:
+                    try {
+                        clientController.manageListOfBoxes(communicationChannel, view);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Manage boxes error");
+                    }
+                    break;
+                case CARD:
+                case DECK:
+                    try {
+                        clientController.manageListOfCards(communicationChannel, view);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Manage cards error");
+                    }
+                    break;
+                case GODPOWER:
+                case UNDO:
+                    clientController.manageConfirmation(communicationChannel, view);
+                    break;
+                case MAP:
+                    try {
+                        clientController.manageMapAsListOfBoxes(communicationChannel, view);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Manage map error");
+                    }
+                    break;
+                case MATCHTYPE:
+                    clientController.askMatchType(communicationChannel, view);
+                    break;
+                case UNIQUEUSERNAME:
+                case USERNAME:
+                    clientController.askUsername(communicationChannel, view);
+                    break;
+                case WORKER:
+                    try {
+                        clientController.manageListOfWorkers(communicationChannel, view);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Manage workers error");
+                    }
+                    break;
+                default:
+                    communicationChannel.write("WTF?!");
+            }
         }
     }
 }
