@@ -9,11 +9,14 @@ import it.polimi.ingsw.server.model.Worker;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.List;
 
 public class Cli implements View {
 
     private BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
+
+    private PrintStream printStream=new PrintStream(System.out);
 
     public String askAnswer() throws IOException {
         return commandline.readLine();
