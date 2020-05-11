@@ -12,7 +12,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
-public class ClientController extends Thread {
+public class ClientController {
 
     public void manageListOfCards(CommunicationChannel communicationChannel, View view) throws IOException {
 
@@ -87,46 +87,4 @@ public class ClientController extends Thread {
     public void askMatchType(CommunicationChannel communicationChannel, View view) {
         communicationChannel.writeNumber(view.askMatchType());
     }
-
-    /*
-    public void run() {
-        while (!communicationChannel.isClosed()) {
-            String message = null;
-            try {
-                message = communicationChannel.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            view.prepareAdditionalCommunication(message);
-            try {
-                switch (message) {
-                    case ("deck"):
-                    case("choose your game card"):
-                    case("card"):
-                        manageListOfCards(communicationChannel, view);
-                        break;
-                    case("possible destinations list of boxes"):
-                    case("possible builds list of boxes"):
-                    case("setup list of boxes"):
-                        manageListOfBoxes(communicationChannel, view);
-                        break;
-                    case("map as list of boxes"):
-                        manageMapAsListOfBoxes(communicationChannel, view);
-                        break;
-                    case("list of movable workers"):
-                        manageListOfWorkers(communicationChannel, view);
-                        break;
-                    case("undo"):
-                    case("use power"):
-                        manageConfirmation(communicationChannel, view);
-                        break;
-                    default:
-                        communicationChannel.writeNumber("WTF?!");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    */
 }

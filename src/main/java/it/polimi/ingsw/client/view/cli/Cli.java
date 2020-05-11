@@ -78,7 +78,7 @@ public class Cli implements View {
             }
             if (answer == 1 || answer == 2) {
                 valid = true;
-                System.out.println(answer);
+                System.out.println("Waiting for the match to start");
             }
             else
                 System.out.println("Not valid answer. Try again");

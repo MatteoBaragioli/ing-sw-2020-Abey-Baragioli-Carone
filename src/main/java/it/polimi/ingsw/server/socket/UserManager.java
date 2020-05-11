@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.socket;
 
 import it.polimi.ingsw.network.CommunicationChannel;
-import it.polimi.ingsw.server.controller.Controller;
+import it.polimi.ingsw.server.controller.DataBase;
 import it.polimi.ingsw.server.model.User;
 
 import java.io.IOException;
@@ -9,16 +9,16 @@ import java.io.IOException;
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class UserManager {
-    final private Controller controller;
+    final private DataBase dataBase;
     final private CommunicationChannel communicationChannel;
 
-    public UserManager(Controller controller, CommunicationChannel communicationChannel) {
-        this.controller = controller;
+    public UserManager(DataBase dataBase, CommunicationChannel communicationChannel) {
+        this.dataBase = dataBase;
         this.communicationChannel = communicationChannel;
     }
 
-    public Controller controller() {
-        return controller;
+    public DataBase dataBase() {
+        return dataBase;
     }
 
     public CommunicationChannel communicationChannel() {
@@ -26,7 +26,7 @@ public class UserManager {
     }
 
     /**
-     * This method
+     * This method creates a user for a socket
      */
     public void run() {
         communicationChannel().writeKeyWord(USERNAME);
@@ -41,7 +41,7 @@ public class UserManager {
         }
         boolean valid = false;
         while (!valid) {
-            if (controller().userNameExists(message)) {
+            if (dataBase().userNameExists(message)) {
                 communicationChannel().writeKeyWord(UNIQUEUSERNAME);
                 try {
                     message = communicationChannel().read();
@@ -57,8 +57,8 @@ public class UserManager {
         }
 
         System.out.println("Registering new user " + message);
-        controller().addUser(new User(message, communicationChannel()));
+        dataBase().addUser(new User(message, communicationChannel()));
         System.out.println("Assigning lobby to " + message);
-        controller().assignUserToLobby(controller().findUser(message));
+        dataBase().assignUserToLobby(dataBase().findUser(message));
     }
 }
