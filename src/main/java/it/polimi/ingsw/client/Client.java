@@ -19,7 +19,7 @@ import static it.polimi.ingsw.network.CommunicationProtocol.*;
 public class Client {
     public static void main(String[] args) {
         Scanner commandline = new Scanner(System.in);
-        System.out.println("Choose view type:\n" + "1)CLI\n" + "2)GUI");
+        System.out.println("Choose view type:\n" + "1   CLI\n" + "2    GUI");
         int choice = commandline.nextInt();
         boolean valid = false;
         View view;
