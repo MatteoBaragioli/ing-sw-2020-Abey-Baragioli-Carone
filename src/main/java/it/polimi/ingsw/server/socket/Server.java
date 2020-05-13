@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.socket;
 
-import it.polimi.ingsw.server.controller.Controller;
+import it.polimi.ingsw.server.controller.DataBase;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -26,7 +26,7 @@ public class Server {
             return;
         }
 
-        Controller controller = new Controller();
+        DataBase dataBase = new DataBase();
 
         System.out.println("Server ready");
         boolean closed = false;
@@ -35,7 +35,7 @@ public class Server {
             try {
                 Socket socket = serverSocket.accept();
                 System.out.println(socket + " tried to connect");
-                executor.submit(new ClientHandler(controller, socket));
+                executor.submit(new ClientHandler(dataBase, socket));
             } catch(IOException e) {
                 closed = true;
                 e.printStackTrace();

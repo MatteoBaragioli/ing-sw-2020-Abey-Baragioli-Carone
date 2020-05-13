@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Controller {
+public class DataBase {
     private List<String> userNames = new ArrayList<>();
     private Map<String, User> users = new HashMap<>();
     private Map<User, Lobby> lobbies = new HashMap<>();

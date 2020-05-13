@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.godPowers;
 
 import it.polimi.ingsw.server.model.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import static it.polimi.ingsw.server.model.Phase.MOVE;
@@ -9,7 +10,7 @@ import static it.polimi.ingsw.server.model.Phase.MOVE;
 public class AddMoveNotStartingBoxPower extends MoveModifier {
 
     @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws IOException {
         if(usePower) {
             actionController.verifyWinCondition(MOVE, winConditions, player, map, opponents);
             if(actionController.currentPlayerHasWon(player)){
@@ -22,7 +23,7 @@ public class AddMoveNotStartingBoxPower extends MoveModifier {
                 //todo comunicare all'utente che non può usare il suo potere aggiuntivo
                 return;
             }
-            Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleDestinations());
+            Box chosenBox = communicationController.chooseDestination(player, player.turnSequence().possibleDestinations());
             if(chosenBox!=null)
                 executePower(player, actionController, chosenBox);
             else{

@@ -1,10 +1,10 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.client.view.cli.Cli;
 import it.polimi.ingsw.client.view.gui.Gui;
-import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.CommunicationChannel;
+import it.polimi.ingsw.network.CommunicationProtocol;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,29 +12,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
-import static it.polimi.ingsw.network.CommunicationProtocol.*;
+import static it.polimi.ingsw.network.CommunicationProtocol.HI;
 
 public class Client {
     public static void main(String[] args) {
-        Scanner commandline = new Scanner(System.in);
-        System.out.println("Choose view type:\n" + "1)CLI\n" + "2)GUI");
-        int choice = commandline.nextInt();
-        boolean valid = false;
-        View view;
-        while (!valid)
-            if (choice == 1 || choice == 2)
-                valid = true;
-            else {
-                System.out.println("Write 1 or 2");
-                choice = commandline.nextInt();
-            }
-        if (choice == 1)
-            view = new Cli();
+        if (args.length > 2 && args[2].equals("-cli"))
+            Cli.main(args);
         else
-            view = new Gui();
+            Gui.main(args);
+    }
 
+    public void start(View view) {
         String hostName = view.askIp();
         int portNumber = view.askPort();
         Socket socket = null;
@@ -69,7 +58,6 @@ public class Client {
 
         CommunicationChannel communicationChannel = new CommunicationChannel(in, out);
         communicationChannel.writeKeyWord(HI);
-        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         ClientController clientController = new ClientController();
         while (!communicationChannel.isClosed()) {
             CommunicationProtocol key = null;
@@ -78,13 +66,15 @@ public class Client {
             }
             catch (IOException e) {
                 e.printStackTrace();
-                System.err.println("Couldn't read key CLIENT");
+                System.err.println("Server lost");
+                //Chiudere Client il Server
                 System.exit(1);
             }
             view.prepareAdditionalCommunication(key);
             switch (key) {
                 case BUILDS:
                 case DESTINATIONS:
+                case REMOVALS:
                 case STARTPOSITION:
                     try {
                         clientController.manageListOfBoxes(communicationChannel, view);
@@ -100,6 +90,14 @@ public class Client {
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Manage cards error");
+                    }
+                    break;
+                case GAMEPLAYERS:
+                    try {
+                        clientController.manageListOfPlayers(communicationChannel, view);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Manage Players Error");
                     }
                     break;
                 case GODPOWER:

@@ -1,25 +1,27 @@
 package it.polimi.ingsw.client.view.cli;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.server.model.Box;
 import it.polimi.ingsw.server.model.GodCard;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Worker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 
 public class Cli implements View {
 
-    private BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
+    private static BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
 
-    public String askAnswer() throws IOException {
+    private PrintStream printStream=new PrintStream(System.out);
+
+    public static String askAnswer() throws IOException {
         return commandline.readLine();
     }
 
-    public int askNumber() throws IOException {
+    public int askNumber() throws IOException, NumberFormatException {
         return Integer.parseInt(askAnswer());
     }
 
@@ -54,6 +56,11 @@ public class Cli implements View {
     }
 
     @Override
+    public void setPlayersInfo(List<Player> players) {
+
+    }
+
+    @Override
     public String askIp() {
         System.out.println("Write ip address to connect to:");
         try {
@@ -75,10 +82,12 @@ public class Cli implements View {
             } catch (IOException e) {
                 e.printStackTrace();
                 return -1;
+            } catch (NumberFormatException e) {
+                answer = 0;
             }
             if (answer == 1 || answer == 2) {
                 valid = true;
-                System.out.println(answer);
+                System.out.println("Waiting for the match to start");
             }
             else
                 System.out.println("Not valid answer. Try again");
@@ -88,7 +97,6 @@ public class Cli implements View {
 
     @Override
     public int askPort() {
-        BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Write port:");
         try {
             return Integer.parseInt(commandline.readLine());
@@ -100,7 +108,6 @@ public class Cli implements View {
 
     @Override
     public String askUserName() {
-        BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Write username:");
         try {
             return commandline.readLine();
@@ -108,5 +115,11 @@ public class Cli implements View {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void main(String[] args) {
+        Cli cli = new Cli();
+        Client client = new Client();
+        client.start(cli);
     }
 }

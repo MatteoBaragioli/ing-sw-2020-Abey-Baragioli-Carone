@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.phases.*;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Match extends Thread {
@@ -125,7 +126,12 @@ public class Match extends Thread {
             int undoCounter = 0;
             for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && currentPlayer.isInGame();){
                 boolean confirm = true;
-                phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
+                try {
+                    phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //todo eliminare il giocatore e terminare la partita
+                }
                 if(undoCounter<3 && phaseIndex<3) {
                     confirm = communicationController.confirmPhase();
                 }
@@ -206,20 +212,30 @@ public class Match extends Thread {
     protected void setUpWorkers(){
         List<Box> freeMap = new ArrayList<>(gameMap.groundToList());
         List<Box> possibleSetUpPosition;
-        Box position;
+        Box position = null;
         List<Player> setUpOrder = new ArrayList<>(gamePlayers);
         for(Player player : gamePlayers){
             player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
         }
         for(Player player : setUpOrder){
             possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
-            position = communicationController.chooseBox(player, possibleSetUpPosition);
+            try {
+                position = communicationController.chooseStartPosition(player, possibleSetUpPosition);
+            } catch (IOException e) {
+                e.printStackTrace();
+                //TODO
+            }
             Worker worker1 = new Worker(position, player.getColour());
             freeMap.remove(position);
             player.assignWorker(worker1);
 
             possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
-            position = communicationController.chooseBox(player, possibleSetUpPosition);
+            try {
+                position = communicationController.chooseStartPosition(player, possibleSetUpPosition);
+            } catch (IOException e) {
+                e.printStackTrace();
+                //TODO
+            }
             Worker worker2 = new Worker(position, player.getColour());
             freeMap.remove(position);
             player.assignWorker(worker2);
@@ -267,7 +283,7 @@ public class Match extends Thread {
             Player player = findPlayer(user);
             if (player.isInGame())
                 removePlayer(player);
-            communicationController.removePlayer(player);
+            communicationController.removeUser(player);
             userToPlayer.remove(user);
             users().remove(user);
         }

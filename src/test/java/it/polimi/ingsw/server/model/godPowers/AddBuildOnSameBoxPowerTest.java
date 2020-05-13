@@ -4,12 +4,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import it.polimi.ingsw.server.model.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AddBuildOnSameBoxPowerTest {
 
     @Test
-    public void usePower() {
+    public void usePower() throws IOException {
         //-------------------------- Test 1 ---------
 
         Map map = new  Map();

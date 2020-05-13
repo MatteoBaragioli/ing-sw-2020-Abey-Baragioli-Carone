@@ -4,6 +4,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import it.polimi.ingsw.server.model.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class PushAdjacentOpponentPowerTest {
         assertEquals(player.turnSequence().possibleDestinations(), testList);
     }
     @Test
-    public void executeAction() {
+    public void executeAction() throws IOException {
         //-------------------------- Test 1 ---------
         //chosenWorker in (2,2) moves on (2,3) pushing the opponent's worker on (2,4)
         Map map = new  Map();

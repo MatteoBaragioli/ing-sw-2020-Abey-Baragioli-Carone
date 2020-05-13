@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.phases;
 
 import it.polimi.ingsw.server.model.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import static it.polimi.ingsw.server.model.Phase.MOVE;
@@ -9,13 +10,13 @@ import static it.polimi.ingsw.server.model.Phase.MOVE;
 public class Move implements TurnPhase {
 
     @Override
-    public void executePhase(Player currentPlayer, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
+    public void executePhase(Player currentPlayer, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws IOException {
         int phaseIndex = 1;
         actionController.initialisePossibleDestinations(currentPlayer.turnSequence(), map);
         actionController.applyOpponentsCondition(currentPlayer, opponents, phaseIndex, map);
         currentPlayer.godCard().actions().get(phaseIndex).changePossibleOptions(currentPlayer, actionController, map);
         if(!currentPlayer.turnSequence().possibleDestinations().isEmpty()) {
-            Box chosenBox = communicationController.chooseBox(currentPlayer, currentPlayer.turnSequence().possibleDestinations());
+            Box chosenBox = communicationController.chooseDestination(currentPlayer, currentPlayer.turnSequence().possibleDestinations());
             if (chosenBox != null) {
                 currentPlayer.turnSequence().setChosenBox(chosenBox);
                 actionController.updateNewPositions(currentPlayer.turnSequence());

@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.godPowers.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
 public class BuildTest {
 
     @Test
-    public void executePhase() {
+    public void executePhase() throws IOException {
         //-------------------------- Test 1 --------- CommunicationController --> usePower returns false, chooseBox returns element 4
         Map map = new  Map();
         ActionController actionController = new ActionController();

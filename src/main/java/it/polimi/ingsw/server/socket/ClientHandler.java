@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.socket;
 
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
-import it.polimi.ingsw.server.controller.Controller;
+import it.polimi.ingsw.server.controller.DataBase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,11 +13,11 @@ import java.net.Socket;
 import static it.polimi.ingsw.network.CommunicationProtocol.HI;
 
 public class ClientHandler extends Thread {
-    final private Controller controller;
+    final private DataBase dataBase;
     final private Socket socket;
 
-    public ClientHandler(Controller controller, Socket socket) {
-        this.controller = controller;
+    public ClientHandler(DataBase dataBase, Socket socket) {
+        this.dataBase = dataBase;
         this.socket = socket;
     }
 
@@ -52,7 +52,7 @@ public class ClientHandler extends Thread {
 
         if (key == HI) {
             System.out.println("Starting registration of socket " + socket);
-            new UserManager(controller, communicationChannel).run();
+            new UserManager(dataBase, communicationChannel).run();
         }
 
         while (!communicationChannel.isClosed()) {

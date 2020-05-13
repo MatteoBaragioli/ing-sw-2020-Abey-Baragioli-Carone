@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import java.io.IOException;
 import java.util.List;
 
 public abstract class MoveModifier implements TurnSequenceModifier {
@@ -7,7 +8,7 @@ public abstract class MoveModifier implements TurnSequenceModifier {
 
     }
 
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
+    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws IOException {
         //startPower-Prometheus
         boolean usePower = communicationController.chooseToUsePower(player);
         usePower(player, communicationController, actionController, map, opponents, winConditions, usePower);
@@ -16,7 +17,7 @@ public abstract class MoveModifier implements TurnSequenceModifier {
 
     public void executePower(Player player, ActionController actionController, Box chosenBox) {}
 
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower){}
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws IOException {}
 
 }
 

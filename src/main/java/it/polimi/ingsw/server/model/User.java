@@ -40,14 +40,13 @@ public class User {
         communicationChannel().write(message);
     }
 
-    private void tell(CommunicationProtocol key) {
+    public void tell(CommunicationProtocol key) {
         communicationChannel().writeKeyWord(key);
     }
 
     public int askTwoOrThreePlayerMatch() throws IOException {
         tell(MATCHTYPE);
         int answer = hearNumber();
-        System.out.println(answer);
         boolean valid = false;
         while (!valid) {
             if (answer == 1 || answer == 2)
@@ -60,5 +59,9 @@ public class User {
         if (answer == 2)
             return 3;
         return 2;
+    }
+
+    public boolean copy() throws IOException {
+        return communicationChannel().nextKey() == RECEIVED;
     }
 }

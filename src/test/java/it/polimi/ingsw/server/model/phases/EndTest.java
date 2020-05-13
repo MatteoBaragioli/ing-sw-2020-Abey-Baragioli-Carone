@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.godPowers.*;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class EndTest {
     @Test
-    public void executePhase() {
+    public void executePhase() throws IOException {
         //-------------------------- Test 1 -----------------------------------------------------
         //this test tries a End Phase for OpponentsCantMoveUpIfPlayerMovesUpPower
         Map map = new Map();

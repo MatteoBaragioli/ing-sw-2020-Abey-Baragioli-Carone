@@ -4,6 +4,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import it.polimi.ingsw.server.model.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,7 +102,7 @@ public class SwapPowerTest {
     }
 
     @Test
-    public void executeAction() {
+    public void executeAction() throws IOException {
         //-------------------------- Test 1 ---------
         //chosenWorker in (3,3) moves on (3,4) swapping the opponent's worker on (3,3)
         Map map = new  Map();
