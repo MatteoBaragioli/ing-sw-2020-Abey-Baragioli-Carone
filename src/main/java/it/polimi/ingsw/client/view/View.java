@@ -17,4 +17,5 @@ public interface View {
     int askWorker(List<Worker> workers);
     void prepareAdditionalCommunication(CommunicationProtocol key);
     void updateMap(List<Box> boxes);
+    void setPlayersInfo(List<Player> players);
 }

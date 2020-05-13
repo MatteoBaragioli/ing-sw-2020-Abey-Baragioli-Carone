@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model.godPowers;
 import it.polimi.ingsw.server.model.*;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 public class OpponenentsCantMoveUpIfPlayerMovesUpPowerTest {
 
     @Test
-    public void executeAction() {
+    public void executeAction() throws IOException {
         //-------------------------- Test 1 ---------
         Map map = new  Map();
         ActionController actionController = new ActionController();

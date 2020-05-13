@@ -74,6 +74,20 @@ public class ClientController {
         communicationChannel.writeNumber(index);
     }
 
+    public void manageListOfPlayers(CommunicationChannel communicationChannel, View view) throws IOException {
+        List<Player> players;
+        String message;
+
+        communicationChannel.writeKeyWord(RECEIVED);
+
+        message = communicationChannel.read();
+
+        Type listType = new TypeToken<List<Player>>() {}.getType();
+        players = new Gson().fromJson(message, listType);
+        view.setPlayersInfo(players);
+        communicationChannel.writeKeyWord(RECEIVED);
+    }
+
     public void manageConfirmation(CommunicationChannel communicationChannel, View view){
         boolean confirmation;
         confirmation = view.askConfirmation();

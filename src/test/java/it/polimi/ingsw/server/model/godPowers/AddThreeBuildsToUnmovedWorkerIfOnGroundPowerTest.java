@@ -4,6 +4,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import it.polimi.ingsw.server.model.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPowerTest {
     }
 
     @Test
-    public void usePower() {
+    public void usePower() throws IOException {
         //this test tries to add a build to the chosenWorker
         Map map = new  Map();
         ActionController actionController = new ActionController();

@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.godPowers;
 
 import it.polimi.ingsw.server.model.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import static it.polimi.ingsw.server.model.Phase.*;
@@ -10,7 +11,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier 
 
 
     @Override
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
+    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws IOException {
         //buildPower - Poseidon
         boolean usePower = true;
         int i;
@@ -46,13 +47,13 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier 
     }
 
     @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws IOException {
         if (usePower) {
             actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
             if (actionController.currentPlayerHasWon(player)) {
                 return;
             }
-            Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
+            Box chosenBox = communicationController.chooseBuild(player, player.turnSequence().possibleBuilds());
             if(chosenBox!=null) {
                 executePower(player, actionController, chosenBox);
                 actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);

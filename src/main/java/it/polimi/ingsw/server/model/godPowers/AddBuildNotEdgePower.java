@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.godPowers;
 
 import it.polimi.ingsw.server.model.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class AddBuildNotEdgePower extends BuildModifier {
 
 
     @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) {
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws IOException {
         if(usePower){
             actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
             if(actionController.currentPlayerHasWon(player)){
@@ -26,7 +27,7 @@ public class AddBuildNotEdgePower extends BuildModifier {
             }
             player.turnSequence().possibleBuilds().removeAll(edgeBoxes);
             if(!player.turnSequence().possibleBuilds().isEmpty()){
-                Box chosenBox = communicationController.chooseBox(player, player.turnSequence().possibleBuilds());
+                Box chosenBox = communicationController.chooseBuild(player, player.turnSequence().possibleBuilds());
                 if(chosenBox!=null)
                     executePower(player, actionController, chosenBox);
                 else{

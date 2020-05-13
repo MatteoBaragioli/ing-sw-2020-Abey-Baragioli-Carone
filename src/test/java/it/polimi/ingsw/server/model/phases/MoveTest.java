@@ -7,6 +7,8 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.godPowers.DoNothing;
 import it.polimi.ingsw.server.model.godPowers.NoSetUpCondition;
 import it.polimi.ingsw.server.model.godPowers.SwapPower;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
 public class MoveTest {
 
     @Test
-    public void executePhase() {
+    public void executePhase() throws IOException {
 
         //-------------------------- Test 1 ---------
         Map map = new Map();
