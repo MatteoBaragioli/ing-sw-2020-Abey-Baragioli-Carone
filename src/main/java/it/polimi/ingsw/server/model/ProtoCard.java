@@ -1,15 +1,23 @@
 package it.polimi.ingsw.server.model;
 
-public class ProtoCard {
-    private final String name;
-    private final int id;
-    private final String[] actions;
-    private final String winCondition;
-    private final int winParameter;
-    private final String setUpCondition;
-    private final String[] fxOnOpponent;
+import it.polimi.ingsw.server.model.godPowers.fx.GodFX;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.GodSetup;
+import it.polimi.ingsw.server.model.godPowers.winConditions.GodWin;
 
-    public ProtoCard(String name, int id, String[] actions, String winCondition, int winParameter, String setUpCondition, String[] fxOnOpponent) {
+public class ProtoCard {
+    final private String name;
+    final private int id;
+    final private GodFX[] actions;
+    final private GodWin winCondition;
+    final private int winParameter;
+    final private GodSetup setUpCondition;
+    final private GodFX[] fxOnOpponent;
+    final private String description;
+    final private String winDescription;
+    final private String setUpDescription;
+    final private String opponentsFxDescription;
+
+    public ProtoCard(String name, int id, GodFX[] actions, GodWin winCondition, int winParameter, GodSetup setUpCondition, GodFX[] fxOnOpponent, String description, String winDescription, String setUpDescription, String opponentsFxDescription) {
         this.name = name;
         this.id = id;
         this.actions = actions;
@@ -17,6 +25,10 @@ public class ProtoCard {
         this.winParameter = winParameter;
         this.setUpCondition = setUpCondition;
         this.fxOnOpponent = fxOnOpponent;
+        this.description = description;
+        this.winDescription = winDescription;
+        this.setUpDescription = setUpDescription;
+        this.opponentsFxDescription = opponentsFxDescription;
     }
 
     public String name() {
@@ -27,11 +39,11 @@ public class ProtoCard {
         return id;
     }
 
-    public String[] actions() {
+    public GodFX[] actions() {
         return actions;
     }
 
-    public String winCondition() {
+    public GodWin winCondition() {
         return winCondition;
     }
 
@@ -39,11 +51,27 @@ public class ProtoCard {
         return winParameter;
     }
 
-    public String setUpCondition() {
+    public GodSetup setUpCondition() {
         return setUpCondition;
     }
 
-    public String[] fxOnOpponent() {
+    public GodFX[] fxOnOpponent() {
         return fxOnOpponent;
+    }
+
+    public String description() {
+        return description;
+    }
+
+    public String winDescription() {
+        return winDescription;
+    }
+
+    public String setUpDescription() {
+        return setUpDescription;
+    }
+
+    public String opponentsFxDescription() {
+        return opponentsFxDescription;
     }
 }

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model.godPowers;
+package it.polimi.ingsw.server.model.godPowers.fx;
 
 import it.polimi.ingsw.server.model.*;
 

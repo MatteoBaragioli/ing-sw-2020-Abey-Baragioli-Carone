@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model.godPowers;
 
+import it.polimi.ingsw.server.model.godPowers.fx.PushAdjacentOpponentPower;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

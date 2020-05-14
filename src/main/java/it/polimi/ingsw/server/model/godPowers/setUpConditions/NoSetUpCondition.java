@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model.godPowers;
+package it.polimi.ingsw.server.model.godPowers.setUpConditions;
 
 import it.polimi.ingsw.server.model.Box;
 import it.polimi.ingsw.server.model.Player;

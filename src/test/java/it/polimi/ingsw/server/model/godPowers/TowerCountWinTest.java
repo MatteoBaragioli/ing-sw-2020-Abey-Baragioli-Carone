@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model.godPowers;
 
+import it.polimi.ingsw.server.model.godPowers.winConditions.TowerCountWin;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

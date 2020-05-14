@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model.godPowers;
 
+import it.polimi.ingsw.server.model.godPowers.fx.AddBuildBeforeMoveIfNotMoveUpPower;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -7,7 +9,6 @@ import it.polimi.ingsw.server.model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class AddBuildBeforeMoveIfNotMoveUpPowerTest {

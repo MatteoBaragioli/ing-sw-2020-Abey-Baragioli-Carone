@@ -1,8 +1,11 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.godPowers.*;
 import static it.polimi.ingsw.server.model.Phase.*;
 
+import it.polimi.ingsw.server.model.godPowers.fx.DoNothing;
+import it.polimi.ingsw.server.model.godPowers.fx.SwapPower;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
+import it.polimi.ingsw.server.model.godPowers.winConditions.TowerCountWin;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model.godPowers;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.model.godPowers.fx.RemoveAdjacentBlockPower;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
 
 import java.io.IOException;

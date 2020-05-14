@@ -1,11 +1,17 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.godPowers.*;
+import it.polimi.ingsw.server.model.godPowers.fx.*;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
+import it.polimi.ingsw.server.model.godPowers.winConditions.MoveTwoLevelsDownWin;
+import it.polimi.ingsw.server.model.godPowers.winConditions.TowerCountWin;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
 
+import static it.polimi.ingsw.server.model.godPowers.fx.GodFX.*;
+import static it.polimi.ingsw.server.model.godPowers.setUpConditions.GodSetup.*;
+import static it.polimi.ingsw.server.model.godPowers.winConditions.GodWin.*;
 import static org.junit.Assert.*;
 
 public class CardConstructorTest {
@@ -15,7 +21,7 @@ public class CardConstructorTest {
         List<ProtoCard> protoCards = new CardConstructor().loadProtoCardsFromFile();
         assertTrue(protoCards.size() > 0);
 
-        //Checking if Apollois generated correctly
+        //Checking if Apollo is generated correctly
         ProtoCard protoCard = protoCards.get(0);
 
         assertEquals("Apollo", protoCard.name());
@@ -23,15 +29,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==1)
-                assertEquals("Swap", protoCard.actions()[i]);
+                assertEquals(SWAP, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Artemis is generated correctly
         protoCard = protoCards.get(1);
@@ -41,15 +47,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==1)
-                assertEquals("AddMoveNotStartingBox", protoCard.actions()[i]);
+                assertEquals(ADD_MOVE_NOT_STARTING_BOX, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Athena is generated correctly
         protoCard = protoCards.get(2);
@@ -59,15 +65,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==3)
-                assertEquals("OpponentsCantMoveUpIfPlayerMovesUp", protoCard.actions()[i]);
+                assertEquals(OPPONENTS_CANT_MOVE_UP_IF_PLAYER_MOVES_UP, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Atlas is generated correctly
         protoCard = protoCards.get(3);
@@ -77,15 +83,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==2)
-                assertEquals("BuildDomeEverywhere", protoCard.actions()[i]);
+                assertEquals(BUILD_DOME_EVERYWHERE, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Demeter is generated correctly
         protoCard = protoCards.get(4);
@@ -95,15 +101,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==2)
-                assertEquals("AddBuildNotSameBox", protoCard.actions()[i]);
+                assertEquals(ADD_BUILD_NOT_SAME_BOX, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Hephaestus is generated correctly
         protoCard = protoCards.get(5);
@@ -113,15 +119,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==2)
-                assertEquals("AddBuildOnSameBox", protoCard.actions()[i]);
+                assertEquals(ADD_BUILD_ON_SAME_BOX, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Minotaur is generated correctly
         protoCard = protoCards.get(6);
@@ -131,15 +137,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==1)
-                assertEquals("PushAdjacentOpponent", protoCard.actions()[i]);
+                assertEquals(PUSH_ADJACENT_OPPONENT, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Pan is generated correctly
         protoCard = protoCards.get(7);
@@ -147,14 +153,14 @@ public class CardConstructorTest {
         assertEquals("Pan", protoCard.name());
         assertEquals(9, protoCard.id());
 
-        for (String action: protoCard.actions())
-            assertEquals("DoNothing", action);
+        for (GodFX action: protoCard.actions())
+            assertEquals(DO_NOTHING, action);
 
-        assertEquals("MoveTwoLevelsDown", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(MOVE_TWO_LEVELS_DOWN, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Prometheus is generated correctly
         protoCard = protoCards.get(8);
@@ -164,15 +170,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i == 0)
-                assertEquals("AddBuildBeforeIfNotMoveUp", protoCard.actions()[i]);
+                assertEquals(ADD_BUILD_BEFORE_IF_NOT_MOVE_UP, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Ares is generated correctly
         protoCard = protoCards.get(9);
@@ -182,15 +188,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==2)
-                assertEquals("RemoveAdjacentBlock", protoCard.actions()[i]);
+                assertEquals(REMOVE_ADJACENT_BLOCK, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Chronus is generated correctly
         protoCard = protoCards.get(10);
@@ -198,15 +204,15 @@ public class CardConstructorTest {
         assertEquals("Chronus", protoCard.name());
         assertEquals(16, protoCard.id());
 
-        for (String action: protoCard.actions())
-                assertEquals("DoNothing", action);
+        for (GodFX action: protoCard.actions())
+                assertEquals(DO_NOTHING, action);
 
-        assertEquals("TowerCountWin", protoCard.winCondition());
+        assertEquals(TOWER_COUNT, protoCard.winCondition());
         assertEquals(5, protoCard.winParameter());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Hestia is generated correctly
         protoCard = protoCards.get(11);
@@ -216,15 +222,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==2)
-                assertEquals("AddBuildNotEdge", protoCard.actions()[i]);
+                assertEquals(ADD_BUILD_NOT_EDGE, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Poseidon is generated correctly
         protoCard = protoCards.get(12);
@@ -234,15 +240,15 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==2)
-                assertEquals("AddThreeBuildsToUnmovedWorker", protoCard.actions()[i]);
+                assertEquals(ADD_THREE_BUILDS_TO_UNMOVED_WORKER, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
 
         //Checking if Zeus is generated correctly
         protoCard = protoCards.get(13);
@@ -252,61 +258,61 @@ public class CardConstructorTest {
 
         for (int i = 0; i<protoCard.actions().length; i++)
             if (i==2)
-                assertEquals("BuildUnderYourself", protoCard.actions()[i]);
+                assertEquals(BUILD_UNDER_YOURSELF, protoCard.actions()[i]);
             else
-                assertEquals("DoNothing", protoCard.actions()[i]);
+                assertEquals(DO_NOTHING, protoCard.actions()[i]);
 
-        assertEquals("Standard", protoCard.winCondition());
-        assertEquals("NoSetUp", protoCard.setUpCondition());
+        assertEquals(STANDARD, protoCard.winCondition());
+        assertEquals(NO_SETUP, protoCard.setUpCondition());
 
-        for (String opponentFX: protoCard.fxOnOpponent())
-            assertEquals("DoNothing", opponentFX);
+        for (GodFX opponentFX: protoCard.fxOnOpponent())
+            assertEquals(DO_NOTHING, opponentFX);
     }
     //Done
 
     @Test
     public void loadFX() {
         CardConstructor cardConstructor = new CardConstructor();
-        Map<String, TurnSequenceModifier> fx = cardConstructor.loadFX();
+        Map<GodFX, TurnSequenceModifier> fx = cardConstructor.loadFX();
 
-        assertTrue(fx.containsKey("DoNothing"));
-        assertTrue(fx.get("DoNothing").getClass().isInstance(new DoNothing()));
+        assertTrue(fx.containsKey(DO_NOTHING));
+        assertTrue(fx.get(DO_NOTHING).getClass().isInstance(new DoNothing()));
 
-        assertTrue(fx.containsKey("Swap"));
-        assertTrue(fx.get("Swap").getClass().isInstance(new SwapPower()));
+        assertTrue(fx.containsKey(SWAP));
+        assertTrue(fx.get(SWAP).getClass().isInstance(new SwapPower()));
 
-        assertTrue(fx.containsKey("AddMoveNotStartingBox"));
-        assertTrue(fx.get("AddMoveNotStartingBox").getClass().isInstance(new AddMoveNotStartingBoxPower()));
+        assertTrue(fx.containsKey(ADD_MOVE_NOT_STARTING_BOX));
+        assertTrue(fx.get(ADD_MOVE_NOT_STARTING_BOX).getClass().isInstance(new AddMoveNotStartingBoxPower()));
 
-        assertTrue(fx.containsKey("OpponentsCantMoveUpIfPlayerMovesUp"));
-        assertTrue(fx.get("OpponentsCantMoveUpIfPlayerMovesUp").getClass().isInstance(new OpponenentsCantMoveUpIfPlayerMovesUpPower()));
+        assertTrue(fx.containsKey(OPPONENTS_CANT_MOVE_UP_IF_PLAYER_MOVES_UP));
+        assertTrue(fx.get(OPPONENTS_CANT_MOVE_UP_IF_PLAYER_MOVES_UP).getClass().isInstance(new OpponenentsCantMoveUpIfPlayerMovesUpPower()));
 
-        assertTrue(fx.containsKey("BuildDomeEverywhere"));
-        assertTrue(fx.get("BuildDomeEverywhere").getClass().isInstance(new BuildDomeEverywherePower()));
+        assertTrue(fx.containsKey(BUILD_DOME_EVERYWHERE));
+        assertTrue(fx.get(BUILD_DOME_EVERYWHERE).getClass().isInstance(new BuildDomeEverywherePower()));
 
-        assertTrue(fx.containsKey("AddBuildNotSameBox"));
-        assertTrue(fx.get("AddBuildNotSameBox").getClass().isInstance(new AddBuildNotSameBoxPower()));
+        assertTrue(fx.containsKey(ADD_BUILD_NOT_SAME_BOX));
+        assertTrue(fx.get(ADD_BUILD_NOT_SAME_BOX).getClass().isInstance(new AddBuildNotSameBoxPower()));
 
-        assertTrue(fx.containsKey("AddBuildOnSameBox"));
-        assertTrue(fx.get("AddBuildOnSameBox").getClass().isInstance(new AddBuildOnSameBoxPower()));
+        assertTrue(fx.containsKey(ADD_BUILD_ON_SAME_BOX));
+        assertTrue(fx.get(ADD_BUILD_ON_SAME_BOX).getClass().isInstance(new AddBuildOnSameBoxPower()));
 
-        assertTrue(fx.containsKey("PushAdjacentOpponent"));
-        assertTrue(fx.get("PushAdjacentOpponent").getClass().isInstance(new PushAdjacentOpponentPower()));
+        assertTrue(fx.containsKey(PUSH_ADJACENT_OPPONENT));
+        assertTrue(fx.get(PUSH_ADJACENT_OPPONENT).getClass().isInstance(new PushAdjacentOpponentPower()));
 
-        assertTrue(fx.containsKey("AddBuildBeforeIfNotMoveUp"));
-        assertTrue(fx.get("AddBuildBeforeIfNotMoveUp").getClass().isInstance(new AddBuildBeforeMoveIfNotMoveUpPower()));
+        assertTrue(fx.containsKey(ADD_BUILD_BEFORE_IF_NOT_MOVE_UP));
+        assertTrue(fx.get(ADD_BUILD_BEFORE_IF_NOT_MOVE_UP).getClass().isInstance(new AddBuildBeforeMoveIfNotMoveUpPower()));
 
-        assertTrue(fx.containsKey("RemoveAdjacentBlock"));
-        assertTrue(fx.get("RemoveAdjacentBlock").getClass().isInstance(new RemoveAdjacentBlockPower()));
+        assertTrue(fx.containsKey(REMOVE_ADJACENT_BLOCK));
+        assertTrue(fx.get(REMOVE_ADJACENT_BLOCK).getClass().isInstance(new RemoveAdjacentBlockPower()));
 
-        assertTrue(fx.containsKey("AddBuildNotEdge"));
-        assertTrue(fx.get("AddBuildNotEdge").getClass().isInstance(new AddBuildNotEdgePower()));
+        assertTrue(fx.containsKey(ADD_BUILD_NOT_EDGE));
+        assertTrue(fx.get(ADD_BUILD_NOT_EDGE).getClass().isInstance(new AddBuildNotEdgePower()));
 
-        assertTrue(fx.containsKey("AddThreeBuildsToUnmovedWorker"));
-        assertTrue(fx.get("AddThreeBuildsToUnmovedWorker").getClass().isInstance(new AddThreeBuildsToUnmovedWorkerIfOnGroundPower()));
+        assertTrue(fx.containsKey(ADD_THREE_BUILDS_TO_UNMOVED_WORKER));
+        assertTrue(fx.get(ADD_THREE_BUILDS_TO_UNMOVED_WORKER).getClass().isInstance(new AddThreeBuildsToUnmovedWorkerIfOnGroundPower()));
 
-        assertTrue(fx.containsKey("BuildUnderYourself"));
-        assertTrue(fx.get("BuildUnderYourself").getClass().isInstance(new BuildUnderYourselfPower()));
+        assertTrue(fx.containsKey(BUILD_UNDER_YOURSELF));
+        assertTrue(fx.get(BUILD_UNDER_YOURSELF).getClass().isInstance(new BuildUnderYourselfPower()));
     }
     //Done
 

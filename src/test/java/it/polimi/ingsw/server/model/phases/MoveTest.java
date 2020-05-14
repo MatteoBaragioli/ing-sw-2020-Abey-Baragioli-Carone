@@ -4,9 +4,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.model.godPowers.DoNothing;
-import it.polimi.ingsw.server.model.godPowers.NoSetUpCondition;
-import it.polimi.ingsw.server.model.godPowers.SwapPower;
+import it.polimi.ingsw.server.model.godPowers.fx.DoNothing;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
+import it.polimi.ingsw.server.model.godPowers.fx.SwapPower;
 
 import java.io.IOException;
 import java.util.ArrayList;

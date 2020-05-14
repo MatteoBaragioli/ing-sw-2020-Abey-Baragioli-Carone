@@ -1,8 +1,8 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.godPowers.MoveTwoLevelsDownWin;
-import it.polimi.ingsw.server.model.godPowers.NoSetUpCondition;
-import it.polimi.ingsw.server.model.godPowers.TowerCountWin;
+import it.polimi.ingsw.server.model.godPowers.winConditions.MoveTwoLevelsDownWin;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
+import it.polimi.ingsw.server.model.godPowers.winConditions.TowerCountWin;
 import org.junit.Test;
 
 import java.util.ArrayList;
