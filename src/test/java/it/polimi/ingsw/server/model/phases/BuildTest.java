@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model.phases;
 
-import it.polimi.ingsw.server.model.godPowers.fx.AddBuildOnSameBoxPower;
-import it.polimi.ingsw.server.model.godPowers.fx.DoNothing;
+import it.polimi.ingsw.server.model.godPowers.fx.*;
 import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
 import static org.junit.Assert.*;

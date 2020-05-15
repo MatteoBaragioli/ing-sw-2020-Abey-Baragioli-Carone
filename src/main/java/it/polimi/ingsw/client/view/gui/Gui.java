@@ -1,20 +1,30 @@
 package it.polimi.ingsw.client.view.gui;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.server.model.Box;
 import it.polimi.ingsw.server.model.GodCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Worker;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 import java.util.List;
 
-public class Gui implements View {
+public class Gui extends Application implements View {
 
-    private String[] args;
+    private Stage stage;
+    private GuiApp gui;
 
-    public Gui(String[] args) {
-        this.args = args;
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        gui = new GuiApp();
+        gui.start(stage);
     }
 
     @Override
@@ -54,7 +64,8 @@ public class Gui implements View {
 
     @Override
     public String askIp() {
-        return null;
+        gui.menuScene().askIp();
+        return "";
     }
 
     @Override
@@ -64,15 +75,13 @@ public class Gui implements View {
 
     @Override
     public int askPort() {
-        return 0;
+        return 1234;
     }
 
     @Override
-    public String askUserName() {
-        return null;
+    public String askUserName(){
+        return gui.menuScene().askNickname();
     }
 
-    public static void main(String[] args) {
 
-    }
 }
