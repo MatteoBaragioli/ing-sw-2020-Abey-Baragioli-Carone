@@ -69,6 +69,12 @@ public class ScreenView {
 
                 for (i = 1; i <= mapDim - 1; i++) {
                     ps.append(this.map.position(i, mapDim - k - 1).getLines().get(j));
+                    if(i==mapDim-1 && j!=0){
+                        ps.append('|');
+                    }
+                    if(i==mapDim-1 && j==0){
+                        ps.append('+');
+                    }
                 }
                 if(infoMessageBox.size()>0 && (j+((boxHeight)*k)<infoMessageBox.size())){
                     ps.append("        "+this.infoMessageBox.get(j+((boxHeight)*k)));
@@ -82,7 +88,6 @@ public class ScreenView {
                 ps.append("\n");
 
             }
-
         }
 
         ps.print(Colors.CYAN_BRIGHT+"  +-----------------+-----------------+-----------------+-----------------+-----------------+\n");

@@ -1,6 +1,13 @@
 package it.polimi.ingsw.client.view.cli;
 
+import it.polimi.ingsw.server.model.Colour;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Colors {
+
+
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset
     public static final String RESET_BACKGROUND="\033[49m"; //reset background color
@@ -70,4 +77,17 @@ public class Colors {
     public static final String WHITE_BACKGROUND="\033[107m"; //(should be, but it's not) WHITE
 
     public static final String WHITE_TRY_BACKGROUND="\033[7m";
+
+
+    private static final HashMap<Colour, String> actualColors ;
+    static {
+        actualColors= new HashMap<>();
+        actualColors.put(Colour.BLUE, Colors.CYAN_BACKGROUND);
+        actualColors.put(Colour.GREY, Colors.GREEN_BACKGROUND_BRIGHT);
+        actualColors.put(Colour.WHITE, Colors.RED_BACKGROUND);
+    }
+
+    public static String getActualColor(Colour colour) {
+        return actualColors.get(colour);
+    }
 }

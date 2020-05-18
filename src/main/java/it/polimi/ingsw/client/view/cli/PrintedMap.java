@@ -9,8 +9,6 @@ public class PrintedMap {
             for (int i = 0; i < mapDim; i++)
                 for (int j = 0; j < mapDim; j++) {
                     this.printedMap[i][j] = new PrintedBlock(i, j);
-                    if(i==mapDim-1)
-                        this.printedMap[i][j].externalBlock();
                 }
         }
 
