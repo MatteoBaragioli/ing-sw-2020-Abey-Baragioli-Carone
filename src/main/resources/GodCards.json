@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Apollo",
+    "id": 1,
+    "actions": ["DO_NOTHING", "SWAP", "DO_NOTHING", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Artemis",
+    "id": 2,
+    "actions": ["DO_NOTHING","ADD_MOVE_NOT_STARTING_BOX", "DO_NOTHING", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Athena",
+    "id": 3,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "OPPONENTS_CANT_MOVE_UP_IF_PLAYER_MOVES_UP"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Atlas",
+    "id": 4,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "BUILD_DOME_EVERYWHERE", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Demeter",
+    "id": 5,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "ADD_BUILD_NOT_SAME_BOX", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Hephaestus",
+    "id": 6,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "ADD_BUILD_ON_SAME_BOX", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Minotaur",
+    "id": 8,
+    "actions": ["DO_NOTHING", "PUSH_ADJACENT_OPPONENT", "DO_NOTHING", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Pan",
+    "id": 9,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"],
+    "winCondition": "MOVE_TWO_LEVELS_DOWN",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Prometheus",
+    "id": 10,
+    "actions": ["ADD_BUILD_BEFORE_IF_NOT_MOVE_UP", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Ares",
+    "id": 12,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "REMOVE_ADJACENT_BLOCK", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Chronus",
+    "id": 16,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"],
+    "winCondition": "TOWER_COUNT",
+    "winParameter": 5,
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Hestia",
+    "id": 21,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "ADD_BUILD_NOT_EDGE", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Poseidon",
+    "id": 27,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "ADD_THREE_BUILDS_TO_UNMOVED_WORKER", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  },
+  {
+    "name": "Zeus",
+    "id": 30,
+    "actions": ["DO_NOTHING", "DO_NOTHING", "BUILD_UNDER_YOURSELF", "DO_NOTHING"],
+    "winCondition": "STANDARD",
+    "setUpCondition": "NO_SETUP",
+    "fxOnOpponent": ["DO_NOTHING", "DO_NOTHING", "DO_NOTHING", "DO_NOTHING"]
+  }
+]
