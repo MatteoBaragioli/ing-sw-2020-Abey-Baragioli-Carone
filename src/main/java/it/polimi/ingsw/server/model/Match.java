@@ -154,7 +154,7 @@ public class Match extends Thread{
             }
         }
         if(winner!=null)
-            System.out.println(winner.getNickname());
+            System.out.println(winner.name());
 
         //END MATCH
         //todo dire chi ha vinto
@@ -225,7 +225,7 @@ public class Match extends Thread{
                 e.printStackTrace();
                 //TODO
             }
-            Worker worker1 = new Worker(position, player.getColour());
+            Worker worker1 = new Worker(position, player.colour());
             freeMap.remove(position);
             player.assignWorker(worker1);
 
@@ -236,7 +236,7 @@ public class Match extends Thread{
                 e.printStackTrace();
                 //TODO
             }
-            Worker worker2 = new Worker(position, player.getColour());
+            Worker worker2 = new Worker(position, player.colour());
             freeMap.remove(position);
             player.assignWorker(worker2);
         }

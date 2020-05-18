@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private String nickname;
+    private String name;
     private Colour colour;
     private List<Worker> workers = new ArrayList<>();
     private GodCard card;
@@ -12,25 +12,25 @@ public class Player {
     private boolean inGame=true;
 
 
-    public Player(String nickname, Colour colour, GodCard card) {
-        this.nickname = nickname;
+    public Player(String name, Colour colour, GodCard card) {
+        this.name = name;
         this.colour = colour;
         this.card = card;
     }
 
     public Player(User user){
-        this.nickname=user.name();
+        this.name =user.name();
     }
 
-    public String getNickname() {
-        return nickname;
+    public String name() {
+        return name;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Colour getColour() {
+    public Colour colour() {
         return colour;
     }
 

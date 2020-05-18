@@ -46,16 +46,14 @@ public class Box {
         return position[1];
     }
 
+    public Worker occupier(){ return occupier;}
+
     public void occupy(Worker occupier){this.occupier=occupier;}
 
     /**
      * This method removes the occupier
      */
     public void removeOccupier() {occupy(null);}
-
-
-
-    public Worker occupier(){ return occupier;}
 
     /**
      * this method tells if a box is occupied by any of the workers of the players

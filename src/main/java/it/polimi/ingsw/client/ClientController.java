@@ -100,4 +100,12 @@ public class ClientController {
     public void askMatchType(CommunicationChannel communicationChannel, View view) {
         communicationChannel.writeNumber(view.askMatchType());
     }
+
+    public void manageMatchStart(CommunicationChannel communicationChannel, View view) {
+        //setting of players
+    }
+
+    public void waitForPlayers(CommunicationChannel communicationChannel, View view) {
+
+    }
 }

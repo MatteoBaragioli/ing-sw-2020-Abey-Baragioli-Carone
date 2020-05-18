@@ -112,6 +112,8 @@ public class Client {
                         System.err.println("Manage map error");
                     }
                     break;
+                case MATCHSTART:
+                    clientController.manageMatchStart(communicationChannel, view);
                 case MATCHTYPE:
                     clientController.askMatchType(communicationChannel, view);
                     break;
@@ -119,6 +121,8 @@ public class Client {
                 case USERNAME:
                     clientController.askUsername(communicationChannel, view);
                     break;
+                case WAITFORPLAYERS:
+                    clientController.waitForPlayers(communicationChannel, view);
                 case WORKER:
                     try {
                         clientController.manageListOfWorkers(communicationChannel, view);

@@ -47,12 +47,12 @@ public class MatchTest {
         players.add(player3);
         Match match = new Match(players, new CommunicationController());
         match.assignColour();
-        assertNotNull(player1.getColour());
-        assertNotNull(player2.getColour());
-        assertNotNull(player3.getColour());
-        assertNotEquals(player1.getColour(), player2.getColour());
-        assertNotEquals(player1.getColour(), player3.getColour());
-        assertNotEquals(player2.getColour(), player3.getColour());
+        assertNotNull(player1.colour());
+        assertNotNull(player2.colour());
+        assertNotNull(player3.colour());
+        assertNotEquals(player1.colour(), player2.colour());
+        assertNotEquals(player1.colour(), player3.colour());
+        assertNotEquals(player2.colour(), player3.colour());
     }
 
     @Test
@@ -92,8 +92,8 @@ public class MatchTest {
 
         for(Player player : match.gamePlayers()) {
             assertNotNull(player.godCard());
-            System.out.println(player.getNickname());
-            System.out.println(player.getColour());
+            System.out.println(player.name());
+            System.out.println(player.colour());
             System.out.println(player.godCard().id());
             System.out.println(player.godCard().name());
         }
@@ -121,8 +121,8 @@ public class MatchTest {
             assertNotNull(player.workers());
             assertEquals(2, player.workers().size());
             assertNotEquals(player.workers().get(0), player.workers().get(1));
-            assertEquals(player.getColour(), player.workers().get(0).colour());
-            assertEquals(player.getColour(), player.workers().get(1).colour());
+            assertEquals(player.colour(), player.workers().get(0).colour());
+            assertEquals(player.colour(), player.workers().get(1).colour());
         }
 
         assertNotEquals(player1.workers().get(0), player2.workers().get(0));
