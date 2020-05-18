@@ -9,7 +9,7 @@ public class PrintedBlock {
 
 
 
-    public PrintedBlock(int x,int y){
+    public PrintedBlock(int x,int y){ // this method creates a list of strings that if printed, print a ground level block
         this.x=x;
         this.y=y;
         this.lines.add(Colors.CYAN_BOLD_BRIGHT+"+-----------------");
@@ -21,11 +21,11 @@ public class PrintedBlock {
 
     public void groundFloorBlock(){
         this.setLines(new ArrayList<String>());
-        this.lines.add(Colors.CYAN_BOLD_BRIGHT+"+-----------------");
-        this.lines.add("|                 ");
-        this.lines.add("|                 ");
-        this.lines.add("|                 ");
-        this.lines.add("|                 ");
+        this.lines.add(Colors.CYAN_BRIGHT+"+-----------------");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 ");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 ");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 ");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 ");
     }
 
     public void firstFloorBlock(){
@@ -64,7 +64,7 @@ public class PrintedBlock {
             this.lines.add(Colors.CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
             this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + "   tower   " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
-            this.lines.add("|   " + Colors.BLUE_BACKGROUND+ Colors.BLACK_BOLD_BRIGHT  + " complete! " + Colors.RESET_BACKGROUND + "   ");
+            this.lines.add("|   " + Colors.BLUE_BACKGROUND+ Colors.BLACK_BOLD_BRIGHT  + " complete! " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
 
         }
@@ -73,7 +73,7 @@ public class PrintedBlock {
             this.lines.add(Colors.CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
             this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + "  dome on  " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
-            this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + " 2° level  " + Colors.RESET_BACKGROUND + "   ");
+            this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + " 2° level  " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
 
         }
@@ -82,7 +82,7 @@ public class PrintedBlock {
             this.lines.add(Colors.CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
             this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + "  dome on  " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
-            this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + " 1° level  " + Colors.RESET_BACKGROUND + "   ");
+            this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + " 1° level  " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
 
         }
@@ -91,7 +91,7 @@ public class PrintedBlock {
             this.lines.add(Colors.CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
             this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + "  dome on  " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
-            this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + "  ground   " + Colors.RESET_BACKGROUND + "   ");
+            this.lines.add("|   " + Colors.BLUE_BACKGROUND + Colors.BLACK_BOLD_BRIGHT + "  ground   " + Colors.RESET_BACKGROUND + Colors.CYAN_BOLD_BRIGHT + "   ");
             this.lines.add("|     " + Colors.BLUE_BACKGROUND + "       " + Colors.RESET_BACKGROUND + "     ");
 
         }
@@ -101,11 +101,11 @@ public class PrintedBlock {
 
     public void externalBlock(){ // this method creates a list of strings that if printed, print a ground level block
         this.setLines(new ArrayList<String>());
-        this.lines.add(Colors.CYAN_BOLD_BRIGHT+"+-----------------+");
-        this.lines.add("|                 |");
-        this.lines.add("|                 |");
-        this.lines.add("|                 |");
-        this.lines.add("|                 |");
+        this.lines.add(Colors.CYAN_BRIGHT+"+-----------------+");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 |");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 |");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 |");
+        this.lines.add(Colors.CYAN_BRIGHT+"|                 |");
     }
 
     public List<String> getLines(){
@@ -138,7 +138,7 @@ public class PrintedBlock {
         this.setLine(buffer, indexOfLine);
     }
 
-    public void groundFloorWithWorker(/**passerò il colore del player che ha questa view*/){
+    public void groundFloorWithWorker(/**passerò il colore del player che ha questa view e il sesso del worker ♀,♂*/){
         this.setLines(new ArrayList<String>());
         this.lines.add(Colors.CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("|                 ");
@@ -192,4 +192,7 @@ public class PrintedBlock {
         else
             groundFloorWithWorker();
     }
+
+
 }
+
