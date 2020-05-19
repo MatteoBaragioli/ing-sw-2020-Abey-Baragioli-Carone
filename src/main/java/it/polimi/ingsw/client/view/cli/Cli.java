@@ -18,6 +18,11 @@ public class Cli implements View{
     private static BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
 
     private PrintStream printStream=new PrintStream(System.out);
+    private ScreenView view=new ScreenView(printStream);
+
+    public ScreenView screenView(){
+        return this.view;
+    }
 
     public static String askAnswer() throws IOException {
         return commandline.readLine();
@@ -98,7 +103,7 @@ public class Cli implements View{
         boolean valid = false;
         int answer = 0;
         while (!valid) {
-            System.out.println("Choose match type:\n" + "1) 1 vs 1\n" + "2)Three For All");
+            System.out.println("Choose match type:\n" + "1   for 1 vs 1\n" + "2   Three For All");
             try {
                 answer = askNumber();
             } catch (IOException e) {
@@ -151,6 +156,7 @@ public class Cli implements View{
     public static void main(String[] args){
         Cli cli = new Cli();
         Client client = new Client(cli);
+        cli.view.title();
         client.start();
     }
 }
