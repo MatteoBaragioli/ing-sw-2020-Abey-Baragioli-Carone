@@ -93,12 +93,12 @@ public class ClientController {
         communicationChannel.writeBoolean(confirmation);
     }
 
-    public void askUsername(CommunicationChannel communicationChannel, View view) {
-        communicationChannel.write(view.askUserName());
+    public void askUsername(CommunicationChannel communicationChannel, String userName) {
+        communicationChannel.write(userName);
     }
 
-    public void askMatchType(CommunicationChannel communicationChannel, View view) {
-        communicationChannel.writeNumber(view.askMatchType());
+    public void askMatchType(CommunicationChannel communicationChannel, int matchType) {
+        communicationChannel.writeNumber(matchType);
     }
 
     public void manageMatchStart(CommunicationChannel communicationChannel, View view) {

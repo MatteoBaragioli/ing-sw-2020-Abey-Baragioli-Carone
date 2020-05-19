@@ -1,12 +1,15 @@
 package it.polimi.ingsw.client.view.gui;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.server.model.Box;
 import it.polimi.ingsw.server.model.GodCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Worker;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
@@ -15,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.util.List;
 
@@ -25,11 +29,16 @@ public class Gui extends Application implements View {
     private Font lillybelleFont = Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
     private static final int mapRowsNumber = 5;
     private static final int mapColumnsNumber = 5;
-    Client client = new Client();
+    Client client = new Client(this);
     Stage window;
     Scene menu;
     Scene loadingScene;
     MenuScene menuScene;
+
+    // fade in and out transition of the menu Scene
+    FadeTransition fadeMenu;
+
+
     StackPane openingPage = new StackPane();
     StackPane menuPage = new StackPane();
     StackPane loadingPage = new StackPane();
@@ -39,13 +48,6 @@ public class Gui extends Application implements View {
     private String nickname;
     private int numberOfPlayers;
 
-
-
-
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -58,8 +60,14 @@ public class Gui extends Application implements View {
 
 
         menuScene = new MenuScene(window, screenWidth, screenHeight);
+
+        fadeMenu = new FadeTransition(Duration.millis(3000), menuScene.menuPage());
+        fadeMenu.setFromValue(0.0);
+        fadeMenu.setToValue(1.0);
+        fadeMenu.play();
+
         menuScene.setMenuScene(this);
-        menuScene.askIp();
+        menuScene.askIp(this);
 
         window.show();
     }
@@ -72,7 +80,7 @@ public class Gui extends Application implements View {
         window.setHeight(720);
         screenWidth = 1280;
         screenHeight = 720;
-        window.initStyle(StageStyle.DECORATED);
+        window.initStyle(StageStyle.UNDECORATED);
         window.setTitle("Santorini");
         window.setOnCloseRequest(e -> {
             e.consume();
@@ -82,11 +90,11 @@ public class Gui extends Application implements View {
     }
 
     public void startClient(){
-        client.start(this);
+        client.start();
     }
 
 
-    private void closeProgram(StackPane fullPage){
+    private void closeProgram(HBox fullPage){
         boolean answer = ConfirmBox.display("Quit?", "Sure you want to quit the game?", window.getWidth(), window.getHeight());
         if(answer)
             window.close();
@@ -121,8 +129,8 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public int askMatchType() {
-        return menuScene.matchType();
+    public void askMatchType(ClientController clientController, CommunicationChannel communicationChannel) {
+        menuScene.askNumberOfPlayers(clientController, communicationChannel);
     }
 
     @Override
@@ -131,8 +139,8 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public String askUserName() {
-        return menuScene.nickname();
+    public void askUserName(ClientController clientController, CommunicationChannel communicationChannel) {
+        menuScene.askNickname(clientController, communicationChannel);
     }
 
     @Override

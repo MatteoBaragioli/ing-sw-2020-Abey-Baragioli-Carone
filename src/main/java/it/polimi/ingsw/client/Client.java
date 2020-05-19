@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.view.cli.Cli;
 import it.polimi.ingsw.client.view.gui.Gui;
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import javafx.application.Application;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,16 +15,25 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.HI;
+import static it.polimi.ingsw.network.CommunicationProtocol.valueOf;
 
-public class Client {
+public class Client extends Thread{
+
+    private final View view;
+
+    public Client(View view) {
+        this.view = view;
+    }
+
     public static void main(String[] args){
         if (args.length > 2 && args[2].equals("-cli"))
             Cli.main(args);
         else
-            Gui.main(args);
+            Application.launch(Gui.class, args);
     }
 
-    public void start(View view){
+    @Override
+    public void run(){
         String hostName = view.askIp();
         int portNumber = view.askPort();
         Socket socket = null;
@@ -60,6 +70,7 @@ public class Client {
         communicationChannel.writeKeyWord(HI);
         ClientController clientController = new ClientController();
         while (!communicationChannel.isClosed()) {
+            System.out.println("sono nel ciclo");
             CommunicationProtocol key = null;
             try {
                 key = communicationChannel.nextKey();
@@ -115,11 +126,11 @@ public class Client {
                 case MATCHSTART:
                     clientController.manageMatchStart(communicationChannel, view);
                 case MATCHTYPE:
-                    clientController.askMatchType(communicationChannel, view);
+                    view.askMatchType(clientController, communicationChannel);
                     break;
                 case UNIQUEUSERNAME:
                 case USERNAME:
-                    clientController.askUsername(communicationChannel, view);
+                    view.askUserName(clientController, communicationChannel);
                     break;
                 case WAITFORPLAYERS:
                     clientController.waitForPlayers(communicationChannel, view);
