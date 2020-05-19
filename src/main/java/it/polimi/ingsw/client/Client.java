@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -35,18 +36,27 @@ public class Client extends Thread{
 
     @Override
     public void run(){
-        String hostName = view.askIp();
-        int portNumber = view.askPort();
+        boolean valid = false;
+        String hostName = null;
+        int portNumber = 0;
         Socket socket = null;
-        try {
-            socket = new Socket(hostName, portNumber);
-        } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + hostName);
-            System.exit(1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Couldn't get I/O for the connection to " + hostName);
-            System.exit(1);
+        while (!valid) {
+            hostName = view.askIp();
+            portNumber = view.askPort();
+            try {
+                socket = new Socket(hostName, portNumber);
+                valid = true;
+            } catch (UnknownHostException e) {
+                view.unknownHost(hostName, e);
+                valid = false;
+            } catch (ConnectException e) {
+                view.connectionRefused(hostName, e);
+                valid = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.err.println("Couldn't get I/O for the connection to " + hostName);
+                System.exit(1);
+            }
         }
 
         PrintWriter out = null;

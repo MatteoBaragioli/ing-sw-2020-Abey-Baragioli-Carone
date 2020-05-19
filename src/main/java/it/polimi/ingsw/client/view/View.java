@@ -8,6 +8,8 @@ import it.polimi.ingsw.network.objects.God;
 import it.polimi.ingsw.network.objects.PlayerCard;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public interface View {
@@ -25,4 +27,6 @@ public interface View {
     void setMyPlayer(PlayerCard player);
     void setOpponentsInfo(List<PlayerCard> players);
     void connectionLost();
+    void unknownHost(String host, UnknownHostException e);
+    void connectionRefused(String host, ConnectException e);
 }

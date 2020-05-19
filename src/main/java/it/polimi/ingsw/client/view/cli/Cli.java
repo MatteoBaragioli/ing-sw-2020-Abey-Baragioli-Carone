@@ -10,6 +10,9 @@ import it.polimi.ingsw.network.objects.God;
 import it.polimi.ingsw.network.objects.PlayerCard;
 
 import java.io.*;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+import java.util.InputMismatchException;
 import java.util.List;
 
 public class Cli implements View{
@@ -71,6 +74,16 @@ public class Cli implements View{
     }
 
     @Override
+    public void unknownHost(String host, UnknownHostException e) {
+        System.err.println("Don't know about host " + host + "\nRetry.");
+    }
+
+    @Override
+    public void connectionRefused(String host, ConnectException e) {
+        System.err.println("Refused connection to" + host + "\nRetry.");
+    }
+
+    @Override
     public String askIp() {
         System.out.println("Write ip address to connect to:");
         try {
@@ -91,7 +104,6 @@ public class Cli implements View{
                 answer = askNumber();
             } catch (IOException e) {
                 e.printStackTrace();
-
             } catch (NumberFormatException e) {
                 answer = 0;
             }
@@ -106,13 +118,24 @@ public class Cli implements View{
 
     @Override
     public int askPort() {
-        System.out.println("Write port:");
-        try {
-            return Integer.parseInt(commandline.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return -1;
+        boolean valid = false;
+        int answer = 0;
+        while (!valid) {
+            System.out.println("Write port:");
+            try {
+                answer = askNumber();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                answer = 0;
+            }
+            if (answer >= 1024) {
+                valid = true;
+            }
+            else
+                System.out.println("Not valid answer. Try again");
         }
+        return answer;
     }
 
     @Override
