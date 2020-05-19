@@ -65,7 +65,7 @@ public class Lobby {
             System.out.println("Added " + user.name() + " to lobby " + this + " with " + nPlayers() + " players\n" + missing + " missing");
             if (isReady()) {
                 System.out.println("Lobby " + this + " is ready");
-                notifyAll();
+                close();
             }
         }
     }
@@ -89,9 +89,11 @@ public class Lobby {
     public void run(){
         System.out.println("Waiting for players");
         while(isOpen()) {
-            if (isReady()) {
-                close();
-                System.out.println("Found players");
+            System.out.println("Lobby non ready");
+            try {
+                wait(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         System.out.println("We can start this match " + this.toString());

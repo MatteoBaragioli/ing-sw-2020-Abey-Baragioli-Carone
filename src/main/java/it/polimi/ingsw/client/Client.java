@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.HI;
@@ -70,17 +71,21 @@ public class Client extends Thread{
         communicationChannel.writeKeyWord(HI);
         ClientController clientController = new ClientController();
         while (!communicationChannel.isClosed()) {
-            System.out.println("sono nel ciclo");
             CommunicationProtocol key = null;
             try {
                 key = communicationChannel.nextKey();
-            }
-            catch (IOException e) {
+            } catch (SocketException e) {
+                e.printStackTrace();
+                System.err.println("Connection lost");
+                view.connectionLost();
+                System.exit(1);
+            } catch (IOException e) {
                 e.printStackTrace();
                 System.err.println("Server lost");
                 //Chiudere Client il Server
                 System.exit(1);
             }
+
             view.prepareAdditionalCommunication(key);
             switch (key) {
                 case BUILDS:
@@ -103,14 +108,6 @@ public class Client extends Thread{
                         System.err.println("Manage cards error");
                     }
                     break;
-                case GAMEPLAYERS:
-                    try {
-                        clientController.manageListOfPlayers(communicationChannel, view);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.err.println("Manage Players Error");
-                    }
-                    break;
                 case GODPOWER:
                 case UNDO:
                     clientController.manageConfirmation(communicationChannel, view);
@@ -125,12 +122,34 @@ public class Client extends Thread{
                     break;
                 case MATCHSTART:
                     clientController.manageMatchStart(communicationChannel, view);
+                    break;
                 case MATCHTYPE:
                     view.askMatchType(clientController, communicationChannel);
                     break;
+                case MYPLAYER:
+                    try {
+                        clientController.manageMyPlayer(communicationChannel, view);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.err.println("Manage My Player Error");
+                    }
+                    break;
+                case OPPONENTS:
+                    try {
+                        clientController.manageListOfOpponents(communicationChannel, view);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Manage Opponents Error");
+                    }
+                    break;
                 case UNIQUEUSERNAME:
                 case USERNAME:
-                    view.askUserName(clientController, communicationChannel);
+                    try {
+                        view.askUserName(clientController, communicationChannel);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Manage Username Error");
+                    }
                     break;
                 case WAITFORPLAYERS:
                     clientController.waitForPlayers(communicationChannel, view);

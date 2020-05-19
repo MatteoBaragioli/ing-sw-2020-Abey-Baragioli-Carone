@@ -109,6 +109,7 @@ public class Match extends Thread{
         //START MATCH
         assignColour();
         Collections.shuffle(gamePlayers);
+        communicationController.announceStart(gamePlayers);
         chooseCards();
         assignCards();
         setUpWorkers();

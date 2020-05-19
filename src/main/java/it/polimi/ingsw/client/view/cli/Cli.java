@@ -5,10 +5,9 @@ import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
-import it.polimi.ingsw.server.model.Box;
-import it.polimi.ingsw.server.model.GodCard;
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Worker;
+import it.polimi.ingsw.network.objects.Cell;
+import it.polimi.ingsw.network.objects.God;
+import it.polimi.ingsw.network.objects.PlayerCard;
 
 import java.io.*;
 import java.util.List;
@@ -27,17 +26,17 @@ public class Cli implements View{
     }
 
     @Override
-    public int askBox(List<Box> boxes) {
+    public int askBox(List<int[]> boxes) {
         return 0;
     }
 
     @Override
-    public int askWorker(List<Worker> workers) {
+    public int askWorker(List<int[]> workers) {
         return 0;
     }
 
     @Override
-    public int askCards(List<GodCard> cards) {
+    public int askCards(List<God> cards) {
         return 0;
     }
 
@@ -52,12 +51,22 @@ public class Cli implements View{
     }
 
     @Override
-    public void updateMap(List<Box> boxes) {
+    public void updateMap(List<Cell> boxes) {
 
     }
 
     @Override
-    public void setPlayersInfo(List<Player> players) {
+    public void setMyPlayer(PlayerCard player) {
+
+    }
+
+    @Override
+    public void setOpponentsInfo(List<PlayerCard> players) {
+
+    }
+
+    @Override
+    public void connectionLost() {
 
     }
 
@@ -88,11 +97,11 @@ public class Cli implements View{
             }
             if (answer == 1 || answer == 2) {
                 valid = true;
-                System.out.println("Waiting for the match to start");
             }
             else
                 System.out.println("Not valid answer. Try again");
         }
+        communicationChannel.writeNumber(answer);
     }
 
     @Override
@@ -107,8 +116,14 @@ public class Cli implements View{
     }
 
     @Override
-    public void askUserName(ClientController clientController, CommunicationChannel communicationChannel) {
+    public void askUserName(ClientController clientController, CommunicationChannel communicationChannel) throws IOException {
         System.out.println("Write username:");
+        communicationChannel.write(commandline.readLine());
+    }
+
+    @Override
+    public String askUserName() {
+        return null;
     }
 
     public static void main(String[] args){

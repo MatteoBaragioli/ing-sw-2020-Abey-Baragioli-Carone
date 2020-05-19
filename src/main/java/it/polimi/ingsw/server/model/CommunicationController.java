@@ -1,10 +1,13 @@
 package it.polimi.ingsw.server.model;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.network.objects.PlayerCard;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
@@ -20,8 +23,13 @@ public class CommunicationController {
         }
     }
 
-    private boolean playerIsUser(Player chooser) {
-        return playerToUser.containsKey(chooser);
+    /**
+     * This method tells if a player represents a user
+     * @param player
+     * @return boolean
+     */
+    private boolean playerIsUser(Player player) {
+        return playerToUser.containsKey(player);
     }
 
     /**
@@ -33,10 +41,74 @@ public class CommunicationController {
             playerToUser.remove(player);
     }
 
+    /**
+     * This method finds the user represented by a player
+     * @param player The player I'm looking for
+     * @return user
+     */
     private User findUser(Player player) {
         if (playerIsUser(player))
             return playerToUser.get(player);
         return null;
+    }
+
+    public boolean announceMyPlayer(Player player) throws IOException {
+        User user = findUser(player);
+        user.tell(MYPLAYER);
+        if (user.copy()) {
+            PlayerCard playerCard = new PlayerCard(player);
+            Type type = new TypeToken<PlayerCard>() {}.getType();
+            user.tell(new Gson().toJson(playerCard, type));
+            return user.copy();
+        }
+        System.out.println("USER DIDN'T RECEIVE PLAYER");
+        return false;
+    }
+
+    public boolean announceOpponents(Player player, List<Player> players) throws IOException {
+        User user = findUser(player);
+        user.tell(OPPONENTS);
+        if (user.copy()) {
+            List<PlayerCard> opponents = new ArrayList<>();
+            for (Player opponent: players) {
+                if (!player.equals(opponent))
+                    opponents.add(new PlayerCard(opponent));
+                Type type = new TypeToken<List<PlayerCard>>() {}.getType();
+                user.tell(new Gson().toJson(opponents, type));
+                return user.copy();
+            }
+        }
+        System.out.println("USER DIDN'T RECEIVE OPPONENTS");
+        return false;
+    }
+
+    public boolean announceParticipants(Player player, List<Player> players) throws IOException {
+        if (announceMyPlayer(player))
+            return announceOpponents(player, players);
+        System.out.println("USER DIDN'T RECEIVE PARTICIPANTS");
+        return false;
+    }
+
+    public void announceStart(List<Player> players) {
+        for (Player player: players)
+            if (playerIsUser(player)) {
+                try {
+                    announceParticipants(player, players);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.err.println(player.name() + " lost connection");
+                    player.setInGame(false);
+                }
+            }
+    }
+
+    private int askWorker(User user, List<Worker> workers) throws IOException {
+        List<int[]> positions = new ArrayList<>();
+        for (Worker worker: workers)
+            positions.add(worker.position().position());
+        Type listType = new TypeToken<List<int[]>>() {}.getType();
+        user.tell(new Gson().toJson(positions, listType));
+        return user.hearNumber();
     }
 
     /**
@@ -51,12 +123,19 @@ public class CommunicationController {
         if (playerIsUser(chooser)) {
             User user = findUser(chooser);
             user.tell(WORKER);
-            if (user.copy()) {
-                //TODO
-                index = user.hearNumber();
-            }
+            if (user.copy())
+                index = askWorker(user, workers);
         }
         return workers.get(index);
+    }
+
+    private int askBox(User user, List<Box> boxes) throws IOException {
+        List<int[]> positions = new ArrayList<>();
+        for (Box box: boxes)
+            positions.add(box.position());
+        Type listType = new TypeToken<List<int[]>>() {}.getType();
+        user.tell(new Gson().toJson(positions, listType));
+        return user.hearNumber();
     }
 
     /**
@@ -71,7 +150,8 @@ public class CommunicationController {
         if (playerIsUser(player)) {
             User user = findUser(player);
             user.tell(STARTPOSITION);
-            index = user.hearNumber();
+            if (user.copy())
+                index = askBox(user, boxes);
         }
         return boxes.get(index);
     }

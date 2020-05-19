@@ -1,14 +1,12 @@
 package it.polimi.ingsw.client.view.gui;
 
 import it.polimi.ingsw.client.ClientController;
-import it.polimi.ingsw.client.view.cli.Cli;
 import it.polimi.ingsw.network.CommunicationChannel;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -20,8 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -236,7 +232,7 @@ public class MenuScene {
         confirmButton.setOnMouseClicked(e -> {
             setNickname(formField.getText());
             formView.getChildren().remove(formField);
-            clientController.askUsername(communicationChannel, nickname);
+            clientController.writeUsername(communicationChannel, nickname);
         });
     }
 

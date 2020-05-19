@@ -10,6 +10,9 @@ import it.polimi.ingsw.server.model.GodCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Worker;
 import javafx.animation.FadeTransition;
+import it.polimi.ingsw.network.objects.Cell;
+import it.polimi.ingsw.network.objects.God;
+import it.polimi.ingsw.network.objects.PlayerCard;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
@@ -111,12 +114,12 @@ public class Gui extends Application implements View {
 
 
     @Override
-    public int askBox(List<Box> boxes) {
+    public int askBox(List<int[]> boxes) {
         return 0;
     }
 
     @Override
-    public int askCards(List<GodCard> cards) {
+    public int askCards(List<God> cards) {
         return 0;
     }
 
@@ -146,7 +149,12 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public int askWorker(List<Worker> workers) {
+    public String askUserName() {
+        return null;
+    }
+
+    @Override
+    public int askWorker(List<int[]> workers) {
         return 0;
     }
 
@@ -156,12 +164,22 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public void updateMap(List<Box> boxes) {
+    public void updateMap(List<Cell> boxes) {
 
     }
 
     @Override
-    public void setPlayersInfo(List<Player> players) {
+    public void setMyPlayer(PlayerCard player) {
+
+    }
+
+    @Override
+    public void setOpponentsInfo(List<PlayerCard> players) {
+
+    }
+
+    @Override
+    public void connectionLost() {
 
     }
 }
