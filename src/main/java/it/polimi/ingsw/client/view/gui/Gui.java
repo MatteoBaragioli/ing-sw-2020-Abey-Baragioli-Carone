@@ -23,6 +23,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class Gui extends Application implements View {
@@ -180,6 +182,16 @@ public class Gui extends Application implements View {
 
     @Override
     public void connectionLost() {
+
+    }
+
+    @Override
+    public void unknownHost(String host, UnknownHostException e) {
+
+    }
+
+    @Override
+    public void connectionRefused(String host, ConnectException e) {
 
     }
 }
