@@ -1,7 +1,9 @@
 package it.polimi.ingsw.client.view.cli;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.server.model.Box;
 import it.polimi.ingsw.server.model.GodCard;
@@ -71,7 +73,7 @@ public class Cli implements View{
     }
 
     @Override
-    public int askMatchType() {
+    public void askMatchType(ClientController clientController, CommunicationChannel communicationChannel) {
         boolean valid = false;
         int answer = 0;
         while (!valid) {
@@ -80,7 +82,7 @@ public class Cli implements View{
                 answer = askNumber();
             } catch (IOException e) {
                 e.printStackTrace();
-                return -1;
+
             } catch (NumberFormatException e) {
                 answer = 0;
             }
@@ -91,7 +93,6 @@ public class Cli implements View{
             else
                 System.out.println("Not valid answer. Try again");
         }
-        return answer;
     }
 
     @Override
@@ -106,19 +107,13 @@ public class Cli implements View{
     }
 
     @Override
-    public String askUserName() {
+    public void askUserName(ClientController clientController, CommunicationChannel communicationChannel) {
         System.out.println("Write username:");
-        try {
-            return commandline.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public static void main(String[] args){
         Cli cli = new Cli();
-        Client client = new Client();
-        client.start(cli);
+        Client client = new Client(cli);
+        client.start();
     }
 }

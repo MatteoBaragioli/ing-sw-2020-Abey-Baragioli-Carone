@@ -31,16 +31,17 @@ public class Gui extends Application implements View {
     private static final int mapColumnsNumber = 5;
     Client client = new Client(this);
     Stage window;
-    Scene menu;
-    Scene loadingScene;
     MenuScene menuScene;
 
     // fade in and out transition of the menu Scene
     FadeTransition fadeMenu;
 
+    //All pages Pane
+    StackPane scene = new StackPane();
+
 
     StackPane openingPage = new StackPane();
-    StackPane menuPage = new StackPane();
+    HBox menuPage = new HBox();
     StackPane loadingPage = new StackPane();
     AnchorPane matchPage = new AnchorPane();
     private String ip;
@@ -59,15 +60,16 @@ public class Gui extends Application implements View {
 
 
 
-        menuScene = new MenuScene(window, screenWidth, screenHeight);
+        menuScene = new MenuScene(window, menuPage, screenWidth, screenHeight, loadingPage);
 
-        fadeMenu = new FadeTransition(Duration.millis(3000), menuScene.menuPage());
-        fadeMenu.setFromValue(0.0);
-        fadeMenu.setToValue(1.0);
-        fadeMenu.play();
-
-        menuScene.setMenuScene(this);
+        scene.getChildren().addAll(openingPage, menuPage);
+        openingPage.setVisible(false);
+        menuPage.setVisible(false);
+        menuScene.setMenuScene();
         menuScene.askIp(this);
+
+        Scene fullScene = new Scene(scene);
+        window.setScene(fullScene);
 
         window.show();
     }

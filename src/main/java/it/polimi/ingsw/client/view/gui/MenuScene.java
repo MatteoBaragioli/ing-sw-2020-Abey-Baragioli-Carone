@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.view.gui;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.view.cli.Cli;
 import it.polimi.ingsw.network.CommunicationChannel;
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -24,6 +25,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import static java.lang.Integer.parseInt;
 
@@ -33,8 +35,10 @@ public class MenuScene {
     private static final Font readyFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
     private static final Font errorFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 15);
     private final Stage primaryWindow;
+    private final HBox menuPage;
     private final double screenWidth;
     private final double screenHeight;
+    private final StackPane loadingPage;
     private Text formText = new Text();
     private Text matchTypeText = new Text("Number of players");
     private TextField formField = new TextField();
@@ -46,18 +50,19 @@ public class MenuScene {
     private String ip;
     private int port;
     private int matchType;
-    private HBox menuPage;
+
     Button confirmButton = new Button("Next");
     Button nextButton = new Button("Next");
     ToggleGroup numberOfPlayers;
     HBox numberOfPlayersOptions;
     VBox matchTypeNumber = new VBox();
 
-    public MenuScene(Stage primaryWindow, double screenWidth, double screenHeight) {
+    public MenuScene(Stage primaryWindow, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage) {
         this.primaryWindow = primaryWindow;
+        this.menuPage = menuPage;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        menuPage = new HBox();
+        this.loadingPage = loadingPage;
         menuPage.setPrefWidth(screenWidth);
         menuPage.setPrefHeight(screenHeight);
 
@@ -113,7 +118,7 @@ public class MenuScene {
     //_______________________________________________END GETTER__________________________________________________________
 
 
-    public void setMenuScene(Gui gui) {
+    public void setMenuScene() {
         //Menu Box Background
         StackPane menuBox = menuGroup();
 
@@ -178,9 +183,11 @@ public class MenuScene {
         menuPage.setBackground(background());
         menuPage.setAlignment(Pos.CENTER);
         playGroup.setVisible(false);
-
-        Scene menuScene = new Scene(menuPage);
-        primaryWindow.setScene(menuScene);
+        FadeTransition menuFade = new FadeTransition(Duration.millis(3000), menuPage);
+        menuFade.setFromValue(0.0);
+        menuPage.setVisible(true);
+        menuFade.setToValue(1.0);
+        menuFade.play();
     }
 
     private Background background() {
@@ -263,15 +270,14 @@ public class MenuScene {
 
     //-----------------------------------------------Loading Page------------------------------------------------------------
 
-    private Scene setLoadingPage(){
+    private void setLoadingPage(){
         Image loadingGif = new Image(Gui.class.getResource("/img/loading.gif").toString(), screenWidth/4, screenHeight/4, false, false);
         ImageView loadingImageGif = new ImageView(loadingGif);
         Image loadingImg = new Image(Gui.class.getResource("/img/loading.png").toString(), screenWidth, screenHeight, false, false);
         ImageView loadingImageView = new ImageView(loadingImg);
-        StackPane loadingPage = new StackPane();
         loadingPage.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         loadingPage.getChildren().addAll(loadingImageGif, loadingImageView);
-        return new Scene(loadingPage);
+        loadingPage.setVisible(true);
     }
 
     //-----------------------------------------------End Loading Page------------------------------------------------------------
@@ -287,7 +293,7 @@ public class MenuScene {
         playView.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             playView.setImage(playClickImg);
             clientController.askMatchType(communicationChannel, matchType);
-            primaryWindow.setScene(setLoadingPage());
+            setLoadingPage();
             event.consume();
         });
     }
@@ -377,7 +383,7 @@ public class MenuScene {
 
 
     public void closeProgram(HBox fullPage){
-        boolean answer = ConfirmBox.display("Quit?", "Sure you want to quit the game?", primaryWindow.getWidth(), primaryWindow.getHeight());
+        boolean answer = ConfirmBox.display("Quit?", "Sure you want to quit the game?", screenWidth, screenHeight);
         if(answer)
             primaryWindow.close();
         else
