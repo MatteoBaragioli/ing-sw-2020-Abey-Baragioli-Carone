@@ -5,14 +5,10 @@ import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
-import it.polimi.ingsw.server.model.Box;
-import it.polimi.ingsw.server.model.GodCard;
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Worker;
 import javafx.animation.FadeTransition;
-import it.polimi.ingsw.network.objects.Cell;
-import it.polimi.ingsw.network.objects.God;
-import it.polimi.ingsw.network.objects.PlayerCard;
+import it.polimi.ingsw.network.objects.BoxProxy;
+import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.PlayerProxy;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
@@ -21,7 +17,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
@@ -121,7 +116,7 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public int askCards(List<God> cards) {
+    public int askCards(List<GodCardProxy> cards) {
         return 0;
     }
 
@@ -166,17 +161,17 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public void updateMap(List<Cell> boxes) {
+    public void updateMap(List<BoxProxy> boxes) {
 
     }
 
     @Override
-    public void setMyPlayer(PlayerCard player) {
+    public void setMyPlayer(PlayerProxy player) {
 
     }
 
     @Override
-    public void setOpponentsInfo(List<PlayerCard> players) {
+    public void setOpponentsInfo(List<PlayerProxy> players) {
 
     }
 

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.network.objects.BoxProxy;
+import it.polimi.ingsw.network.objects.WorkerProxy;
+
 public class Box {
     private int level=0;
     private boolean dome=false;
@@ -49,6 +52,13 @@ public class Box {
     public Worker occupier(){ return occupier;}
 
     public void occupy(Worker occupier){this.occupier=occupier;}
+
+    public BoxProxy crateProxy() {
+        WorkerProxy workerProxy = null;
+        if (isOccupiedByWorkers())
+            workerProxy = occupier().createProxy();
+        return new BoxProxy(level(), hasDome(), position(), workerProxy);
+    }
 
     /**
      * This method removes the occupier

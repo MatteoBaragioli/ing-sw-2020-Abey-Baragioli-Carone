@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.network.objects.GodCardProxy;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,5 +90,9 @@ public class GodCard {
 
     public String opponentsFxDescription() {
         return opponentsFxDescription;
+    }
+
+    public GodCardProxy createProxy() {
+        return new GodCardProxy(name(), id(), description(), winDescription(), setUpDescription(), opponentsFxDescription());
     }
 }

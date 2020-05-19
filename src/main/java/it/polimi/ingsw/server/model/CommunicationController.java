@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.network.objects.PlayerCard;
+import it.polimi.ingsw.network.objects.PlayerProxy;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -52,28 +52,41 @@ public class CommunicationController {
         return null;
     }
 
+    /**
+     * This method communicates to a user what player is representing him/her
+     * @param player player avatar
+     * @return boolean if everything went well
+     * @throws IOException if there are network errors
+     */
     public boolean announceMyPlayer(Player player) throws IOException {
         User user = findUser(player);
         user.tell(MYPLAYER);
         if (user.copy()) {
-            PlayerCard playerCard = new PlayerCard(player);
-            Type type = new TypeToken<PlayerCard>() {}.getType();
-            user.tell(new Gson().toJson(playerCard, type));
+            PlayerProxy playerProxy = player.createProxy();
+            Type type = new TypeToken<PlayerProxy>() {}.getType();
+            user.tell(new Gson().toJson(playerProxy, type));
             return user.copy();
         }
         System.out.println("USER DIDN'T RECEIVE PLAYER");
         return false;
     }
 
+    /**
+     * This method communicates to a user who are the opponents
+     * @param player player avatar
+     * @param players all players
+     * @return boolean if everything went well
+     * @throws IOException if there are network errors
+     */
     public boolean announceOpponents(Player player, List<Player> players) throws IOException {
         User user = findUser(player);
         user.tell(OPPONENTS);
         if (user.copy()) {
-            List<PlayerCard> opponents = new ArrayList<>();
+            List<PlayerProxy> opponents = new ArrayList<>();
             for (Player opponent: players) {
                 if (!player.equals(opponent))
-                    opponents.add(new PlayerCard(opponent));
-                Type type = new TypeToken<List<PlayerCard>>() {}.getType();
+                    opponents.add(opponent.createProxy());
+                Type type = new TypeToken<List<PlayerProxy>>() {}.getType();
                 user.tell(new Gson().toJson(opponents, type));
                 return user.copy();
             }
@@ -82,6 +95,13 @@ public class CommunicationController {
         return false;
     }
 
+    /**
+     * This method communicates to a user who are the participants
+     * @param player player avatar
+     * @param players all players
+     * @return boolean if everything went well
+     * @throws IOException if there are network errors
+     */
     public boolean announceParticipants(Player player, List<Player> players) throws IOException {
         if (announceMyPlayer(player))
             return announceOpponents(player, players);

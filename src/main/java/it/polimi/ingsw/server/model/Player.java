@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.PlayerProxy;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +73,13 @@ public class Player {
 
     public void playerIsOver(){
         setInGame(false);
+    }
+
+    public PlayerProxy createProxy() {
+        GodCardProxy godCardProxy = null;
+        if (godCard() != null)
+            godCardProxy = godCard().createProxy();
+        return new PlayerProxy(name(), colour(), godCardProxy);
     }
 
     /**

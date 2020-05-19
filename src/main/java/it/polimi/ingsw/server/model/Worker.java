@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
 
+import it.polimi.ingsw.network.objects.WorkerProxy;
+
 public class Worker {
     private Box position;
     private boolean gender;
@@ -11,6 +13,7 @@ public class Worker {
         this.position.occupy(this);
         this.colour = colour;
     }
+
     public Worker(boolean gender, Box position){
         this.gender=gender;
         this.position=position;
@@ -29,6 +32,10 @@ public class Worker {
 
     public boolean gender() {
         return gender;
+    }
+
+    public WorkerProxy createProxy() {
+        return new WorkerProxy(colour(), gender());
     }
 
     /**

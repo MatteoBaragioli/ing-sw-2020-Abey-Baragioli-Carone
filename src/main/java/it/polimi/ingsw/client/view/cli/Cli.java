@@ -5,14 +5,13 @@ import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
-import it.polimi.ingsw.network.objects.Cell;
-import it.polimi.ingsw.network.objects.God;
-import it.polimi.ingsw.network.objects.PlayerCard;
+import it.polimi.ingsw.network.objects.BoxProxy;
+import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.PlayerProxy;
 
 import java.io.*;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
-import java.util.InputMismatchException;
 import java.util.List;
 
 public class Cli implements View{
@@ -39,7 +38,7 @@ public class Cli implements View{
     }
 
     @Override
-    public int askCards(List<God> cards) {
+    public int askCards(List<GodCardProxy> cards) {
         return 0;
     }
 
@@ -54,17 +53,17 @@ public class Cli implements View{
     }
 
     @Override
-    public void updateMap(List<Cell> boxes) {
+    public void updateMap(List<BoxProxy> boxes) {
 
     }
 
     @Override
-    public void setMyPlayer(PlayerCard player) {
+    public void setMyPlayer(PlayerProxy player) {
 
     }
 
     @Override
-    public void setOpponentsInfo(List<PlayerCard> players) {
+    public void setOpponentsInfo(List<PlayerProxy> players) {
 
     }
 

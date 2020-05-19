@@ -3,10 +3,9 @@ package it.polimi.ingsw.client;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.network.objects.Cell;
-import it.polimi.ingsw.network.objects.God;
-import it.polimi.ingsw.network.objects.PlayerCard;
-import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.network.objects.BoxProxy;
+import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.PlayerProxy;
 import it.polimi.ingsw.network.CommunicationChannel;
 
 import java.io.IOException;
@@ -18,27 +17,27 @@ import static it.polimi.ingsw.network.CommunicationProtocol.*;
 public class ClientController {
 
     public void manageListOfCards(CommunicationChannel communicationChannel, View view) throws IOException {
-        List<God> cards;
+        List<GodCardProxy> cards;
         int index;
         communicationChannel.writeKeyWord(RECEIVED);
 
         String delivery = communicationChannel.read();
 
-        Type listType = new TypeToken<List<God>>() {}.getType();
+        Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
         cards = new Gson().fromJson(delivery, listType);
         index= view.askCards(cards);
         communicationChannel.writeNumber(index);
     }
 
     public void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws IOException {
-        List<Cell> boxes;
+        List<BoxProxy> boxes;
         String message;
 
         communicationChannel.writeKeyWord(RECEIVED);
 
         message = communicationChannel.read();
 
-        Type listType = new TypeToken<List<Cell>>() {}.getType();
+        Type listType = new TypeToken<List<BoxProxy>>() {}.getType();
         boxes= new Gson().fromJson(message, listType);
 
         view.updateMap(boxes);
@@ -76,14 +75,14 @@ public class ClientController {
     }
 
     public void manageMyPlayer(CommunicationChannel communicationChannel, View view) throws IOException {
-        PlayerCard player;
+        PlayerProxy player;
         String message;
 
         communicationChannel.writeKeyWord(RECEIVED);
 
         message = communicationChannel.read();
 
-        Type listType = new TypeToken<List<PlayerCard>>() {}.getType();
+        Type listType = new TypeToken<List<PlayerProxy>>() {}.getType();
         player = new Gson().fromJson(message, listType);
         view.setMyPlayer(player);
         System.out.println(message);
@@ -91,14 +90,14 @@ public class ClientController {
     }
 
     public void manageListOfOpponents(CommunicationChannel communicationChannel, View view) throws IOException {
-        List<PlayerCard> players;
+        List<PlayerProxy> players;
         String message;
 
         communicationChannel.writeKeyWord(RECEIVED);
 
         message = communicationChannel.read();
 
-        Type listType = new TypeToken<List<PlayerCard>>() {}.getType();
+        Type listType = new TypeToken<List<PlayerProxy>>() {}.getType();
         players = new Gson().fromJson(message, listType);
         view.setOpponentsInfo(players);
         communicationChannel.writeKeyWord(RECEIVED);
