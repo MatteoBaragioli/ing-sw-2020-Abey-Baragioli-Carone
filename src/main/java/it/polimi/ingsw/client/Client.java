@@ -17,7 +17,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.HI;
-import static it.polimi.ingsw.network.CommunicationProtocol.valueOf;
 
 public class Client extends Thread{
 
@@ -134,7 +133,7 @@ public class Client extends Thread{
                     clientController.manageMatchStart(communicationChannel, view);
                     break;
                 case MATCHTYPE:
-                    view.askMatchType(clientController, communicationChannel);
+                    clientController.askMatchType(communicationChannel, view);
                     break;
                 case MYPLAYER:
                     try {
@@ -155,7 +154,7 @@ public class Client extends Thread{
                 case UNIQUEUSERNAME:
                 case USERNAME:
                     try {
-                        view.askUserName(clientController, communicationChannel);
+                        clientController.writeUsername(communicationChannel, view);
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Manage Username Error");

@@ -3,6 +3,8 @@ package it.polimi.ingsw.client.view.gui;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.network.CommunicationChannel;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -20,24 +22,26 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import static java.lang.Integer.parseInt;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MenuScene {
 
     private static final Font lillybelleFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 20);
-    private static final Font readyFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
-    private static final Font errorFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 15);
+    private static final Font errorFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 13);
+    private final Gui gui;
     private final Stage primaryWindow;
     private final HBox menuPage;
     private final double screenWidth;
     private final double screenHeight;
     private final StackPane loadingPage;
-    private Text formText = new Text();
-    private Text matchTypeText = new Text("Number of players");
-    private TextField formField = new TextField();
+    private final Text formText = new Text();
+    private final Text errorMessage = new Text();
+    private final Text matchTypeText = new Text("Number of players");
+    private final TextField formField = new TextField();
     private VBox formView;
     private Group formGroup;
     private Group playGroup;
@@ -46,14 +50,14 @@ public class MenuScene {
     private String ip;
     private int port;
     private int matchType;
-
+    private ImageView loadingIcon;
     Button confirmButton = new Button("Next");
-    Button nextButton = new Button("Next");
     ToggleGroup numberOfPlayers;
     HBox numberOfPlayersOptions;
     VBox matchTypeNumber = new VBox();
 
-    public MenuScene(Stage primaryWindow, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage) {
+    public MenuScene(Gui gui, Stage primaryWindow, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage) {
+        this.gui = gui;
         this.primaryWindow = primaryWindow;
         this.menuPage = menuPage;
         this.screenWidth = screenWidth;
@@ -83,6 +87,12 @@ public class MenuScene {
 
     private void setmatchType(int matchType) {
         this.matchType = matchType;
+    }
+
+    public void setErrorMessage1(String message){
+        errorMessage.setText(message);
+        errorMessage.setVisible(true);
+        errorMessage.setManaged(true);
     }
 
     //_______________________________________________END SETTER__________________________________________________________
@@ -120,7 +130,6 @@ public class MenuScene {
 
         //form
         formGroup = new Group();
-        formGroup.prefWidth(screenWidth / 4);
         formGroup.prefHeight(screenHeight / 2);
         formText.setFont(lillybelleFont);
         formField.setCursor(Cursor.TEXT);
@@ -131,14 +140,22 @@ public class MenuScene {
         confirmButton.setPrefHeight(screenHeight / 20);
         confirmButton.setCursor(Cursor.HAND);
         confirmButton.setFont(lillybelleFont);
+        errorMessage.setFont(errorFont);
+        errorMessage.setFill(Color.DARKRED);
+        errorMessage.setTextAlignment(TextAlignment.CENTER);
+        Image loadingImg = new Image(MenuScene.class.getResource("/img/loadingIcon.gif").toString(), screenWidth / 20, screenHeight / 16, false, false);
+        loadingIcon = new ImageView(loadingImg);
 
         formView = new VBox();
         formView.setAlignment(Pos.CENTER);
         formView.setSpacing(20);
-        formView.setPadding(new Insets(0, 0, screenHeight / 6, 0));
-        formView.getChildren().addAll(formText, formField, confirmButton);
+        formView.setPadding(new Insets(0, 0, screenHeight / 9, 0));
+        formView.getChildren().addAll(formText, formField, confirmButton, loadingIcon, errorMessage);
         formGroup.getChildren().add(formView);
-
+        errorMessage.setVisible(false);
+        errorMessage.setManaged(false);
+        loadingIcon.setVisible(false);
+        loadingIcon.setManaged(false);
 
         matchTypeText.setFont(lillybelleFont);
         RadioButton twoPlayers = new RadioButton("2");
@@ -150,24 +167,19 @@ public class MenuScene {
 
         numberOfPlayers = new ToggleGroup();
         twoPlayers.setToggleGroup(numberOfPlayers);
-        twoPlayers.setSelected(false);
+        twoPlayers.setSelected(true);
         threePlayers.setToggleGroup(numberOfPlayers);
         threePlayers.setSelected(false);
-
-        nextButton.setPrefWidth(screenWidth / 8);
-        nextButton.setPrefHeight(screenHeight / 20);
-        nextButton.setCursor(Cursor.HAND);
-        nextButton.setFont(lillybelleFont);
-
         numberOfPlayersOptions = new HBox();
         numberOfPlayersOptions.getChildren().addAll(twoPlayers, threePlayers);
         numberOfPlayersOptions.setSpacing(60);
         numberOfPlayersOptions.setAlignment(Pos.CENTER);
         matchTypeNumber.setAlignment(Pos.CENTER);
         matchTypeNumber.setSpacing(20);
-        matchTypeNumber.setPadding(new Insets(0, 0, screenHeight / 6, 0));
-        matchTypeNumber.getChildren().addAll(matchTypeText, numberOfPlayersOptions, nextButton);
+        matchTypeNumber.setPadding(new Insets(0, 0, screenHeight / 8, 0));
+        matchTypeNumber.getChildren().addAll(matchTypeText, numberOfPlayersOptions);
         matchTypeNumber.setVisible(false);
+        errorMessage.setWrappingWidth(screenWidth/8);
 
         Group quitGroup = quitGroup(menuPage);
         playGroup = playGroup();
@@ -175,11 +187,12 @@ public class MenuScene {
 
 
 
+
         menuPage.getChildren().addAll(quitGroup, menuBox, playGroup);
         menuPage.setBackground(background());
         menuPage.setAlignment(Pos.CENTER);
         playGroup.setVisible(false);
-        FadeTransition menuFade = new FadeTransition(Duration.millis(3000), menuPage);
+        FadeTransition menuFade = new FadeTransition(Duration.millis(1000), menuPage);
         menuFade.setFromValue(0.0);
         menuPage.setVisible(true);
         menuFade.setToValue(1.0);
@@ -192,7 +205,7 @@ public class MenuScene {
     }
 
     private StackPane menuGroup() {
-        Image menuBoxImg = new Image(Gui.class.getResource("/img/menu_box_background.png").toString(), screenWidth / 2, screenHeight / 1.1, false, false);
+        Image menuBoxImg = new Image(MenuScene.class.getResource("/img/menu_box_background.png").toString(), screenWidth / 2, screenHeight / 1.1, false, false);
         ImageView menuBoxView = new ImageView(menuBoxImg);
         menuBoxView.setEffect(new DropShadow(10, Color.BLACK));
         StackPane menuBox = new StackPane();
@@ -202,44 +215,87 @@ public class MenuScene {
     }
 
     //-----------------------------------------------Form and Communication------------------------------------------------------------
-    public void askIp(Gui gui) {
+    public String askIp() {
+        loadingIcon.setVisible(false);
+        confirmButton.setVisible(true);
+        AtomicBoolean clicked = new AtomicBoolean(false);
+        setIp(null);
         formText.setText("Ip Address");
         formField.clear();
         confirmButton.setOnMouseClicked(e -> {
             setIp(formField.getText());
-            confirmButton.setPrefWidth(screenWidth / 16);
-            askPort(gui);
+            errorMessage.setVisible(false);
+            clicked.set(true);
         });
+        while(!clicked.get()){
+
+        }
+        return ip();
     }
 
-    public void askPort(Gui gui) {
+    public int askPort() {
+        setPort(0);
+        AtomicBoolean clicked = new AtomicBoolean(false);
+        AtomicBoolean valid = new AtomicBoolean(false);
         formText.setText("Port Number");
-        formField.clear();
-        confirmButton.setOnMouseClicked(e -> {
-            try {
-                setPort(Integer.parseInt(formField.getText()));
-            } catch (Exception notInt) {
-
+        while (!valid.get()){
+            clicked.set(false);
+            formField.clear();
+            confirmButton.setOnMouseClicked(e -> {
+                try {
+                    setPort(Integer.parseInt(formField.getText()));
+                    errorMessage.setVisible(false);
+                    errorMessage.setManaged(false);
+                    if(port()>1023)
+                        valid.set(true);
+                    else
+                        setPort(0);
+                } catch (Exception notInt) {
+                    errorMessage.setVisible(true);
+                    errorMessage.setManaged(true);
+                    setErrorMessage1("Port must be a number");
+                }
+                clicked.set(true);
+            });
+            while (!clicked.get()){
             }
-            gui.startClient();
-        });
+        }
+        confirmButton.setVisible(false);
+        confirmButton.setManaged(false);
+        loadingIcon.setVisible(true);
+        loadingIcon.setManaged(true);
+        return port();
     }
 
-
-    public void askNickname(ClientController clientController, CommunicationChannel communicationChannel) {
+    public String askNickname() {
+        if(nickname!=null){
+            setErrorMessage1("Nickname already used");
+        }
+        loadingIcon.setVisible(false);
+        loadingIcon.setManaged(false);
+        confirmButton.setVisible(true);
+        confirmButton.setManaged(true);
+        AtomicBoolean clicked = new AtomicBoolean(false);
         formText.setText("Nickname");
         formField.clear();
         confirmButton.setOnMouseClicked(e -> {
             setNickname(formField.getText());
-            formView.getChildren().remove(formField);
-            clientController.writeUsername(communicationChannel, nickname);
+            clicked.set(true);
+            errorMessage.setVisible(false);
+            errorMessage.setManaged(false);
         });
+        while (!clicked.get()){
+        }
+        return nickname();
     }
 
-    public void askNumberOfPlayers(ClientController clientController, CommunicationChannel communicationChannel) {
+    public int askNumberOfPlayers() {
+        AtomicBoolean clicked = new AtomicBoolean(false);
         formView.setVisible(false);
         matchTypeNumber.setVisible(true);
-        nextButton.setOnMouseClicked(e -> {
+        playGroup.setVisible(true);
+        Image playClickImg = new Image(MenuScene.class.getResource("/img/play_clicked.png").toString(),screenWidth/8, screenHeight/4, false, false);
+        playView.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             RadioButton selectedRadioButton = (RadioButton) numberOfPlayers.getSelectedToggle();
             String number = selectedRadioButton.getText();
             if (number.equals("2")) {
@@ -247,18 +303,16 @@ public class MenuScene {
             } else {
                 setmatchType(2);
             }
-            activatePlayButton(clientController, communicationChannel);
-            readyForm();
+            playView.setImage(playClickImg);
+            setLoadingPage();
+            clicked.set(true);
+            event.consume();
         });
-    }
+        while (!clicked.get()){
 
-    public void readyForm() {
-        matchTypeNumber.setVisible(false);
-        formView.setVisible(true);
-        formText.setText("You're ready to play!");
-        confirmButton.setVisible(false);
+        }
+        return matchType();
     }
-
 
     //-----------------------------------------------End Form and Communication------------------------------------------------------------
 
@@ -267,13 +321,29 @@ public class MenuScene {
     //-----------------------------------------------Loading Page------------------------------------------------------------
 
     private void setLoadingPage(){
-        Image loadingGif = new Image(Gui.class.getResource("/img/loading.gif").toString(), screenWidth/4, screenHeight/4, false, false);
+        Image loadingGif = new Image(MenuScene.class.getResource("/img/loading.gif").toString(), screenWidth/4, screenHeight/4, false, false);
         ImageView loadingImageGif = new ImageView(loadingGif);
-        Image loadingImg = new Image(Gui.class.getResource("/img/loading.png").toString(), screenWidth, screenHeight, false, false);
+        Image loadingImg = new Image(MenuScene.class.getResource("/img/loading.png").toString(), screenWidth, screenHeight, false, false);
         ImageView loadingImageView = new ImageView(loadingImg);
         loadingPage.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         loadingPage.getChildren().addAll(loadingImageGif, loadingImageView);
-        loadingPage.setVisible(true);
+        gui.playTransitionClouds();
+        FadeTransition menuFadeOut = new FadeTransition(Duration.millis(2000), menuPage);
+        menuFadeOut.setFromValue(1);
+        menuFadeOut.setToValue(0);
+        menuFadeOut.play();
+
+        Timeline loadingTimer = new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                ae -> {
+                    menuPage.setVisible(false);
+                    FadeTransition loadingFade = new FadeTransition(Duration.millis(3000), loadingPage);
+                    loadingFade.setFromValue(0.0);
+                    loadingPage.setVisible(true);
+                    loadingFade.setToValue(1.0);
+                    loadingFade.play();
+                }));
+        loadingTimer.play();
     }
 
     //-----------------------------------------------End Loading Page------------------------------------------------------------
@@ -283,20 +353,9 @@ public class MenuScene {
     //-----------------------------------------------Play Button------------------------------------------------------------
 
 
-    private void activatePlayButton(ClientController clientController, CommunicationChannel communicationChannel){
-        playGroup.setVisible(true);
-        Image playClickImg = new Image(Gui.class.getResource("/img/play_clicked.png").toString(),screenWidth/8, screenHeight/4, false, false);
-        playView.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-            playView.setImage(playClickImg);
-            clientController.askMatchType(communicationChannel, matchType);
-            setLoadingPage();
-            event.consume();
-        });
-    }
-
     private ImageView playButton(){
-        Image playImg = new Image(Gui.class.getResource("/img/play.png").toString(), screenWidth/8, screenHeight/4, false, false);
-        Image playHoverImg = new Image(Gui.class.getResource("/img/play_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
+        Image playImg = new Image(MenuScene.class.getResource("/img/play.png").toString(), screenWidth/8, screenHeight/4, false, false);
+        Image playHoverImg = new Image(MenuScene.class.getResource("/img/play_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
         playView = new ImageView(playImg);
         playView.setEffect(new DropShadow(10, Color.BLACK));
         playView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
@@ -329,9 +388,9 @@ public class MenuScene {
     //-----------------------------------------------Quit Button------------------------------------------------------------
 
     private  ImageView quitButton(HBox fullPage){
-        Image quitImg = new Image(Gui.class.getResource("/img/quit_normal.png").toString(), screenWidth/8, screenHeight/4, false, false);
-        Image quitHoverImg = new Image(Gui.class.getResource("/img/quit_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
-        Image quitClickImg = new Image(Gui.class.getResource("/img/quit_clicked.png").toString(),screenWidth/8, screenHeight/4, false, false);
+        Image quitImg = new Image(MenuScene.class.getResource("/img/quit_normal.png").toString(), screenWidth/8, screenHeight/4, false, false);
+        Image quitHoverImg = new Image(MenuScene.class.getResource("/img/quit_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
+        Image quitClickImg = new Image(MenuScene.class.getResource("/img/quit_clicked.png").toString(),screenWidth/8, screenHeight/4, false, false);
         ImageView quitView = new ImageView(quitImg);
 
         quitView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {

@@ -109,12 +109,12 @@ public class ClientController {
         communicationChannel.writeBoolean(confirmation);
     }
 
-    public void writeUsername(CommunicationChannel communicationChannel, String userName) {
-        communicationChannel.write(userName);
+    public void writeUsername(CommunicationChannel communicationChannel, View view) throws IOException {
+        communicationChannel.write(view.askUserName());
     }
 
-    public void askMatchType(CommunicationChannel communicationChannel, int matchType) {
-        communicationChannel.writeNumber(matchType);
+    public void askMatchType(CommunicationChannel communicationChannel, View view) {
+        communicationChannel.writeNumber(view.askMatchType());
     }
 
     public void manageMatchStart(CommunicationChannel communicationChannel, View view) {

@@ -1,22 +1,30 @@
 package it.polimi.ingsw.client.view.gui;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import javafx.animation.FadeTransition;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import it.polimi.ingsw.network.objects.BoxProxy;
+import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.PlayerProxy;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
@@ -33,16 +41,26 @@ public class Gui extends Application implements View {
     Stage window;
     MenuScene menuScene;
 
-    // fade in and out transition of the menu Scene
-    FadeTransition fadeMenu;
+
 
     //All pages Pane
-    StackPane scene = new StackPane();
+    StackPane firstScene = new StackPane();
 
 
     StackPane openingPage = new StackPane();
+
     HBox menuPage = new HBox();
+
     StackPane loadingPage = new StackPane();
+
+    StackPane transitionClouds = new StackPane();
+
+    TranslateTransition translateLeftTransitionIn;
+    TranslateTransition translateLeftTransitionOut;
+    TranslateTransition translateRightTransitionIn;
+    TranslateTransition translateRightTransitionOut;
+
+
     AnchorPane matchPage = new AnchorPane();
     private String ip;
     private int port;
@@ -55,20 +73,28 @@ public class Gui extends Application implements View {
 
         window = primaryStage;
         windowStyle();
-        //openingPage = openingPage();
-        //loadingPage = loadingPage();
 
 
 
-        menuScene = new MenuScene(window, menuPage, screenWidth, screenHeight, loadingPage);
-
-        scene.getChildren().addAll(openingPage, menuPage);
-        openingPage.setVisible(false);
+        firstScene.getChildren().addAll(openingPage, loadingPage, menuPage, transitionClouds);
+        openingPage.setVisible(true);
         menuPage.setVisible(false);
-        menuScene.setMenuScene();
-        menuScene.askIp(this);
+        loadingPage.setVisible(false);
+        transitionClouds.setVisible(false);
 
-        Scene fullScene = new Scene(scene);
+
+        //openingPage();
+
+        //if not opening page todo toglierlo
+        openingPage.setVisible(false);
+        menuScene = new MenuScene(this, window, menuPage, screenWidth, screenHeight, loadingPage);
+        menuScene.setMenuScene();
+        startClient();
+
+
+        createTransitionClouds();
+
+        Scene fullScene = new Scene(firstScene);
         window.setScene(fullScene);
 
         window.show();
@@ -104,6 +130,89 @@ public class Gui extends Application implements View {
             fullPage.setEffect(new BoxBlur(0, 0, 0));
     }
 
+    private void openingPage(){
+        Image openingImg = new Image(Gui.class.getResource("/img/opening/opening.png").toString(), screenWidth, screenHeight, false, false);
+        ImageView openingView = new ImageView(openingImg);
+        Image logoImg = new Image(Gui.class.getResource("/img/opening/logo.png").toString(), screenWidth/2, screenHeight/2, false, false);
+        ImageView logoView = new ImageView(logoImg);
+
+        openingPage.getChildren().addAll(openingView, logoView);
+        openingPage.setAlignment(Pos.CENTER);
+        openingView.setVisible(true);
+        logoView.setVisible(false);
+
+
+        FadeTransition openingFadeIn = new FadeTransition(Duration.millis(2000), openingPage);
+        openingFadeIn.setFromValue(0.0);
+        openingFadeIn.setToValue(1.0);
+        FadeTransition openingFadeOut = new FadeTransition(Duration.millis(2000), openingPage);
+        openingFadeOut.setFromValue(1.0);
+        openingFadeOut.setToValue(0.0);
+
+
+        openingFadeIn.play();
+
+        Timeline firstTimer = new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                ae -> {
+                    openingFadeOut.play();
+                }));
+        firstTimer.play();
+
+        Timeline secondTimer = new Timeline(new KeyFrame(
+                Duration.millis(4000),
+                ae -> {
+                    openingFadeIn.play();
+                    logoView.setVisible(true);
+                    openingView.setVisible(false);
+                }));
+        secondTimer.play();
+
+        Timeline thirdTimer = new Timeline(new KeyFrame(
+                Duration.millis(6000),
+                ae -> {
+                    openingFadeOut.play();
+                }));
+        thirdTimer.play();
+
+        Timeline menuTimer = new Timeline(new KeyFrame(
+                Duration.millis(8000),
+                ae -> {
+                    openingPage.setVisible(false);
+                    menuScene = new MenuScene(this, window, menuPage, screenWidth, screenHeight, loadingPage);
+                    menuScene.setMenuScene();
+                    client.start();
+                }));
+        menuTimer.play();
+    }
+
+    private void createTransitionClouds(){
+        Image leftCloudImg = new Image(Gui.class.getResource("/img/transitionCloudLeft.png").toString(), screenWidth, screenHeight*2, false, false);
+        ImageView leftCloud = new ImageView(leftCloudImg);
+        Image rightCloudImg = new Image(Gui.class.getResource("/img/transitionCloudRight.png").toString(), screenWidth, screenHeight*2, false, false);
+        ImageView rightCloud = new ImageView(rightCloudImg);
+
+        transitionClouds.getChildren().addAll(rightCloud, leftCloud);
+
+        translateLeftTransitionIn = new TranslateTransition(Duration.millis(2000), leftCloud);
+        translateLeftTransitionIn.setFromX(-screenWidth);
+        translateLeftTransitionIn.setByX(screenWidth-screenWidth/4);
+        translateLeftTransitionIn.setAutoReverse(true);
+
+        translateRightTransitionIn = new TranslateTransition(Duration.millis(2000), rightCloud);
+        translateRightTransitionIn.setFromX(screenWidth);
+        translateRightTransitionIn.setByX(-screenWidth+screenWidth/4);
+        translateRightTransitionIn.setAutoReverse(true);
+    }
+
+    public void playTransitionClouds(){
+        transitionClouds.setVisible(true);
+        translateLeftTransitionIn.setCycleCount(2);
+        translateLeftTransitionIn.play();
+        translateRightTransitionIn.setCycleCount(2);
+        translateRightTransitionIn.play();
+    }
+
 
     public MenuScene menuScene(){
         return menuScene;
@@ -127,28 +236,24 @@ public class Gui extends Application implements View {
 
     @Override
     public String askIp() {
-        return menuScene.ip();
+        return menuScene.askIp();
     }
 
     @Override
-    public void askMatchType(ClientController clientController, CommunicationChannel communicationChannel) {
-        menuScene.askNumberOfPlayers(clientController, communicationChannel);
+    public int askMatchType() {
+        return menuScene.askNumberOfPlayers();
     }
 
     @Override
     public int askPort() {
-        return menuScene.port();
-    }
-
-    @Override
-    public void askUserName(ClientController clientController, CommunicationChannel communicationChannel) {
-        menuScene.askNickname(clientController, communicationChannel);
+        return menuScene.askPort();
     }
 
     @Override
     public String askUserName() {
-        return null;
+        return menuScene.askNickname();
     }
+
 
     @Override
     public int askWorker(List<int[]> workers) {
@@ -182,11 +287,11 @@ public class Gui extends Application implements View {
 
     @Override
     public void unknownHost(String host, UnknownHostException e) {
-
+        menuScene().setErrorMessage1("Host does not exist");
     }
 
     @Override
     public void connectionRefused(String host, ConnectException e) {
-
+        menuScene().setErrorMessage1("Connection refused");
     }
 }
