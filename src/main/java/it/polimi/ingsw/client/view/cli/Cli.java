@@ -6,6 +6,9 @@ import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
+import static it.polimi.ingsw.network.CommunicationProtocol.*;
+import static it.polimi.ingsw.client.view.cli.Colors.*;
+import it.polimi.ingsw.server.model.Colour;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -14,9 +17,10 @@ import java.util.List;
 
 public class Cli implements View{
     private static BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
-
     private PrintStream printStream=new PrintStream(System.out);
     private ScreenView view=new ScreenView(printStream);
+    private PlayerProxy myPlayer;
+    private List<PlayerProxy> otherPlayers;
 
     public ScreenView screenView(){
         return this.view;
@@ -32,31 +36,184 @@ public class Cli implements View{
 
     @Override
     public int askBox(List<int[]> boxes) {
-        return 0;
+        boolean valid = false;
+        int answer = 0;
+        for(int i=0; i<boxes.size(); i++){
+           printStream.print((i+1)+"   for box in"+convertCoordinates(boxes.get(i))+"    ");
+        }
+        while (!valid) {
+
+            try {
+                answer = askNumber();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                answer = 0;
+            }
+            if (answer<=boxes.size() && answer>0) {
+                valid = true;
+            }
+            else
+                System.out.println("Not valid answer. Try again");
+        }
+        return answer;
     }
 
     @Override
     public int askWorker(List<int[]> workers) {
-        return 0;
+        boolean valid = false;
+        int answer = 0;
+        for(int i=0; i<workers.size(); i++){
+            printStream.print((i+1)+"   for worker in"+convertCoordinates(workers.get(i))+"    ");
+        }
+        while (!valid) {
+
+            try {
+                answer = askNumber();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                answer = 0;
+            }
+            if (answer<=workers.size() &&answer>0) {
+                valid = true;
+            }
+            else
+                System.out.println("Not valid answer. Try again");
+        }
+        return answer;
+
     }
 
     @Override
     public int askCards(List<GodCardProxy> cards) {
-        return 0;
+        boolean valid = false;
+        int answer = 0;
+        printStream.println("GAME CARDS:");
+        printStream.println("\n");
+        for(int i=0; i<cards.size(); i++){
+            printStream.println((i+1)+" "+cards.get(i).name +":    ");
+            printStream.println(cards.get(i).description);
+            printStream.println(" ");
+        }
+        for(int i=0; i<cards.size(); i++){
+            printStream.println((i+1)+"   for card "+cards.get(i).name);
+
+        }
+        while (!valid) {
+
+            try {
+                answer = askNumber();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                answer = 0;
+            }
+            if (answer<=cards.size() &&answer>0) {
+                valid = true;
+            }
+            else
+                System.out.println("Not valid answer. Try again");
+        }
+        return answer;
     }
 
     @Override
     public boolean askConfirmation() {
-        return false;
+
+        boolean valid = false;
+        int answer = 0;
+        while (!valid) {
+
+            try {
+                answer = askNumber();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                answer = 0;
+            }
+            if (answer == 1 || answer == 2) {
+                valid = true;
+            }
+            else
+                System.out.println("Not valid answer. Try again");
+        }
+        if (answer==1) {
+            return true;
+        }
+        else
+            return false;
+
     }
 
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
+        switch(key) {
+            case GODPOWER:
+                //view.clearScreen();
+                //view.updateMap();
+                view.turn();
+                printStream.println("\nWould you like to use your power?");
+                printStream.println("1  YES;  2 NO");
+                break;
+            case UNDO:
+                //view.clearScreen();
+                //view.updateMap();
+                view.turn();
+                printStream.println("\nDo you want end your turn?");
+                printStream.println("1  UNDO;  2 GO AHEAD");
+                break;
+            case DECK:
+                //view.clearScreen();
+                //view.updateMap();
+                view.turn();
+                printStream.println("\nYou are the challenger, choose the game cards! One for each player");
+                printStream.println("\n");
+                break;
+            case CARD:
+                //view.clearScreen();
+                //view.updateMap();
+                view.turn();
+                printStream.println("\n choose your game card!");
+                printStream.println("\n");
 
-    }
+            }
+        }
+
 
     @Override
     public void updateMap(List<BoxProxy> boxes) {
+        for(BoxProxy boxProxy:boxes) {
+
+                if (boxProxy.level == 0) {
+                    view.map().position(boxProxy.position[0], boxProxy.position[1]).groundFloorBlock();
+                            if(boxProxy.dome==true){
+                                view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
+                            }
+                }
+                if (boxProxy.level == 1) {
+                    view.map().position(boxProxy.position[0], boxProxy.position[1]).firstFloorBlock();
+                    if(boxProxy.dome==true){
+                        view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
+                    }
+                }
+                if (boxProxy.level == 2) {
+                    view.map().position(boxProxy.position[0], boxProxy.position[1]).secondFloorBlock();
+                    if(boxProxy.dome==true){
+                        view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
+                    }
+                }
+                if (boxProxy.level == 3) {
+                    view.map().position(boxProxy.position[0], boxProxy.position[1]).firstFloorBlock();
+                    if(boxProxy.dome==true){
+                        view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
+                    }
+                }
+                if (boxProxy.occupier!=null) {
+                    view.map().position(boxProxy.position[0], boxProxy.position[1]).withWorker(boxProxy.occupier.gender, boxProxy.occupier.colour);
+                }
+
+        }
 
     }
 
@@ -144,6 +301,53 @@ public class Cli implements View{
     public String askUserName() throws IOException {
         System.out.println("Write username:");
         return commandline.readLine();
+    }
+
+    public String convertCoordinates(int[] coordinates){
+        char first;
+        char second;
+        switch(coordinates[0]) {
+            case 0:
+                first = 'A';
+                break;
+            case 1:
+                first = 'B';
+                break;
+            case 2:
+                first = 'C';
+                break;
+            case 3:
+                first = 'D';
+                break;
+            case 4:
+                first = 'E';
+                break;
+            default:
+                return "error in conversion of coordinates";
+
+
+        }
+        switch(coordinates[1]) {
+            case 0:
+                second = '1';
+                break;
+            case 1:
+                second = '2';
+                break;
+            case 2:
+                second = '3';
+                break;
+            case 3:
+                second = '4';
+                break;
+            case 4:
+                second = '5';
+                break;
+            default:
+                return "error in conversion of coordinates";
+
+        }
+        return first+","+second;
     }
 
     public static void main(String[] args){
