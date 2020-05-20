@@ -24,7 +24,7 @@ public class PrintedBlock {
     }
 
     public void groundFloorBlock(){
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         this.lines.add(CYAN_BRIGHT+"+-----------------");
         this.lines.add(CYAN_BRIGHT+"|                 ");
         this.lines.add(CYAN_BRIGHT+"|                 ");
@@ -33,7 +33,7 @@ public class PrintedBlock {
     }
 
     public void firstFloorBlock(){
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+BLACK_BOLD_BRIGHT+LIGHTGRAY_BACKGROUND+"    1°level    "+CYAN_BRIGHT+" ");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+"               "+CYAN_BRIGHT+" ");
@@ -43,7 +43,7 @@ public class PrintedBlock {
     }
 
     public void secondFloorBlock(){
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  2°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -53,7 +53,7 @@ public class PrintedBlock {
     }
 
     public void thirdFloorBlock(){
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  3°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+BLACK_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -64,7 +64,7 @@ public class PrintedBlock {
 
     public void domeBlock(){
         if (getLines().get(1).contains("3°level")) {
-            this.setLines(new ArrayList<String>());
+            this.lines.clear();
             this.lines.add(CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + BLUE_BACKGROUND + "       " + RESET_BACKGROUND + "     ");
             this.lines.add("|   " + BLUE_BACKGROUND + BLACK_BOLD_BRIGHT + "   tower   " + RESET_BACKGROUND + CYAN_BOLD_BRIGHT + "   ");
@@ -73,7 +73,7 @@ public class PrintedBlock {
 
         }
         else if (getLines().get(1).contains("2°level")) {
-            this.setLines(new ArrayList<String>());
+            this.lines.clear();
             this.lines.add(CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + BLUE_BACKGROUND + "       " + RESET_BACKGROUND + "     ");
             this.lines.add("|   " + BLUE_BACKGROUND + BLACK_BOLD_BRIGHT + "  dome on  " + RESET_BACKGROUND + CYAN_BOLD_BRIGHT + "   ");
@@ -82,7 +82,7 @@ public class PrintedBlock {
 
         }
         else if (getLines().get(1).contains("1°level")) {
-            this.setLines(new ArrayList<String>());
+            this.lines.clear();
             this.lines.add(CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + BLUE_BACKGROUND + "       " + RESET_BACKGROUND + "     ");
             this.lines.add("|   " + BLUE_BACKGROUND + BLACK_BOLD_BRIGHT + "  dome on  " + RESET_BACKGROUND + CYAN_BOLD_BRIGHT + "   ");
@@ -91,7 +91,7 @@ public class PrintedBlock {
 
         }
         else {
-            this.setLines(new ArrayList<String>());
+            this.lines.clear();
             this.lines.add(CYAN_BOLD_BRIGHT + "+-----------------");
             this.lines.add("|     " + BLUE_BACKGROUND + "       " + RESET_BACKGROUND + "     ");
             this.lines.add("|   " + BLUE_BACKGROUND + BLACK_BOLD_BRIGHT + "  dome on  " + RESET_BACKGROUND + CYAN_BOLD_BRIGHT + "   ");
@@ -141,7 +141,7 @@ public class PrintedBlock {
         }
         else
             genderChar='♂';
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("|                 ");
         this.lines.add("|     "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   W   "+RESET_BACKGROUND+"    "+CYAN_BRIGHT+" ");
@@ -150,7 +150,7 @@ public class PrintedBlock {
 
     }
     public void firstFloorWithWorker(boolean gender, Colour color){
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         char genderChar;
         if (gender==true){
             genderChar='♀';
@@ -172,7 +172,7 @@ public class PrintedBlock {
         }
         else
             genderChar='♂';
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  2°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"  "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   W   "+LIGHTGRAY_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -189,7 +189,7 @@ public class PrintedBlock {
         }
         else
             genderChar='♂';
-        this.setLines(new ArrayList<String>());
+        this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  3°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+BLACK_BACKGROUND+"  "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   W   "+BLACK_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
