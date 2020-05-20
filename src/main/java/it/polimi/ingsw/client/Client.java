@@ -17,10 +17,12 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.HI;
+import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
 
 public class Client extends Thread{
 
     private final View view;
+    CommunicationChannel communicationChannel = null;
 
     public Client(View view) {
         this.view = view;
@@ -76,7 +78,7 @@ public class Client extends Thread{
             System.exit(1);
         }
 
-        CommunicationChannel communicationChannel = new CommunicationChannel(in, out);
+        communicationChannel = new CommunicationChannel(in, out);
         communicationChannel.writeKeyWord(HI);
         ClientController clientController = new ClientController();
         while (!communicationChannel.isClosed()) {
@@ -174,5 +176,11 @@ public class Client extends Thread{
                     communicationChannel.write("WTF?!");
             }
         }
+    }
+
+    public void end(){
+        if(communicationChannel!=null)
+            communicationChannel.writeKeyWord(QUIT);
+        stop();
     }
 }
