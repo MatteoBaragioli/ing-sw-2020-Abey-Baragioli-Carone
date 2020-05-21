@@ -7,13 +7,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommunicationChannel {
 
     final private BufferedReader in;
     final private PrintWriter out;
+    private List<String> messages = new ArrayList<>();
     private boolean closed = false;
+    final public String SEPARATOR = "_CONTENT_";
 
     public CommunicationChannel(BufferedReader bufferedReader, PrintWriter printWriter) {
         in = bufferedReader;

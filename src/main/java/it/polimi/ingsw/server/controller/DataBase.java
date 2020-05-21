@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.model.User;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,30 +11,39 @@ import java.util.Map;
 
 public class DataBase {
 
+    private List<Socket> connections = new ArrayList<>();
+    private Map<Socket, String> connectionToUser = new HashMap<>();
     private List<String> userNames = new ArrayList<>();
     private Map<String, User> users = new HashMap<>();
     private Map<User, Lobby> lobbies = new HashMap<>();
     private List<Lobby> completeLobbies = new ArrayList<>();
     private List<Lobby> openLobbies = new ArrayList<>();
 
-    public List<String> userNames() {
-        return userNames;
+    /**
+     * This method tells if a connection is registered
+     * @param socket
+     * @return boolean
+     */
+    public boolean hasConnection(Socket socket) {
+        return connections.contains(socket);
     }
 
-    public Map<String, User> users() {
-        return users;
+    /**
+     * This method registers a new connection
+     * @param socket
+     */
+    public synchronized void addConnection(Socket socket) {
+        if (!hasConnection(socket))
+            connections.add(socket);
     }
 
-    public Map<User, Lobby> lobbies() {
-        return lobbies;
-    }
-
-    public List<Lobby> completeLobbies() {
-        return completeLobbies;
-    }
-
-    public List<Lobby> openLobbies() {
-        return openLobbies;
+    /**
+     * This method tells if a user has registered from this connection
+     * @param socket connection
+     * @return boolean
+     */
+    public boolean connectionHasUser(Socket socket) {
+        return connectionToUser.containsKey(socket);
     }
 
     /**
@@ -42,7 +52,7 @@ public class DataBase {
      * @return boolean
      */
     public boolean userNameExists(String username) {
-        return userNames().contains(username);
+        return userNames.contains(username);
     }
 
     /**
@@ -52,7 +62,7 @@ public class DataBase {
     public synchronized boolean addUserName(String name) {
         boolean exists = userNameExists(name);
         if (!exists)
-            userNames().add(name);
+            userNames.add(name);
         return !exists;
     }
 
@@ -62,7 +72,7 @@ public class DataBase {
      */
     private synchronized void deleteUserName(String name) {
         if (userNameExists(name))
-            userNames().remove(name);
+            userNames.remove(name);
     }
 
     /**
@@ -72,8 +82,20 @@ public class DataBase {
      */
     public User findUser(String username) {
         if (userNameExists(username))
-            return users().get(username);
+            return users.get(username);
         return null;
+    }
+
+    /**
+     * This method tells if a user has registered from this connection
+     * @param socket connection
+     * @return boolean
+     */
+    public User findUser(Socket socket) {
+        if (connectionHasUser(socket))
+            return findUser(connectionToUser.get(socket));
+        else
+            return null;
     }
 
     /**
@@ -85,9 +107,26 @@ public class DataBase {
         if (user != null) {
             done = addUserName(user.name());
             if (done)
-                users().put(user.name(), user);
+                users.put(user.name(), user);
         }
         return done;
+    }
+
+    /**
+     * This method removes a user to the DB
+     * @param username new user
+     */
+    public synchronized void removeUser(String username) {
+        users.remove(username);
+    }
+
+    /**
+     * This method tells if a user is assigned to a Lobby
+     * @param user user
+     * @return boolean
+     */
+    public boolean userHasLobby(User user) {
+        return lobbies.containsKey(user);
     }
 
     /**
@@ -106,18 +145,17 @@ public class DataBase {
     public synchronized void deleteUser(User user) {
         if (user != null) {
             userQuitLobby(user);
-            users().remove(user.name());
+            removeUser(user.name());
             deleteUserName(user.name());
         }
     }
 
     /**
-     * This method tells if a user is assigned to a Lobby
-     * @param user user
-     * @return boolean
+     * This method removes a user from the DB
+     * @param socket leaving user
      */
-    public boolean userHasLobby(User user) {
-        return lobbies().containsKey(user);
+    public synchronized void deleteSocket(Socket socket) {
+        deleteUser(findUser(socket));
     }
 
     /**
@@ -127,7 +165,7 @@ public class DataBase {
      */
     public Lobby findLobby(User user) {
         if (user != null && userNameExists(user.name()) && userHasLobby(user))
-            return lobbies().get(user);
+            return lobbies.get(user);
         return null;
     }
 
@@ -138,7 +176,7 @@ public class DataBase {
      */
     public synchronized void joinLobby(User user, Lobby lobby) {
         if (!userHasLobby(user))
-            lobbies().put(user, lobby);
+            lobbies.put(user, lobby);
     }
 
     /**
@@ -146,8 +184,8 @@ public class DataBase {
      * @param lobby the lobby created by this user manager
      */
     public synchronized void registerCompleteLobby(Lobby lobby) {
-        openLobbies().remove(lobby);
-        completeLobbies().add(lobby);
+        openLobbies.remove(lobby);
+        completeLobbies.add(lobby);
     }
 
     /**
@@ -169,8 +207,8 @@ public class DataBase {
 
         System.out.println("Looking for a lobby with " + nPlayers + " players for " + user.name());
         Lobby lobby;
-        for (int i = 0; i < openLobbies().size() && !found; i++) {
-            lobby = openLobbies().get(i);
+        for (int i = 0; i < openLobbies.size() && !found; i++) {
+            lobby = openLobbies.get(i);
             if (lobby.isOpen() && lobby.nPlayers()==nPlayers) {
                 found = true;
                 lobby.addUser(user);
@@ -182,7 +220,7 @@ public class DataBase {
             lobby = new Lobby(user, nPlayers);
             joinLobby(user, lobby);
             System.out.println("New lobby " + lobby + " with " + nPlayers + " players has been created for " + user.name());
-            openLobbies().add(lobby);
+            openLobbies.add(lobby);
             lobby.run();
             registerCompleteLobby(lobby);
         }

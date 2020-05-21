@@ -7,16 +7,15 @@ import java.util.List;
 
 public class GodCard {
     private String name;
-    private int id;
+    final public int id;
     private List<TurnSequenceModifier> actions = new ArrayList<>();
     private WinCondition winCondition;
     private SetUpCondition setUpCondition;
     private List<TurnSequenceModifier> effectsOnOpponents;
-    final private String description;
-    final private String winDescription;
-    final private String setUpDescription;
-    final private String opponentsFxDescription;
-
+    final public String description;
+    final public String winDescription;
+    final public String setUpDescription;
+    final public String opponentsFxDescription;
 
     public GodCard(String name, int id, List<TurnSequenceModifier> actions, WinCondition winCondition, SetUpCondition setUpCondition, List<TurnSequenceModifier> effectsOnOpponents, String description, String winDescription, String setUpDescription, String opponentsFxDescription) {
         this.name = name;
@@ -76,23 +75,7 @@ public class GodCard {
         return effectsOnOpponents;
     }
 
-    public String description() {
-        return description;
-    }
-
-    public String winDescription() {
-        return winDescription;
-    }
-
-    public String setUpDescription() {
-        return setUpDescription;
-    }
-
-    public String opponentsFxDescription() {
-        return opponentsFxDescription;
-    }
-
     public GodCardProxy createProxy() {
-        return new GodCardProxy(name(), id(), description(), winDescription(), setUpDescription(), opponentsFxDescription());
+        return new GodCardProxy(name(), id(), description, winDescription, setUpDescription, opponentsFxDescription);
     }
 }

@@ -2,10 +2,11 @@ package it.polimi.ingsw.server.socket;
 
 import it.polimi.ingsw.server.controller.DataBase;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,9 +48,24 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        System.out.println("Write port:");
-        int port = in.nextInt();
+        boolean valid = false;
+        int port = 0;
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        while (!valid) {
+            System.out.println("Write port:");
+            try {
+                port = Integer.parseInt(in.readLine());;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                port = 0;
+            }
+            if (port > 1023)
+                valid = true;
+            else
+                System.out.println("Not valid port. Try again");
+        }
+
         Server server = new Server(port);
         server.startServer();
     }

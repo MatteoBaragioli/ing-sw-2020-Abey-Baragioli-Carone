@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import static it.polimi.ingsw.network.CommunicationProtocol.HI;
+import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class ClientHandler extends Thread{
 
@@ -53,11 +53,21 @@ public class ClientHandler extends Thread{
 
         if (key == HI) {
             System.out.println("Starting registration of socket " + socket);
+            dataBase.addConnection(socket);
             new UserManager(dataBase, communicationChannel).run();
         }
 
         while (!communicationChannel.isClosed()) {
+            try {
+                if (communicationChannel.nextKey() == QUIT)
+                    communicationChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.err.println("Error in Client Handler");
+                communicationChannel.close();
+            }
         }
+        dataBase.deleteSocket(socket);
         // Chiudo gli stream e il socket
         try {
             socket.close();
