@@ -9,18 +9,19 @@ import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import it.polimi.ingsw.network.objects.BoxProxy;
-import it.polimi.ingsw.network.objects.GodCardProxy;
-import it.polimi.ingsw.network.objects.PlayerProxy;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -34,31 +35,37 @@ public class Gui extends Application implements View {
 
     private double screenWidth = Screen.getPrimary().getBounds().getWidth();
     private double screenHeight = Screen.getPrimary().getBounds().getHeight();
-    private Font lillybelleFont = Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
+    private final Font lillybelleFont = Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
     private static final int mapRowsNumber = 5;
     private static final int mapColumnsNumber = 5;
-    Client client = new Client(this);
-    Stage window;
-    MenuScene menuScene;
+    private final Client client = new Client(this);
+    private Stage window;
+    private MenuScene menuScene;
 
 
 
-    //All pages Pane
-    StackPane firstScene = new StackPane();
+
+    private final StackPane firstScene = new StackPane();
 
 
-    StackPane openingPage = new StackPane();
+    private final StackPane openingPage = new StackPane();
 
-    HBox menuPage = new HBox();
+    private final HBox menuPage = new HBox();
 
-    StackPane loadingPage = new StackPane();
+    private final StackPane loadingPage = new StackPane();
 
-    StackPane transitionClouds = new StackPane();
+    private final StackPane transitionClouds = new StackPane();
 
-    TranslateTransition translateLeftTransitionIn;
-    TranslateTransition translateLeftTransitionOut;
-    TranslateTransition translateRightTransitionIn;
-    TranslateTransition translateRightTransitionOut;
+    private final StackPane confirmPopup = new StackPane();
+
+    private Text questionPopup;
+
+    private Button yesPopupButton;
+
+    private Button noPopupButton;
+
+    private TranslateTransition translateLeftTransitionIn;
+    private TranslateTransition translateRightTransitionIn;
 
 
     AnchorPane matchPage = new AnchorPane();
@@ -69,18 +76,20 @@ public class Gui extends Application implements View {
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
 
         window = primaryStage;
         windowStyle();
+        confirmPopup();
 
 
-
-        firstScene.getChildren().addAll(openingPage, loadingPage, menuPage, transitionClouds);
+        firstScene.getChildren().addAll(openingPage, menuPage, transitionClouds, loadingPage, confirmPopup);
         openingPage.setVisible(true);
         menuPage.setVisible(false);
         loadingPage.setVisible(false);
         transitionClouds.setVisible(false);
+        confirmPopup.setVisible(false);
+        confirmPopup.setAlignment(Pos.CENTER);
 
 
         //openingPage();
@@ -103,16 +112,16 @@ public class Gui extends Application implements View {
 
 
     public void windowStyle(){
-        //window.setMaximized(true);
-        window.setWidth(1280);
-        window.setHeight(720);
-        screenWidth = 1280;
-        screenHeight = 720;
+        window.setMaximized(true);
+        //window.setWidth(1280);
+        //window.setHeight(720);
+        //screenWidth = 1280;
+        //screenHeight = 720;
         window.initStyle(StageStyle.UNDECORATED);
         window.setTitle("Santorini");
         window.setOnCloseRequest(e -> {
             e.consume();
-            closeProgram(menuScene().menuPage());
+            closeProgram();
         });
         window.setResizable(true);
     }
@@ -122,13 +131,77 @@ public class Gui extends Application implements View {
     }
 
 
-    private void closeProgram(HBox fullPage){
-        boolean answer = ConfirmBox.display("Quit?", "Sure you want to quit the game?", window.getWidth(), window.getHeight());
-        if(answer)
+    public void closeProgram(){
+        yesPopupButton.setOnAction(e -> {
             window.close();
-        else
-            fullPage.setEffect(new BoxBlur(0, 0, 0));
+            client.end();
+
+        });
+        noPopupButton.setOnAction(e -> {
+            menuPage.setEffect(new BoxBlur(0, 0, 0));
+            openingPage.setEffect(new BoxBlur(0, 0, 0));
+            loadingPage.setEffect(new BoxBlur(0, 0, 0));
+            confirmPopup.setVisible(false);
+        });
+        createConfirmPopup("Do you really want to quit the game?");
     }
+
+    private void confirmPopup(){
+        confirmPopup.setPrefWidth(screenWidth/4);
+        confirmPopup.setPrefHeight(screenHeight/4);
+
+        Image confirmFrame = new Image(Gui.class.getResource("/img/frame.png").toString(), screenWidth/2, screenHeight/2, false, false);
+        ImageView confirmView = new ImageView(confirmFrame);
+
+        VBox confirmBox = new VBox();
+
+        questionPopup = new Text();
+        questionPopup.setFont(lillybelleFont);
+
+        HBox answers = new HBox();
+        yesPopupButton = new Button("Yes");
+        noPopupButton = new Button("No");
+
+        yesPopupButton.setFont(lillybelleFont);
+        yesPopupButton.setCursor(Cursor.HAND);
+        noPopupButton.setFont(lillybelleFont);
+        noPopupButton.setCursor(Cursor.HAND);
+
+
+
+        answers.getChildren().addAll(yesPopupButton, noPopupButton);
+        answers.setSpacing(50);
+        answers.setAlignment(Pos.CENTER);
+
+
+
+
+        confirmBox.setSpacing(10);
+        confirmBox.getChildren().addAll(questionPopup, answers);
+
+        confirmPopup.getChildren().addAll(confirmView, confirmBox);
+        confirmPopup.setAlignment(Pos.CENTER);
+        confirmBox.setAlignment(Pos.CENTER);
+
+    }
+
+    private void createConfirmPopup(String question){
+        questionPopup.setText(question);
+        menuPage.setEffect(new BoxBlur(5, 10, 10));
+        openingPage.setEffect(new BoxBlur(5, 10, 10));
+        loadingPage.setEffect(new BoxBlur(5, 10, 10));
+        confirmPopup.setVisible(true);
+    }
+
+
+
+
+
+
+
+
+
+
 
     private void openingPage(){
         Image openingImg = new Image(Gui.class.getResource("/img/opening/opening.png").toString(), screenWidth, screenHeight, false, false);

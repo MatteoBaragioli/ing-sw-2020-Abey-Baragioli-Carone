@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MenuScene {
 
-    private static final Font lillybelleFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 20);
-    private static final Font errorFont = Font.loadFont(ConfirmBox.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 13);
+    private static final Font lillybelleFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 20);
+    private static final Font errorFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 13);
     private final Gui gui;
     private final Stage primaryWindow;
     private final HBox menuPage;
@@ -117,9 +117,6 @@ public class MenuScene {
         return matchType;
     }
 
-    public HBox menuPage() {
-        return menuPage;
-    }
 
     //_______________________________________________END GETTER__________________________________________________________
 
@@ -181,7 +178,7 @@ public class MenuScene {
         matchTypeNumber.setVisible(false);
         errorMessage.setWrappingWidth(screenWidth/8);
 
-        Group quitGroup = quitGroup(menuPage);
+        Group quitGroup = quitGroup();
         playGroup = playGroup();
         menuBox.getChildren().addAll(formGroup, matchTypeNumber);
 
@@ -326,7 +323,31 @@ public class MenuScene {
         Image loadingImg = new Image(MenuScene.class.getResource("/img/loading.png").toString(), screenWidth, screenHeight, false, false);
         ImageView loadingImageView = new ImageView(loadingImg);
         loadingPage.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        loadingPage.getChildren().addAll(loadingImageGif, loadingImageView);
+        Image quitLoadingImg = new Image(MenuScene.class.getResource("/img/quit_normal.png").toString(), screenWidth/12, screenHeight/8, false, false);
+        Image quitLoadingHoverImg = new Image(MenuScene.class.getResource("/img/quit_hover.png").toString(),screenWidth/12, screenHeight/8, false, false);
+        Image quitLoadingClickImg = new Image(MenuScene.class.getResource("/img/quit_clicked.png").toString(),screenWidth/12, screenHeight/8, false, false);
+        ImageView quitLoading = new ImageView(quitLoadingImg);
+
+        quitLoading.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
+            quitLoading.setImage(quitLoadingHoverImg);
+            quitLoading.setCursor(Cursor.HAND);
+            event.consume();
+        });
+
+        quitLoading.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
+            quitLoading.setImage(quitLoadingImg);
+            event.consume();
+        });
+
+        quitLoading.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            quitLoading.setImage(quitLoadingClickImg);
+            gui.closeProgram();
+            event.consume();
+        });
+        StackPane quitPane = new StackPane();
+        quitPane.setAlignment(Pos.TOP_LEFT);
+        quitPane.getChildren().add(quitLoading);
+        loadingPage.getChildren().addAll(loadingImageGif, loadingImageView, quitPane);
         gui.playTransitionClouds();
         FadeTransition menuFadeOut = new FadeTransition(Duration.millis(2000), menuPage);
         menuFadeOut.setFromValue(1);
@@ -387,7 +408,7 @@ public class MenuScene {
 
     //-----------------------------------------------Quit Button------------------------------------------------------------
 
-    private  ImageView quitButton(HBox fullPage){
+    private  ImageView quitButton(){
         Image quitImg = new Image(MenuScene.class.getResource("/img/quit_normal.png").toString(), screenWidth/8, screenHeight/4, false, false);
         Image quitHoverImg = new Image(MenuScene.class.getResource("/img/quit_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
         Image quitClickImg = new Image(MenuScene.class.getResource("/img/quit_clicked.png").toString(),screenWidth/8, screenHeight/4, false, false);
@@ -404,14 +425,9 @@ public class MenuScene {
             event.consume();
         });
 
-        quitView.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-            quitView.setImage(quitClickImg);
-            fullPage.setEffect(new BoxBlur(5, 10, 10));
-            event.consume();
-        });
-
         quitView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            closeProgram(fullPage);
+            quitView.setImage(quitClickImg);
+            gui.closeProgram();
             event.consume();
         });
 
@@ -420,8 +436,8 @@ public class MenuScene {
 
 
 
-    private Group quitGroup(HBox fullPage){
-        ImageView quitView = quitButton(fullPage);
+    private Group quitGroup(){
+        ImageView quitView = quitButton();
 
         quitView.setEffect(new DropShadow(10, Color.BLACK));
 
@@ -434,14 +450,4 @@ public class MenuScene {
 
     //-----------------------------------------------END Quit Button------------------------------------------------------------
 
-
-
-
-    public void closeProgram(HBox fullPage){
-        boolean answer = ConfirmBox.display("Quit?", "Sure you want to quit the game?", screenWidth, screenHeight);
-        if(answer)
-            primaryWindow.close();
-        else
-            fullPage.setEffect(new BoxBlur(0, 0, 0));
-    }
 }
