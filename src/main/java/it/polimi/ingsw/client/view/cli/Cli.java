@@ -6,9 +6,7 @@ import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
-import static it.polimi.ingsw.network.CommunicationProtocol.*;
-import static it.polimi.ingsw.client.view.cli.Colors.*;
-import it.polimi.ingsw.server.model.Colour;
+
 
 import java.io.*;
 import java.net.ConnectException;
@@ -20,7 +18,7 @@ public class Cli implements View{
     private PrintStream printStream=new PrintStream(System.out);
     private ScreenView view=new ScreenView(printStream);
     private PlayerProxy myPlayer;
-    private List<PlayerProxy> otherPlayers;
+    private List<PlayerProxy> opponents;
 
     public ScreenView screenView(){
         return this.view;
@@ -109,7 +107,7 @@ public class Cli implements View{
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer<=cards.size() &&answer>0) {
+            if (answer<=cards.size() && answer>0) {
                 valid = true;
             }
             else
@@ -219,12 +217,13 @@ public class Cli implements View{
 
     @Override
     public void setMyPlayer(PlayerProxy player) {
+        this.myPlayer=player;
 
     }
 
     @Override
     public void setOpponentsInfo(List<PlayerProxy> players) {
-
+        opponents.addAll(players);
     }
 
     @Override
