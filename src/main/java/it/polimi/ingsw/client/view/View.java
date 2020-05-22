@@ -26,4 +26,5 @@ public interface View {
     void connectionLost();
     void unknownHost(String host, UnknownHostException e);
     void connectionRefused(String host, ConnectException e);
+    void startMatch();
 }

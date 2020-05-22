@@ -22,7 +22,7 @@ import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
 public class Client extends Thread{
 
     private final View view;
-    CommunicationChannel communicationChannel = null;
+    private CommunicationChannel communicationChannel = null;
 
     public Client(View view) {
         this.view = view;

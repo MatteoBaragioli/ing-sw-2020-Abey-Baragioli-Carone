@@ -43,7 +43,7 @@ public class CardConstructor {
             String jsonObject = new Gson().toJson(protoCards);
             protoCards = new Gson().fromJson(jsonObject, listType);
         } catch (Exception FileNotFoundException) {
-            //
+            System.out.println("File not found");
         }
         return protoCards;
     }

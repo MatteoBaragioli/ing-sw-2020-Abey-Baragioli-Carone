@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,7 +31,6 @@ public class MenuScene {
     private static final Font lillybelleFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 20);
     private static final Font errorFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 13);
     private final Gui gui;
-    private final Stage primaryWindow;
     private final HBox menuPage;
     private final double screenWidth;
     private final double screenHeight;
@@ -51,14 +48,13 @@ public class MenuScene {
     private int port;
     private int matchType;
     private ImageView loadingIcon;
-    Button confirmButton = new Button("Next");
-    ToggleGroup numberOfPlayers;
-    HBox numberOfPlayersOptions;
-    VBox matchTypeNumber = new VBox();
+    private Button confirmButton = new Button("Next");
+    private ToggleGroup numberOfPlayers;
+    private HBox numberOfPlayersOptions;
+    private VBox matchTypeNumber = new VBox();
 
-    public MenuScene(Gui gui, Stage primaryWindow, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage) {
+    public MenuScene(Gui gui, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage) {
         this.gui = gui;
-        this.primaryWindow = primaryWindow;
         this.menuPage = menuPage;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -227,6 +223,7 @@ public class MenuScene {
         while(!clicked.get()){
 
         }
+
         return ip();
     }
 
@@ -358,13 +355,20 @@ public class MenuScene {
                 Duration.millis(2000),
                 ae -> {
                     menuPage.setVisible(false);
-                    FadeTransition loadingFade = new FadeTransition(Duration.millis(3000), loadingPage);
+                    FadeTransition loadingFade = new FadeTransition(Duration.millis(4000), loadingPage);
                     loadingFade.setFromValue(0.0);
-                    loadingPage.setVisible(true);
                     loadingFade.setToValue(1.0);
                     loadingFade.play();
+                    loadingPage.setVisible(true);
                 }));
         loadingTimer.play();
+
+        Timeline momentaneoTimer = new Timeline(new KeyFrame(
+                Duration.millis(10000),
+                ae -> {
+                    gui.startMatch();
+                }));
+        momentaneoTimer.play();
     }
 
     //-----------------------------------------------End Loading Page------------------------------------------------------------

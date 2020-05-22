@@ -7,7 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 public class GuiMap extends GridPane {
-    private GuiBox[][] boxesList;
+    private final GuiBox[][] boxesList;
 
 
     public GuiMap(int rowsNumber, int columnsNumber, double mapDim, double screenWidth, double screenHeight) {

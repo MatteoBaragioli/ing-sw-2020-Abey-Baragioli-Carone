@@ -11,7 +11,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -29,6 +28,7 @@ import javafx.util.Duration;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Gui extends Application implements View {
@@ -41,7 +41,7 @@ public class Gui extends Application implements View {
     private final Client client = new Client(this);
     private Stage window;
     private MenuScene menuScene;
-
+    private MatchScene matchScene;
 
 
 
@@ -68,43 +68,49 @@ public class Gui extends Application implements View {
     private TranslateTransition translateRightTransitionIn;
 
 
-    AnchorPane matchPage = new AnchorPane();
-    private String ip;
-    private int port;
+    StackPane matchPage = new StackPane();
+
+
+
     private String nickname;
+    private String color;
     private int numberOfPlayers;
 
 
     @Override
     public void start(Stage primaryStage){
-
         window = primaryStage;
         windowStyle();
         confirmPopup();
 
 
-        firstScene.getChildren().addAll(openingPage, menuPage, transitionClouds, loadingPage, confirmPopup);
+        firstScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, confirmPopup);
         openingPage.setVisible(true);
         menuPage.setVisible(false);
         loadingPage.setVisible(false);
         transitionClouds.setVisible(false);
         confirmPopup.setVisible(false);
         confirmPopup.setAlignment(Pos.CENTER);
+        matchPage.setVisible(false);
+
 
 
         //openingPage();
 
-        //if not opening page todo toglierlo
-        openingPage.setVisible(false);
-        menuScene = new MenuScene(this, window, menuPage, screenWidth, screenHeight, loadingPage);
-        menuScene.setMenuScene();
-        startClient();
 
+        //if not opening page todo toglierlo
+        /*openingPage.setVisible(false);
+        menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage);
+        menuScene.setMenuScene();
+        startClient();*/
 
         createTransitionClouds();
 
+        matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
+
         Scene fullScene = new Scene(firstScene);
         window.setScene(fullScene);
+        startMatch();
 
         window.show();
     }
@@ -252,7 +258,7 @@ public class Gui extends Application implements View {
                 Duration.millis(8000),
                 ae -> {
                     openingPage.setVisible(false);
-                    menuScene = new MenuScene(this, window, menuPage, screenWidth, screenHeight, loadingPage);
+                    menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage);
                     menuScene.setMenuScene();
                     client.start();
                 }));
@@ -284,6 +290,12 @@ public class Gui extends Application implements View {
         translateLeftTransitionIn.play();
         translateRightTransitionIn.setCycleCount(2);
         translateRightTransitionIn.play();
+        Timeline cloudsTimer = new Timeline(new KeyFrame(
+                Duration.millis(4000),
+                ae -> {
+                    transitionClouds.setVisible(false);
+                }));
+        cloudsTimer.play();
     }
 
 
@@ -291,6 +303,13 @@ public class Gui extends Application implements View {
         return menuScene;
     }
 
+    public int mapRowsNumber() {
+        return mapRowsNumber;
+    }
+
+    public int mapColumnsNumber() {
+        return mapColumnsNumber;
+    }
 
     @Override
     public int askBox(List<int[]> boxes) {
@@ -299,7 +318,8 @@ public class Gui extends Application implements View {
 
     @Override
     public int askCards(List<GodCardProxy> cards) {
-        return 0;
+        matchScene.chooseCards(cards);
+        return 1;
     }
 
     @Override
@@ -345,6 +365,7 @@ public class Gui extends Application implements View {
 
     @Override
     public void setMyPlayer(PlayerProxy player) {
+        nickname=player.name;
 
     }
 
@@ -366,5 +387,44 @@ public class Gui extends Application implements View {
     @Override
     public void connectionRefused(String host, ConnectException e) {
         menuScene().setErrorMessage1("Connection refused");
+    }
+
+    @Override
+    public void startMatch(){
+        playTransitionClouds();
+        matchScene.setMatchScene("Matteo", 3, "Blue");
+        FadeTransition loadingFadeOut = new FadeTransition(Duration.millis(2000), loadingPage);
+        loadingFadeOut.setFromValue(1);
+        loadingFadeOut.setToValue(0);
+        loadingFadeOut.play();
+
+        Timeline matchTimer = new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                ae -> {
+                    loadingPage.setVisible(false);
+                    FadeTransition matchFade = new FadeTransition(Duration.millis(3000), matchPage);
+                    matchFade.setFromValue(0.0);
+                    matchPage.setVisible(true);
+                    matchFade.setToValue(1.0);
+                    matchFade.play();
+                }));
+        matchTimer.play();
+
+
+
+        //todo togliere
+        Timeline momentaneo2Timer = new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                ae -> {
+                    List<GodCardProxy> momentaneeCards = new ArrayList<>();
+                    GodCardProxy apollo = new GodCardProxy("Apollo", 1, "Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.", null, null, null);
+                    momentaneeCards.add(apollo);
+                    GodCardProxy artemis = new GodCardProxy("Artemis", 2, "Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.", null, null, null);
+                    momentaneeCards.add(artemis);
+                    askCards(momentaneeCards);
+                }));
+        momentaneo2Timer.play();
+
+
     }
 }
