@@ -417,10 +417,16 @@ public class Gui extends Application implements View {
                 Duration.millis(2000),
                 ae -> {
                     List<GodCardProxy> momentaneeCards = new ArrayList<>();
-                    GodCardProxy apollo = new GodCardProxy("Apollo", 1, "Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.", null, null, null);
+                    GodCardProxy apollo = new GodCardProxy("Apollo", 1, "Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated", null, null, null);
                     momentaneeCards.add(apollo);
-                    GodCardProxy artemis = new GodCardProxy("Artemis", 2, "Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.", null, null, null);
+                    GodCardProxy artemis = new GodCardProxy("Artemis", 2, "Your Move: Your Worker may move one additional time, but not back to its initial space", null, null, null);
                     momentaneeCards.add(artemis);
+                    GodCardProxy athena = new GodCardProxy("Athena", 2, "Opponent’s Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn", null, null, null);
+                    momentaneeCards.add(athena);
+                    GodCardProxy atlas = new GodCardProxy("Atlas", 2, "Your Build: Your Worker may build a dome at any level", null, null, null);
+                    momentaneeCards.add(atlas);
+                    GodCardProxy ares = new GodCardProxy("Ares", 2, "End of Your Turn: You may remove an unoccupied block (not dome) neighboring your unmoved Worker. You also remove any Tokens on the block", null, null, null);
+                    momentaneeCards.add(ares);
                     askCards(momentaneeCards);
                 }));
         momentaneo2Timer.play();
