@@ -2,6 +2,8 @@ package it.polimi.ingsw.server.socket;
 
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.Pinger;
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.server.controller.DataBase;
 
 import java.io.BufferedReader;
@@ -12,7 +14,7 @@ import java.net.Socket;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
-public class ClientHandler extends Thread{
+public class ClientHandler extends Thread {
 
     final private DataBase dataBase;
     final private Socket socket;
@@ -23,6 +25,7 @@ public class ClientHandler extends Thread{
     }
 
     public void run() {
+        setPriority(1);
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -47,17 +50,20 @@ public class ClientHandler extends Thread{
             key = communicationChannel.nextKey();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Can't receive the first key word from client");
+            System.err.println("IO Exception");
             System.exit(1);
         }
 
+        Pinger pinger = new Pinger(communicationChannel);
+        pinger.start();
+
         if (key == HI) {
             System.out.println("Starting registration of socket " + socket);
-            dataBase.addConnection(socket);
-            new UserManager(dataBase, communicationChannel).run();
+            dataBase.addConnection(communicationChannel);
+            new UserManager(dataBase, communicationChannel).start();
         }
 
-        while (!communicationChannel.isClosed()) {
+        while (!communicationChannel.isClosed() && pinger.isAlive()) {
             try {
                 if (communicationChannel.nextKey() == QUIT)
                     communicationChannel.close();
@@ -67,7 +73,7 @@ public class ClientHandler extends Thread{
                 communicationChannel.close();
             }
         }
-        dataBase.deleteSocket(socket);
+        dataBase.deleteConnection(communicationChannel);
         // Chiudo gli stream e il socket
         try {
             socket.close();

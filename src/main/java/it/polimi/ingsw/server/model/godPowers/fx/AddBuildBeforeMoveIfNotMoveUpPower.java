@@ -1,13 +1,15 @@
 package it.polimi.ingsw.server.model.godPowers.fx;
 
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.server.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class AddBuildBeforeMoveIfNotMoveUpPower extends BuildModifier {
     @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws IOException {
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws TimeoutException, ChannelClosedException {
         if(usePower){
             actionController.initialisePossibleBuilds(player.turnSequence(), map);
             actionController.applyOpponentsCondition(player, opponents, 2, map);

@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.view.gui;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import javafx.animation.FadeTransition;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
@@ -140,7 +141,12 @@ public class Gui extends Application implements View {
     public void closeProgram(){
         yesPopupButton.setOnAction(e -> {
             window.close();
-            client.end();
+            try {
+                client.end();
+            } catch (ChannelClosedException ex) {
+                ex.printStackTrace();
+                System.err.println("Connection Lost");
+            }
 
         });
         noPopupButton.setOnAction(e -> {
@@ -312,7 +318,7 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public int askBox(List<int[]> boxes) {
+    public int askPosition(List<int[]> positions) {
         return 0;
     }
 

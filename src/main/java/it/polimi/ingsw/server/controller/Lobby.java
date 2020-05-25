@@ -86,17 +86,7 @@ public class Lobby {
         match.start();
     }
 
-    public void run(){
-        System.out.println("Waiting for players");
-        while(isOpen()) {
-            System.out.println("Lobby non ready");
-            try {
-                wait(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println("We can start this match " + this.toString());
+    public void createMatch() {
         setMatch(new Match(users));
         System.out.println("Match " + match() + " can start");
         beginMatch();

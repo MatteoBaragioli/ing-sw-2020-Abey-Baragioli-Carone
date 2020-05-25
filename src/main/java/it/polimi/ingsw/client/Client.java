@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.view.cli.Cli;
 import it.polimi.ingsw.client.view.gui.Gui;
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import javafx.application.Application;
 
 import java.io.BufferedReader;
@@ -16,10 +17,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import static it.polimi.ingsw.network.CommunicationProtocol.HI;
-import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
+import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
-public class Client extends Thread{
+public class Client extends Thread {
 
     private final View view;
     private CommunicationChannel communicationChannel = null;
@@ -47,7 +47,9 @@ public class Client extends Thread{
             try {
                 socket = new Socket(hostName, portNumber);
                 valid = true;
-            } catch (UnknownHostException e) {
+            } catch (IllegalArgumentException e) {
+                valid = false;
+            }catch (UnknownHostException e) {
                 view.unknownHost(hostName, e);
                 valid = false;
             } catch (ConnectException e) {
@@ -79,7 +81,13 @@ public class Client extends Thread{
         }
 
         communicationChannel = new CommunicationChannel(in, out);
-        communicationChannel.writeKeyWord(HI);
+        try {
+            communicationChannel.writeKeyWord(HI);
+        } catch (ChannelClosedException e) {
+            e.printStackTrace();
+            view.connectionLost();
+            System.exit(-1);
+        }
         ClientController clientController = new ClientController();
         while (!communicationChannel.isClosed()) {
             CommunicationProtocol key = null;
@@ -99,13 +107,14 @@ public class Client extends Thread{
 
             view.prepareAdditionalCommunication(key);
             switch (key) {
-                case BUILDS:
-                case DESTINATIONS:
-                case REMOVALS:
+                case BUILD:
+                case DESTINATION:
+                case REMOVAL:
                 case STARTPOSITION:
+                case WORKER:
                     try {
-                        clientController.manageListOfBoxes(communicationChannel, view);
-                    } catch (IOException e) {
+                        clientController.manageListOfPositions(communicationChannel, view);
+                    } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Manage boxes error");
                     }
@@ -114,73 +123,121 @@ public class Client extends Thread{
                 case DECK:
                     try {
                         clientController.manageListOfCards(communicationChannel, view);
-                    } catch (IOException e) {
+                    } catch (ChannelClosedException e) {
                         e.printStackTrace();
-                        System.err.println("Manage cards error");
+                        System.err.println("Connection closed Manage CARDS");
+                        System.exit(-1);
                     }
                     break;
                 case GODPOWER:
                 case UNDO:
-                    clientController.manageConfirmation(communicationChannel, view);
+                    try {
+                        clientController.manageConfirmation(communicationChannel, view);
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection closed Manage CONFIRMATION");
+                        System.exit(-1);
+                    }
                     break;
                 case MAP:
                     try {
                         clientController.manageMapAsListOfBoxes(communicationChannel, view);
-                    } catch (IOException e) {
+                    } catch (ChannelClosedException e) {
                         e.printStackTrace();
-                        System.err.println("Manage map error");
+                        System.err.println("Connection closed Manage MAP");
+                        System.exit(-1);
                     }
                     break;
                 case MATCHSTART:
                     clientController.manageMatchStart(communicationChannel, view);
                     break;
                 case MATCHTYPE:
-                    clientController.askMatchType(communicationChannel, view);
+                    try {
+                        communicationChannel.writeMatchType(view.askMatchType());
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection closed MATCHTYPE");
+                        System.exit(-1);
+                    }
                     break;
                 case MYPLAYER:
                     try {
                         clientController.manageMyPlayer(communicationChannel, view);
-                    } catch (Exception e) {
+                    } catch (ChannelClosedException e) {
                         e.printStackTrace();
-                        System.err.println("Manage My Player Error");
+                        System.err.println("Connection closed MY PLAYER");
+                        System.exit(-1);
                     }
                     break;
                 case OPPONENTS:
                     try {
                         clientController.manageListOfOpponents(communicationChannel, view);
-                    } catch (IOException e) {
+                    } catch (ChannelClosedException e) {
                         e.printStackTrace();
-                        System.err.println("Manage Opponents Error");
+                        System.err.println("Connection closed OPPONENTS");
+                        System.exit(-1);
+                    }
+                    break;
+                case PING:
+                    try {
+                        communicationChannel.writeKeyWord(PONG);
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("PING Error");
+                        System.exit(-1);
                     }
                     break;
                 case UNIQUEUSERNAME:
                 case USERNAME:
                     try {
-                        clientController.writeUsername(communicationChannel, view);
+                        communicationChannel.writeUsername(view.askUserName());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        System.err.println("Manage Username Error");
+                        System.err.println("View Error");
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection Lost");
+                        System.exit(-1);
                     }
                     break;
                 case WAITFORPLAYERS:
-                    clientController.waitForPlayers(communicationChannel, view);
-                case WORKER:
                     try {
-                        clientController.manageListOfWorkers(communicationChannel, view);
-                    } catch (IOException e) {
+                        clientController.waitForPlayers(communicationChannel, view);
+                    } catch (ChannelClosedException e) {
                         e.printStackTrace();
-                        System.err.println("Manage workers error");
+                        System.err.println("Connection Lost");
+                        System.exit(-1);
                     }
                     break;
                 default:
-                    communicationChannel.write("WTF?!");
+
             }
         }
+
+        try {
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Can't get close BufferReader Clientside");
+            System.exit(1);
+        }
+
+        out.close();
+
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Can't get close socket Clientside");
+            System.exit(1);
+        }
+
+
     }
 
-    public void end(){
-        if(communicationChannel!=null)
+    public void end() throws ChannelClosedException {
+        if(communicationChannel!=null) {
             communicationChannel.writeKeyWord(QUIT);
-        stop();
+        }
     }
 }

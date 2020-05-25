@@ -1,9 +1,11 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.server.model.phases.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeoutException;
 
 public class Match extends Thread{
     private int currentPlayerIndex;
@@ -109,7 +111,7 @@ public class Match extends Thread{
         //START MATCH
         assignColour();
         Collections.shuffle(gamePlayers);
-        communicationController.announceStart(gamePlayers);
+        announceStart();
         chooseCards();
         assignCards();
         setUpWorkers();
@@ -117,11 +119,7 @@ public class Match extends Thread{
         int firstPlayerIndex = communicationController.chooseFirstPlayer(winner, gamePlayers);
 
         //MATCH
-        List<TurnPhase> phasesSequence = new ArrayList<>();
-        phasesSequence.add(new Start());
-        phasesSequence.add(new Move());
-        phasesSequence.add(new Build());
-        phasesSequence.add(new End());
+        List<TurnPhase> phasesSequence = createPhaseSequence();
         for(currentPlayerIndex = firstPlayerIndex; currentPlayerIndex<gamePlayers.size()&&winner==null;){
             Player currentPlayer = gamePlayers.get(currentPlayerIndex);
             int undoCounter = 0;
@@ -131,24 +129,29 @@ public class Match extends Thread{
                     phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    //todo eliminare il giocatore e terminare la partita
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                } catch (ChannelClosedException e) {
+                    e.printStackTrace();
                 }
                 if(undoCounter<3 && phaseIndex<3) {
-                    confirm = communicationController.confirmPhase();
+                    confirm = communicationController.confirmPhase(currentPlayer);
                 }
                 if(!confirm){
-                    phaseIndex = 0;
+                    currentPlayer.turnSequence().undo();
                     undoCounter++;
+                    phaseIndex = 0;
                 }
                 else phaseIndex++;
             }
             winner = currentPlayer.turnSequence().possibleWinner();
             if(!currentPlayer.isInGame()){
                 removePlayer(currentPlayer);
+                currentPlayerIndex--;
                 if(gamePlayers.size()==1)
                     winner=gamePlayers.get(0);
             }
-            if(currentPlayerIndex>=gamePlayers.size()-1){
+            if(currentPlayerIndex >= gamePlayers.size()-1){
                 currentPlayerIndex=0;
             } else {
                 currentPlayerIndex++;
@@ -161,11 +164,37 @@ public class Match extends Thread{
         //todo dire chi ha vinto
     }
 
+    private List<TurnPhase> createPhaseSequence() {
+        List<TurnPhase> turnPhases = new ArrayList<>();
+        turnPhases.add(new Start());
+        turnPhases.add(new Move());
+        turnPhases.add(new Build());
+        turnPhases.add(new End());
+        return turnPhases;
+    }
+
+    public void announceStart() {
+        for (Player player: gamePlayers) {
+            try {
+                communicationController.announceParticipants(player, gamePlayers);
+            } catch (ChannelClosedException e) {
+                removeUser(communicationController.findUser(player));
+                if (gamePlayers.size() > 1)
+                    announceStart();
+                else
+                    endGame();
+            }
+        }
+    }
+
+    private void endGame() {
+        //todo
+    }
 
     /**
      * This method assignes a colour to every player
      */
-    protected void assignColour(){
+    public void assignColour(){
         List<Colour> colours = new ArrayList<>();
         colours.add(Colour.BLUE);
         colours.add(Colour.WHITE);
@@ -188,9 +217,11 @@ public class Match extends Thread{
         List<GodCard> deck = cardConstructor.cards();
         Player challenger = gamePlayers.get(0);
         for(Player player : gamePlayers) {
-            GodCard chosenCard = communicationController.chooseCard(challenger, deck);
-            cards.add(chosenCard);
-            deck.remove(chosenCard);
+            if (player.isInGame()) {
+                GodCard chosenCard = communicationController.chooseCard(challenger, deck);
+                cards.add(chosenCard);
+                deck.remove(chosenCard);
+            }
         }
     }
 
@@ -219,27 +250,26 @@ public class Match extends Thread{
             player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
         }
         for(Player player : setUpOrder){
-            possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
-            try {
-                position = communicationController.chooseStartPosition(player, possibleSetUpPosition);
-            } catch (IOException e) {
-                e.printStackTrace();
-                //TODO
+            for (int i = 0; i<2 && player.isInGame(); i++) {
+                possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
+                try {
+                    position = communicationController.chooseStartPosition(player, possibleSetUpPosition);
+                    Worker worker = new Worker(position, player.colour());
+                    freeMap.remove(position);
+                    player.assignWorker(worker);
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                    player.setInGame(false);
+                } catch (ChannelClosedException e) {
+                    e.printStackTrace();
+                    player.setInGame(false);
+                }
             }
-            Worker worker1 = new Worker(position, player.colour());
-            freeMap.remove(position);
-            player.assignWorker(worker1);
-
-            possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
-            try {
-                position = communicationController.chooseStartPosition(player, possibleSetUpPosition);
-            } catch (IOException e) {
-                e.printStackTrace();
-                //TODO
+            if (!player.isInGame()) {
+                removeUser(communicationController.findUser(player));
+                //todo update Map
+                announceStart();
             }
-            Worker worker2 = new Worker(position, player.colour());
-            freeMap.remove(position);
-            player.assignWorker(worker2);
         }
     }
 

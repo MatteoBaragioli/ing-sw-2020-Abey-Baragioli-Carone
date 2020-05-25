@@ -1,9 +1,9 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.network.CommunicationChannel;
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.server.model.User;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class DataBase {
 
-    private List<Socket> connections = new ArrayList<>();
-    private Map<Socket, String> connectionToUser = new HashMap<>();
+    private List<CommunicationChannel> connections = new ArrayList<>();
+    private Map<CommunicationChannel, String> connectionToUser = new HashMap<>();
     private List<String> userNames = new ArrayList<>();
     private Map<String, User> users = new HashMap<>();
     private Map<User, Lobby> lobbies = new HashMap<>();
@@ -21,29 +21,29 @@ public class DataBase {
 
     /**
      * This method tells if a connection is registered
-     * @param socket
+     * @param communicationChannel
      * @return boolean
      */
-    public boolean hasConnection(Socket socket) {
-        return connections.contains(socket);
+    public boolean hasConnection(CommunicationChannel communicationChannel) {
+        return connections.contains(communicationChannel);
     }
 
     /**
      * This method registers a new connection
-     * @param socket
+     * @param communicationChannel
      */
-    public synchronized void addConnection(Socket socket) {
-        if (!hasConnection(socket))
-            connections.add(socket);
+    public synchronized void addConnection(CommunicationChannel communicationChannel) {
+        if (!hasConnection(communicationChannel))
+            connections.add(communicationChannel);
     }
 
     /**
      * This method tells if a user has registered from this connection
-     * @param socket connection
+     * @param communicationChannel connection
      * @return boolean
      */
-    public boolean connectionHasUser(Socket socket) {
-        return connectionToUser.containsKey(socket);
+    public boolean connectionHasUser(CommunicationChannel communicationChannel) {
+        return connectionToUser.containsKey(communicationChannel);
     }
 
     /**
@@ -88,12 +88,12 @@ public class DataBase {
 
     /**
      * This method tells if a user has registered from this connection
-     * @param socket connection
+     * @param communicationChannel connection
      * @return boolean
      */
-    public User findUser(Socket socket) {
-        if (connectionHasUser(socket))
-            return findUser(connectionToUser.get(socket));
+    public User findUser(CommunicationChannel communicationChannel) {
+        if (connectionHasUser(communicationChannel))
+            return findUser(connectionToUser.get(communicationChannel));
         else
             return null;
     }
@@ -152,10 +152,10 @@ public class DataBase {
 
     /**
      * This method removes a user from the DB
-     * @param socket leaving user
+     * @param communicationChannel leaving user
      */
-    public synchronized void deleteSocket(Socket socket) {
-        deleteUser(findUser(socket));
+    public synchronized void deleteConnection(CommunicationChannel communicationChannel) {
+        deleteUser(findUser(communicationChannel));
     }
 
     /**
@@ -179,6 +179,14 @@ public class DataBase {
             lobbies.put(user, lobby);
     }
 
+    public synchronized Lobby createNewLobby(User user, int nPlayers) {
+        Lobby lobby = new Lobby(user, nPlayers);
+        joinLobby(user, lobby);
+        System.out.println("New lobby " + lobby + " with " + nPlayers + " players has been created for " + user.name());
+        openLobbies.add(lobby);
+        return lobby;
+    }
+
     /**
      * This method moves the lobby from the incomplete openLobbies list to the complete ones
      * @param lobby the lobby created by this user manager
@@ -196,13 +204,13 @@ public class DataBase {
         boolean found = false;
         int nPlayers = 0;
         try {
-            nPlayers = user.askTwoOrThreePlayerMatch();
-        } catch (IOException e) {
+            nPlayers = user.askMatchType();
+        } catch (ChannelClosedException e) {
             user.communicationChannel().close();
             deleteUser(user);
             e.printStackTrace();
             System.err.println("Can't ask matchtype to " + user.name());
-            System.exit(0);
+            System.exit(-1);
         }
 
         System.out.println("Looking for a lobby with " + nPlayers + " players for " + user.name());
@@ -217,11 +225,11 @@ public class DataBase {
         }
 
         if (!found) {
-            lobby = new Lobby(user, nPlayers);
-            joinLobby(user, lobby);
-            System.out.println("New lobby " + lobby + " with " + nPlayers + " players has been created for " + user.name());
-            openLobbies.add(lobby);
-            lobby.run();
+            lobby = createNewLobby(user, nPlayers);
+            while (!lobby.isReady()) {
+            }
+            System.out.println("We can start this match " + lobby.toString());
+            lobby.createMatch();
             registerCompleteLobby(lobby);
         }
     }

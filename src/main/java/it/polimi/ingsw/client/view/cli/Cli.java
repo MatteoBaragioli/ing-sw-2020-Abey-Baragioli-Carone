@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.view.cli;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
@@ -12,6 +13,8 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.List;
+
+import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
 
 public class Cli implements View{
     private static BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
@@ -28,16 +31,23 @@ public class Cli implements View{
         return commandline.readLine();
     }
 
+    private boolean checkIfUserIsQuitting(String answer) {
+        return answer.equals(QUIT.toString());
+    }
+
     public int askNumber() throws IOException, NumberFormatException {
-        return Integer.parseInt(askAnswer());
+        String answer = askAnswer();
+        if (checkIfUserIsQuitting(answer))
+            return -1;
+        return Integer.parseInt(answer);
     }
 
     @Override
-    public int askBox(List<int[]> boxes) {
+    public int askPosition(List<int[]> positions) {
         boolean valid = false;
         int answer = 0;
-        for(int i=0; i<boxes.size(); i++){
-           printStream.print((i+1)+"   for box in"+convertCoordinates(boxes.get(i))+"    ");
+        for(int i = 0; i< positions.size(); i++){
+           printStream.print((i+1)+"   for box in"+convertCoordinates(positions.get(i))+"    ");
         }
         while (!valid) {
 
@@ -48,7 +58,7 @@ public class Cli implements View{
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer<=boxes.size() && answer>0) {
+            if (answer<= positions.size() && answer>0) {
                 valid = true;
             }
             else
@@ -242,6 +252,11 @@ public class Cli implements View{
     }
 
     @Override
+    public void startMatch() {
+
+    }
+
+    @Override
     public String askIp() {
         System.out.println("Write ip address to connect to:");
         try {
@@ -265,7 +280,7 @@ public class Cli implements View{
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer == 1 || answer == 2) {
+            if (answer == -1 || answer == 1 || answer == 2) {
                 valid = true;
             }
             else

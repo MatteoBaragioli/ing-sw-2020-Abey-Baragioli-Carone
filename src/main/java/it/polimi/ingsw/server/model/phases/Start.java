@@ -1,15 +1,17 @@
 package it.polimi.ingsw.server.model.phases;
 
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.server.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import static it.polimi.ingsw.server.model.Phase.START;
 
 public class Start implements TurnPhase {
     @Override
-    public void executePhase(Player currentPlayer, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws IOException {
+    public void executePhase(Player currentPlayer, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws TimeoutException, ChannelClosedException {
         int phaseIndex = 0;
         actionController.initialiseMovableWorker(currentPlayer, map);
         actionController.applyOpponentsCondition(currentPlayer, opponents, phaseIndex, map);

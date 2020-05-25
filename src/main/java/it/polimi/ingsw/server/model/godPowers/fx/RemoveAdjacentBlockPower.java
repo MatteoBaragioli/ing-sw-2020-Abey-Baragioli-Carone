@@ -1,14 +1,16 @@
 package it.polimi.ingsw.server.model.godPowers.fx;
 
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.server.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class RemoveAdjacentBlockPower extends BuildModifier{
 
     @Override
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws IOException {
+    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws TimeoutException, ChannelClosedException {
         //buildPower - Ares
         boolean usePower = communicationController.chooseToUsePower(player);
         for (Worker worker : player.workers()) {
@@ -22,7 +24,7 @@ public class RemoveAdjacentBlockPower extends BuildModifier{
     }
 
     @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws IOException {
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws TimeoutException, ChannelClosedException {
         if(usePower) {
             player.turnSequence().clearPossibleBuilds();
             for(Box box : map.adjacent(player.turnSequence().chosenWorker().position())){

@@ -1,15 +1,17 @@
 package it.polimi.ingsw.server.model.godPowers.fx;
 
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.server.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import static it.polimi.ingsw.server.model.Phase.*;
 
 public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier {
     @Override
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws IOException {
+    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) throws TimeoutException, ChannelClosedException {
         //buildPower - Poseidon
         boolean usePower = true;
         int i;
@@ -45,7 +47,7 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier 
     }
 
     @Override
-    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws IOException {
+    public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower) throws TimeoutException, ChannelClosedException {
         if (usePower) {
             actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
             if (actionController.currentPlayerHasWon(player)) {

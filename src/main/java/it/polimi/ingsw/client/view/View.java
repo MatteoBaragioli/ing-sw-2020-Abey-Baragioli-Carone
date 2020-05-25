@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 public interface View {
-    int askBox(List<int[]> boxes);
+    int askPosition(List<int[]> positions);
     int askCards(List<GodCardProxy> cards);
     boolean askConfirmation();
     String askIp();

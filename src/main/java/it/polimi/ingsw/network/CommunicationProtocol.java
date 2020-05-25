@@ -1,12 +1,15 @@
 package it.polimi.ingsw.network;
 
 public enum CommunicationProtocol {
-    BUILDS,
+    BUILD,
     CARD,
+    COUNTDOWN,
     DECK,
-    DESTINATIONS,
+    DESTINATION,
+    EMPTY,
     GODPOWER,
     HI,
+    INVALID,
     LOSER,
     MAP,
     MATCHSTART,
@@ -17,8 +20,9 @@ public enum CommunicationProtocol {
     PONG,
     QUIT,
     RECEIVED,
-    REMOVALS,
+    REMOVAL,
     STARTPOSITION,
+    TIMEOUT,
     UNDO,
     USERNAME,
     UNIQUEUSERNAME,
