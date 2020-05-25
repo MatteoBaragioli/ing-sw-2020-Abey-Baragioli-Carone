@@ -15,6 +15,7 @@ public class Pinger extends Thread {
     public void run() {
         while (!communicationChannel.isClosed()) {
             int countdown = 5;
+            System.out.println("Check connessione");
             try {
                 communicationChannel.writeKeyWord(PING);
             } catch (ChannelClosedException e) {
@@ -32,10 +33,14 @@ public class Pinger extends Thread {
                 }
                 System.out.println(countdown);
             }
-            if (!communicationChannel.isClosed() && (countdown == 0 || !communicationChannel.isPinged()))
+            if (!communicationChannel.isClosed() && (countdown == 0 || !communicationChannel.isPinged())) {
                 communicationChannel.close();
-            else
+                System.out.println("Client non connesso");
+            }
+            else {
                 communicationChannel.resetPing();
+                System.out.println("Client connesso");
+            }
         }
     }
 }

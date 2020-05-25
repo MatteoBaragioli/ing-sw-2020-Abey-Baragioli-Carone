@@ -86,6 +86,7 @@ public class CommunicationChannel {
      */
     public synchronized void saveMessage(String message) {
         buffer.add(message);
+        System.out.println("Buffer non vuoto");
     }
 
     /**
@@ -110,13 +111,15 @@ public class CommunicationChannel {
      */
     public synchronized String nextMessage() throws ChannelClosedException {
         while (!hasMessages() && !isClosed()) {
+            System.out.println("Buffer vuoto");
             try {
                 wait();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                System.err.println("It isn't waiting");
             }
         }
+
         if (!isClosed()) {
             String message = buffer.get(CURRENTMESSAGEINDEX);
             removeCurrentMessageFromBuffer();
@@ -139,7 +142,8 @@ public class CommunicationChannel {
         resetTimeout();
         CountDown countDown = new CountDown(this);
         countDown.start();
-        while (!isClosed() && !isTimeout()) {
+        while (!isClosed() && !isTimeout() && !hasMessages()) {
+            System.out.println("Buffer vuoto");
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -220,16 +224,14 @@ public class CommunicationChannel {
      * @throws IOException in case of network error
      * @throws ChannelClosedException if connection is lost
      */
-    public synchronized CommunicationProtocol nextKey() throws IOException {
+    public CommunicationProtocol nextKey() throws IOException {
         String message = read();
+        System.out.println(message);
         CommunicationProtocol key = getKey(message);
-        if (key == RECEIVED || hasContent(message)) {
+        if (key == RECEIVED || hasContent(message))
             saveMessage(message);
-            notifyAll();
-        }
         if (key == PONG)
             ping();
-        System.out.println(message);
         return key;
     }
 
@@ -274,6 +276,7 @@ public class CommunicationChannel {
      */
     public String askUsername() throws ChannelClosedException {
         while (!isClosed()){
+            System.out.println("Chiedo Username");
             writeKeyWord(USERNAME);
             String message = nextMessage();
             if (message != null && getKey(message) == USERNAME)
