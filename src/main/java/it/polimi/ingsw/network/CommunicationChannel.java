@@ -243,6 +243,16 @@ public class CommunicationChannel {
         Type type = new TypeToken<Integer>() {}.getType();
         return new Gson().fromJson(getContent(message), type);
     }
+    /**
+     * This method converts the content in a boolean value
+     * @param message String
+     * @return content
+     * @throws JsonSyntaxException in case the content is invalid
+     */
+    public boolean readBoolean(String message) throws JsonSyntaxException {
+        Type type = new TypeToken<Boolean>() {}.getType();
+        return new Gson().fromJson(getContent(message), type);
+    }
 
     /**
      * This method send a string
@@ -384,6 +394,18 @@ public class CommunicationChannel {
         return copy();
     }
 
+
+    /**
+     * this method sends to the user the map and tells if it was received
+     * @param map
+     * @return
+     * @throws ChannelClosedException
+     */
+    public boolean sendMap(String map)throws ChannelClosedException {
+        write(keyToString(MAP) + SEPARATOR + map);
+        return copy();
+    }
+
     /**
      * This method sends the user an index of a card list
      * @param key Type of list
@@ -459,9 +481,37 @@ public class CommunicationChannel {
             if (message != null && getKey(message) == REMOVAL)
                 return readNumber(message);
         }
-        return 0;
+        return -1;
     }
 
+    public int askCard(String cards) throws TimeoutException, ChannelClosedException {
+        while (!isClosed()) {
+            write(keyToString(CARD) + SEPARATOR + cards);
+            String message = nextGameMessage();
+            if (message != null && getKey(message) == CARD)
+                return readNumber(message);
+        }
+        return -1;
+    }
+
+
+    /**
+     * This method asks for confirmation  and waits for a reply
+     * @param key key of Communication Protocol
+     * @return boolean value of confirmation
+     * @throws ChannelClosedException if there's no connection
+     */
+    public boolean askConfirmation(CommunicationProtocol key) throws TimeoutException, ChannelClosedException{
+        while (!isClosed()) {
+            if (key==GODPOWER || key==UNDO) {
+                write(keyToString(key));
+                String message = nextGameMessage();
+                if (message != null && getKey(message) == key)
+                    return readBoolean(message);
+            }
+        }
+        throw new ChannelClosedException();
+    }
     public void writeConfirmation(CommunicationProtocol key, String confirmation) throws ChannelClosedException {
         write(keyToString(key) + SEPARATOR + confirmation);
     }

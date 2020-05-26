@@ -220,9 +220,7 @@ public class Cli implements View{
                 if (boxProxy.occupier!=null) {
                     view.map().position(boxProxy.position[0], boxProxy.position[1]).withWorker(boxProxy.occupier.gender, boxProxy.occupier.colour);
                 }
-
         }
-
     }
 
     @Override

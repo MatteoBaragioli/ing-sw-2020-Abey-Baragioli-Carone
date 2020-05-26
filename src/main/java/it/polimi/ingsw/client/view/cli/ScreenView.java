@@ -79,9 +79,7 @@ public class ScreenView {
                 if(infoMessageBox.size()>0 && (j+((boxHeight)*k)<infoMessageBox.size())){
                     ps.append("        "+this.infoMessageBox.get(j+((boxHeight)*k)));
                 }
-                //if((j+((boxHeight)*k)==infoMessageBox.size())) {
-                //   ps.append("\n");
-                // }
+
                 if((j+((boxHeight)*k)>=infoMessageBox.size()) && turnMessageBox.size()>0 && (j+((boxHeight)*k)-infoMessageBox.size()<turnMessageBox.size())){
                     ps.append("        "+this.turnMessageBox.get(j+((boxHeight)*k)-infoMessageBox.size()));
                 }
@@ -166,13 +164,13 @@ public class ScreenView {
     public void title()   {
         ps.println("\n");
         ps.println("\n");
-        ps.println(Colors.BLUE_BRIGHT+"                                                   Welcome to...");
-        ps.println(Colors.BLUE_BRIGHT+"                            _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____            ");
-        ps.println(Colors.BLUE_BRIGHT+"                          /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |               ");
-        ps.println(Colors.BLUE_BRIGHT+"                         |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |          ");
-        ps.println(Colors.BLUE_BRIGHT+"                          \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |             ");
-        ps.println(Colors.BLUE_BRIGHT+"                           _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |              ");
-        ps.println(Colors.BLUE_BRIGHT+"                          |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|                  ");
+        ps.println(Colors.BLUE_BRIGHT+"                                                      Welcome to...");
+        ps.println(Colors.BLUE_BRIGHT+"                               _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____        ");
+        ps.println(Colors.BLUE_BRIGHT+"                             /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |   ");
+        ps.println(Colors.BLUE_BRIGHT+"                            |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |   ");
+        ps.println(Colors.BLUE_BRIGHT+"                             \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |  ");
+        ps.println(Colors.BLUE_BRIGHT+"                              _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |   ");
+        ps.println(Colors.BLUE_BRIGHT+"                             |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|    ");
         ps.println(Colors.RESET+"\n");
         ps.println("\n");
 

@@ -57,6 +57,17 @@ public class User {
     }
 
     /**
+     * this methos sends to the user the map and tells if it was received
+     * @param map
+     * @return boolean
+     * @throws ChannelClosedException
+     */
+    public boolean sendMap(String map) throws ChannelClosedException {
+        return communicationChannel().sendOpponents(map);
+    }
+
+
+    /**
      * This method sends a list of positions and waits for the users choice
      * @param positions Json object
      * @return int
@@ -109,5 +120,27 @@ public class User {
      */
     public int askRemoval(String removals) throws TimeoutException, ChannelClosedException {
         return communicationChannel().askRemoval(removals);
+    }
+
+    /**
+     * this method sends a list cards to choose from
+     * @param cards json object
+     * @return int
+     * @throws TimeoutException
+     * @throws ChannelClosedException
+     */
+    public int askCard (String cards) throws TimeoutException, ChannelClosedException{
+        return communicationChannel().askCard(cards);
+    }
+
+    /**
+     * this method asks for user confirmation, either to use a godpower or undo their turn, and waits for the users choice
+     * @param key key of coms protocol
+     * @return boolean
+     * @throws TimeoutException
+     * @throws ChannelClosedException
+     */
+    public boolean askConfirmation(CommunicationProtocol key) throws TimeoutException, ChannelClosedException {
+        return communicationChannel().askConfirmation(key);
     }
 }

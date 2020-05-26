@@ -173,22 +173,32 @@ public class ActionController {
      */
     public boolean canPlayerPlay(Player player, List<Player> opponents, Map map) {
         initialiseMovableWorker(player, map);
+        applyOpponentsCondition(player, opponents, 0,map);
+        player.godCard().actions().get(0).changePossibleOptions(player, this, map);
         if (!player.turnSequence().movableWorkers().isEmpty())
             for (Worker worker: player.turnSequence().movableWorkers()) {
                 player.turnSequence().setChosenWorker(worker);
                 initialisePossibleDestinations(player.turnSequence(), map);
                 applyOpponentsCondition(player, opponents, 1, map);
+                player.godCard().actions().get(1).changePossibleOptions(player, this, map);// per poteri aumentano le possible destinations
                 if (!player.turnSequence().possibleDestinations().isEmpty()) {
-                    int i = 0;
-                    while (i<player.turnSequence().possibleDestinations().size()) {
-                        player.turnSequence().setChosenBox(player.turnSequence().possibleDestinations().get(i));
+                    for (Box box:player.turnSequence().possibleDestinations()) {
+                        player.turnSequence().setChosenBox(box);
                         initialisePossibleBuilds(player.turnSequence(), map);
                         applyOpponentsCondition(player, opponents, 2, map);
-                        if (!player.turnSequence().possibleBuilds().isEmpty())
+                        player.godCard().actions().get(2).changePossibleOptions(player, this, map); // per poteri che aumentano le possible buids (zeus)
+                        if (!player.turnSequence().possibleBuilds().isEmpty()) {
+                            player.turnSequence().resetChosenWorker();
+                            player.turnSequence().possibleBuilds().clear();
+                            player.turnSequence().possibleDestinations().clear();
                             return true;
+                        }
                     }
                 }
             }
+        player.turnSequence().resetChosenWorker();
+        player.turnSequence().possibleBuilds().clear();
+        player.turnSequence().possibleDestinations().clear();
         return false;
     }
 }

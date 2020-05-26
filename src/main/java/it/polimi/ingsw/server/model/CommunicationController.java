@@ -2,7 +2,9 @@ package it.polimi.ingsw.server.model;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 
 import java.lang.reflect.Type;
@@ -234,6 +236,30 @@ public class CommunicationController {
     }
 
     /**
+     * this method asks to the user for a confirmation to the user
+     * @param user asked user
+     * @param key key of communication protocol
+     * @return boolean value
+     * @throws TimeoutException
+     * @throws ChannelClosedException
+     */
+    public boolean askConfirmation(User user, CommunicationProtocol key) throws TimeoutException, ChannelClosedException {
+        return user.askConfirmation(key);
+    }
+
+    /**
+     * this method asks to the user for a God Card
+     * @param user
+     * @param cards
+     * @return
+     * @throws TimeoutException
+     * @throws ChannelClosedException
+     */
+    public int askCard(User user, List<GodCard> cards)throws TimeoutException, ChannelClosedException {
+        Type listType = new TypeToken<List<GodCard>>() {}.getType();
+        return user.askCard(new Gson().toJson(cards, listType));
+    }
+    /**
      * This method asks a player to choose one build location from a list
      * @param chooser player
      * @param boxes List of choices
@@ -252,18 +278,25 @@ public class CommunicationController {
         System.out.println("Hai perso");
     }
 
-    public boolean chooseToUsePower(Player chooser){
-        return true;
+    public boolean chooseToUsePower(Player chooser)throws TimeoutException, ChannelClosedException {
+        boolean result=new Random().nextBoolean();
+        boolean answer;
+        if (playerIsUser(chooser))
+            result= askConfirmation(findUser(chooser), GODPOWER);
+        return result;
     }
 
-    public void updateView(List<Player> players, Map map) {
-        //todo view communication to each player
+    public boolean updateView(Player player , List<BoxProxy> boxes) throws ChannelClosedException {
+        User user = findUser(player);
+        Type type = new TypeToken<BoxProxy>() {}.getType();
+        return user.sendMap(new Gson().toJson(boxes, type));
     }
 
-    public GodCard chooseCard(Player chooser, List<GodCard> cards){
-        //todo chiedo a utente una carta
-        int i = new Random().nextInt(cards.size());
-        return cards.get(i);
+    public GodCard chooseCard(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException{
+        int index = new Random().nextInt(cards.size());
+        if (playerIsUser(chooser))
+            index = askCard(findUser(chooser), cards);
+        return cards.get(index);
     }
 
     public int chooseFirstPlayer(Player chooser, List<Player> players){
@@ -272,7 +305,10 @@ public class CommunicationController {
         return index;
     }
 
-    public boolean confirmPhase(Player player){
-        return new Random().nextBoolean();
+    public boolean confirmPhase(Player player)throws TimeoutException, ChannelClosedException{
+        boolean result=new Random().nextBoolean();
+        if (playerIsUser(player))
+            result= askConfirmation(findUser(player), UNDO);
+        return result;
     }
 }
