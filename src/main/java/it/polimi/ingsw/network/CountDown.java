@@ -3,17 +3,19 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 
 public class CountDown extends Thread {
-    final public CommunicationChannel communicationChannel;
-    final public int MINUTE = 60;
-    final public int SECOND = 1000;
+    public final CommunicationChannel communicationChannel;
+    public final int MINUTE = 60;
+    public final int SECOND = 1000;
+    public final CommunicationProtocol key;
 
-    public CountDown(CommunicationChannel communicationChannel) {
+    public CountDown(CommunicationChannel communicationChannel, CommunicationProtocol key) {
         this.communicationChannel = communicationChannel;
+        this.key = key;
     }
 
     public synchronized void run() {
         int i = MINUTE;
-        while (i > 0 && !communicationChannel.hasMessages()) {
+        while (i > 0 && !communicationChannel.hasMessages(key)) {
             try {
                 sleep(SECOND);
                 communicationChannel.countdown(i);

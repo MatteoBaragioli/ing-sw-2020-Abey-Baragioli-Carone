@@ -89,19 +89,15 @@ public class Client extends Thread {
             System.exit(-1);
         }
         ClientController clientController = new ClientController();
+        Listener listener = new Listener(communicationChannel);
         while (!communicationChannel.isClosed()) {
             CommunicationProtocol key = null;
             try {
-                key = communicationChannel.nextKey();
-            } catch (SocketException e) {
+                key = communicationChannel.popKey();
+            } catch (ChannelClosedException e) {
                 e.printStackTrace();
                 System.err.println("Connection lost");
                 view.connectionLost();
-                System.exit(1);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.err.println("Server lost");
-                //Chiudere Client il Server
                 System.exit(1);
             }
 
@@ -113,7 +109,7 @@ public class Client extends Thread {
                 case STARTPOSITION:
                 case WORKER:
                     try {
-                        clientController.manageListOfPositions(communicationChannel, view);
+                        clientController.manageListOfPositions(key, communicationChannel, view);
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Manage boxes error");
@@ -122,7 +118,7 @@ public class Client extends Thread {
                 case CARD:
                 case DECK:
                     try {
-                        clientController.manageListOfCards(communicationChannel, view);
+                        clientController.manageListOfCards(key, communicationChannel, view);
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed Manage CARDS");
@@ -132,7 +128,7 @@ public class Client extends Thread {
                 case GODPOWER:
                 case UNDO:
                     try {
-                        clientController.manageConfirmation(communicationChannel, view);
+                        clientController.manageConfirmation(key, communicationChannel, view);
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed Manage CONFIRMATION");
@@ -175,15 +171,6 @@ public class Client extends Thread {
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed OPPONENTS");
-                        System.exit(-1);
-                    }
-                    break;
-                case PING:
-                    try {
-                        communicationChannel.writeKeyWord(PONG);
-                    } catch (ChannelClosedException e) {
-                        e.printStackTrace();
-                        System.err.println("PING Error");
                         System.exit(-1);
                     }
                     break;

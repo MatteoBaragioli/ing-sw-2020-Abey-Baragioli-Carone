@@ -129,13 +129,24 @@ public class Match extends Thread{
                     phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    //todo
                 } catch (TimeoutException e) {
                     e.printStackTrace();
+                    //todo
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
+                    //todo
                 }
                 if(undoCounter<3 && phaseIndex<3) {
-                    confirm = communicationController.confirmPhase(currentPlayer);
+                    try {
+                        confirm = communicationController.confirmPhase(currentPlayer);
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                        //todo
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        //todo
+                    }
                 }
                 if(!confirm){
                     currentPlayer.turnSequence().undo();
@@ -218,7 +229,16 @@ public class Match extends Thread{
         Player challenger = gamePlayers.get(0);
         for(Player player : gamePlayers) {
             if (player.isInGame()) {
-                GodCard chosenCard = communicationController.chooseCard(challenger, deck);
+                GodCard chosenCard = null;
+                try {
+                    chosenCard = communicationController.chooseCard(challenger, deck);
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                    //todo
+                } catch (ChannelClosedException e) {
+                    e.printStackTrace();
+                    //todo
+                }
                 cards.add(chosenCard);
                 deck.remove(chosenCard);
             }
@@ -231,7 +251,16 @@ public class Match extends Thread{
     protected void assignCards(){
         List<GodCard> availableCards = new ArrayList<>(cards);
         for(int i = gamePlayers.size()-1; i>=0; i--){
-            GodCard chosenCard = communicationController.chooseCard(gamePlayers.get(i), availableCards);
+            GodCard chosenCard = null;
+            try {
+                chosenCard = communicationController.chooseCard(gamePlayers.get(i), availableCards);
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+                //todo
+            } catch (ChannelClosedException e) {
+                e.printStackTrace();
+                //todo
+            }
             gamePlayers.get(i).assignCard(chosenCard);
             availableCards.remove(chosenCard);
         }

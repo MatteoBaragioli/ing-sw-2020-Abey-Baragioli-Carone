@@ -175,8 +175,15 @@ public class DataBase {
      * @param lobby joined lobby
      */
     public synchronized void joinLobby(User user, Lobby lobby) {
-        if (!userHasLobby(user))
+        if (!userHasLobby(user)) {
             lobbies.put(user, lobby);
+            lobby.addUser(user);
+            if (lobby.isReady()) {
+                System.out.println("We can start this match " + lobby.toString());
+                registerCompleteLobby(lobby);
+                lobby.createMatch();
+            }
+        }
     }
 
     public synchronized Lobby createNewLobby(User user, int nPlayers) {
@@ -219,18 +226,12 @@ public class DataBase {
             lobby = openLobbies.get(i);
             if (lobby.isOpen() && lobby.nPlayers()==nPlayers) {
                 found = true;
-                lobby.addUser(user);
                 joinLobby(user, lobby);
             }
         }
 
-        if (!found) {
+        if (!found)
             lobby = createNewLobby(user, nPlayers);
-            while (!lobby.isReady()) {
-            }
-            System.out.println("We can start this match " + lobby.toString());
-            lobby.createMatch();
-            registerCompleteLobby(lobby);
-        }
+
     }
 }

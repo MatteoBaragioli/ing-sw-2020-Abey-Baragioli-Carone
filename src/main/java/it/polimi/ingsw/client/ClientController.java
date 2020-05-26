@@ -17,64 +17,52 @@ import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class ClientController {
 
-    public void manageListOfCards(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    public void manageListOfCards(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<GodCardProxy> cards;
         int index;
-
-        String content = communicationChannel.nextMessage();
-        CommunicationProtocol key = communicationChannel.getKey(content);
-        if (key == CARD || key == DECK) {
-            Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
-            cards = new Gson().fromJson(communicationChannel.getContent(content), listType);
-            index = view.askCards(cards);
-            if (index == -1)
-                communicationChannel.writeKeyWord(QUIT);
-            else
-                communicationChannel.writeChoiceFromList(key, index);
-        }
+        String content = communicationChannel.nextMessage(key);
+        Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
+        cards = new Gson().fromJson(communicationChannel.getContent(content), listType);
+        index = view.askCards(cards);
+        if (index == -1)
+            communicationChannel.writeKeyWord(QUIT);
+        else
+            communicationChannel.writeChoiceFromList(key, index);
     }
 
     public void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<BoxProxy> boxes;
-        String message = communicationChannel.nextMessage();
+        String message = communicationChannel.nextMessage(MAP);
 
-        if (communicationChannel.getKey(message) == MAP) {
-            Type listType = new TypeToken<List<BoxProxy>>() {}.getType();
-            boxes = new Gson().fromJson(communicationChannel.getContent(message), listType);
-            view.updateMap(boxes);
-            communicationChannel.writeKeyWord(RECEIVED);
-        }
-        else
-            communicationChannel.writeKeyWord(INVALID);
+        Type listType = new TypeToken<List<BoxProxy>>() {}.getType();
+        boxes = new Gson().fromJson(communicationChannel.getContent(message), listType);
+        view.updateMap(boxes);
+        communicationChannel.writeKeyWord(RECEIVED);
     }
 
-    public void manageListOfPositions(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    public void manageListOfPositions(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<int[]> positions;
-        String message = communicationChannel.nextMessage();
+        String message = communicationChannel.nextMessage(key);
 
-        CommunicationProtocol key = communicationChannel.getKey(message);
-        if (key == BUILD || key == DESTINATION || key == REMOVAL || key == STARTPOSITION || key == WORKER) {
-            Type listType = new TypeToken<List<int[]>>() {}.getType();
-            positions = new Gson().fromJson(message, listType);
-            int index;
+        Type listType = new TypeToken<List<int[]>>() {}.getType();
+        positions = new Gson().fromJson(communicationChannel.getContent(message), listType);
 
-            if (key == WORKER)
-                index = view.askWorker(positions);
-            else
-                index = view.askPosition(positions);
+        int index;
 
-            if (index == -1)
-                communicationChannel.writeKeyWord(QUIT);
-            else
-                communicationChannel.writeChoiceFromList(key, index);
-        }
+        if (key == WORKER)
+            index = view.askWorker(positions);
         else
-            communicationChannel.writeKeyWord(INVALID);
+            index = view.askPosition(positions);
+
+        if (index == -1)
+            communicationChannel.writeKeyWord(QUIT);
+        else
+            communicationChannel.writeChoiceFromList(key, index);
     }
 
     public void manageMyPlayer(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         PlayerProxy player;
-        String message = communicationChannel.nextMessage();
+        String message = communicationChannel.nextMessage(MYPLAYER);
 
         if (communicationChannel.getKey(message) == MYPLAYER) {
             Type listType = new TypeToken<List<PlayerProxy>>() {}.getType();
@@ -88,7 +76,7 @@ public class ClientController {
 
     public void manageListOfOpponents(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<PlayerProxy> players;
-        String message = communicationChannel.nextMessage();
+        String message = communicationChannel.nextMessage(OPPONENTS);
 
         if (communicationChannel.getKey(message) == OPPONENTS) {
             Type listType = new TypeToken<List<PlayerProxy>>() {}.getType();
@@ -100,16 +88,10 @@ public class ClientController {
             communicationChannel.writeKeyWord(INVALID);
     }
 
-    public void manageConfirmation(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-        String message = communicationChannel.nextMessage();
-        CommunicationProtocol key = communicationChannel.getKey(message);
+    public void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
 
-        if (key == GODPOWER || key == UNDO) {
-            Type type = new TypeToken<Boolean>() {}.getType();
-            communicationChannel.writeConfirmation(key, new Gson().toJson(view.askConfirmation(), type));
-        }
-        else
-            communicationChannel.writeKeyWord(INVALID);
+        Type type = new TypeToken<Boolean>() {}.getType();
+        communicationChannel.writeConfirmation(key, new Gson().toJson(view.askConfirmation(), type));
     }
 
     public void manageMatchStart(CommunicationChannel communicationChannel, View view) {
@@ -117,10 +99,6 @@ public class ClientController {
     }
 
     public void waitForPlayers(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-        String message = communicationChannel.nextMessage();
-        if (communicationChannel.getKey(message) == WAITFORPLAYERS) {
-            //notify view
-            communicationChannel.writeKeyWord(RECEIVED);
-        }
+        communicationChannel.writeKeyWord(RECEIVED);
     }
 }
