@@ -231,7 +231,7 @@ public class Match extends Thread{
             if (player.isInGame()) {
                 GodCard chosenCard = null;
                 try {
-                    chosenCard = communicationController.chooseCard(challenger, deck);
+                    chosenCard = communicationController.chooseDeck(challenger, deck);
                 } catch (TimeoutException e) {
                     e.printStackTrace();
                     //todo

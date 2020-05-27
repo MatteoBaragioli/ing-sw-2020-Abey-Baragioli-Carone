@@ -25,7 +25,7 @@ public class Pinger extends Thread {
 
             while (countdown > 0 && !communicationChannel.isClosed() && !communicationChannel.isPinged()) {
                 try {
-                    sleep(1000);
+                    sleep(10000);
                     countdown--;
                 } catch (InterruptedException e) {
                     e.printStackTrace();

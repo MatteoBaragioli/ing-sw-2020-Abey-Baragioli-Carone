@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.view.cli;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
@@ -58,7 +57,7 @@ public class Cli implements View{
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer<= positions.size() && answer>0) {
+            if ((answer<= positions.size() && answer>0) || answer == -1) {
                 valid = true;
             }
             else
@@ -83,7 +82,7 @@ public class Cli implements View{
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer<=workers.size() &&answer>0) {
+            if ((answer<=workers.size() &&answer>0) || answer == -1) {
                 valid = true;
             }
             else
@@ -99,15 +98,13 @@ public class Cli implements View{
         int answer = 0;
         printStream.println("GAME CARDS:");
         printStream.println("\n");
-        for(int i=0; i<cards.size(); i++){
+
+        for(int i=0; i<cards.size(); i++) {
             printStream.println((i+1)+" "+cards.get(i).name +":    ");
             printStream.println(cards.get(i).description);
             printStream.println(" ");
         }
-        for(int i=0; i<cards.size(); i++){
-            printStream.println((i+1)+"   for card "+cards.get(i).name);
 
-        }
         while (!valid) {
 
             try {
@@ -117,12 +114,14 @@ public class Cli implements View{
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer<=cards.size() && answer>0) {
+            if ((answer<=cards.size() && answer>0) || answer == -1) {
                 valid = true;
             }
             else
                 System.out.println("Not valid answer. Try again");
         }
+        if (answer != -1)
+            answer--;
         return answer;
     }
 
@@ -174,17 +173,17 @@ public class Cli implements View{
             case DECK:
                 //view.clearScreen();
                 //view.updateMap();
-                view.turn();
+                //view.turn();
                 printStream.println("\nYou are the challenger, choose the game cards! One for each player");
                 printStream.println("\n");
                 break;
             case CARD:
                 //view.clearScreen();
                 //view.updateMap();
-                view.turn();
+                //view.turn();
                 printStream.println("\n choose your game card!");
                 printStream.println("\n");
-
+                break;
             }
         }
 
@@ -231,7 +230,7 @@ public class Cli implements View{
 
     @Override
     public void setOpponentsInfo(List<PlayerProxy> players) {
-        opponents.addAll(players);
+        opponents = players;
     }
 
     @Override
@@ -284,6 +283,8 @@ public class Cli implements View{
             else
                 System.out.println("Not valid answer. Try again");
         }
+        if (answer != -1)
+            answer++;
         return answer;
     }
 

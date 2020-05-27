@@ -90,6 +90,8 @@ public class Client extends Thread {
         }
         ClientController clientController = new ClientController();
         Listener listener = new Listener(communicationChannel);
+        listener.start();
+
         while (!communicationChannel.isClosed()) {
             CommunicationProtocol key = null;
             try {
@@ -125,9 +127,20 @@ public class Client extends Thread {
                         System.exit(-1);
                     }
                     break;
+                case COUNTDOWN:
+                    try {
+                        clientController.manageCountDown(view);
+                        communicationChannel.popMessage();
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection closed COUNTDOWN");
+                        System.exit(-1);
+                    }
+                    break;
                 case GODPOWER:
                 case UNDO:
                     try {
+                        communicationChannel.popMessage();
                         clientController.manageConfirmation(key, communicationChannel, view);
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
@@ -149,6 +162,7 @@ public class Client extends Thread {
                     break;
                 case MATCHTYPE:
                     try {
+                        communicationChannel.popMessage();
                         communicationChannel.writeMatchType(view.askMatchType());
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
@@ -177,6 +191,7 @@ public class Client extends Thread {
                 case UNIQUEUSERNAME:
                 case USERNAME:
                     try {
+                        communicationChannel.popMessage();
                         communicationChannel.writeUsername(view.askUserName());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -189,6 +204,7 @@ public class Client extends Thread {
                     break;
                 case WAITFORPLAYERS:
                     try {
+                        communicationChannel.popMessage();
                         clientController.waitForPlayers(communicationChannel, view);
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();

@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.network.objects.BoxProxy;
+import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 
 import java.lang.reflect.Type;
@@ -256,9 +257,47 @@ public class CommunicationController {
      * @throws ChannelClosedException
      */
     public int askCard(User user, List<GodCard> cards)throws TimeoutException, ChannelClosedException {
-        Type listType = new TypeToken<List<GodCard>>() {}.getType();
-        return user.askCard(new Gson().toJson(cards, listType));
+        List<GodCardProxy> proxyCards = new ArrayList<>();
+
+        for (GodCard card: cards)
+            proxyCards.add(card.createProxy());
+
+        Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
+        return user.askCard(new Gson().toJson(proxyCards, listType));
     }
+
+    public GodCard chooseCard(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException{
+        int index = new Random().nextInt(cards.size());
+        if (playerIsUser(chooser))
+            index = askCard(findUser(chooser), cards);
+        return cards.get(index);
+    }
+
+    /**
+     * this method asks to the user for a God Card
+     * @param user
+     * @param deck
+     * @return
+     * @throws TimeoutException
+     * @throws ChannelClosedException
+     */
+    public int askDeck(User user, List<GodCard> deck)throws TimeoutException, ChannelClosedException {
+        List<GodCardProxy> proxyDeck = new ArrayList<>();
+
+        for (GodCard card: deck)
+            proxyDeck.add(card.createProxy());
+
+        Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
+        return user.askDeck(new Gson().toJson(proxyDeck, listType));
+    }
+
+    public GodCard chooseDeck(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException {
+        int index = new Random().nextInt(cards.size());
+        if (playerIsUser(chooser))
+            index = askDeck(findUser(chooser), cards);
+        return cards.get(index);
+    }
+
     /**
      * This method asks a player to choose one build location from a list
      * @param chooser player
@@ -290,13 +329,6 @@ public class CommunicationController {
         User user = findUser(player);
         Type type = new TypeToken<BoxProxy>() {}.getType();
         return user.sendMap(new Gson().toJson(boxes, type));
-    }
-
-    public GodCard chooseCard(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException{
-        int index = new Random().nextInt(cards.size());
-        if (playerIsUser(chooser))
-            index = askCard(findUser(chooser), cards);
-        return cards.get(index);
     }
 
     public int chooseFirstPlayer(Player chooser, List<Player> players){

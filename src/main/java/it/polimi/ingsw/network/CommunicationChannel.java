@@ -109,37 +109,38 @@ public class CommunicationChannel {
         return buffer.isEmpty();
     }
 
-    public CommunicationProtocol popKey() throws ChannelClosedException {
-        while (!isClosed() && isEmpty()) {
-            System.out.println("Buffer vuoto");
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                System.err.println("Non waita");
-            }
-            if (!isEmpty()) {
-                synchronized (this) {
-                    return getKey(buffer.get(0));
+    public synchronized CommunicationProtocol popKey() throws ChannelClosedException {
+        while (!isClosed()) {
+            if (!isEmpty())
+                return getKey(buffer.get(0));
+            else {
+                System.out.println("Buffer vuoto");
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.err.println("Non waita");
                 }
             }
         }
         throw new ChannelClosedException();
     }
 
-    public String popMessage() throws ChannelClosedException {
+    public synchronized String popMessage() throws ChannelClosedException {
         while (!isClosed()) {
-            System.out.println("Buffer vuoto");
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                System.err.println("Non waita");
-            }
-            synchronized (this) {
+            if (!isEmpty()) {
                 String message = buffer.get(0);
-                buffer.remove(message);
+                buffer.remove(0);
                 return message;
+            }
+            else {
+                System.out.println("Buffer vuoto");
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.err.println("Non waita");
+                }
             }
         }
         throw new ChannelClosedException();
@@ -150,25 +151,25 @@ public class CommunicationChannel {
      * @return The popped message
      * @throws ChannelClosedException if connection is lost
      */
-    public String nextMessage(CommunicationProtocol key) throws ChannelClosedException {
+    public synchronized String nextMessage(CommunicationProtocol key) throws ChannelClosedException {
         while (!isClosed()) {
-            System.out.println("Buffer vuoto");
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                System.err.println("Non waita");
-            }
             if (hasMessages(key)) {
-                synchronized (this) {
-                    String message;
-                    for (int i = 0; i < buffer.size(); i++) {
-                        message = buffer.get(i);
-                        if (getKey(message) == key) {
-                            buffer.remove(message);
-                            return message;
-                        }
+                String message;
+                for (int i = 0; i < buffer.size(); i++) {
+                    message = buffer.get(i);
+                    if (getKey(message) == key) {
+                        buffer.remove(message);
+                        return message;
                     }
+                }
+            }
+            else {
+                System.out.println("Buffer vuoto");
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.err.println("Non waita");
                 }
             }
         }
@@ -185,26 +186,26 @@ public class CommunicationChannel {
      * @throws TimeoutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeoutException {
+    public synchronized String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeoutException {
         resetTimeout();
         CountDown countDown = new CountDown(this, key);
         countDown.start();
 
-        while (!isClosed() && !isTimeout()) {
-            System.out.println("Buffer vuoto");
-            try {
-                if (!hasMessages(key))
-                    wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        while (!isClosed() && countDown.isAlive()) {
+            if (hasMessages(key)) {
+                countDown.finish();
+                return nextMessage(key);
             }
-
-            if (!isClosed()) {
-                synchronized (this) {
-                    if (hasMessages(key))
-                        return nextMessage(key);
+            else {
+                System.out.println("Buffer vuoto");
+                try {
+                    if (!hasMessages(key))
+                        wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
+
         }
 
         if (isClosed())
@@ -400,12 +401,10 @@ public class CommunicationChannel {
      * @throws ChannelClosedException if there's no connection
      */
     public synchronized void writeMatchType(int matchType) throws ChannelClosedException {
-        String message = nextMessage(MATCHTYPE);
-        if (getKey(message) == MATCHTYPE)
-            if (matchType == quit)
-                writeKeyWord(QUIT);
-            else
-                write(keyToString(MATCHTYPE) + SEPARATOR + matchType);
+        if (matchType == quit)
+            writeKeyWord(QUIT);
+        else
+            write(keyToString(MATCHTYPE) + SEPARATOR + matchType);
     }
 
     /**
@@ -537,25 +536,31 @@ public class CommunicationChannel {
      * @throws ChannelClosedException if there's no connection
      */
     public int askRemoval(String removals) throws TimeoutException, ChannelClosedException {
-        while (!isClosed()) {
+        if (!isClosed()) {
             write(keyToString(REMOVAL) + SEPARATOR + removals);
             String message = nextGameMessage(REMOVAL);
-            if (message != null && getKey(message) == REMOVAL)
-                return readNumber(message);
+            return readNumber(message);
         }
         return -1;
     }
 
     public int askCard(String cards) throws TimeoutException, ChannelClosedException {
-        while (!isClosed()) {
+        if (!isClosed()) {
             write(keyToString(CARD) + SEPARATOR + cards);
             String message = nextGameMessage(CARD);
-            if (message != null && getKey(message) == CARD)
-                return readNumber(message);
+            return readNumber(message);
         }
         return -1;
     }
 
+    public int askDeck(String deck) throws TimeoutException, ChannelClosedException {
+        if (!isClosed()) {
+            write(keyToString(DECK) + SEPARATOR + deck);
+            String message = nextGameMessage(DECK);
+            return readNumber(message);
+        }
+        return -1;
+    }
 
     /**
      * This method asks for confirmation  and waits for a reply

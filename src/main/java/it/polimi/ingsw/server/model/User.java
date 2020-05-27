@@ -134,6 +134,17 @@ public class User {
     }
 
     /**
+     * this method sends a list cards to choose from
+     * @param deck json object
+     * @return int
+     * @throws TimeoutException
+     * @throws ChannelClosedException
+     */
+    public int askDeck (String deck) throws TimeoutException, ChannelClosedException{
+        return communicationChannel().askDeck(deck);
+    }
+
+    /**
      * this method asks for user confirmation, either to use a godpower or undo their turn, and waits for the users choice
      * @param key key of coms protocol
      * @return boolean
