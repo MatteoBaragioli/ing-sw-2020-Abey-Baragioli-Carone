@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.server.model.Colour;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.server.model.GodCard;
 import javafx.animation.FadeTransition;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
@@ -13,6 +14,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -114,8 +116,6 @@ public class Gui extends Application implements View {
 */
         createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
-        //todo toglierlo
-        //startMatch();
 
         Scene fullScene = new Scene(mainScene);
         window.setScene(fullScene);
@@ -325,8 +325,14 @@ public class Gui extends Application implements View {
 
     @Override
     public int askCards(List<GodCardProxy> cards) {
-        matchScene.chooseCards(cards);
+        Platform.runLater(() -> matchScene.chooseCards(cards));
         return 1;
+    }
+
+    @Override
+    public int[] askDeck(List<GodCardProxy> cards) {
+        Platform.runLater(() -> matchScene.chooseCards(cards));
+        return matchScene.chosenCards();
     }
 
     @Override
@@ -413,18 +419,12 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public void unknownHost(String host, UnknownHostException e) {
-        menuScene().setErrorMessage("Host does not exist");
-    }
-
-    @Override
-    public void connectionRefused(String host, ConnectException e) {
+    public void connectionFailed(String host) {
         menuScene().setErrorMessage("Connection refused");
     }
 
     @Override
     public void startMatch(){
-        AtomicBoolean ready = new AtomicBoolean(false);
         playTransitionClouds();
 
         matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents);

@@ -316,6 +316,12 @@ public class Cli implements View{
         return commandline.readLine();
     }
 
+    //todo modificare
+    @Override
+    public int[] askDeck(List<GodCardProxy> cards) {
+        return new int[0];
+    }
+
     public String convertCoordinates(int[] coordinates){
         char first;
         char second;

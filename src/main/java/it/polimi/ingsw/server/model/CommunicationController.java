@@ -281,7 +281,7 @@ public class CommunicationController {
      * @throws TimeoutException
      * @throws ChannelClosedException
      */
-    public int askDeck(User user, List<GodCard> deck)throws TimeoutException, ChannelClosedException {
+    public int[] askDeck(User user, List<GodCard> deck)throws TimeoutException, ChannelClosedException {
         List<GodCardProxy> proxyDeck = new ArrayList<>();
 
         for (GodCard card: deck)
@@ -291,11 +291,16 @@ public class CommunicationController {
         return user.askDeck(new Gson().toJson(proxyDeck, listType));
     }
 
-    public GodCard chooseDeck(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException {
-        int index = new Random().nextInt(cards.size());
-        if (playerIsUser(chooser))
-            index = askDeck(findUser(chooser), cards);
-        return cards.get(index);
+    public List<GodCard> chooseDeck(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException {
+        List<GodCard> chosenCards = new ArrayList<>();
+        int[] indexes;
+        if (playerIsUser(chooser)) {
+            indexes = askDeck(findUser(chooser), cards);
+            for (int i = 0; i<indexes.length ;i++){
+                chosenCards.add(cards.get(indexes[i]));
+            }
+        }
+        return chosenCards;
     }
 
     /**

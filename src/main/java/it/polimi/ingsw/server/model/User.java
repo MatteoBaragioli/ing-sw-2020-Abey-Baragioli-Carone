@@ -140,7 +140,7 @@ public class User {
      * @throws TimeoutException
      * @throws ChannelClosedException
      */
-    public int askDeck (String deck) throws TimeoutException, ChannelClosedException{
+    public int[] askDeck (String deck) throws TimeoutException, ChannelClosedException{
         return communicationChannel().askDeck(deck);
     }
 

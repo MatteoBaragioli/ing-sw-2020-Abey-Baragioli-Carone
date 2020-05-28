@@ -17,7 +17,21 @@ import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class ClientController {
 
-    public void manageListOfCards(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    public void manageDeck(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+        List<GodCardProxy> cards;
+        int[] index;
+        String content = communicationChannel.popMessage();
+        Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
+        cards = new Gson().fromJson(communicationChannel.getContent(content), listType);
+        index = view.askDeck(cards);
+
+        if (index[0] == -1)
+            communicationChannel.writeKeyWord(QUIT);
+        else
+            communicationChannel.writeChoicesFromList(DECK, index);
+    }
+
+    public void manageListOfCards(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<GodCardProxy> cards;
         int index;
         String content = communicationChannel.popMessage();
@@ -27,7 +41,7 @@ public class ClientController {
         if (index == -1)
             communicationChannel.writeKeyWord(QUIT);
         else
-            communicationChannel.writeChoiceFromList(key, index);
+            communicationChannel.writeChoiceFromList(CARD, index);
     }
 
     public void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {

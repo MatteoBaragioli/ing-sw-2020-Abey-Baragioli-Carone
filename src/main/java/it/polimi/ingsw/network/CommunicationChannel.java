@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.objects.GodCardProxy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -282,7 +283,7 @@ public class CommunicationChannel {
      */
     public CommunicationProtocol nextKey() throws IOException {
         String message = read();
-        //System.out.println("\nReceiving:\n" + message + "\n");
+        System.out.println("\nReceiving:\n" + message + "\n");
         CommunicationProtocol key = getKey(message);
 
         if (key != PING && key != PONG)
@@ -323,7 +324,7 @@ public class CommunicationChannel {
     public void write(String message) throws ChannelClosedException {
         synchronized (out) {
             if (!isClosed()) {
-                //System.out.println("\nSending:\n" + message + "\n");
+                System.out.println("\nSending:\n" + message + "\n");
                 out.println(message);
                 out.flush();
             } else
@@ -478,6 +479,17 @@ public class CommunicationChannel {
     }
 
     /**
+     * This method sends the user an index of a card list
+     * @param key Type of list
+     * @param indexes int
+     * @throws ChannelClosedException if there's no connection
+     */
+    public void writeChoicesFromList(CommunicationProtocol key, int[] indexes) throws ChannelClosedException{
+        Type listType = new TypeToken<int[]>() {}.getType();
+        write(keyToString(key) + SEPARATOR + new Gson().toJson(indexes, listType));
+    }
+
+    /**
      * This method sends a list of positions as json object and waits for a reply
      * @param positions Box coordinates
      * @return int list index
@@ -553,13 +565,16 @@ public class CommunicationChannel {
         return -1;
     }
 
-    public int askDeck(String deck) throws TimeoutException, ChannelClosedException {
+    public int[] askDeck(String deck) throws TimeoutException, ChannelClosedException {
         if (!isClosed()) {
             write(keyToString(DECK) + SEPARATOR + deck);
             String message = nextGameMessage(DECK);
-            return readNumber(message);
+            Type listType = new TypeToken<int[]>() {}.getType();
+            return new Gson().fromJson(getContent(message), listType);
         }
-        return -1;
+        int[] quit = new int[1];
+        quit[0] = -1;
+        return quit;
     }
 
     /**

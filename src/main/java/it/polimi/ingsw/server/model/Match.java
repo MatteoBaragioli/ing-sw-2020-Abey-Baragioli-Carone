@@ -227,21 +227,14 @@ public class Match extends Thread{
         CardConstructor cardConstructor = new CardConstructor();
         List<GodCard> deck = cardConstructor.cards();
         Player challenger = gamePlayers.get(0);
-        for(Player player : gamePlayers) {
-            if (player.isInGame()) {
-                GodCard chosenCard = null;
-                try {
-                    chosenCard = communicationController.chooseDeck(challenger, deck);
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                    //todo
-                } catch (ChannelClosedException e) {
-                    e.printStackTrace();
-                    //todo
-                }
-                cards.add(chosenCard);
-                deck.remove(chosenCard);
-            }
+        try {
+            cards = communicationController.chooseDeck(challenger, deck);
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            //todo
+        } catch (ChannelClosedException e) {
+            e.printStackTrace();
+            //todo
         }
     }
 

@@ -115,12 +115,20 @@ public class Client extends Thread {
                     }
                     break;
                 case CARD:
-                case DECK:
                     try {
-                        clientController.manageListOfCards(key, communicationChannel, view);
+                        clientController.manageListOfCards(communicationChannel, view);
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed Manage CARDS");
+                        System.exit(-1);
+                    }
+                    break;
+                case DECK:
+                    try {
+                        clientController.manageDeck(communicationChannel, view);
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection closed Manage DECK");
                         System.exit(-1);
                     }
                     break;

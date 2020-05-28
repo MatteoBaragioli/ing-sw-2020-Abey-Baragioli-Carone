@@ -23,6 +23,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MatchScene {
 
@@ -100,6 +101,10 @@ public class MatchScene {
     //variable that saves the currently selected card box from the entire list of all the cards
     private HBox selectedCardBox;
 
+    private AtomicBoolean confirmChallengerCards = new AtomicBoolean(false);
+
+    int[] cardsIndexes;
+
 
     private List<ImageView> cardsView;
     private List<Text> godNames;
@@ -131,7 +136,7 @@ public class MatchScene {
         StackPane playerViewPane = playerView.getPlayerViewStackPane();
 
         matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, chooseCardsBox);
-        chooseCardsBox.setVisible(false);
+        chooseCardsBox.setVisible(true);
     }
 
     //_________________________________________________SETTER____________________________________________________________
@@ -233,8 +238,6 @@ public class MatchScene {
 
         Platform.runLater(() -> playerView.setPage(nickname, color, opponents));
 
-        chooseCardsBox = new StackPane();
-
         chooseCardsBox.setVisible(false);
         matchPage.setPrefWidth(screenWidth);
         matchPage.setPrefHeight(screenHeight);
@@ -330,6 +333,7 @@ public class MatchScene {
      * @param godCards List of GodCardProxy (all game's cards)
      */
     public void chooseCards(List<GodCardProxy> godCards){
+        cardsIndexes = new int[numberOfPlayers];
         choicesNames = new Text[numberOfPlayers];
         choicesImages = new ImageView[numberOfPlayers];
         choicesBoxes = new HBox[numberOfPlayers];
@@ -385,7 +389,7 @@ public class MatchScene {
             });
             cardBox.setOnMouseClicked(e -> {
                 if(choicesCounter<numberOfPlayers)
-                    activateAddCardsButton(addGodImg, addGodHoverImg, addGodInactiveImg, addGod, removeGodImg, removeGodHoverImg, removeGodInactiveImg, removeGod);
+                    activateAddCardsButton(addGodImg, addGodHoverImg, addGodInactiveImg, addGod, removeGodImg, removeGodHoverImg, removeGodInactiveImg, removeGod, cardsIndexes, godCards);
                 selectedCard = godName.getText();
                 selectedCardBox = cardBox;
                 cardBox.setStyle("-fx-border-color: black");
@@ -466,6 +470,10 @@ public class MatchScene {
             confirmChoices.setCursor(Cursor.HAND);
             confirmChoices.setImage(confirmImg);
         });
+        confirmChoices.setOnMouseClicked(e -> {
+            confirmChallengerCards.set(true);
+            hideChooseCards();
+        });
         choices.getChildren().add(confirmChoices);
         confirmChoices.setVisible(false);
 
@@ -473,8 +481,37 @@ public class MatchScene {
         chooseCardsBox.getChildren().addAll(chooseCardsView, chooseCards);
         chooseCardsBox.setAlignment(Pos.CENTER);
 
-        showChooseCards();
 
+
+        FadeTransition chooseCardsBoxFadeIn = new FadeTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsBoxFadeIn.setFromValue(0);
+        chooseCardsBoxFadeIn.setToValue(1);
+
+        ScaleTransition chooseCardsBoxZoomIn1 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsBoxZoomIn1.setFromX(0);
+        chooseCardsBoxZoomIn1.setToX(1);
+        chooseCardsBoxZoomIn1.setFromY(0.01);
+        chooseCardsBoxZoomIn1.setToY(0.01);
+
+        ScaleTransition chooseCardsBoxZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsBoxZoomIn2.setFromY(0.01);
+        chooseCardsBoxZoomIn2.setToY(1);
+
+        chooseCardsBoxFadeIn.play();
+        chooseCardsBoxZoomIn1.play();
+
+        Timeline showingTimer1 = new Timeline(new KeyFrame(
+                Duration.millis(200),
+                ae -> {
+                    chooseCardsBox.setVisible(true);
+                }));
+        showingTimer1.play();
+        Timeline showingTimer = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    chooseCardsBoxZoomIn2.play();
+                }));
+        showingTimer.play();
     }
 
     /**
@@ -488,7 +525,7 @@ public class MatchScene {
      * @param removeGodInactiveImg Remove button inactive image
      * @param removeGod Remove button
      */
-    private void activateAddCardsButton(Image addGodImg, Image addGodHoverImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodHoverImg, Image removeGodInactiveImg, ImageView removeGod){
+    private void activateAddCardsButton(Image addGodImg, Image addGodHoverImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodHoverImg, Image removeGodInactiveImg, ImageView removeGod, int[] cardsIndexes, List<GodCardProxy> godCards){
         addGod.setImage(addGodImg);
         addGod.setOnMouseEntered(e ->{
             addGod.setImage(addGodHoverImg);
@@ -502,6 +539,11 @@ public class MatchScene {
             choicesNames[choicesCounter-1].setText(selectedCard);
             choicesImages[choicesCounter-1].setImage(new Image(MatchScene.class.getResource("/img/godCards/" + selectedCard + ".png").toString(), screenWidth/14, screenHeight/9, false, false));
             choicesBoxes[choicesCounter-1].setVisible(true);
+            for(GodCardProxy godCard : godCards){
+                if(godCard.name.equals(selectedCard)){
+                    cardsIndexes[choicesCounter-1] = godCards.indexOf(godCard);
+                }
+            }
             chosenCards.add(selectedCardBox);
             selectedCardBox.setVisible(false);
             selectedCardBox.setManaged(false);
@@ -574,35 +616,6 @@ public class MatchScene {
      * This method shows choose cards box
      */
     private void showChooseCards(){
-        FadeTransition chooseCardsFadeIn = new FadeTransition(Duration.millis(1000), chooseCardsBox);
-        chooseCardsFadeIn.setFromValue(0);
-        chooseCardsFadeIn.setToValue(1);
-
-        ScaleTransition chooseCardsZoomIn1 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
-        chooseCardsZoomIn1.setFromX(0);
-        chooseCardsZoomIn1.setToX(1);
-        chooseCardsZoomIn1.setFromY(0.01);
-        chooseCardsZoomIn1.setToY(0.01);
-
-        ScaleTransition chooseCardsZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
-        chooseCardsZoomIn2.setFromY(0.01);
-        chooseCardsZoomIn2.setToY(1);
-
-        chooseCardsFadeIn.play();
-        chooseCardsZoomIn1.play();
-
-        Timeline showingTimer1 = new Timeline(new KeyFrame(
-                Duration.millis(200),
-                ae -> {
-                    chooseCardsBox.setVisible(true);
-                }));
-        showingTimer1.play();
-        Timeline showingTimer = new Timeline(new KeyFrame(
-                Duration.millis(1000),
-                ae -> {
-                    chooseCardsZoomIn2.play();
-                }));
-        showingTimer.play();
 
     }
 
@@ -639,5 +652,12 @@ public class MatchScene {
                     chooseCardsBox.setVisible(false);
                 }));
         hidingTimer2.play();
+    }
+
+    public int[] chosenCards(){
+        while(!confirmChallengerCards.get()){
+
+        }
+        return cardsIndexes;
     }
 }
