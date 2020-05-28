@@ -1,6 +1,12 @@
 package it.polimi.ingsw.client.view.gui;
 
 import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.PlayerProxy;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +32,13 @@ public class MatchScene {
     private final double screenWidth;
     private final double screenHeight;
     private final StackPane matchPage;
+
+    double dimension;
+    double marginDim;
+    double totalMargin;
+    double mapDim;
+
+    ImageView mapView;
 
     //number of players of the match
     private int numberOfPlayers;
@@ -57,7 +71,7 @@ public class MatchScene {
     private List<HBox> chosenCards = new ArrayList<>();
 
     //pane that is visible to the master -> the challenger has to choose the cards for the match
-    private StackPane chooseCardsBox;
+    private StackPane chooseCardsBox = new StackPane();
 
     //content of the chooseCardBox divided in 3 columns
     private HBox chooseCards;
@@ -100,6 +114,24 @@ public class MatchScene {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.matchPage = matchPage;
+
+        dimension = screenHeight - screenHeight / 20;
+        marginDim = dimension / 28.05421687;
+        totalMargin = dimension / 6.504189944;
+        mapDim = dimension - (2 * marginDim);
+
+        guiMap = new GuiMap(gui.mapRowsNumber(),gui.mapColumnsNumber(), mapDim, screenWidth, screenHeight);
+
+        Image mapImg = new Image(MatchScene.class.getResource("/img/board.png").toString(),dimension,dimension,false,false);
+        mapView = new ImageView(mapImg);
+        ImageView matchBackground = matchBackground(screenWidth, screenHeight);
+
+        playerView = new PlayerView(screenWidth, screenHeight, guiMap, gui);
+
+        StackPane playerViewPane = playerView.getPlayerViewStackPane();
+
+        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, chooseCardsBox);
+        chooseCardsBox.setVisible(false);
     }
 
     //_________________________________________________SETTER____________________________________________________________
@@ -191,20 +223,21 @@ public class MatchScene {
 
 
 
-    public void setMatchScene(String nickname, int numberOfPlayers, String color) {
-        choicesNames = new Text[numberOfPlayers];
-        choicesImages = new ImageView[numberOfPlayers];
-        choicesBoxes = new HBox[numberOfPlayers];
+    public void setMatchScene(String nickname, int numberOfPlayers, String color, List<PlayerProxy> opponents) {
         this.numberOfPlayers = numberOfPlayers;
-        double dimension = screenHeight - screenHeight / 20;
-        double marginDim = dimension / 28.05421687;
-        double totalMargin = dimension / 6.504189944;
-        double mapDim = dimension - (2 * marginDim);
 
+        guiMap.setMaxWidth(dimension);
+        guiMap.setMaxHeight(dimension);
+        guiMap.setAlignment(Pos.CENTER);
+        guiMap.setPadding(new Insets(totalMargin));
 
-        guiMap = createMap(dimension, mapDim, totalMargin);
-        Image mapImg = new Image(MatchScene.class.getResource("/img/board.png").toString(),dimension,dimension,false,false);
-        ImageView mapView = new ImageView(mapImg);
+        Platform.runLater(() -> playerView.setPage(nickname, color, opponents));
+
+        chooseCardsBox = new StackPane();
+
+        chooseCardsBox.setVisible(false);
+        matchPage.setPrefWidth(screenWidth);
+        matchPage.setPrefHeight(screenHeight);
 
         AnchorPane.setTopAnchor(guiMap, (screenHeight-dimension)/2);
         AnchorPane.setBottomAnchor(guiMap, (screenHeight-dimension)/2);
@@ -215,37 +248,6 @@ public class MatchScene {
         AnchorPane.setLeftAnchor(mapView, (screenWidth-dimension)/2);
         AnchorPane.setRightAnchor(mapView, (screenWidth-dimension)/2);
 
-        playerView = new PlayerView();
-
-        playerView.create(nickname, color, numberOfPlayers, screenWidth, screenHeight);
-        StackPane playerViewGroup = playerView.getPlayerViewStackPane();
-        setPlayerViewPosition(playerViewGroup, screenHeight);
-
-        ImageView matchBackground = matchBackground(screenWidth, screenHeight);
-
-        chooseCardsBox = new StackPane();
-
-
-        matchPage.getChildren().addAll(matchBackground,mapView, playerViewGroup, guiMap, chooseCardsBox);
-        chooseCardsBox.setVisible(false);
-        matchPage.setPrefWidth(screenWidth);
-        matchPage.setPrefHeight(screenHeight);
-
-    }
-
-    public GuiMap createMap(double dimension, double mapDim, double totalMargin){
-        GuiMap guiMapCreation = new GuiMap(gui.mapRowsNumber(),gui.mapColumnsNumber(), mapDim, screenWidth, screenHeight);
-        guiMapCreation.setMaxWidth(dimension);
-        guiMapCreation.setMaxHeight(dimension);
-        guiMapCreation.setAlignment(Pos.CENTER);
-        Insets margin = new Insets(totalMargin);
-        guiMapCreation.setPadding(margin);
-
-        return guiMapCreation;
-    }
-
-    public void setPlayerViewPosition(StackPane playerView, double screenHeight){
-        AnchorPane.setBottomAnchor(playerView, (screenHeight)/1000);
     }
 
     public ImageView matchBackground(double screenWidth, double screenHeight){
@@ -322,7 +324,15 @@ public class MatchScene {
 
     }*/
 
+
+    /**
+     * This method creates and shows the box to choose the match cards (only to challenger)
+     * @param godCards List of GodCardProxy (all game's cards)
+     */
     public void chooseCards(List<GodCardProxy> godCards){
+        choicesNames = new Text[numberOfPlayers];
+        choicesImages = new ImageView[numberOfPlayers];
+        choicesBoxes = new HBox[numberOfPlayers];
         Image addGodImg = new Image(MatchScene.class.getResource("/img/buttons/addGod.png").toString(), screenWidth/12, screenHeight/12, false, false);
         Image addGodHoverImg = new Image(MatchScene.class.getResource("/img/buttons/addGodHover.png").toString(), screenWidth/12, screenHeight/12, false, false);
         Image addGodInactiveImg = new Image(MatchScene.class.getResource("/img/buttons/addGodInactive.png").toString(), screenWidth/12, screenHeight/12, false, false);
@@ -462,10 +472,22 @@ public class MatchScene {
         chooseCards.getChildren().addAll(allCards,  buttons, choices);
         chooseCardsBox.getChildren().addAll(chooseCardsView, chooseCards);
         chooseCardsBox.setAlignment(Pos.CENTER);
-        chooseCardsBox.setVisible(true);
+
+        showChooseCards();
 
     }
 
+    /**
+     * This method activates add button in the Choose cards box when chosen cards are less than number of players
+     * @param addGodImg Add button image
+     * @param addGodHoverImg Add button hover image
+     * @param addGodInactiveImg Add button Inactive image
+     * @param addGod Add button
+     * @param removeGodImg Remove button image
+     * @param removeGodHoverImg Remove button hover image
+     * @param removeGodInactiveImg Remove button inactive image
+     * @param removeGod Remove button
+     */
     private void activateAddCardsButton(Image addGodImg, Image addGodHoverImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodHoverImg, Image removeGodInactiveImg, ImageView removeGod){
         addGod.setImage(addGodImg);
         addGod.setOnMouseEntered(e ->{
@@ -491,6 +513,11 @@ public class MatchScene {
         });
     }
 
+    /**
+     * This method deactivates add button in the Choose cards box when chosen cards are as many as number of players
+     * @param addGodInactiveImg Add button inactive image
+     * @param addGod Add button
+     */
     private void deactivateAddCardsButton(Image addGodInactiveImg, ImageView addGod){
         addGod.setImage(addGodInactiveImg);
         addGod.setOnMouseEntered(e -> {
@@ -500,6 +527,13 @@ public class MatchScene {
         addGod.setOnMouseClicked(Event::consume);
     }
 
+    /**
+     * This method activates remove button in the Choose cards box when chosen cards are 1 or more
+     * @param removeGodImg Remove button image
+     * @param removeGodHoverImg Remove button hover image
+     * @param removeGodInactiveImg Remove button inactive image
+     * @param removeGod Remove button
+     */
     private void activateRemoveCardsButton(Image removeGodImg, Image removeGodHoverImg, Image removeGodInactiveImg, ImageView removeGod){
         removeGod.setImage(removeGodImg);
         removeGod.setOnMouseEntered(e ->{
@@ -522,6 +556,11 @@ public class MatchScene {
         });
     }
 
+    /**
+     * This method deactivates remove button in the Choose cards box when chosen cards are 0
+     * @param removeGodInactiveImg Remove button inactive image
+     * @param removeGod Remove button
+     */
     private void deactivateRemoveCardsButton(Image removeGodInactiveImg, ImageView removeGod){
         removeGod.setImage(removeGodInactiveImg);
         removeGod.setOnMouseEntered(e -> {
@@ -529,5 +568,76 @@ public class MatchScene {
         });
         removeGod.setOnMouseExited(Event::consume);
         removeGod.setOnMouseClicked(Event::consume);
+    }
+
+    /**
+     * This method shows choose cards box
+     */
+    private void showChooseCards(){
+        FadeTransition chooseCardsFadeIn = new FadeTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsFadeIn.setFromValue(0);
+        chooseCardsFadeIn.setToValue(1);
+
+        ScaleTransition chooseCardsZoomIn1 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsZoomIn1.setFromX(0);
+        chooseCardsZoomIn1.setToX(1);
+        chooseCardsZoomIn1.setFromY(0.01);
+        chooseCardsZoomIn1.setToY(0.01);
+
+        ScaleTransition chooseCardsZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsZoomIn2.setFromY(0.01);
+        chooseCardsZoomIn2.setToY(1);
+
+        chooseCardsFadeIn.play();
+        chooseCardsZoomIn1.play();
+
+        Timeline showingTimer1 = new Timeline(new KeyFrame(
+                Duration.millis(200),
+                ae -> {
+                    chooseCardsBox.setVisible(true);
+                }));
+        showingTimer1.play();
+        Timeline showingTimer = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    chooseCardsZoomIn2.play();
+                }));
+        showingTimer.play();
+
+    }
+
+    /**
+     * This method hides choose cards box
+     */
+    private void hideChooseCards(){
+        FadeTransition chooseCardsFadeOut = new FadeTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsFadeOut.setFromValue(1);
+        chooseCardsFadeOut.setToValue(0);
+
+        ScaleTransition chooseCardsZoomOut1 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsZoomOut1.setFromY(1);
+        chooseCardsZoomOut1.setToY(0.01);
+        chooseCardsZoomOut1.setFromX(1);
+        chooseCardsZoomOut1.setToX(1);
+
+        ScaleTransition chooseCardsZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);
+        chooseCardsZoomIn2.setFromX(1);
+        chooseCardsZoomIn2.setToX(0);
+
+        chooseCardsZoomOut1.play();
+
+        Timeline hidingTimer1 = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    chooseCardsZoomIn2.play();
+                    chooseCardsFadeOut.play();
+                }));
+        hidingTimer1.play();
+        Timeline hidingTimer2 = new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                ae -> {
+                    chooseCardsBox.setVisible(false);
+                }));
+        hidingTimer2.play();
     }
 }

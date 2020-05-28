@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.view.gui;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.server.model.Colour;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import javafx.animation.FadeTransition;
 import it.polimi.ingsw.network.objects.BoxProxy;
@@ -31,6 +32,7 @@ import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Gui extends Application implements View {
 
@@ -46,7 +48,8 @@ public class Gui extends Application implements View {
 
 
 
-    private final StackPane firstScene = new StackPane();
+
+    private final StackPane mainScene = new StackPane();
 
 
     private final StackPane openingPage = new StackPane();
@@ -54,6 +57,8 @@ public class Gui extends Application implements View {
     private final HBox menuPage = new HBox();
 
     private final StackPane loadingPage = new StackPane();
+
+    private final StackPane howToPlayBox = new StackPane();
 
     private final StackPane transitionClouds = new StackPane();
 
@@ -69,13 +74,14 @@ public class Gui extends Application implements View {
     private TranslateTransition translateRightTransitionIn;
 
 
-    StackPane matchPage = new StackPane();
+    private StackPane matchPage = new StackPane();
 
 
 
     private String nickname;
     private String color;
     private int numberOfPlayers;
+    private List<PlayerProxy> opponents = new ArrayList<>();
 
 
     @Override
@@ -85,7 +91,7 @@ public class Gui extends Application implements View {
         confirmPopup();
 
 
-        firstScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, confirmPopup);
+        mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, confirmPopup);
         openingPage.setVisible(true);
         menuPage.setVisible(false);
         loadingPage.setVisible(false);
@@ -93,25 +99,26 @@ public class Gui extends Application implements View {
         confirmPopup.setVisible(false);
         confirmPopup.setAlignment(Pos.CENTER);
         matchPage.setVisible(false);
+        howToPlayBox.setVisible(false);
 
 
 
-        //openingPage();
+        openingPage();
 
 
         //if not opening page todo toglierlo
-        /*openingPage.setVisible(false);
-        menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage);
+/*        openingPage.setVisible(false);
+        menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
         menuScene.setMenuScene();
-        startClient();*/
-
+        startClient();
+*/
         createTransitionClouds();
-
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
+        //todo toglierlo
+        //startMatch();
 
-        Scene fullScene = new Scene(firstScene);
+        Scene fullScene = new Scene(mainScene);
         window.setScene(fullScene);
-        startMatch();
 
         window.show();
     }
@@ -206,15 +213,6 @@ public class Gui extends Application implements View {
     }
 
 
-
-
-
-
-
-
-
-
-
     private void openingPage(){
         Image openingImg = new Image(Gui.class.getResource("/img/opening/opening.png").toString(), screenWidth, screenHeight, false, false);
         ImageView openingView = new ImageView(openingImg);
@@ -264,7 +262,7 @@ public class Gui extends Application implements View {
                 Duration.millis(8000),
                 ae -> {
                     openingPage.setVisible(false);
-                    menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage);
+                    menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
                     menuScene.setMenuScene();
                     client.start();
                 }));
@@ -304,6 +302,9 @@ public class Gui extends Application implements View {
         cloudsTimer.play();
     }
 
+    public StackPane howToPlayBox(){
+        return howToPlayBox;
+    }
 
     public MenuScene menuScene(){
         return menuScene;
@@ -340,7 +341,8 @@ public class Gui extends Application implements View {
 
     @Override
     public int askMatchType() {
-        return menuScene.askNumberOfPlayers();
+        numberOfPlayers = menuScene.askNumberOfPlayers();
+        return numberOfPlayers;
     }
 
     @Override
@@ -350,7 +352,8 @@ public class Gui extends Application implements View {
 
     @Override
     public String askUserName() {
-        return menuScene.askNickname();
+        nickname = menuScene.askNickname();
+        return nickname;
     }
 
 
@@ -371,13 +374,37 @@ public class Gui extends Application implements View {
 
     @Override
     public void setMyPlayer(PlayerProxy player) {
-        nickname=player.name;
-
+        if(player.godCardProxy==null){
+            nickname = player.name;
+            if(player.colour.equals(Colour.BLUE))
+                color = "Blue";
+            else if(player.colour.equals(Colour.WHITE))
+                color = "White";
+            else if(player.colour.equals(Colour.GREY))
+                color = "Grey";
+        } else {
+            matchScene.playerView().setMyCard(player);
+        }
     }
 
     @Override
-    public void setOpponentsInfo(List<PlayerProxy> players) {
+    public void setOpponentsInfo(List<PlayerProxy> opponents) {
+        AtomicBoolean ready = new AtomicBoolean(false);
+        if(opponents.get(0).godCardProxy==null) {
+            this.opponents = opponents;
+            Timeline readyTimer = new Timeline(new KeyFrame(
+                    Duration.millis(4000),
+                    ae -> {
+                        ready.set(true);
+                    }));
+            readyTimer.play();
+            while (!ready.get()){
 
+            }
+            startMatch();
+        }
+        else
+            matchScene.playerView().setOpponentsCards(opponents);
     }
 
     @Override
@@ -387,18 +414,20 @@ public class Gui extends Application implements View {
 
     @Override
     public void unknownHost(String host, UnknownHostException e) {
-        menuScene().setErrorMessage1("Host does not exist");
+        menuScene().setErrorMessage("Host does not exist");
     }
 
     @Override
     public void connectionRefused(String host, ConnectException e) {
-        menuScene().setErrorMessage1("Connection refused");
+        menuScene().setErrorMessage("Connection refused");
     }
 
     @Override
     public void startMatch(){
+        AtomicBoolean ready = new AtomicBoolean(false);
         playTransitionClouds();
-        matchScene.setMatchScene("Matteo", 3, "Blue");
+
+        matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents);
         FadeTransition loadingFadeOut = new FadeTransition(Duration.millis(2000), loadingPage);
         loadingFadeOut.setFromValue(1);
         loadingFadeOut.setToValue(0);
@@ -415,28 +444,5 @@ public class Gui extends Application implements View {
                     matchFade.play();
                 }));
         matchTimer.play();
-
-
-
-        //todo togliere
-        Timeline momentaneo2Timer = new Timeline(new KeyFrame(
-                Duration.millis(2000),
-                ae -> {
-                    List<GodCardProxy> momentaneeCards = new ArrayList<>();
-                    GodCardProxy apollo = new GodCardProxy("Apollo", 1, "Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated", null, null, null);
-                    momentaneeCards.add(apollo);
-                    GodCardProxy artemis = new GodCardProxy("Artemis", 2, "Your Move: Your Worker may move one additional time, but not back to its initial space", null, null, null);
-                    momentaneeCards.add(artemis);
-                    GodCardProxy athena = new GodCardProxy("Athena", 2, "Opponent’s Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn", null, null, null);
-                    momentaneeCards.add(athena);
-                    GodCardProxy atlas = new GodCardProxy("Atlas", 2, "Your Build: Your Worker may build a dome at any level", null, null, null);
-                    momentaneeCards.add(atlas);
-                    GodCardProxy ares = new GodCardProxy("Ares", 2, "End of Your Turn: You may remove an unoccupied block (not dome) neighboring your unmoved Worker. You also remove any Tokens on the block", null, null, null);
-                    momentaneeCards.add(ares);
-                    askCards(momentaneeCards);
-                }));
-        momentaneo2Timer.play();
-
-
     }
 }
