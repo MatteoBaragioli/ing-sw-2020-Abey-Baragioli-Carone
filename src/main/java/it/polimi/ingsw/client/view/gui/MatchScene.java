@@ -278,55 +278,6 @@ public class MatchScene {
             index++;
         }
     }
-/*
-    public void createChooseCardBox(int cardsNumber){
-        Image chooseCardsImg = new Image(MatchScene.class.getResource("/img/chooseCardsBackground.png").toString(), screenWidth/2, screenHeight/2, false, false);
-        ImageView chooseCardsView = new ImageView(chooseCardsImg);
-        ScrollPane allCards = new ScrollPane();
-        allCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        allCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        VBox cardsList = new VBox();
-        cardsView = new ArrayList<>();
-        godNames = new ArrayList<>();
-        godDescriptions = new ArrayList<>();
-        cardsInfo = new ArrayList<>();
-        cardBoxes = new ArrayList<>();
-        for(int i = 0; i<cardsNumber; i++){
-            cardsView.add(new ImageView());
-            godNames.add(new Text());
-            godDescriptions.add(new Text());
-            cardsInfo.add(new VBox());
-            cardBoxes.add(new HBox());
-            cardsInfo.get(i).getChildren().addAll(godNames.get(i), godDescriptions.get(i));
-            cardBoxes.get(i).getChildren().addAll(cardsView.get(i), cardsInfo.get(i));
-            cardsList.getChildren().add(cardBoxes.get(i));
-        }
-
-        allCards.setContent(cardsList);
-        VBox buttons = new VBox();
-        Button insert = new Button();
-        buttons.getChildren().add(insert);
-
-        VBox choices = new VBox();
-        //todo momentaneo
-        choices.getChildren().add(new Button());
-
-        chooseCards.getChildren().addAll(allCards,  buttons, choices);
-        chooseCardsBox.getChildren().addAll(chooseCardsView);
-        chooseCardsBox.setAlignment(Pos.CENTER);
-        chooseCardsBox.setVisible(true);
-    }
-
-    public void chooseCards(List<GodCardProxy> godCards){
-        for(int i = 0; i<godCards.size();i++){
-            Image cardImg = new Image(MatchScene.class.getResource("/img/godCards/"+godCards.get(i).name+".png").toString(), screenWidth/8, screenHeight/8, false, false);
-            cardsView.get(i).setImage(cardImg);
-            godNames.get(i).setText(godCards.get(i).name);
-            godDescriptions.get(i).setText(godCards.get(i).description);
-        }
-
-    }*/
-
 
     /**
      * This method creates and shows the box to choose the match cards (only to challenger)
@@ -368,7 +319,15 @@ public class MatchScene {
             Text godName = new Text(card.name);
             godName.setTextAlignment(TextAlignment.CENTER);
             godName.setFont(lillybelleFont);
-            Text godDescription = new Text(card.description);
+            Text godDescription = new Text();
+            if(card.description!=null)
+                godDescription.setText(card.description);
+            else if(card.winDescription!=null)
+                godDescription.setText(card.winDescription);
+            else if(card.setUpDescription!=null)
+                godDescription.setText(card.setUpDescription);
+            else if(card.opponentsFxDescription!=null)
+                godDescription.setText(card.opponentsFxDescription);
             godDescription.setFont(godInfoFont);
             godDescription.setWrappingWidth(screenWidth/6);
             godDescription.setTextAlignment(TextAlignment.CENTER);

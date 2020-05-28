@@ -399,7 +399,7 @@ public class Gui extends Application implements View {
         if(opponents.get(0).godCardProxy==null) {
             this.opponents = opponents;
             Timeline readyTimer = new Timeline(new KeyFrame(
-                    Duration.millis(4000),
+                    Duration.millis(1000),
                     ae -> {
                         ready.set(true);
                     }));
@@ -427,7 +427,7 @@ public class Gui extends Application implements View {
     public void startMatch(){
         playTransitionClouds();
 
-        matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents);
+        Platform.runLater(() -> matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents));
         FadeTransition loadingFadeOut = new FadeTransition(Duration.millis(2000), loadingPage);
         loadingFadeOut.setFromValue(1);
         loadingFadeOut.setToValue(0);

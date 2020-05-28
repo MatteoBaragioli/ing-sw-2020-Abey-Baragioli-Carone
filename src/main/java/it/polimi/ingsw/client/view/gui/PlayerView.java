@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.view.gui;
 
+import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import it.polimi.ingsw.server.model.Colour;
 import javafx.animation.FadeTransition;
@@ -82,17 +83,11 @@ public class PlayerView extends StackPane {
     //helper page number
     private int helperPage;
 
-    //opponents frames
-    private final ImageView[] opponentsFrames = new ImageView[2];
+    //opponents list view
+    private VBox opponentsView;
 
-    //opponents names
-    private final Label[] opponentsNames = new Label[2];
-
-    //opponents cards
-    private final Label[] opponentsCards = new Label[2];
-
-    //opponents boxes
-    private final StackPane[] opponentsBoxes = new StackPane[2];
+    //opponents powers
+    private HashMap<String, Label> opponentsPowers = new HashMap<>();
 
     private ImageView confirmView;
     private ImageView undoView;
@@ -268,42 +263,12 @@ public class PlayerView extends StackPane {
         rightView.setPrefHeight(screenHeight);
 
         //right TOP
-        VBox opponentsView = new VBox();
+        opponentsView = new VBox();
         opponentsView.setPrefWidth(screenWidth/4);
         opponentsView.setPrefWidth(screenHeight/2);
         opponentsView.setPadding(new Insets(screenWidth/50, 0, 0, 0));
         opponentsView.setSpacing(screenHeight/50);
         opponentsView.setAlignment(CENTER);
-
-        for(int i = 0 ; i<2 ; i++){
-            ImageView opponentView = new ImageView();
-            opponentsFrames[i] = opponentView;
-
-            Label opponentName = new Label();
-
-            opponentName.setFont(messagesFont);
-            opponentName.setTextAlignment(TextAlignment.CENTER);
-            opponentName.setPadding(new Insets(screenHeight/70, 0, 0, 0));
-
-            opponentsNames[i] = opponentName;
-
-            Label opponentCardName = new Label();
-            opponentCardName.setFont(messagesFont);
-            opponentCardName.setTextAlignment(TextAlignment.CENTER);
-
-            opponentsCards[i] = opponentCardName;
-
-            StackPane opponentBox = new StackPane();
-            opponentBox.getChildren().addAll(opponentView, opponentName, opponentCardName);
-            setAlignment(opponentName, TOP_CENTER);
-            opponentBox.setVisible(false);
-            opponentBox.setManaged(true);
-            opponentBox.setPrefHeight(screenHeight/5);
-
-            opponentsBoxes[i] = opponentBox;;
-
-            opponentsView.getChildren().add(opponentBox);
-        }
 
         //right CENTER
         Image powersImg = new Image(PlayerView.class.getResource("/img/buttons/showPowers.png").toString(),screenWidth/6, screenHeight/4,false,false);
@@ -630,15 +595,27 @@ public class PlayerView extends StackPane {
                 opponentColor = "Grey";
 
             Image opponentImg = new Image(PlayerView.class.getResource("/img/opponentView"+opponentColor+".png").toString(),screenWidth/5, screenHeight/5,false,false);
-            opponentsFrames[opponents.indexOf(opponent)].setImage(opponentImg);
+            ImageView opponentView = new ImageView(opponentImg);
 
-            opponentsNames[opponents.indexOf(opponent)].setText(opponent.name);
-            opponentsNames[opponents.indexOf(opponent)].setTextFill(fontColor(opponentColor));
+            Label opponentName = new Label(opponent.name);
+            opponentName.setFont(messagesFont);
+            opponentName.setTextFill(fontColor(opponentColor));
+            opponentName.setTextAlignment(TextAlignment.CENTER);
+            opponentName.setPadding(new Insets(screenHeight/70, 0, 0, 0));
 
-            opponentsCards[opponents.indexOf(opponent)].setTextFill(fontColor(opponentColor));
+            Label opponentCardName = new Label();
+            opponentCardName.setFont(messagesFont);
+            opponentCardName.setTextAlignment(TextAlignment.CENTER);
+            opponentCardName.setTextFill(fontColor(opponentColor));
 
-            opponentsBoxes[opponents.indexOf(opponent)].setVisible(true);
-            opponentsBoxes[opponents.indexOf(opponent)].setManaged(true);
+            opponentsPowers.put(opponent.name, opponentCardName);
+
+            StackPane opponentBox = new StackPane();
+            opponentBox.getChildren().addAll(opponentView, opponentName, opponentCardName);
+            setAlignment(opponentName, TOP_CENTER);
+            opponentBox.setPrefHeight(screenHeight/5);
+
+            opponentsView.getChildren().add(opponentBox);
         }
     }
 
@@ -659,7 +636,7 @@ public class PlayerView extends StackPane {
      */
     public void setOpponentsCards(List<PlayerProxy> opponents){
         for(PlayerProxy opponent : opponents){
-            opponentsCards[opponents.indexOf(opponent)].setText(opponent.godCardProxy.name);
+            opponentsPowers.get(opponent.name).setText(opponent.godCardProxy.name);
             activePowersNames[opponents.indexOf(opponent)+1].setText(opponent.godCardProxy.name);
             activePowersInfos[opponents.indexOf(opponent)+1].setText(opponent.godCardProxy.description);
         }
