@@ -164,13 +164,13 @@ public class ScreenView {
     public void title()   {
         ps.println("\n");
         ps.println("\n");
-        ps.println(Colors.BLUE_BRIGHT+"                                                      Welcome to...");
-        ps.println(Colors.BLUE_BRIGHT+"                               _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____        ");
-        ps.println(Colors.BLUE_BRIGHT+"                             /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |   ");
-        ps.println(Colors.BLUE_BRIGHT+"                            |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |   ");
-        ps.println(Colors.BLUE_BRIGHT+"                             \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |  ");
-        ps.println(Colors.BLUE_BRIGHT+"                              _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |   ");
-        ps.println(Colors.BLUE_BRIGHT+"                             |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|    ");
+        ps.println(Colors.BLUE_BRIGHT+"                                                   Welcome to...");
+        ps.println(Colors.BLUE_BRIGHT+"                            _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____        ");
+        ps.println(Colors.BLUE_BRIGHT+"                          /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |   ");
+        ps.println(Colors.BLUE_BRIGHT+"                         |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |   ");
+        ps.println(Colors.BLUE_BRIGHT+"                          \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |  ");
+        ps.println(Colors.BLUE_BRIGHT+"                           _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |   ");
+        ps.println(Colors.BLUE_BRIGHT+"                          |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|    ");
         ps.println(Colors.RESET+"\n");
         ps.println("\n");
 

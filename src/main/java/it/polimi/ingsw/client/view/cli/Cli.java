@@ -96,15 +96,22 @@ public class Cli implements View{
     public int askCards(List<GodCardProxy> cards) {
         boolean valid = false;
         int answer = 0;
+        if(cards.size()==1)
+            return 0;
+        view.clearScreen();
         printStream.println("GAME CARDS:");
-        printStream.println("\n");
 
         for(int i=0; i<cards.size(); i++) {
             printStream.println((i+1)+" "+cards.get(i).name +":    ");
-            printStream.println(cards.get(i).description);
-            printStream.println(" ");
-        }
+            if(cards.get(i).setUpDescription!=null)
+                printStream.println(cards.get(i).setUpDescription);
+            if(cards.get(i).description!=null)
+                printStream.println(cards.get(i).description);
+            if(cards.get(i).winDescription!=null)
+                printStream.println(cards.get(i).winDescription);
 
+        }
+        printStream.println("press the number displayed next to the god's name to choose it");
         while (!valid) {
 
             try {
@@ -146,10 +153,10 @@ public class Cli implements View{
                 System.out.println("Not valid answer. Try again");
         }
         if (answer==1) {
-            return true;
+            return false;
         }
         else
-            return false;
+            return true;
 
     }
 
@@ -175,14 +182,12 @@ public class Cli implements View{
                 //view.updateMap();
                 //view.turn();
                 printStream.println("\nYou are the challenger, choose the game cards! One for each player");
-                printStream.println("\n");
                 break;
             case CARD:
                 //view.clearScreen();
                 //view.updateMap();
                 //view.turn();
                 printStream.println("\n choose your game card!");
-                printStream.println("\n");
                 break;
             }
         }
@@ -239,12 +244,7 @@ public class Cli implements View{
     }
 
     @Override
-    public void unknownHost(String host, UnknownHostException e) {
-        System.err.println("Don't know about host " + host + "\nRetry.");
-    }
-
-    @Override
-    public void connectionRefused(String host, ConnectException e) {
+    public void connectionFailed(String host) {
         System.err.println("Refused connection to" + host + "\nRetry.");
     }
 

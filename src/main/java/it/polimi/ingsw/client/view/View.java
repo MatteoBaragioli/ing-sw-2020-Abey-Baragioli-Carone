@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.objects.PlayerProxy;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -24,7 +25,6 @@ public interface View {
     void setMyPlayer(PlayerProxy player);
     void setOpponentsInfo(List<PlayerProxy> players);
     void connectionLost();
-    void unknownHost(String host, UnknownHostException e);
-    void connectionRefused(String host, ConnectException e);
+    void connectionFailed(String host);
     void startMatch();
 }

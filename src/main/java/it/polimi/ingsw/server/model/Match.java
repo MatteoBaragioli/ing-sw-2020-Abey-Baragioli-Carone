@@ -223,7 +223,7 @@ public class Match extends Thread{
     /**
      * This method makes the challenger choose the match cards
      */
-    protected void chooseCards(){
+    protected void chooseCards()  {
         CardConstructor cardConstructor = new CardConstructor();
         List<GodCard> deck = cardConstructor.cards();
         Player challenger = gamePlayers.get(0);
@@ -248,7 +248,7 @@ public class Match extends Thread{
     /**
      * This method makes every player choose their own GodCard
      */
-    protected void assignCards(){
+    protected void assignCards() {
         List<GodCard> availableCards = new ArrayList<>(cards);
         for(int i = gamePlayers.size()-1; i>=0; i--){
             GodCard chosenCard = null;
