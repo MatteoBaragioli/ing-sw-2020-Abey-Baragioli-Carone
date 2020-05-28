@@ -30,9 +30,9 @@ import static javafx.scene.paint.Color.WHITE;
 
 public class MenuScene {
 
-    private static final Font lillybelleFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 20);
-    private static final Font pageNumberFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 40);
-    private static final Font errorFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 13);
+    private final Font lillybelleFont;
+    private final Font pageNumberFont;
+    private final Font errorFont;
 
     //variable that contains the Gui reference
     private final Gui gui;
@@ -103,6 +103,9 @@ public class MenuScene {
 
 
     public MenuScene(Gui gui, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage, StackPane howToPlayBox) {
+        lillybelleFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
+        pageNumberFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
+        errorFont = Font.loadFont(MenuScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/120);
         this.gui = gui;
         this.menuPage = menuPage;
         this.screenWidth = screenWidth;
@@ -701,7 +704,12 @@ public class MenuScene {
             RadioButton selectedRadioButton = (RadioButton) numberOfPlayersGroup.getSelectedToggle();
             String number = selectedRadioButton.getText();
             setNumberOfPlayers(Integer.parseInt(number));
-            clicked.set(true);
+            Timeline readyTimer = new Timeline(new KeyFrame(
+                    Duration.millis(6000),
+                    ae -> {
+                        clicked.set(true);
+                    }));
+            readyTimer.play();
             event.consume();
         });
         while (!clicked.get()){

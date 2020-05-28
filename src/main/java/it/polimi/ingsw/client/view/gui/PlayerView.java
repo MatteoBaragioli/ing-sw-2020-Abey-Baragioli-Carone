@@ -30,10 +30,9 @@ import static javafx.geometry.Pos.*;
 import static javafx.scene.paint.Color.*;
 
 public class PlayerView extends StackPane {
-    private static final Font standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 40);
-    private static final Font messagesFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
-    private static final Font powersNameFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
-    private static final Font powersFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 20);
+    private final Font standardFont;
+    private final Font lillybelle;
+    private final Font powersFont;
     private final double screenWidth;
     private final double screenHeight;
     private StackPane playerView = new StackPane();
@@ -96,6 +95,9 @@ public class PlayerView extends StackPane {
     private Group powersClosed;
 
     public PlayerView(double screenWidth, double screenHeight, GuiMap guiMap, Gui gui) {
+        standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
+        lillybelle = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
+        powersFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/70);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.guiMap = guiMap;
@@ -187,7 +189,7 @@ public class PlayerView extends StackPane {
         ImageView messagesView = new ImageView(messagesImg);
 
         messagesBox = new Label("Good Luck!");
-        messagesBox.setFont(messagesFont);
+        messagesBox.setFont(lillybelle);
         messagesBox.setTextFill(WHITE);
         messagesBox.setPrefWidth(screenWidth/4);
         messagesBox.setPrefHeight(screenHeight/4);
@@ -331,7 +333,7 @@ public class PlayerView extends StackPane {
             Text powerInfo = new Text();
             if(i==0)
                 powerName.setText("No active powers");
-            powerName.setFont(powersNameFont);
+            powerName.setFont(lillybelle);
             powerName.setFill(MIDNIGHTBLUE);
             powerName.setTextAlignment(TextAlignment.CENTER);
             powerInfo.setFont(powersFont);
@@ -598,13 +600,13 @@ public class PlayerView extends StackPane {
             ImageView opponentView = new ImageView(opponentImg);
 
             Label opponentName = new Label(opponent.name);
-            opponentName.setFont(messagesFont);
+            opponentName.setFont(lillybelle);
             opponentName.setTextFill(fontColor(opponentColor));
             opponentName.setTextAlignment(TextAlignment.CENTER);
             opponentName.setPadding(new Insets(screenHeight/70, 0, 0, 0));
 
             Label opponentCardName = new Label();
-            opponentCardName.setFont(messagesFont);
+            opponentCardName.setFont(lillybelle);
             opponentCardName.setTextAlignment(TextAlignment.CENTER);
             opponentCardName.setTextFill(fontColor(opponentColor));
 

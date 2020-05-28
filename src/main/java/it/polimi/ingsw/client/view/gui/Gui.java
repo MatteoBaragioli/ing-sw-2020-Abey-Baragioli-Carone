@@ -5,7 +5,6 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.server.model.Colour;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
-import it.polimi.ingsw.server.model.GodCard;
 import javafx.animation.FadeTransition;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
@@ -30,8 +29,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,7 +37,7 @@ public class Gui extends Application implements View {
 
     private double screenWidth = Screen.getPrimary().getBounds().getWidth();
     private double screenHeight = Screen.getPrimary().getBounds().getHeight();
-    private final Font lillybelleFont = Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), 25);
+    private final Font lillybelleFont = Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
     private static final int mapRowsNumber = 5;
     private static final int mapColumnsNumber = 5;
     private final Client client = new Client(this);
@@ -127,10 +124,10 @@ public class Gui extends Application implements View {
 
     public void windowStyle(){
         window.setMaximized(true);
-        //window.setWidth(1280);
-        //window.setHeight(720);
-        //screenWidth = 1280;
-        //screenHeight = 720;
+        /*window.setWidth(1280);
+        window.setHeight(720);
+        screenWidth = 1280;
+        screenHeight = 720;*/
         window.initStyle(StageStyle.UNDECORATED);
         window.setTitle("Santorini");
         window.setOnCloseRequest(e -> {
@@ -325,8 +322,8 @@ public class Gui extends Application implements View {
 
     @Override
     public int askCards(List<GodCardProxy> cards) {
-        Platform.runLater(() -> matchScene.chooseCards(cards));
-        return 1;
+        Platform.runLater(() -> matchScene.chooseCard(cards));
+        return matchScene.chosenCard();
     }
 
     @Override
@@ -395,18 +392,8 @@ public class Gui extends Application implements View {
 
     @Override
     public void setOpponentsInfo(List<PlayerProxy> opponents) {
-        AtomicBoolean ready = new AtomicBoolean(false);
         if(opponents.get(0).godCardProxy==null) {
             this.opponents = opponents;
-            Timeline readyTimer = new Timeline(new KeyFrame(
-                    Duration.millis(1000),
-                    ae -> {
-                        ready.set(true);
-                    }));
-            readyTimer.play();
-            while (!ready.get()){
-
-            }
             startMatch();
         }
         else
@@ -425,6 +412,7 @@ public class Gui extends Application implements View {
 
     @Override
     public void startMatch(){
+        AtomicBoolean ready = new AtomicBoolean(false);
         playTransitionClouds();
 
         Platform.runLater(() -> matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents));
@@ -442,7 +430,12 @@ public class Gui extends Application implements View {
                     matchPage.setVisible(true);
                     matchFade.setToValue(1.0);
                     matchFade.play();
+                    ready.set(true);
                 }));
         matchTimer.play();
+
+        while(!ready.get()){
+
+        }
     }
 }
