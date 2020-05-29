@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.network.objects.BoxProxy;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,5 +107,12 @@ public class Map {
             if(builtOnBox.isCompleteTower())
                 setCompleteTowers(completeTowers + 1);
         }
+    }
+
+    public List<BoxProxy> createProxy() {
+        List<BoxProxy> map = new ArrayList<>();
+        for (Box box: groundToList())
+            map.add(box.crateProxy());
+        return map;
     }
 }

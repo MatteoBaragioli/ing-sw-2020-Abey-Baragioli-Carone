@@ -96,8 +96,7 @@ public class ClientController {
 
     public void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
 
-        Type type = new TypeToken<Boolean>() {}.getType();
-        communicationChannel.writeConfirmation(key, new Gson().toJson(view.askConfirmation(), type));
+        communicationChannel.writeConfirmation(key, view.askConfirmation());
     }
 
     public void manageMatchStart(CommunicationChannel communicationChannel, View view) {

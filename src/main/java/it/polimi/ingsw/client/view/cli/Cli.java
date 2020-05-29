@@ -9,8 +9,6 @@ import it.polimi.ingsw.network.objects.PlayerProxy;
 
 
 import java.io.*;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
@@ -31,7 +29,7 @@ public class Cli implements View{
     }
 
     private boolean checkIfUserIsQuitting(String answer) {
-        return answer.equals(QUIT.toString());
+        return answer.equals(QUIT.toString()) || answer.equals("quit");
     }
 
     public int askNumber() throws IOException, NumberFormatException {
@@ -96,9 +94,6 @@ public class Cli implements View{
     public int askCards(List<GodCardProxy> cards) {
         boolean valid = false;
         int answer = 0;
-        if(cards.size()==1)
-            return 0;
-        view.clearScreen();
         printStream.println("GAME CARDS:");
 
         for(int i=0; i<cards.size(); i++) {
@@ -133,7 +128,7 @@ public class Cli implements View{
     }
 
     @Override
-    public boolean askConfirmation() {
+    public int askConfirmation() {
 
         boolean valid = false;
         int answer = 0;
@@ -143,21 +138,19 @@ public class Cli implements View{
                 answer = askNumber();
             } catch (IOException e) {
                 e.printStackTrace();
+                answer = -1;
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer == 1 || answer == 2) {
+            if (answer == -1 || answer == 1 || answer == 2) {
                 valid = true;
             }
             else
                 System.out.println("Not valid answer. Try again");
         }
-        if (answer==1) {
-            return false;
-        }
-        else
-            return true;
-
+        if (answer != -1)
+            answer--;
+        return answer;
     }
 
     @Override

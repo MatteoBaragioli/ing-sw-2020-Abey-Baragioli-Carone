@@ -330,6 +330,16 @@ public class CommunicationController {
         return result;
     }
 
+    public boolean updateView(List<Player> players , List<BoxProxy> boxes) throws ChannelClosedException {
+        for (Player player:players) {
+            if (!updateView(player, boxes)) {
+                System.out.println("Non ha ricevuto la mappa");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean updateView(Player player , List<BoxProxy> boxes) throws ChannelClosedException {
         User user = findUser(player);
         Type type = new TypeToken<BoxProxy>() {}.getType();
@@ -345,7 +355,7 @@ public class CommunicationController {
     public boolean confirmPhase(Player player)throws TimeoutException, ChannelClosedException{
         boolean result=new Random().nextBoolean();
         if (playerIsUser(player))
-            result= askConfirmation(findUser(player), UNDO);
+            result = askConfirmation(findUser(player), UNDO);
         return result;
     }
 }

@@ -18,6 +18,7 @@ public class Match extends Thread{
     private ActionController actionController = new ActionController();
     private Player winner=null;
     private CommunicationController communicationController;
+    private List<TurnPhase> phasesSequence = createPhaseSequence();
 
     public Match(List<User>  users) {
         for (User user : users)
@@ -111,51 +112,25 @@ public class Match extends Thread{
         //START MATCH
         assignColour();
         Collections.shuffle(gamePlayers);
-        announcePartecipant();
+        announceParticipants();
         chooseCards();
         assignCards();
-        announcePartecipant();
+        announceParticipants();
         setUpWorkers();
         setUpWinConditions();
         int firstPlayerIndex = communicationController.chooseFirstPlayer(winner, gamePlayers);
 
         //MATCH
-        List<TurnPhase> phasesSequence = createPhaseSequence();
         for(currentPlayerIndex = firstPlayerIndex; currentPlayerIndex<gamePlayers.size()&&winner==null;){
             Player currentPlayer = gamePlayers.get(currentPlayerIndex);
-            int undoCounter = 0;
-            for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && currentPlayer.isInGame();){
-                boolean confirm = true;
-                try {
-                    phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //todo
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                    //todo
-                } catch (ChannelClosedException e) {
-                    e.printStackTrace();
-                    //todo
-                }
-                if(undoCounter<3 && phaseIndex<3) {
-                    try {
-                        confirm = communicationController.confirmPhase(currentPlayer);
-                    } catch (TimeoutException e) {
-                        e.printStackTrace();
-                        //todo
-                    } catch (ChannelClosedException e) {
-                        e.printStackTrace();
-                        //todo
-                    }
-                }
-                if(!confirm){
-                    currentPlayer.turnSequence().undo();
-                    undoCounter++;
-                    phaseIndex = 0;
-                }
-                else phaseIndex++;
+            try {
+                takeTurn(currentPlayer);
+            } catch (IOException | ChannelClosedException | TimeoutException e) {
+                e.printStackTrace();
+                currentPlayer.setInGame(false);
+                currentPlayer.turnSequence().undo();
             }
+
             winner = currentPlayer.turnSequence().possibleWinner();
             if(!currentPlayer.isInGame()){
                 removePlayer(currentPlayer);
@@ -176,6 +151,25 @@ public class Match extends Thread{
         //todo dire chi ha vinto
     }
 
+    private void takeTurn(Player currentPlayer) throws ChannelClosedException, TimeoutException, IOException {
+        int undoCounter = 0;
+        for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && currentPlayer.isInGame();){
+            boolean confirm = true;
+            phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
+            if(undoCounter<3 && phaseIndex<3)
+                confirm = communicationController.confirmPhase(currentPlayer);
+            if(!confirm){
+                currentPlayer.turnSequence().undo();
+                communicationController.updateView(currentPlayer, gameMap.createProxy());
+                undoCounter++;
+                phaseIndex = 0;
+            }
+            else
+                phaseIndex++;
+        }
+        communicationController.updateView(gamePlayers, gameMap.createProxy());
+    }
+
     private List<TurnPhase> createPhaseSequence() {
         List<TurnPhase> turnPhases = new ArrayList<>();
         turnPhases.add(new Start());
@@ -185,14 +179,14 @@ public class Match extends Thread{
         return turnPhases;
     }
 
-    public void announcePartecipant() {
+    public void announceParticipants() {
         for (Player player: gamePlayers) {
             try {
                 communicationController.announceParticipants(player, gamePlayers);
             } catch (ChannelClosedException e) {
                 removeUser(communicationController.findUser(player));
                 if (gamePlayers.size() > 1)
-                    announcePartecipant();
+                    announceParticipants();
                 else
                     endGame();
             }
@@ -280,6 +274,7 @@ public class Match extends Thread{
                     Worker worker = new Worker(position, player.colour());
                     freeMap.remove(position);
                     player.assignWorker(worker);
+                    communicationController.updateView(gamePlayers, gameMap.createProxy());
                 } catch (TimeoutException e) {
                     e.printStackTrace();
                     player.setInGame(false);
@@ -291,7 +286,7 @@ public class Match extends Thread{
             if (!player.isInGame()) {
                 removeUser(communicationController.findUser(player));
                 //todo update Map
-                announcePartecipant();
+                announceParticipants();
             }
         }
     }

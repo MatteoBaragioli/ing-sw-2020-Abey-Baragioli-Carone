@@ -23,7 +23,7 @@ public class CommunicationChannel {
     private List<String> buffer = new ArrayList<>();
     private boolean closed = false;
     private boolean ping = false;
-    final public String SEPARATOR = "_CONTENT_";
+    static final public String SEPARATOR = "_CONTENT_";
     final private int KEYINDEX = 0;
     final private int CONTENTINDEX = 1;
     final private int CURRENTMESSAGEINDEX = 0;
@@ -220,7 +220,7 @@ public class CommunicationChannel {
      * @param key keyword
      * @return related string
      */
-    public String keyToString(CommunicationProtocol key) {
+    public static String keyToString(CommunicationProtocol key) {
         Type type = new TypeToken<CommunicationProtocol>() {}.getType();
         return new Gson().toJson(key, type);
     }
@@ -309,11 +309,12 @@ public class CommunicationChannel {
      * This method converts the content in a boolean value
      * @param message String
      * @return content
-     * @throws JsonSyntaxException in case the content is invalid
      */
-    public boolean readBoolean(String message) throws JsonSyntaxException {
-        Type type = new TypeToken<Boolean>() {}.getType();
-        return new Gson().fromJson(getContent(message), type);
+    public boolean readBoolean(String message) {
+        int answer = readNumber(message);
+        if (answer == 0)
+            return true;
+        return false;
     }
 
     /**
@@ -583,18 +584,19 @@ public class CommunicationChannel {
      * @return boolean value of confirmation
      * @throws ChannelClosedException if there's no connection
      */
-    public boolean askConfirmation(CommunicationProtocol key) throws TimeoutException, ChannelClosedException{
-        while (!isClosed()) {
-            if (key==GODPOWER || key==UNDO) {
-                write(keyToString(key));
-                String message = nextGameMessage(key);
-                if (message != null && getKey(message) == key)
-                    return readBoolean(message);
-            }
+    public boolean askConfirmation(CommunicationProtocol key) throws TimeoutException, ChannelClosedException {
+        if (!isClosed()) {
+            write(keyToString(key));
+            String message = nextGameMessage(key);
+            return readBoolean(message);
         }
         throw new ChannelClosedException();
     }
-    public void writeConfirmation(CommunicationProtocol key, String confirmation) throws ChannelClosedException {
-        write(keyToString(key) + SEPARATOR + confirmation);
+
+    public void writeConfirmation(CommunicationProtocol key, int confirmation) throws ChannelClosedException {
+        if (confirmation == quit)
+            writeKeyWord(QUIT);
+        else
+            write(keyToString(key) + SEPARATOR + confirmation);
     }
 }

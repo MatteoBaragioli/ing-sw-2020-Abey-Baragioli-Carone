@@ -4,19 +4,15 @@ import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
-import it.polimi.ingsw.server.model.GodCard;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 public interface View {
     int askPosition(List<int[]> positions);
     int askCards(List<GodCardProxy> cards);
     int[] askDeck(List<GodCardProxy> cards);
-    boolean askConfirmation();
+    int askConfirmation();
     String askIp();
     int askMatchType();
     int askPort();

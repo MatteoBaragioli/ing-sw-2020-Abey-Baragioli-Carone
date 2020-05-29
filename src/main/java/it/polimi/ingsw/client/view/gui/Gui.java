@@ -334,8 +334,8 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public boolean askConfirmation() {
-        return false;
+    public int askConfirmation() {
+        return 1;
     }
 
     @Override
