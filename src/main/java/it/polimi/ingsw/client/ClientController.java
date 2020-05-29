@@ -70,8 +70,10 @@ public class ClientController {
 
         if (index == -1)
             communicationChannel.writeKeyWord(QUIT);
-        else
+        else {
             communicationChannel.writeChoiceFromList(key, index);
+            System.out.println("Chosen Destination" + index);
+        }
     }
 
     public void manageMyPlayer(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {

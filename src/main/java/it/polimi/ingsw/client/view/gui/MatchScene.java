@@ -61,7 +61,7 @@ public class MatchScene {
     private String chosenWorkerGender;
 
     //current chosen worker new position
-    private final int[] chosenWorkerNewPosition = new int[2];
+    private GuiBox chosenWorkerNewPosition;
 
     //chosen box index -> this variable will be returned as answer to server request
     private int chosenBoxIndex;
@@ -111,6 +111,8 @@ public class MatchScene {
 
     //info description when a player has to choose their card
     private Text infoGodDescription = new Text("Go on a card to see the power");
+
+    private AtomicBoolean destinationReady = new AtomicBoolean(false);
 
 
 
@@ -174,12 +176,13 @@ public class MatchScene {
         this.chosenWorkerGender = chosenWorkerGender;
     }
 
-    public void setChosenWorkerNewPosition(int x, int y) {
-        chosenWorkerNewPosition[0] = x;
-        chosenWorkerNewPosition[1] = y;
+    public void setChosenWorkerNewPosition(GuiBox chosenWorkerNewPosition) {
+        this.chosenWorkerNewPosition = chosenWorkerNewPosition;
     }
 
-
+    public void setDestinationReady(boolean destinationReady) {
+        this.destinationReady.set(destinationReady);
+    }
     //_______________________________________________END SETTER__________________________________________________________
 
 
@@ -206,7 +209,7 @@ public class MatchScene {
         return chosenWorkerGender;
     }
 
-    public int[] chosenWorkerNewPosition() {
+    public GuiBox chosenWorkerNewPosition() {
         return chosenWorkerNewPosition;
     }
 
@@ -270,14 +273,22 @@ public class MatchScene {
     }
 
     public void chooseDestination(List<int[]> possibleDestinations){
-
-        //todo Il server mi manderà una lista e vorrà indietro l'indice della lista come risposta
         int index = 0;
         for(int[] i : possibleDestinations){
             map().box(i[0], i[1]).setIndex(index);
             map().box(i[0], i[1]).setAsChosable(this, possibleDestinations, 1);
             index++;
         }
+        setChosableBoxes(possibleDestinations);
+
+    }
+
+    public int chosenDestination(){
+        while(!destinationReady.get()){
+
+        }
+        destinationReady.set(false);
+        return chosenBoxIndex();
     }
     public void chooseBuild(List<int[]> possibleDestinations){
 
@@ -480,7 +491,7 @@ public class MatchScene {
                 }));
         showingTimer1.play();
         Timeline showingTimer = new Timeline(new KeyFrame(
-                Duration.millis(2000),
+                Duration.millis(1000),
                 ae -> {
                     chooseCardsBoxZoomIn2.play();
                 }));

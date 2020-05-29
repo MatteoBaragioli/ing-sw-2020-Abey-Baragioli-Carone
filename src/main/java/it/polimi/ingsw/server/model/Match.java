@@ -111,9 +111,10 @@ public class Match extends Thread{
         //START MATCH
         assignColour();
         Collections.shuffle(gamePlayers);
-        announceStart();
+        announcePartecipant();
         chooseCards();
         assignCards();
+        announcePartecipant();
         setUpWorkers();
         setUpWinConditions();
         int firstPlayerIndex = communicationController.chooseFirstPlayer(winner, gamePlayers);
@@ -184,14 +185,14 @@ public class Match extends Thread{
         return turnPhases;
     }
 
-    public void announceStart() {
+    public void announcePartecipant() {
         for (Player player: gamePlayers) {
             try {
                 communicationController.announceParticipants(player, gamePlayers);
             } catch (ChannelClosedException e) {
                 removeUser(communicationController.findUser(player));
                 if (gamePlayers.size() > 1)
-                    announceStart();
+                    announcePartecipant();
                 else
                     endGame();
             }
@@ -290,7 +291,7 @@ public class Match extends Thread{
             if (!player.isInGame()) {
                 removeUser(communicationController.findUser(player));
                 //todo update Map
-                announceStart();
+                announcePartecipant();
             }
         }
     }

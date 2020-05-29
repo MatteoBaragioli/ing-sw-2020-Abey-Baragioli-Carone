@@ -106,7 +106,6 @@ public class Client extends Thread {
                 case DESTINATION:
                 case REMOVAL:
                 case STARTPOSITION:
-
                 case WORKER:
                     try {
                         clientController.manageListOfPositions(key, communicationChannel, view);

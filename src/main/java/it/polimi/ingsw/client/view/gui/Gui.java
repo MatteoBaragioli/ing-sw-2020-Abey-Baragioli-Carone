@@ -123,12 +123,12 @@ public class Gui extends Application implements View {
 
 
     public void windowStyle(){
-        window.setMaximized(true);
-        /*window.setWidth(1280);
+        //window.setMaximized(true);
+        window.setWidth(1280);
         window.setHeight(720);
         screenWidth = 1280;
-        screenHeight = 720;*/
-        window.initStyle(StageStyle.UNDECORATED);
+        screenHeight = 720;
+        window.initStyle(StageStyle.DECORATED);
         window.setTitle("Santorini");
         window.setOnCloseRequest(e -> {
             e.consume();
@@ -317,7 +317,8 @@ public class Gui extends Application implements View {
 
     @Override
     public int askPosition(List<int[]> positions) {
-        return 0;
+        Platform.runLater(() -> matchScene.chooseDestination(positions));
+        return matchScene.chosenDestination();
     }
 
     @Override
@@ -386,7 +387,7 @@ public class Gui extends Application implements View {
             else if(player.colour.equals(Colour.GREY))
                 color = "Grey";
         } else {
-            matchScene.playerView().setMyCard(player);
+            Platform.runLater(() ->matchScene.playerView().setMyCard(player));
         }
     }
 
@@ -397,7 +398,7 @@ public class Gui extends Application implements View {
             startMatch();
         }
         else
-            matchScene.playerView().setOpponentsCards(opponents);
+            Platform.runLater(() -> matchScene.playerView().setOpponentsCards(opponents));
     }
 
     @Override

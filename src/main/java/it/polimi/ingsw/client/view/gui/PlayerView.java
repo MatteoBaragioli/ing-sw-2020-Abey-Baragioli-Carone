@@ -88,6 +88,9 @@ public class PlayerView extends StackPane {
     //opponents powers
     private HashMap<String, Label> opponentsPowers = new HashMap<>();
 
+    //active powers
+    VBox activePowersBox;
+
     private ImageView confirmView;
     private ImageView undoView;
     private ImageView usePowerView;
@@ -323,29 +326,9 @@ public class PlayerView extends StackPane {
         activePowers = new StackPane();
         Image activePowersImg = new Image(PlayerView.class.getResource("/img/activePowers.png").toString(),screenWidth/1.5, screenHeight/1.5,false,false);
         ImageView activePowersView = new ImageView(activePowersImg);
-        VBox activePowersBox = new VBox();
+        activePowersBox = new VBox();
         activePowersBox.setSpacing(screenHeight/50);
         activePowersBox.setAlignment(CENTER);
-        activePowersNames = new Text[2];
-        activePowersInfos = new Text[2];
-        for(int i=0 ; i<2; i++){
-            Text powerName = new Text();
-            Text powerInfo = new Text();
-            if(i==0)
-                powerName.setText("No active powers");
-            powerName.setFont(lillybelle);
-            powerName.setFill(MIDNIGHTBLUE);
-            powerName.setTextAlignment(TextAlignment.CENTER);
-            powerInfo.setFont(powersFont);
-            powerInfo.setTextAlignment(TextAlignment.CENTER);
-            powerInfo.setWrappingWidth(screenWidth/2.5);
-
-            activePowersNames[i] = powerName;
-            activePowersInfos[i] = powerInfo;
-
-            activePowersBox.getChildren().addAll(powerName, powerInfo);
-        }
-
         Image exitImage = new Image(MenuScene.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
         Image exitHoverImage = new Image(MenuScene.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
         ImageView exitButton = new ImageView(exitImage);
@@ -626,10 +609,37 @@ public class PlayerView extends StackPane {
      * @param player PlayerProxy
      */
     public void setMyCard(PlayerProxy player){
-        textBox.setText(player.godCardProxy.name);
+        cardName.setVisible(false);
+        cardName.setText(player.godCardProxy.name);
+        godView.setVisible(false);
         godView.setImage(new Image(PlayerView.class.getResource("/img/godCards/" + player.godCardProxy.name + ".png").toString(),(screenWidth/7), screenHeight/3.3,false,false));
-        activePowersNames[0].setText(player.godCardProxy.name);
-        activePowersInfos[0].setText(player.godCardProxy.description);
+        Text powerName = new Text(player.godCardProxy.name);
+        Text powerInfo = new Text();
+        if(player.godCardProxy.description!=null)
+            powerInfo.setText(player.godCardProxy.description);
+        else if(player.godCardProxy.winDescription!=null)
+            powerInfo.setText(player.godCardProxy.winDescription);
+        else if(player.godCardProxy.setUpDescription!=null)
+            powerInfo.setText(player.godCardProxy.setUpDescription);
+        else if(player.godCardProxy.opponentsFxDescription!=null)
+            powerInfo.setText(player.godCardProxy.opponentsFxDescription);
+        powerName.setFont(standardFont);
+        powerInfo.setFont(lillybelle);
+        powerInfo.setWrappingWidth(screenWidth/2);
+        powerInfo.setTextAlignment(TextAlignment.CENTER);
+        activePowersBox.getChildren().addAll(powerName, powerInfo);
+
+        FadeTransition cardImageFadeIn = new FadeTransition(Duration.millis(1000), godView);
+        cardImageFadeIn.setFromValue(0);
+        cardImageFadeIn.setToValue(1);
+        FadeTransition cardNameFadeIn = new FadeTransition(Duration.millis(1000), cardName);
+        cardNameFadeIn.setFromValue(0);
+        cardNameFadeIn.setToValue(1);
+
+        cardImageFadeIn.play();
+        cardNameFadeIn.play();
+        cardName.setVisible(true);
+        godView.setVisible(true);
     }
 
     /**
@@ -638,9 +648,31 @@ public class PlayerView extends StackPane {
      */
     public void setOpponentsCards(List<PlayerProxy> opponents){
         for(PlayerProxy opponent : opponents){
+            opponentsPowers.get(opponent.name).setVisible(false);
             opponentsPowers.get(opponent.name).setText(opponent.godCardProxy.name);
-            activePowersNames[opponents.indexOf(opponent)+1].setText(opponent.godCardProxy.name);
-            activePowersInfos[opponents.indexOf(opponent)+1].setText(opponent.godCardProxy.description);
+            Text powerName = new Text(opponent.godCardProxy.name);
+            Text powerInfo = new Text();
+            if(opponent.godCardProxy.description!=null)
+                powerInfo.setText(opponent.godCardProxy.description);
+            else if(opponent.godCardProxy.winDescription!=null)
+                powerInfo.setText(opponent.godCardProxy.winDescription);
+            else if(opponent.godCardProxy.setUpDescription!=null)
+                powerInfo.setText(opponent.godCardProxy.setUpDescription);
+            else if(opponent.godCardProxy.opponentsFxDescription!=null)
+                powerInfo.setText(opponent.godCardProxy.opponentsFxDescription);
+
+            powerName.setFont(standardFont);
+            powerInfo.setFont(lillybelle);
+            powerInfo.setWrappingWidth(screenWidth/2);
+            powerInfo.setTextAlignment(TextAlignment.CENTER);
+            activePowersBox.getChildren().addAll(powerName, powerInfo);
+
+            FadeTransition opponentCardFadeIn = new FadeTransition(Duration.millis(1000), opponentsPowers.get(opponent.name));
+            opponentCardFadeIn.setFromValue(0);
+            opponentCardFadeIn.setToValue(1);
+
+            opponentCardFadeIn.play();
+            opponentsPowers.get(opponent.name).setVisible(true);
         }
     }
 
@@ -747,14 +779,11 @@ public class PlayerView extends StackPane {
             e.consume();
         });
         confirmView.setOnMouseClicked(e -> {
-            if(phase==1){
-                match.setChosenWorkerPosition(match.chosenWorkerNewPosition()[0], match.chosenWorkerNewPosition()[1]);
-                match.setChosenBoxIndex(match.map().box(match.chosenWorkerPosition()[0], match.chosenWorkerPosition()[1]).index());
-            }
-            //todo manda al server la risposta
-            System.out.println(match.chosenBoxIndex());
-
+            match.setChosenBoxIndex(match.chosenWorkerNewPosition().index());
+            match.setChosenBoxIndex(match.chosenWorkerNewPosition().index());
+            match.chosenWorkerNewPosition().removeColor();
             match.clearChosableBoxes();
+            match.setDestinationReady(true);
             deactivateButtons(screenWidth, screenHeight);
         });
         Image undoImg = new Image(PlayerView.class.getResource("/img/buttons/undo.png").toString(),screenWidth/15, screenHeight/10,false,false);
@@ -785,7 +814,7 @@ public class PlayerView extends StackPane {
             e.consume();
         });
         undoView.setOnMouseClicked(e -> {
-            match.map().box(match.chosenWorkerNewPosition()[0], match.chosenWorkerNewPosition()[1]).removeColor();
+            match.chosenWorkerNewPosition().removeColor();
             for (int[] i : match.chosableBoxes()) {
                 match.map().box(i[0], i[1]).setAsChosable(match, match.chosableBoxes(), phase);
             }

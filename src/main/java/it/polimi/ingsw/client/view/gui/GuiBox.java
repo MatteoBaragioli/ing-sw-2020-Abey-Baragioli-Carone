@@ -103,7 +103,7 @@ public class GuiBox extends Button {
             event.consume();
         });
         addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            match.setChosenWorkerNewPosition(x, y);
+            match.setChosenWorkerNewPosition(this);
             for(int[] i : chosableBoxes){
                 match.map().box(i[0], i[1]).setAsNotChosable();
             }
