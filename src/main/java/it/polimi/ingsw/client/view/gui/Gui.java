@@ -32,6 +32,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Gui extends Application implements View {
 
@@ -44,6 +45,8 @@ public class Gui extends Application implements View {
     private Stage window;
     private MenuScene menuScene;
     private MatchScene matchScene;
+    private AtomicInteger answer;
+    private AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
 
 
 
@@ -102,15 +105,15 @@ public class Gui extends Application implements View {
 
 
 
-        openingPage();
+        //openingPage();
 
 
         //if not opening page todo toglierlo
-/*        openingPage.setVisible(false);
+        openingPage.setVisible(false);
         menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
         menuScene.setMenuScene();
         startClient();
-*/
+
         createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
 
@@ -121,6 +124,10 @@ public class Gui extends Application implements View {
     }
 
 
+    public synchronized void setClickedConfirmation(boolean clicked) {
+        clickedConfirmation.set(clicked);
+        notifyAll();
+    }
 
     public void windowStyle(){
         //window.setMaximized(true);
@@ -160,6 +167,33 @@ public class Gui extends Application implements View {
             confirmPopup.setVisible(false);
         });
         createConfirmPopup("Do you really want to quit the game?");
+    }
+
+    public synchronized int undoTurn(){
+        clickedConfirmation.set(false);
+        answer = new AtomicInteger(2);
+        createConfirmPopup("Do you confirm your turn?");
+        while(!clickedConfirmation.get()){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+        }
+        return answer.get();
+    }
+
+    public void setUndoButtons(){
+        yesPopupButton.setOnAction(e -> {
+            answer.set(0);
+            setClickedConfirmation(true);
+            confirmPopup.setVisible(false);
+        });
+        noPopupButton.setOnAction(e -> {
+            answer.set(1);
+            setClickedConfirmation(true);
+            confirmPopup.setVisible(false);
+        });
     }
 
     private void confirmPopup(){
@@ -334,8 +368,15 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public int askConfirmation() {
-        return 1;
+    public int askConfirmation(CommunicationProtocol key) {
+        switch (key){
+            case UNDO:
+                Platform.runLater(this::setUndoButtons);
+                return undoTurn();
+            case GODPOWER:
+
+        }
+        return undoTurn();
     }
 
     @Override
@@ -363,17 +404,42 @@ public class Gui extends Application implements View {
 
     @Override
     public int askWorker(List<int[]> workers) {
-        return 0;
+        return askPosition(workers);
     }
 
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
 
+
+
     }
 
     @Override
     public void updateMap(List<BoxProxy> boxes) {
-
+        Platform.runLater(() -> matchScene.map().clearMap());
+        for(BoxProxy box : boxes){
+            if(box.dome)
+                Platform.runLater(() -> matchScene.map().box(box.position[0], box.position[1]).build(4));
+            else if(box.level!=0)
+                Platform.runLater(() -> matchScene.map().box(box.position[0], box.position[1]).build(box.level));
+            if(box.occupier!=null){
+                //occupier color
+                String occupierColor;
+                if(box.occupier.colour.equals(Colour.BLUE))
+                    occupierColor = "Blue";
+                else if(box.occupier.colour.equals(Colour.WHITE))
+                    occupierColor = "White";
+                else
+                    occupierColor = "Grey";
+                //occupier gender
+                String gender;
+                if(box.occupier.gender)
+                    gender = "Female";
+                else
+                    gender = "Male";
+                Platform.runLater(() -> matchScene.map().box(box.position[0], box.position[1]).moveWorker(occupierColor, gender));
+            }
+        }
     }
 
     @Override

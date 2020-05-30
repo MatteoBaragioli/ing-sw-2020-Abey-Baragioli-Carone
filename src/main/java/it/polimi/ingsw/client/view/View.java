@@ -12,7 +12,7 @@ public interface View {
     int askPosition(List<int[]> positions);
     int askCards(List<GodCardProxy> cards);
     int[] askDeck(List<GodCardProxy> cards);
-    int askConfirmation();
+    int askConfirmation(CommunicationProtocol key);
     String askIp();
     int askMatchType();
     int askPort();

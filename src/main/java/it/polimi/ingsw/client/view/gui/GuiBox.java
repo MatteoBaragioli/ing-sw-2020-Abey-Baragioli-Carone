@@ -18,18 +18,17 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 public class GuiBox extends Button {
-    private int x;
-    private int y;
-    private int level=0;
-    private double boxWidth;
-    private double boxHeight;
+    private final int x;
+    private final int y;
+    private final double boxWidth;
+    private final double boxHeight;
     private Group graphics = new Group();
-    private Label building = new Label();
-    private Label worker = new Label();
+    private final Label building = new Label();
+    private final Label worker = new Label();
     private double previousOpacity;
     private int index = -1;
-    private double screenWidth;
-    private double screenHeight;
+    private final double screenWidth;
+    private final double screenHeight;
 
     public GuiBox(int x, int y, double boxWidth, double boxHeight, double screenWidth, double screenHeight) {
         this.x = x;
@@ -88,7 +87,7 @@ public class GuiBox extends Button {
         setOpacity(opacity);
     }
 
-    public void setEffects(MatchScene match, List<int[]> chosableBoxes, int phase){
+    public void setEffects(MatchScene match, List<int[]> chosableBoxes){
         addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             changeOpacity(0.4);
             setHoverBlue();
@@ -103,12 +102,12 @@ public class GuiBox extends Button {
             event.consume();
         });
         addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            match.setChosenWorkerNewPosition(this);
+            match.setChosenBox(this);
             for(int[] i : chosableBoxes){
                 match.map().box(i[0], i[1]).setAsNotChosable();
             }
             setSelected();
-            match.playerView().activateButtons(screenWidth, screenHeight, 1, match);
+            match.playerView().activateButtons();
         });
     }
 
@@ -128,12 +127,12 @@ public class GuiBox extends Button {
         addEventHandler(MouseEvent.MOUSE_CLICKED, Event::consume);
     }
 
-    public void setAsChosable(MatchScene match, List<int[]> chosableBoxes, int phase){
+    public void setAsChosable(MatchScene match, List<int[]> chosableBoxes){
         setBlue();
         setDisable(false);
         previousOpacity = getOpacity();
         changeOpacity(0.4);
-        setEffects(match, chosableBoxes, phase);
+        setEffects(match, chosableBoxes);
     }
 
     public void setAsNotChosable(){
@@ -143,10 +142,12 @@ public class GuiBox extends Button {
         clearEffects();
     }
 
-    public void build(){
-        level++;
+    public void build(int level){
         Image levelImg;
-        if(level==4){
+        if(level==0){
+            building.setGraphic(null);
+            return;
+        }else if(level==4) {
             levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/levelDome.png").toString());
         }else {
             levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/level" + level + ".png").toString());
@@ -156,19 +157,6 @@ public class GuiBox extends Button {
         levelImgView.setFitHeight(boxHeight - boxHeight / 5);
         building.setGraphic(levelImgView);
         setOpacity(1);
-    }
-
-    public void remove(){
-        level--;
-        if(level>0){
-            Image levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/level" + level + ".png").toString());
-            ImageView levelImgView = new ImageView(levelImg);
-            levelImgView.setFitWidth(boxWidth - boxWidth / 5);
-            levelImgView.setFitHeight(boxHeight - boxHeight / 5);
-            building.setGraphic(levelImgView);
-        } else {
-            building.setGraphic(null);
-        }
     }
 
     public void moveWorker(String color, String gender){

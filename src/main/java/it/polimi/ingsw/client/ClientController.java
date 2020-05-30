@@ -68,7 +68,6 @@ public class ClientController {
             communicationChannel.writeKeyWord(QUIT);
         else {
             communicationChannel.writeChoiceFromList(key, index);
-            System.out.println("Chosen Destination" + index);
         }
     }
 
@@ -92,7 +91,7 @@ public class ClientController {
 
     public void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
 
-        communicationChannel.writeConfirmation(key, view.askConfirmation());
+        communicationChannel.writeConfirmation(key, view.askConfirmation(key));
     }
 
     public void manageMatchStart(CommunicationChannel communicationChannel, View view) {

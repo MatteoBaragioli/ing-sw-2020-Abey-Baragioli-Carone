@@ -176,7 +176,7 @@ public class Cli implements View{
         }
 
     @Override
-    public int askConfirmation() {
+    public int askConfirmation(CommunicationProtocol key) {
 
         boolean valid = false;
         int answer = 0;

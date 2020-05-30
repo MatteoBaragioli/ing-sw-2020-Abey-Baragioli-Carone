@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.view.gui;
 
-import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import it.polimi.ingsw.server.model.Colour;
 import javafx.animation.FadeTransition;
@@ -30,15 +29,29 @@ import static javafx.geometry.Pos.*;
 import static javafx.scene.paint.Color.*;
 
 public class PlayerView extends StackPane {
+    //big font
     private final Font standardFont;
+
+    //medium font
     private final Font lillybelle;
-    private final Font powersFont;
+
+    //window width
     private final double screenWidth;
+
+    //window height
     private final double screenHeight;
+
+    //player view pane
     private StackPane playerView = new StackPane();
+
+    //reference to gui
     private final Gui gui;
 
+    //reference to map
     private final GuiMap guiMap;
+
+    //Match scene
+    private final MatchScene match;
 
     //messages to show to player
     private Label messagesBox;
@@ -52,9 +65,6 @@ public class PlayerView extends StackPane {
     //player's god card frame
     private ImageView cardView;
 
-    //player's god card
-    private Label cardInfo;
-
     //player's god card image
     private ImageView godView;
 
@@ -63,12 +73,6 @@ public class PlayerView extends StackPane {
 
     //player's name
     private Label textBox;
-
-    //active powers names
-    private Text[] activePowersNames;
-
-    //active powers infos
-    private Text[] activePowersInfos;
 
     //active powers pane
     private StackPane activePowers;
@@ -86,25 +90,28 @@ public class PlayerView extends StackPane {
     private VBox opponentsView;
 
     //opponents powers
-    private HashMap<String, Label> opponentsPowers = new HashMap<>();
+    private final HashMap<String, Label> opponentsPowers = new HashMap<>();
 
     //active powers
-    VBox activePowersBox;
+    private VBox activePowersBox;
 
+    //confirm button
     private ImageView confirmView;
-    private ImageView undoView;
-    private ImageView usePowerView;
-    private Group powers;
-    private Group powersClosed;
 
-    public PlayerView(double screenWidth, double screenHeight, GuiMap guiMap, Gui gui) {
+    //undo button
+    private ImageView undoView;
+
+    //undo button
+    private ImageView usePowerView;
+
+    public PlayerView(double screenWidth, double screenHeight, GuiMap guiMap, Gui gui, MatchScene match) {
         standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
         lillybelle = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
-        powersFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/70);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.guiMap = guiMap;
         this.gui = gui;
+        this.match = match;
         create();
     }
 
@@ -173,7 +180,7 @@ public class PlayerView extends StackPane {
         cardName.setTextAlignment(TextAlignment.CENTER);
 
 
-        cardInfo = new Label();
+        Label cardInfo = new Label();
         cardInfo.setPrefSize(screenWidth/4, screenHeight/2);
         Insets godPadding = new Insets(0, 0,screenWidth/400, 0);
         cardInfo.setPadding(godPadding);
@@ -270,10 +277,10 @@ public class PlayerView extends StackPane {
         //right TOP
         opponentsView = new VBox();
         opponentsView.setPrefWidth(screenWidth/4);
-        opponentsView.setPrefWidth(screenHeight/2);
+        opponentsView.setPrefHeight(screenHeight/2);
         opponentsView.setPadding(new Insets(screenWidth/50, 0, 0, 0));
         opponentsView.setSpacing(screenHeight/50);
-        opponentsView.setAlignment(CENTER);
+        opponentsView.setAlignment(TOP_CENTER);
 
         //right CENTER
         Image powersImg = new Image(PlayerView.class.getResource("/img/buttons/showPowers.png").toString(),screenWidth/6, screenHeight/4,false,false);
@@ -312,7 +319,7 @@ public class PlayerView extends StackPane {
         buttons.getChildren().addAll(usePowerView, undoView, confirmView);
         buttons.setSpacing(screenWidth/50);
         buttons.setPrefWidth(screenWidth/4);
-        buttons.setPrefHeight(screenHeight/4);
+        buttons.setPrefHeight(screenHeight/5);
         buttons.setAlignment(BOTTOM_RIGHT);
         buttons.setPadding(new Insets(screenWidth/40, screenWidth/40, 0,0));
 
@@ -329,6 +336,9 @@ public class PlayerView extends StackPane {
         activePowersBox = new VBox();
         activePowersBox.setSpacing(screenHeight/50);
         activePowersBox.setAlignment(CENTER);
+        Text noPowers = new Text("No active powers");
+        noPowers.setFont(standardFont);
+        activePowersBox.getChildren().add(noPowers);
         Image exitImage = new Image(MenuScene.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
         Image exitHoverImage = new Image(MenuScene.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
         ImageView exitButton = new ImageView(exitImage);
@@ -341,7 +351,7 @@ public class PlayerView extends StackPane {
             exitButton.setCursor(Cursor.DEFAULT);
         });
         exitButton.setOnMouseClicked(e -> {
-            hidePane(activePowers);
+            hidePane(activePowers, true);
         });
         VBox exit = new VBox(exitButton);
         exit.setPadding(new Insets(screenHeight/10, 0, 0, screenWidth/10));
@@ -414,7 +424,7 @@ public class PlayerView extends StackPane {
             backToMatchView.setCursor(Cursor.DEFAULT);
         });
         backToMatchView.setOnMouseClicked((e -> {
-            hidePane(pausePane);
+            hidePane(pausePane, true);
         }));
 
         pauseOptions.getChildren().addAll(backToMatchView, howToPlayView, helperView, surrenderView);
@@ -452,7 +462,7 @@ public class PlayerView extends StackPane {
             exitHelperButton.setCursor(Cursor.DEFAULT);
         });
         exitHelperButton.setOnMouseClicked(e -> {
-            hidePane(helper);
+            hidePane(helper, false);
         });
 
         helperPage = 1;
@@ -551,6 +561,12 @@ public class PlayerView extends StackPane {
 
     }
 
+    /**
+     * This method sets all player attributes (nickname, color, opponents) in the player view
+     * @param nickname Player's nickname
+     * @param color Player's color
+     * @param opponents Player's opponents
+     */
     public void setPage(String nickname, String color, List<PlayerProxy> opponents){
         Color fontColor = fontColor(color);
 
@@ -605,7 +621,7 @@ public class PlayerView extends StackPane {
     }
 
     /**
-     * This method assignes card to player and save the power as active power
+     * This method assigns card to player and save the power as active power
      * @param player PlayerProxy
      */
     public void setMyCard(PlayerProxy player){
@@ -627,6 +643,8 @@ public class PlayerView extends StackPane {
         powerInfo.setFont(lillybelle);
         powerInfo.setWrappingWidth(screenWidth/2);
         powerInfo.setTextAlignment(TextAlignment.CENTER);
+        activePowersBox.getChildren().clear();
+
         activePowersBox.getChildren().addAll(powerName, powerInfo);
 
         FadeTransition cardImageFadeIn = new FadeTransition(Duration.millis(1000), godView);
@@ -643,7 +661,7 @@ public class PlayerView extends StackPane {
     }
 
     /**
-     * This method assignes card to opponents and save the power as active power
+     * This method assigns card to opponents and save the power as active power
      * @param opponents OpponentsProxy
      */
     public void setOpponentsCards(List<PlayerProxy> opponents){
@@ -678,6 +696,7 @@ public class PlayerView extends StackPane {
 
     /**
      * This method shows panes
+     * @param pane Pane to show
      */
     private void showPane(StackPane pane){
         guiMap.setVisible(false);
@@ -708,9 +727,11 @@ public class PlayerView extends StackPane {
     }
 
     /**
-     * This method hides panes
+     *  This method hides panes and re-shows the map if parameter showMap is true
+     * @param pane Pane to hide
+     * @param showMap If true, the method shows the GuiMap
      */
-    private void hidePane(StackPane pane){
+    private void hidePane(StackPane pane, boolean showMap){
         FadeTransition paneFadeOut = new FadeTransition(Duration.millis(1000), pane);
         paneFadeOut.setFromValue(1);
         paneFadeOut.setToValue(0);
@@ -738,18 +759,24 @@ public class PlayerView extends StackPane {
                 Duration.millis(2000),
                 ae -> {
                     pane.setVisible(false);
+                    if(showMap)
+                        guiMap.setVisible(true);
                 }));
         hidingTimer2.play();
     }
 
-
-
-
+    /**
+     * This method change the message inside the info box
+     * @param messageString Message to show
+     */
     public void changeMessage(String messageString){
         messagesBox.setText(messageString);
     }
 
-    public void activateButtons(double screenWidth, double screenHeight, int phase, MatchScene match){
+    /**
+     * This method activated undo and confirm buttons
+     */
+    public void activateButtons(){
         AtomicReference<String> oldMessage = new AtomicReference<>();
         Image confirmImg = new Image(PlayerView.class.getResource("/img/buttons/confirmAction.png").toString(),screenWidth/15, screenHeight/10,false,false);
         Image confirmImgHover = new Image(PlayerView.class.getResource("/img/buttons/confirmActionHover.png").toString(),screenWidth/15, screenHeight/10,false,false);
@@ -779,12 +806,11 @@ public class PlayerView extends StackPane {
             e.consume();
         });
         confirmView.setOnMouseClicked(e -> {
-            match.setChosenBoxIndex(match.chosenWorkerNewPosition().index());
-            match.setChosenBoxIndex(match.chosenWorkerNewPosition().index());
-            match.chosenWorkerNewPosition().removeColor();
+            match.setChosenBoxIndex(match.chosenBox().index());
+            match.chosenBox().removeColor();
             match.clearChosableBoxes();
             match.setDestinationReady(true);
-            deactivateButtons(screenWidth, screenHeight);
+            deactivateButtons();
         });
         Image undoImg = new Image(PlayerView.class.getResource("/img/buttons/undo.png").toString(),screenWidth/15, screenHeight/10,false,false);
         Image undoImgHover = new Image(PlayerView.class.getResource("/img/buttons/undoHover.png").toString(),screenWidth/15, screenHeight/10,false,false);
@@ -814,14 +840,18 @@ public class PlayerView extends StackPane {
             e.consume();
         });
         undoView.setOnMouseClicked(e -> {
-            match.chosenWorkerNewPosition().removeColor();
+            match.chosenBox().removeColor();
             for (int[] i : match.chosableBoxes()) {
-                match.map().box(i[0], i[1]).setAsChosable(match, match.chosableBoxes(), phase);
+                match.map().box(i[0], i[1]).setAsChosable(match, match.chosableBoxes());
             }
-            match.playerView().deactivateButtons(screenWidth, screenHeight);
+            match.playerView().deactivateButtons();
         });
     }
-    public void deactivateButtons(double screenWidth, double screenHeight) {
+
+    /**
+     * This method deactivates undo and confirm button
+     */
+    public void deactivateButtons() {
         Image confirmImg = new Image(PlayerView.class.getResource("/img/buttons/confirmActionInactive.png").toString(), screenWidth / 15, screenHeight / 10, false, false);
         confirmView.setImage(confirmImg);
         confirmView.setOnMouseEntered(e -> {
@@ -860,7 +890,11 @@ public class PlayerView extends StackPane {
         });
     }
 
-    public void activateUsePower(double screenWidth, double screenHeight){
+    /**
+     * This method activates use power button
+     */
+    public void activateUsePower(){
+        //todo usePower dà 0
         AtomicReference<String> oldMessage = new AtomicReference<>();
         Image usePowerImg = new Image(PlayerView.class.getResource("/img/buttons/usePower.png").toString(),screenWidth/15, screenHeight/10,false,false);
         Image usePowerImgHover = new Image(PlayerView.class.getResource("/img/buttons/usePowerHover.png").toString(),screenWidth/15, screenHeight/10,false,false);
@@ -890,7 +924,11 @@ public class PlayerView extends StackPane {
             e.consume();
         });
     }
-    public void deactivateUsePower(double screenWidth, double screenHeight) {
+
+    /**
+     * This method deactivates use power button
+     */
+    public void deactivateUsePower() {
         Image usePowerImg = new Image(PlayerView.class.getResource("/img/buttons/usePowerInactive.png").toString(), screenWidth / 15, screenHeight / 10, false, false);
         usePowerView.setImage(usePowerImg);
         usePowerView.setOnMouseEntered(e -> {
@@ -913,8 +951,8 @@ public class PlayerView extends StackPane {
 
     /**
      * This method initialises the font color, based on player color
-     * @param color
-     * @return
+     * @param color Player's color
+     * @return Font color
      */
     public Color fontColor(String color){
         if(color=="White"){

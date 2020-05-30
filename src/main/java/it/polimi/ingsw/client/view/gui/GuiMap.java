@@ -8,13 +8,17 @@ import javafx.scene.layout.RowConstraints;
 
 public class GuiMap extends GridPane {
     private GuiBox[][] boxesList;
+    private final int columns;
+    private final int rows;
 
 
     public GuiMap(int rowsNumber, int columnsNumber, double mapDim, double screenWidth, double screenHeight){
-        createMap(rowsNumber, columnsNumber, mapDim, screenWidth, screenHeight);
+        createMap(mapDim, screenWidth, screenHeight, rowsNumber, columnsNumber);
+        rows = rowsNumber;
+        columns = columnsNumber;
     }
 
-    public void createMap(int rowsNumber, int columnsNumber, double mapDim, double screenWidth, double screenHeight) {
+    public void createMap(double mapDim, double screenWidth, double screenHeight, int rowsNumber, int columnsNumber) {
         int i, j, k;
         boxesList = new GuiBox[rowsNumber][columnsNumber];
         for (i = 0; i < columnsNumber; i++) {
@@ -46,5 +50,15 @@ public class GuiMap extends GridPane {
 
     public GuiBox box(int x, int y){
         return boxesList[x][y];
+    }
+
+    public void clearMap(){
+        int i, j;
+        for (i = 0; i < rows; i++) {
+            for(j = 0;  j < columns; j++) {
+                box(i,j).build(0);
+                box(i,j).removeWorker();
+            }
+        }
     }
 }
