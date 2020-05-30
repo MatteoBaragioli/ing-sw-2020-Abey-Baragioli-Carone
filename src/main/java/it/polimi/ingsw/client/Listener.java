@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.network.CommunicationChannel;
-import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.*;
+
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 
 import java.io.IOException;

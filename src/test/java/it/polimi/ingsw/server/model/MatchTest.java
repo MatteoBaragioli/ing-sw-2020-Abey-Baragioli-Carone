@@ -175,12 +175,14 @@ public class MatchTest {
         match.match();
     }
 
-    /*
-    @Test
+
+   /** @Test
     public void matches(){
-        while(true){
+        int i=0;
+        while (true) {
             match();
+            i++;
+            System.out.println(i);
         }
-    }
-    */
+    }*/
 }

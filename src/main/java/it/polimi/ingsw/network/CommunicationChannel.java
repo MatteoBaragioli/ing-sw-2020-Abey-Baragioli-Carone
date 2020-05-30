@@ -90,7 +90,7 @@ public class CommunicationChannel {
     public synchronized void saveMessage(String message) {
         buffer.add(message);
         notifyAll();
-        System.out.println("Buffer non vuoto");
+       // System.out.println("Buffer non vuoto");
     }
 
     /**
@@ -115,7 +115,7 @@ public class CommunicationChannel {
             if (!isEmpty())
                 return getKey(buffer.get(0));
             else {
-                System.out.println("Buffer vuoto");
+                //System.out.println("Buffer vuoto");
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -135,7 +135,7 @@ public class CommunicationChannel {
                 return message;
             }
             else {
-                System.out.println("Buffer vuoto");
+                //System.out.println("Buffer vuoto");
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -165,7 +165,7 @@ public class CommunicationChannel {
                 }
             }
             else {
-                System.out.println("Buffer vuoto");
+                //System.out.println("Buffer vuoto");
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -198,7 +198,7 @@ public class CommunicationChannel {
                 return nextMessage(key);
             }
             else {
-                System.out.println("Buffer vuoto");
+               // System.out.println("Buffer vuoto");
                 try {
                     if (!hasMessages(key))
                         wait();

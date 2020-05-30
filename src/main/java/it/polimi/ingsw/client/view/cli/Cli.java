@@ -61,6 +61,8 @@ public class Cli implements View{
             else
                 System.out.println("Not valid answer. Try again");
         }
+        if(answer!=-1)
+            answer--;
         return answer;
     }
 
@@ -92,40 +94,86 @@ public class Cli implements View{
 
     @Override
     public int askCards(List<GodCardProxy> cards) {
-        boolean valid = false;
+        boolean sure=false;
+        boolean validCard=false;
+        boolean validConfirmation=false;
         int answer = 0;
-        printStream.println("GAME CARDS:");
 
-        for(int i=0; i<cards.size(); i++) {
-            printStream.println((i+1)+" "+cards.get(i).name +":    ");
-            if(cards.get(i).setUpDescription!=null)
-                printStream.println(cards.get(i).setUpDescription);
-            if(cards.get(i).description!=null)
-                printStream.println(cards.get(i).description);
-            if(cards.get(i).winDescription!=null)
-                printStream.println(cards.get(i).winDescription);
+        if(cards.size()==1)
+            return 0;
 
-        }
-        printStream.println("press the number displayed next to the god's name to choose it");
-        while (!valid) {
+        while (!sure) {
+            answer = 0;
+            validCard=false;
+            validConfirmation=false;
+            view.clearScreen();
+            printStream.println("\n choose your game card!");
 
-            try {
-                answer = askNumber();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NumberFormatException e) {
-                answer = 0;
+            for(int i=0; i<cards.size(); i++) {
+                printStream.println((i+1)+" "+cards.get(i).name +":    ");
+                if(cards.get(i).setUpDescription!=null)
+                    printStream.println(cards.get(i).setUpDescription);
+                if(cards.get(i).description!=null)
+                    printStream.println(cards.get(i).description);
+                if(cards.get(i).winDescription!=null)
+                    printStream.println(cards.get(i).winDescription);
             }
-            if ((answer<=cards.size() && answer>0) || answer == -1) {
-                valid = true;
+            printStream.print("\n");
+            printStream.println("press the number displayed next to the god's name to choose it");
+
+            while (!validCard) {
+                try {
+                    answer = askNumber();
+                    printStream.println(answer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NumberFormatException e) {
+                    answer = 0;
+                }
+                if ((answer <= cards.size() && answer > 0) || answer == -1) {
+                    validCard = true;
+                } else {
+                    printStream.println("Not valid answer. Try again");
+                    printStream.println("press the number displayed next to the god's name to choose it");
+                }
+                if (answer==-1)
+                    return answer;
             }
-            else
-                System.out.println("Not valid answer. Try again");
-        }
-        if (answer != -1)
             answer--;
+
+            printStream.print("you chose:");
+            printStream.print("   " + cards.get(answer).name);
+
+            printStream.println(" ");
+            printStream.println("these will be your game card, are you sure? ");
+            printStream.println("1  yes     2   no");
+
+
+            int confirm = 0;
+            while (!validConfirmation) {
+                try {
+                    confirm = askNumber();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NumberFormatException e) {
+                    confirm = 0;
+                }
+                if (confirm == 1 || confirm == 2 || confirm==-1)
+                    validConfirmation = true;
+
+                else {
+                    printStream.println("Not valid answer. Try again");
+                    printStream.println("1  yes     2   no");
+                }
+
+                if (confirm==-1)
+                    return confirm;
+            }
+            if (confirm == 1)
+                sure = true;
+        }
         return answer;
-    }
+        }
 
     @Override
     public int askConfirmation() {
@@ -146,7 +194,7 @@ public class Cli implements View{
                 valid = true;
             }
             else
-                System.out.println("Not valid answer. Try again");
+                printStream.println("Not valid answer. Try again");
         }
         if (answer != -1)
             answer--;
@@ -170,18 +218,6 @@ public class Cli implements View{
                 printStream.println("\nDo you want end your turn?");
                 printStream.println("1  UNDO;  2 GO AHEAD");
                 break;
-            case DECK:
-                //view.clearScreen();
-                //view.updateMap();
-                //view.turn();
-                printStream.println("\nYou are the challenger, choose the game cards! One for each player");
-                break;
-            case CARD:
-                //view.clearScreen();
-                //view.updateMap();
-                //view.turn();
-                printStream.println("\n choose your game card!");
-                break;
             }
         }
 
@@ -192,32 +228,31 @@ public class Cli implements View{
 
                 if (boxProxy.level == 0) {
                     view.map().position(boxProxy.position[0], boxProxy.position[1]).groundFloorBlock();
-                            if(boxProxy.dome==true){
-                                view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
-                            }
                 }
+
                 if (boxProxy.level == 1) {
                     view.map().position(boxProxy.position[0], boxProxy.position[1]).firstFloorBlock();
-                    if(boxProxy.dome==true){
-                        view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
-                    }
                 }
+
                 if (boxProxy.level == 2) {
                     view.map().position(boxProxy.position[0], boxProxy.position[1]).secondFloorBlock();
-                    if(boxProxy.dome==true){
-                        view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
-                    }
                 }
+
                 if (boxProxy.level == 3) {
                     view.map().position(boxProxy.position[0], boxProxy.position[1]).firstFloorBlock();
-                    if(boxProxy.dome==true){
-                        view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
-                    }
                 }
+
+                if(boxProxy.dome){
+                    view.map().position(boxProxy.position[0], boxProxy.position[1]).domeBlock();
+                 }
+
                 if (boxProxy.occupier!=null) {
                     view.map().position(boxProxy.position[0], boxProxy.position[1]).withWorker(boxProxy.occupier.gender, boxProxy.occupier.colour);
                 }
+
         }
+        view.clearScreen();
+        view.turn();
     }
 
     @Override
@@ -262,7 +297,7 @@ public class Cli implements View{
         boolean valid = false;
         int answer = 0;
         while (!valid) {
-            System.out.println("Choose match type:\n" + "1   for 1 vs 1\n" + "2   Three For All");
+            printStream.println("Choose match type:\n" + "1   for 1 vs 1\n" + "2   Three For All");
             try {
                 answer = askNumber();
             } catch (IOException e) {
@@ -278,6 +313,7 @@ public class Cli implements View{
         }
         if (answer != -1)
             answer++;
+        printStream.println("waiting for the match to start...");
         return answer;
     }
 
@@ -309,11 +345,91 @@ public class Cli implements View{
         return commandline.readLine();
     }
 
-    //todo modificare
+
     @Override
     public int[] askDeck(List<GodCardProxy> cards) {
-        return new int[0];
+        boolean sure=false;
+        int[] answer=new int[(opponents.size()+1)];
+
+        while(!sure) {
+            view.clearScreen();
+            printStream.println("\nYou are the challenger, choose the game cards! One for each player");
+            printStream.println("GAME CARDS:");
+
+            for(int i=0; i<cards.size(); i++) {
+                printStream.println((i+1)+" "+cards.get(i).name +":    ");
+                if(cards.get(i).setUpDescription!=null)
+                    printStream.println(cards.get(i).setUpDescription);
+                if(cards.get(i).description!=null)
+                    printStream.println(cards.get(i).description);
+                if(cards.get(i).winDescription!=null)
+                    printStream.println(cards.get(i).winDescription);
+
+            }
+            printStream.print("\n");
+            printStream.println("press the number displayed next to the god's name to choose it, you have to choose "+(opponents.size()+1)+"  cards");
+
+            for (int i = 0; i < (opponents.size() + 1); i++) {
+                boolean valid = false;
+                while (!valid) {
+                    try {
+                        answer[i] = askNumber();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (NumberFormatException e) {
+                        answer[i] = 0;
+                    }
+                    if ((answer[i] <= cards.size() && answer[i] > 0) || answer[i]==-1) {
+                        valid = true;
+                    }
+                     else {
+                       printStream.println("Not valid answer. Try again");
+                       printStream.println("press the number displayed next to the god's name to choose it");
+                    }
+                    if (answer[i] == -1) {
+                        answer[0] = -1;
+                        return answer;
+                    }
+                }
+            }
+
+            for (int i = 0; i < (opponents.size() + 1); i++) {
+                answer[i]--;
+            }
+
+            printStream.print("you chose:");
+            for (int i = 0; i < (opponents.size() + 1); i++) {
+                printStream.print("   " + cards.get(answer[i]).name);
+            }
+            printStream.println(" ");
+            printStream.println("these will be the game cards, are you sure? ");
+            printStream.println("1  yes     2   no");
+
+            boolean valid = false;
+            int confirm = 0;
+            while (!valid) {
+                try {
+                    confirm = askNumber();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NumberFormatException e) {
+                    confirm = 0;
+                }
+                if (confirm == 1 || confirm == 2)
+                    valid = true;
+
+                if (confirm == 1)
+                    sure = true;
+                else {
+                    printStream.println("Not valid answer. Try again");
+                    printStream.println("1  yes     2   no");
+                }
+
+            }
+        }
+        return answer;
     }
+
 
     public String convertCoordinates(int[] coordinates){
         char first;
@@ -336,8 +452,6 @@ public class Cli implements View{
                 break;
             default:
                 return "error in conversion of coordinates";
-
-
         }
         switch(coordinates[1]) {
             case 0:

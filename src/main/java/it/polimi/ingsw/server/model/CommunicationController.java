@@ -342,7 +342,7 @@ public class CommunicationController {
 
     public boolean updateView(Player player , List<BoxProxy> boxes) throws ChannelClosedException {
         User user = findUser(player);
-        Type type = new TypeToken<BoxProxy>() {}.getType();
+        Type type = new TypeToken<List<BoxProxy>>() {}.getType();
         return user.sendMap(new Gson().toJson(boxes, type));
     }
 

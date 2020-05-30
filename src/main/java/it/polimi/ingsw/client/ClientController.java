@@ -3,13 +3,9 @@ package it.polimi.ingsw.client;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
-import it.polimi.ingsw.network.objects.BoxProxy;
-import it.polimi.ingsw.network.objects.GodCardProxy;
-import it.polimi.ingsw.network.objects.PlayerProxy;
-import it.polimi.ingsw.network.CommunicationChannel;
-
+import it.polimi.ingsw.network.objects.*;
 import java.lang.reflect.Type;
 import java.util.List;
 

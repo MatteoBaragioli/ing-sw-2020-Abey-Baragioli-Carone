@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.network.CommunicationChannel;
-import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 
 import java.util.concurrent.TimeoutException;
@@ -63,7 +62,7 @@ public class User {
      * @throws ChannelClosedException
      */
     public boolean sendMap(String map) throws ChannelClosedException {
-        return communicationChannel().sendOpponents(map);
+        return communicationChannel().sendMap(map);
     }
 
 
