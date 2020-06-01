@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
-import it.polimi.ingsw.network.objects.GodCardProxy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -360,13 +359,13 @@ public class CommunicationChannel {
 
 
     /**
-     * This method sends the keyword UNIQUEUSERNAME and waits for a reply
+     * This method sends the keyword UNIQUE_USERNAME and waits for a reply
      * @return String
      * @throws ChannelClosedException if there's no connection
      */
     public String askUniqueUsername() throws ChannelClosedException {
         while (!isClosed()){
-            writeKeyWord(UNIQUEUSERNAME);
+            writeKeyWord(UNIQUE_USERNAME);
             String message = nextMessage(USERNAME);
             if (message != null && getKey(message) == USERNAME)
                 return getContent(message);
@@ -384,21 +383,21 @@ public class CommunicationChannel {
     }
 
     /**
-     * This method sends the keyword MATCHTYPE and waits for a reply
+     * This method sends the keyword MATCH_TYPE and waits for a reply
      * @return int
      * @throws ChannelClosedException if there's no connection
      */
     public int askMatchType() throws ChannelClosedException {
         while (!isClosed()){
-            writeKeyWord(MATCHTYPE);
-            String message = nextMessage(MATCHTYPE);
+            writeKeyWord(MATCH_TYPE);
+            String message = nextMessage(MATCH_TYPE);
             return readNumber(message);
         }
         throw new ChannelClosedException();
     }
 
     /**
-     * This method writes a reply to a MATCHTYPE request
+     * This method writes a reply to a MATCH_TYPE request
      * @param matchType answer
      * @throws ChannelClosedException if there's no connection
      */
@@ -406,7 +405,7 @@ public class CommunicationChannel {
         if (matchType == quit)
             writeKeyWord(QUIT);
         else
-            write(keyToString(MATCHTYPE) + SEPARATOR + matchType);
+            write(keyToString(MATCH_TYPE) + SEPARATOR + matchType);
     }
 
     /**
@@ -442,7 +441,7 @@ public class CommunicationChannel {
      * @throws ChannelClosedException if there's no connection
      */
     public boolean sendMyPlayer(String player) throws ChannelClosedException {
-        write(keyToString(MYPLAYER) + SEPARATOR + player);
+        write(keyToString(MY_PLAYER) + SEPARATOR + player);
         return copy();
     }
 
@@ -464,7 +463,7 @@ public class CommunicationChannel {
      * @throws ChannelClosedException if there's no connection
      */
     public boolean sendCurrentPlayer(String currentPlayer) throws ChannelClosedException {
-        write(keyToString(CURRENTPLAYER) + SEPARATOR + currentPlayer);
+        write(keyToString(CURRENT_PLAYER) + SEPARATOR + currentPlayer);
         return copy();
     }
 
@@ -476,6 +475,17 @@ public class CommunicationChannel {
      */
     public boolean sendMap(String map)throws ChannelClosedException {
         write(keyToString(MAP) + SEPARATOR + map);
+        return copy();
+    }
+
+    /**
+     * this method sends to the user the map and tells if it was received
+     * @param story String list
+     * @return
+     * @throws ChannelClosedException
+     */
+    public boolean sendStory(String story) throws ChannelClosedException {
+        write(keyToString(MATCH_STORY) + SEPARATOR + story);
         return copy();
     }
 
@@ -509,9 +519,9 @@ public class CommunicationChannel {
      */
     public int askStartPosition(String positions) throws ChannelClosedException, TimeoutException {
         while (!isClosed()) {
-            write(keyToString(STARTPOSITION) + SEPARATOR + positions);
-            String message = nextGameMessage(STARTPOSITION);
-            if (message != null && getKey(message) == STARTPOSITION)
+            write(keyToString(START_POSITION) + SEPARATOR + positions);
+            String message = nextGameMessage(START_POSITION);
+            if (message != null && getKey(message) == START_POSITION)
                 return readNumber(message);
         }
         throw new ChannelClosedException();

@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.network.CommunicationChannel.SEPARATOR;
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class MatchStory {
@@ -22,6 +21,7 @@ public class MatchStory {
     public final int move = 1;
     public final int removal = 2;
     public final Map<Integer, CommunicationProtocol> actionConverter;
+    public final static String STORY_SEPARATOR = "_STORY_SEPARATOR_";
 
     public MatchStory(Player player) {
         Map<Integer, CommunicationProtocol> converter = new HashMap<>();
@@ -32,9 +32,13 @@ public class MatchStory {
         actionConverter = converter;
     }
 
+    public List<String> story() {
+        return story;
+    }
+
     public void addEvent(int[] workerLocation, int action, int[] location) {
         Type type =new TypeToken<int[]>() {}.getType();
-        story.add(playerName + SEPARATOR + new Gson().toJson(workerLocation, type) + SEPARATOR + CommunicationChannel.keyToString(actionConverter.get(action)) + SEPARATOR + new Gson().toJson(location, type));
+        story.add(playerName + STORY_SEPARATOR + new Gson().toJson(workerLocation, type) + STORY_SEPARATOR + CommunicationChannel.keyToString(actionConverter.get(action)) + STORY_SEPARATOR + new Gson().toJson(location, type));
     }
 
     public void clear() {

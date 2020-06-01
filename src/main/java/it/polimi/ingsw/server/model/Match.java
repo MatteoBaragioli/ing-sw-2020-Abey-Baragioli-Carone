@@ -177,6 +177,19 @@ public class Match extends Thread{
             else
                 phaseIndex++;
         }
+        tellMatchStory(matchStory);
+    }
+
+    private void tellMatchStory(MatchStory matchStory) {
+        for (Player player: gamePlayers) {
+            try {
+                communicationController.tellMatchStory(player, matchStory);
+            } catch (ChannelClosedException e) {
+                e.printStackTrace();
+                removeUser(findUser(e.name()));
+                announceParticipants();
+            }
+        }
     }
 
     private List<TurnPhase> createPhaseSequence() {
@@ -193,7 +206,7 @@ public class Match extends Thread{
             try {
                 communicationController.announceParticipants(player, gamePlayers);
             } catch (ChannelClosedException e) {
-                removeUser(communicationController.findUser(player));
+                removeUser(findUser(e.name()));
                 if (gamePlayers.size() > 1)
                     announceParticipants();
                 else
@@ -312,7 +325,7 @@ public class Match extends Thread{
                 }
             }
             if (!player.isInGame()) {
-                removeUser(communicationController.findUser(player));
+                removeUser(findUser(player.name()));
                 //todo update Map
                 announceParticipants();
             }

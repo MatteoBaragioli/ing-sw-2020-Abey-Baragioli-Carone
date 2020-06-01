@@ -204,7 +204,7 @@ public class Cli implements View{
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
         switch(key) {
-            case GODPOWER:
+            case GOD_POWER:
                 //view.clearScreen();
                 //view.updateMap();
                 view.turn();
@@ -283,6 +283,11 @@ public class Cli implements View{
 
     @Override
     public void setCurrentPlayer(PlayerProxy player) {
+
+    }
+
+    @Override
+    public void tellStory(String content) {
 
     }
 

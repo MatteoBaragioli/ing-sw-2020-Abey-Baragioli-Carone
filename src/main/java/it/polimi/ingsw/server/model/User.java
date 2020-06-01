@@ -86,7 +86,7 @@ public class User {
     }
 
     /**
-     * this methos sends to the user the map and tells if it was received
+     * This method sends to the user the map and tells if it was received
      * @param map
      * @return boolean
      * @throws ChannelClosedException
@@ -100,6 +100,20 @@ public class User {
         }
     }
 
+    /**
+     * This method sends to the user the turn story and tells if it was received
+     * @param story Strings List
+     * @return boolean
+     * @throws ChannelClosedException
+     */
+    public boolean tellStory(String story) throws ChannelClosedException {
+        try {
+            return communicationChannel().sendStory(story);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
+    }
 
     /**
      * This method sends a list of positions and waits for the users choice

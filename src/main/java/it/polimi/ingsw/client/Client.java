@@ -104,7 +104,7 @@ public class Client extends Thread {
                 case BUILD:
                 case DESTINATION:
                 case REMOVAL:
-                case STARTPOSITION:
+                case START_POSITION:
                 case WORKER:
                     try {
                         clientController.manageListOfPositions(key, communicationChannel, view);
@@ -124,16 +124,17 @@ public class Client extends Thread {
                     break;
                 case COUNTDOWN:
                     try {
-                        clientController.manageCountDown(view);
-                        communicationChannel.popMessage();
+                        clientController.manageCountDown(communicationChannel, view);
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed COUNTDOWN");
                         System.exit(-1);
                     }
                     break;
-                case CURRENTPLAYER:
-                case MYPLAYER:
+                case CURRENT_PLAYER:
+                case LOSER:
+                case MY_PLAYER:
+                case WINNER:
                     try {
                         clientController.managePlayer(key, communicationChannel, view);
                     } catch (ChannelClosedException e) {
@@ -151,7 +152,7 @@ public class Client extends Thread {
                         System.exit(-1);
                     }
                     break;
-                case GODPOWER:
+                case GOD_POWER:
                 case UNDO:
                     try {
                         communicationChannel.popMessage();
@@ -171,16 +172,25 @@ public class Client extends Thread {
                         System.exit(-1);
                     }
                     break;
-                case MATCHSTART:
+                case MATCH_START:
                     clientController.manageMatchStart(communicationChannel, view);
                     break;
-                case MATCHTYPE:
+                case MATCH_STORY:
+                    try {
+                        clientController.manageMatchStory(communicationChannel, view);
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection closed Manage MATCH_STORY");
+                        System.exit(-1);
+                    }
+                    break;
+                case MATCH_TYPE:
                     try {
                         communicationChannel.popMessage();
                         communicationChannel.writeMatchType(view.askMatchType());
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
-                        System.err.println("Connection closed MATCHTYPE");
+                        System.err.println("Connection closed MATCH_TYPE");
                         System.exit(-1);
                     }
                     break;
@@ -193,7 +203,7 @@ public class Client extends Thread {
                         System.exit(-1);
                     }
                     break;
-                case UNIQUEUSERNAME:
+                case UNIQUE_USERNAME:
                 case USERNAME:
                     try {
                         communicationChannel.popMessage();
@@ -207,7 +217,7 @@ public class Client extends Thread {
                         System.exit(-1);
                     }
                     break;
-                case WAITFORPLAYERS:
+                case WAIT_FOR_PLAYERS:
                     try {
                         communicationChannel.popMessage();
                         clientController.waitForPlayers(communicationChannel, view);

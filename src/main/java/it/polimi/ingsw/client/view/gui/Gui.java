@@ -373,7 +373,7 @@ public class Gui extends Application implements View {
             case UNDO:
                 Platform.runLater(this::setUndoButtons);
                 return undoTurn();
-            case GODPOWER:
+            case GOD_POWER:
 
         }
         return undoTurn();
@@ -508,6 +508,11 @@ public class Gui extends Application implements View {
 
     @Override
     public void setCurrentPlayer(PlayerProxy player) {
+
+    }
+
+    @Override
+    public void tellStory(String content) {
 
     }
 }

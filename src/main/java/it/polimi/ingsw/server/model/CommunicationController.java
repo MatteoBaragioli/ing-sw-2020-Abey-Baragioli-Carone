@@ -6,6 +6,7 @@ import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 
 import java.lang.reflect.Type;
@@ -339,7 +340,7 @@ public class CommunicationController {
         boolean result=new Random().nextBoolean();
         boolean answer;
         if (playerIsUser(chooser))
-            result= askConfirmation(findUser(chooser), GODPOWER);
+            result= askConfirmation(findUser(chooser), GOD_POWER);
         return result;
     }
 
@@ -370,5 +371,17 @@ public class CommunicationController {
         if (playerIsUser(player))
             result = askConfirmation(findUser(player), UNDO);
         return result;
+    }
+
+    /**
+     * This method sends the highlights of the turn to a player
+     * @param player receiver
+     * @param matchStory object
+     * @return
+     */
+    public boolean tellMatchStory(Player player, MatchStory matchStory) throws ChannelClosedException {
+        User user = findUser(player);
+        Type type = new TypeToken<List<String>>(){}.getType();
+        return user.tellStory(new Gson().toJson(matchStory.story(), type));
     }
 }
