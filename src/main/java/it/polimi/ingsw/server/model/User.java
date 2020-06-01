@@ -32,7 +32,12 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public int askMatchType() throws ChannelClosedException {
-        return communicationChannel().askMatchType();
+        try {
+            return communicationChannel().askMatchType();
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -42,7 +47,12 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public boolean sendMyPlayer(String player) throws ChannelClosedException {
-        return communicationChannel().sendMyPlayer(player);
+        try {
+            return communicationChannel().sendMyPlayer(player);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -52,7 +62,27 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public boolean sendOpponents(String opponents) throws ChannelClosedException {
-        return communicationChannel().sendOpponents(opponents);
+        try {
+            return communicationChannel().sendOpponents(opponents);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
+    }
+
+    /**
+     * This method sends to the user the current player and tells if it was received
+     * @param currentPlayer Avatar representing the current player
+     * @return boolean
+     * @throws ChannelClosedException if connection is lost
+     */
+    public boolean sendCurrentPlayer(String currentPlayer) throws ChannelClosedException {
+        try {
+            return communicationChannel().sendCurrentPlayer(currentPlayer);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -62,7 +92,12 @@ public class User {
      * @throws ChannelClosedException
      */
     public boolean sendMap(String map) throws ChannelClosedException {
-        return communicationChannel().sendMap(map);
+        try {
+            return communicationChannel().sendMap(map);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
 
@@ -74,7 +109,12 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public int askStartPosition(String positions) throws TimeoutException, ChannelClosedException {
-        return communicationChannel().askStartPosition(positions);
+        try {
+            return communicationChannel().askStartPosition(positions);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -85,7 +125,12 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public int askWorker(String workers) throws TimeoutException, ChannelClosedException {
-        return communicationChannel().askWorker(workers);
+        try {
+            return communicationChannel().askWorker(workers);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -96,7 +141,12 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public int askDestination(String destinations) throws TimeoutException, ChannelClosedException {
-        return communicationChannel().askDestination(destinations);
+        try {
+            return communicationChannel().askDestination(destinations);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -107,7 +157,12 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public int askBuild(String builds) throws TimeoutException, ChannelClosedException {
-        return communicationChannel().askBuild(builds);
+        try {
+            return communicationChannel().askBuild(builds);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -118,7 +173,12 @@ public class User {
      * @throws ChannelClosedException if connection is lost
      */
     public int askRemoval(String removals) throws TimeoutException, ChannelClosedException {
-        return communicationChannel().askRemoval(removals);
+        try {
+            return communicationChannel().askRemoval(removals);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -128,8 +188,13 @@ public class User {
      * @throws TimeoutException
      * @throws ChannelClosedException
      */
-    public int askCard (String cards) throws TimeoutException, ChannelClosedException{
-        return communicationChannel().askCard(cards);
+    public int askCard (String cards) throws TimeoutException, ChannelClosedException {
+        try {
+            return communicationChannel().askCard(cards);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -139,8 +204,13 @@ public class User {
      * @throws TimeoutException
      * @throws ChannelClosedException
      */
-    public int[] askDeck (String deck) throws TimeoutException, ChannelClosedException{
-        return communicationChannel().askDeck(deck);
+    public int[] askDeck (String deck) throws TimeoutException, ChannelClosedException {
+        try {
+            return communicationChannel().askDeck(deck);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 
     /**
@@ -151,6 +221,11 @@ public class User {
      * @throws ChannelClosedException
      */
     public boolean askConfirmation(CommunicationProtocol key) throws TimeoutException, ChannelClosedException {
-        return communicationChannel().askConfirmation(key);
+        try {
+            return communicationChannel().askConfirmation(key);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
     }
 }

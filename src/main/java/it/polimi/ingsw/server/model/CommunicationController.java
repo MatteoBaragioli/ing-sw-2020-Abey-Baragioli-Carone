@@ -103,6 +103,19 @@ public class CommunicationController {
     }
 
     /**
+     * This method communicates to a user who is playing now
+     * @param player listener
+     * @param currentPlayer current player
+     * @return boolean if everything went well
+     */
+    public boolean announceCurrentPlayer(Player player, Player currentPlayer) throws ChannelClosedException {
+        User user = findUser(player);
+        PlayerProxy playerProxy = currentPlayer.createProxy();
+        Type type = new TypeToken<PlayerProxy>() {}.getType();
+        return user.sendCurrentPlayer(new Gson().toJson(playerProxy, type));
+    }
+
+    /**
      * This method asks the user to choose one worker from a list
      * @param user User
      * @param workers List of movable workers

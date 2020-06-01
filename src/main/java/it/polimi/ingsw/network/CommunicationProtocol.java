@@ -4,6 +4,7 @@ public enum CommunicationProtocol {
     BUILD,
     CARD,
     COUNTDOWN,
+    CURRENTPLAYER,
     DECK,
     DESTINATION,
     EMPTY,

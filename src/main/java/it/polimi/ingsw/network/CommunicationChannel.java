@@ -457,6 +457,16 @@ public class CommunicationChannel {
         return copy();
     }
 
+    /**
+     * This method sends a player and tells if it was received
+     * @param currentPlayer Sent player
+     * @return boolean
+     * @throws ChannelClosedException if there's no connection
+     */
+    public boolean sendCurrentPlayer(String currentPlayer) throws ChannelClosedException {
+        write(keyToString(CURRENTPLAYER) + SEPARATOR + currentPlayer);
+        return copy();
+    }
 
     /**
      * this method sends to the user the map and tells if it was received

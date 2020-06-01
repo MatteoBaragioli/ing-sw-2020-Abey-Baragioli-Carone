@@ -282,6 +282,11 @@ public class Cli implements View{
     }
 
     @Override
+    public void setCurrentPlayer(PlayerProxy player) {
+
+    }
+
+    @Override
     public String askIp() {
         System.out.println("Write ip address to connect to:");
         try {

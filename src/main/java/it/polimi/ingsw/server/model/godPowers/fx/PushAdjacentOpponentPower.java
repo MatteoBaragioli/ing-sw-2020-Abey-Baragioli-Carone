@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model.godPowers.fx;
 
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
@@ -15,12 +17,13 @@ public class PushAdjacentOpponentPower extends MoveModifier{
     }
 
     @Override
-    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions) {
+    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, MatchStory matchStory) throws ChannelClosedException {
         //movePower - Minotaur
         for (Worker worker : player.turnSequence().movedWorkers()) {
             if (!player.workers().contains(worker) && player.turnSequence().workersCurrentPosition(worker).equals(player.turnSequence().workersCurrentPosition(player.turnSequence().chosenWorker()))) {
                 player.turnSequence().recordNewPosition(worker, map.boxesSameDirection(player.turnSequence().previousBox(), player.turnSequence().workersCurrentPosition(worker)).get(0));
             }
         }
+        communicationController.updateView(player, map.createProxy());
     }
 }

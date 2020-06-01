@@ -122,15 +122,6 @@ public class Client extends Thread {
                         System.exit(-1);
                     }
                     break;
-                case DECK:
-                    try {
-                        clientController.manageDeck(communicationChannel, view);
-                    } catch (ChannelClosedException e) {
-                        e.printStackTrace();
-                        System.err.println("Connection closed Manage DECK");
-                        System.exit(-1);
-                    }
-                    break;
                 case COUNTDOWN:
                     try {
                         clientController.manageCountDown(view);
@@ -138,6 +129,25 @@ public class Client extends Thread {
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed COUNTDOWN");
+                        System.exit(-1);
+                    }
+                    break;
+                case CURRENTPLAYER:
+                case MYPLAYER:
+                    try {
+                        clientController.managePlayer(key, communicationChannel, view);
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection closed Manage Player");
+                        System.exit(-1);
+                    }
+                    break;
+                case DECK:
+                    try {
+                        clientController.manageDeck(communicationChannel, view);
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        System.err.println("Connection closed Manage DECK");
                         System.exit(-1);
                     }
                     break;
@@ -171,15 +181,6 @@ public class Client extends Thread {
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed MATCHTYPE");
-                        System.exit(-1);
-                    }
-                    break;
-                case MYPLAYER:
-                    try {
-                        clientController.manageMyPlayer(communicationChannel, view);
-                    } catch (ChannelClosedException e) {
-                        e.printStackTrace();
-                        System.err.println("Connection closed MY PLAYER");
                         System.exit(-1);
                     }
                     break;

@@ -71,12 +71,15 @@ public class ClientController {
         }
     }
 
-    public void manageMyPlayer(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    public void managePlayer(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         PlayerProxy player;
         String message = communicationChannel.popMessage();
         Type listType = new TypeToken<PlayerProxy>() {}.getType();
         player = new Gson().fromJson(communicationChannel.getContent(message), listType);
-        view.setMyPlayer(player);
+        if (key == MYPLAYER)
+            view.setMyPlayer(player);
+        else
+            view.setCurrentPlayer(player);
         communicationChannel.writeKeyWord(RECEIVED);
     }
 

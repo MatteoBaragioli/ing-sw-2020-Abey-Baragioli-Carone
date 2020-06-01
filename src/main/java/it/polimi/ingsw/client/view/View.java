@@ -25,4 +25,5 @@ public interface View {
     void connectionLost();
     void connectionFailed(String host);
     void startMatch();
+    void setCurrentPlayer(PlayerProxy player);
 }
