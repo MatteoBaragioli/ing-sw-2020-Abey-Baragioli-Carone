@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
-
 public class Cli implements View {
     private static BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
     private PrintStream printStream = new PrintStream(System.out);
@@ -31,7 +29,13 @@ public class Cli implements View {
     }
 
     private boolean checkIfUserIsQuitting(String answer) {
-        return answer.equals(QUIT.toString()) || answer.equals("quit");
+        Pattern pattern1 = Pattern.compile("QUIT");
+        Pattern pattern2 = Pattern.compile("Quit");
+        Pattern pattern3 = Pattern.compile("quit");
+        Matcher matcher1 = pattern1.matcher(answer);
+        Matcher matcher2 = pattern2.matcher(answer);
+        Matcher matcher3 = pattern3.matcher(answer);
+        return matcher1.find() || matcher2.find() || matcher3.find();
     }
 
     public int askNumber() throws IOException, NumberFormatException {
