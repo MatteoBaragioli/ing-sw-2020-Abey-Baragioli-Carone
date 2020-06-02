@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MatchScene {
 
+    //font used for
     private final Font lillybelleFont;
     private final Font godInfoFont;
     private final Gui gui;
@@ -35,12 +36,13 @@ public class MatchScene {
     private final double screenHeight;
     private final StackPane matchPage;
 
-    double dimension;
-    double marginDim;
-    double totalMargin;
-    double mapDim;
+    private final double dimension;
+    private double marginDim;
+    private double totalMargin;
+    private double mapDim;
 
-    ImageView mapView;
+
+    private final ImageView mapView;
 
     //number of players of the match
     private int numberOfPlayers;
@@ -51,17 +53,8 @@ public class MatchScene {
     //map of the match
     private final GuiMap guiMap;
 
-    //current chosen worker position
-    private final int[] chosenWorkerPosition = new int[2];
-
-    //current chosen worker color
-    private String chosenWorkerColor;
-
-    //current chosen worker gender
-    private String chosenWorkerGender;
-
     //current chosen worker new position
-    private GuiBox chosenWorkerNewPosition;
+    private GuiBox chosenBox;
 
     //chosen box index -> this variable will be returned as answer to server request
     private int chosenBoxIndex;
@@ -107,20 +100,13 @@ public class MatchScene {
     private final AtomicBoolean confirmMyCards = new AtomicBoolean(false);
 
     //info name when a player has to choose their card
-    private Text infoGodName = new Text();
+    private final Text infoGodName = new Text();
 
     //info description when a player has to choose their card
-    private Text infoGodDescription = new Text("Go on a card to see the power");
+    private final Text infoGodDescription = new Text("Go on a card to see the power");
 
-    private AtomicBoolean destinationReady = new AtomicBoolean(false);
+    private final AtomicBoolean destinationReady = new AtomicBoolean(false);
 
-
-
-    private List<ImageView> cardsView;
-    private List<Text> godNames;
-    private List<Text> godDescriptions;
-    private List<VBox> cardsInfo;
-    private List<HBox> cardBoxes;
 
 
 
@@ -143,7 +129,7 @@ public class MatchScene {
         mapView = new ImageView(mapImg);
         ImageView matchBackground = matchBackground(screenWidth, screenHeight);
 
-        playerView = new PlayerView(screenWidth, screenHeight, guiMap, gui);
+        playerView = new PlayerView(screenWidth, screenHeight, guiMap, gui, this);
 
         StackPane playerViewPane = playerView.getPlayerViewStackPane();
 
@@ -163,25 +149,13 @@ public class MatchScene {
         this.chosenBoxIndex = chosenBoxIndex;
     }
 
-    public void setChosenWorkerPosition(int x, int y) {
-        chosenWorkerPosition[0] = x;
-        chosenWorkerPosition[1] = y;
+    public void setChosenBox(GuiBox chosenBox) {
+        this.chosenBox = chosenBox;
     }
 
-    public void setChosenWorkerColor(String chosenWorkerColor) {
-        this.chosenWorkerColor = chosenWorkerColor;
-    }
-
-    public void setChosenWorkerGender(String chosenWorkerGender) {
-        this.chosenWorkerGender = chosenWorkerGender;
-    }
-
-    public void setChosenWorkerNewPosition(GuiBox chosenWorkerNewPosition) {
-        this.chosenWorkerNewPosition = chosenWorkerNewPosition;
-    }
-
-    public void setDestinationReady(boolean destinationReady) {
+    public synchronized void setDestinationReady(boolean destinationReady) {
         this.destinationReady.set(destinationReady);
+        notifyAll();
     }
     //_______________________________________________END SETTER__________________________________________________________
 
@@ -197,20 +171,8 @@ public class MatchScene {
         return chosenBoxIndex;
     }
 
-    public int[] chosenWorkerPosition() {
-        return chosenWorkerPosition;
-    }
-
-    public String chosenWorkerColor() {
-        return chosenWorkerColor;
-    }
-
-    public String chosenWorkerGender() {
-        return chosenWorkerGender;
-    }
-
-    public GuiBox chosenWorkerNewPosition() {
-        return chosenWorkerNewPosition;
+    public GuiBox chosenBox() {
+        return chosenBox;
     }
 
     public PlayerView playerView(){
@@ -221,17 +183,13 @@ public class MatchScene {
         return guiMap;
     }
 
-    public StackPane chooseCardsBox() {
-        return chooseCardsBox;
-    }
-
 
     //_______________________________________________END GETTER__________________________________________________________
 
 
-
-
-
+    /**
+     * This method clears chosable boxes list (every request has different chosable boxes)
+     */
     public void clearChosableBoxes(){
         chosableBoxes = new ArrayList<>();
     }
@@ -276,29 +234,23 @@ public class MatchScene {
         int index = 0;
         for(int[] i : possibleDestinations){
             map().box(i[0], i[1]).setIndex(index);
-            map().box(i[0], i[1]).setAsChosable(this, possibleDestinations, 1);
+            map().box(i[0], i[1]).setAsChosable(this, possibleDestinations);
             index++;
         }
         setChosableBoxes(possibleDestinations);
 
     }
 
-    public int chosenDestination(){
+    public synchronized int chosenDestination(){
         while(!destinationReady.get()){
-
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         destinationReady.set(false);
         return chosenBoxIndex();
-    }
-    public void chooseBuild(List<int[]> possibleDestinations){
-
-        //todo Il server mi manderà una lista e vorrà indietro l'indice della lista come risposta
-        int index = 0;
-        for(int[] i : possibleDestinations){
-            map().box(i[0], i[1]).setIndex(index);
-            map().box(i[0], i[1]).setAsChosable(this, possibleDestinations, 2);
-            index++;
-        }
     }
 
     /**

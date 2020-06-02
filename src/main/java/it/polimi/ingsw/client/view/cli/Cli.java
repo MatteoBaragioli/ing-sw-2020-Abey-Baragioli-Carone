@@ -15,18 +15,16 @@ import java.util.regex.Pattern;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
 
-public class Cli implements View{
+public class Cli implements View {
     private static BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
-    private PrintStream printStream=new PrintStream(System.out);
-    private ScreenView view=new ScreenView(printStream);
+    private PrintStream printStream = new PrintStream(System.out);
+    private ScreenView view = new ScreenView(printStream);
     private PlayerProxy myPlayer;
     private List<PlayerProxy> opponents;
 
-
-    public ScreenView screenView(){
+    public ScreenView screenView() {
         return this.view;
     }
-
 
     public static String askAnswer() throws IOException {
         return commandline.readLine();
@@ -45,38 +43,38 @@ public class Cli implements View{
 
     @Override
     public int askPosition(List<int[]> positions) { //nuovo ask position che legge stringa
-        String answer=null;
+        String answer = null;
         boolean validAnswer;
         boolean validConfirmation;
-        boolean sure=false;
-        int answerToInt=0;
-        Pattern pattern=Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
+        boolean sure = false;
+        int answerToInt = 0;
+        Pattern pattern = Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
         view.clearScreen();
         view.turn();
         printStream.println("enter the coordinates of a box on the board");
-        while(!sure) {
+        while (!sure) {
             validAnswer = false;
-            validConfirmation=false;
+            validConfirmation = false;
             while (!validAnswer) {
                 try {
                     answer = askAnswer();
-                }catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
                 if (checkIfUserIsQuitting(answer))
                     return -1;
 
-                Matcher matcher=pattern.matcher(answer);
+                Matcher matcher = pattern.matcher(answer);
 
                 if (matcher.find()) {
                     validAnswer = true;
-                    answer=cleanPosition(answer, matcher);
+                    answer = cleanPosition(answer, matcher);
                 } else {
                     printStream.println("Not valid answer. Try again");
                     printStream.println("You must enter a letter and a number that refer to a box on the board");
                 }
             }
-            printStream.println("you entered box "+answer+ " are you sure?");
+            printStream.println("you entered box " + answer + " are you sure?");
             int confirm = 0;
             while (!validConfirmation) {
                 try {
@@ -86,7 +84,7 @@ public class Cli implements View{
                 } catch (NumberFormatException e) {
                     confirm = 0;
                 }
-                if (confirm == 1 || confirm == 2 || confirm==-1)
+                if (confirm == 1 || confirm == 2 || confirm == -1)
                     validConfirmation = true;
 
                 else {
@@ -94,18 +92,18 @@ public class Cli implements View{
                     printStream.println("1  yes     2   no");
                 }
 
-                if (confirm==-1)
+                if (confirm == -1)
                     return confirm;
             }
             if (confirm == 1)
                 sure = true;
         }
 
-        boolean found=false;
-        for(int i=0; i<positions.size()&& !found; i++){
-            if(Arrays.equals(positions.get(i), getCartesianCoodinates(answer))) {
+        boolean found = false;
+        for (int i = 0; i < positions.size() && !found; i++) {
+            if (Arrays.equals(positions.get(i), getCartesianCoodinates(answer))) {
                 answerToInt = i;
-                found=true;
+                found = true;
             }
         }
 
@@ -113,33 +111,34 @@ public class Cli implements View{
     }
 
 
-
-    public String cleanPosition(String answer, Matcher matcher){
+    public String cleanPosition(String answer, Matcher matcher) {
         char letter;
-       // matcher.find();
-        switch (answer.charAt(matcher.start())){
+        // matcher.find();
+        switch (answer.charAt(matcher.start())) {
             case ('a'):
-                letter='A';
+                letter = 'A';
                 break;
             case ('b'):
-                letter='B';
+                letter = 'B';
                 break;
             case ('c'):
-                letter='C';
+                letter = 'C';
                 break;
             case ('d'):
-                letter='D';
+                letter = 'D';
                 break;
             case ('e'):
-                letter='E';
+                letter = 'E';
                 break;
-            default: letter=answer.charAt(matcher.start());
+            default:
+                letter = answer.charAt(matcher.start());
         }
-       return(""+letter+ answer.charAt(matcher.end()-1)+"");
+        return ("" + letter + answer.charAt(matcher.end() - 1) + "");
     }
 
 
-    /**  @Override
+
+    /*  @Override
     public int askPosition(List<int[]> positions) {
         boolean valid = false;
         int answer = 0;
@@ -287,7 +286,7 @@ public class Cli implements View{
         }
 
     @Override
-    public int askConfirmation() {
+    public int askConfirmation(CommunicationProtocol key) {
 
         boolean valid = false;
         int answer = 0;
@@ -315,7 +314,7 @@ public class Cli implements View{
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
         switch(key) {
-            case GODPOWER:
+            case GOD_POWER:
                 view.clearScreen();
                 view.turn();
                 printStream.println("\nWould you like to use your power?");
@@ -387,6 +386,16 @@ public class Cli implements View{
 
     @Override
     public void startMatch() {
+
+    }
+
+    @Override
+    public void setCurrentPlayer(PlayerProxy player) {
+
+    }
+
+    @Override
+    public void tellStory(String content) {
 
     }
 

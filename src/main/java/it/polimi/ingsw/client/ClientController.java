@@ -70,16 +70,24 @@ public class ClientController {
             communicationChannel.writeKeyWord(QUIT);
         else {
             communicationChannel.writeChoiceFromList(key, index);
-            System.out.println("Chosen Destination" + index);
         }
     }
 
-    public void manageMyPlayer(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    public void managePlayer(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         PlayerProxy player;
         String message = communicationChannel.popMessage();
         Type listType = new TypeToken<PlayerProxy>() {}.getType();
         player = new Gson().fromJson(communicationChannel.getContent(message), listType);
-        view.setMyPlayer(player);
+        switch (key) {
+            case MY_PLAYER:
+                view.setMyPlayer(player);
+                break;
+            case CURRENT_PLAYER:
+                view.setCurrentPlayer(player);
+                break;
+            case LOSER:
+                break;
+        }
         communicationChannel.writeKeyWord(RECEIVED);
     }
 
@@ -93,8 +101,7 @@ public class ClientController {
     }
 
     public void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-
-        communicationChannel.writeConfirmation(key, view.askConfirmation());
+        communicationChannel.writeConfirmation(key, view.askConfirmation(key));
     }
 
     public void manageMatchStart(CommunicationChannel communicationChannel, View view) {
@@ -105,7 +112,13 @@ public class ClientController {
         communicationChannel.writeKeyWord(RECEIVED);
     }
 
-    public void manageCountDown(View view) {
+    public void manageCountDown(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+        communicationChannel.popMessage();
+    }
 
+    public void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+        String message = communicationChannel.popMessage();
+        view.tellStory(communicationChannel.getContent(message));
+        communicationChannel.writeKeyWord(RECEIVED);
     }
 }

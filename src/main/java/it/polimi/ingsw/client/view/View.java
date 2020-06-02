@@ -12,7 +12,7 @@ public interface View {
     int askPosition(List<int[]> positions) ;
     int askCards(List<GodCardProxy> cards);
     int[] askDeck(List<GodCardProxy> cards);
-    int askConfirmation();
+    int askConfirmation(CommunicationProtocol key);
     String askIp();
     int askMatchType();
     int askPort();
@@ -25,4 +25,6 @@ public interface View {
     void connectionLost();
     void connectionFailed(String host);
     void startMatch();
+    void setCurrentPlayer(PlayerProxy player);
+    void tellStory(String content);
 }

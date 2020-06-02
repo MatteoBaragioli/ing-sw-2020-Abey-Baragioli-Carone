@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.server.model.phases.*;
 
 import java.io.IOException;
@@ -123,12 +124,19 @@ public class Match extends Thread{
         //MATCH
         for(currentPlayerIndex = firstPlayerIndex; currentPlayerIndex<gamePlayers.size()&&winner==null;){
             Player currentPlayer = gamePlayers.get(currentPlayerIndex);
+            announceCurrentPlayer(currentPlayer);
             try {
                 takeTurn(currentPlayer);
             } catch (IOException | ChannelClosedException | TimeoutException e) {
                 e.printStackTrace();
                 currentPlayer.setInGame(false);
                 currentPlayer.turnSequence().undo();
+            }
+
+            try {
+                communicationController.updateView(gamePlayers, gameMap.createProxy());
+            } catch (ChannelClosedException e) {
+                removeUser(findUser(e.name()));
             }
 
             winner = currentPlayer.turnSequence().possibleWinner();
@@ -151,23 +159,37 @@ public class Match extends Thread{
         //todo dire chi ha vinto
     }
 
-    private void takeTurn(Player currentPlayer) throws ChannelClosedException, TimeoutException, IOException {
+    private void takeTurn(Player player) throws ChannelClosedException, TimeoutException, IOException {
         int undoCounter = 0;
-        for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && currentPlayer.isInGame();){
+        MatchStory matchStory = new MatchStory(player);
+        for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && player.isInGame();){
             boolean confirm = true;
-            phasesSequence.get(phaseIndex).executePhase(currentPlayer, communicationController, actionController, gameMap, getOpponents(currentPlayer), winConditions);
-            if(undoCounter<3 && phaseIndex<3)
-                confirm = communicationController.confirmPhase(currentPlayer);
+            phasesSequence.get(phaseIndex).executePhase(player, communicationController, actionController, gameMap, getOpponents(player), winConditions, matchStory);
+            if(undoCounter<3 && phaseIndex==2)
+                confirm = communicationController.confirmPhase(player);
             if(!confirm){
-                currentPlayer.turnSequence().undo();
-                communicationController.updateView(currentPlayer, gameMap.createProxy());
+                player.turnSequence().undo();
+                matchStory.clear();
+                communicationController.updateView(player, gameMap.createProxy());
                 undoCounter++;
                 phaseIndex = 0;
             }
             else
                 phaseIndex++;
         }
-        communicationController.updateView(gamePlayers, gameMap.createProxy());
+        tellMatchStory(matchStory);
+    }
+
+    private void tellMatchStory(MatchStory matchStory) {
+        for (Player player: gamePlayers) {
+            try {
+                communicationController.tellMatchStory(player, matchStory);
+            } catch (ChannelClosedException e) {
+                e.printStackTrace();
+                removeUser(findUser(e.name()));
+                announceParticipants();
+            }
+        }
     }
 
     private List<TurnPhase> createPhaseSequence() {
@@ -184,7 +206,21 @@ public class Match extends Thread{
             try {
                 communicationController.announceParticipants(player, gamePlayers);
             } catch (ChannelClosedException e) {
-                removeUser(communicationController.findUser(player));
+                removeUser(findUser(e.name()));
+                if (gamePlayers.size() > 1)
+                    announceParticipants();
+                else
+                    endGame();
+            }
+        }
+    }
+
+    private void announceCurrentPlayer(Player currentPlayer) {
+        for (Player player: gamePlayers) {
+            try {
+                communicationController.announceCurrentPlayer(player, currentPlayer);
+            } catch (ChannelClosedException e) {
+                removeUser(findUser(e.name()));
                 if (gamePlayers.size() > 1)
                     announceParticipants();
                 else
@@ -274,7 +310,6 @@ public class Match extends Thread{
                     Worker worker = new Worker(position, player.colour());
                     freeMap.remove(position);
                     player.assignWorker(worker);
-                    communicationController.updateView(gamePlayers, gameMap.createProxy());
                 } catch (TimeoutException e) {
                     e.printStackTrace();
                     player.setInGame(false);
@@ -282,9 +317,15 @@ public class Match extends Thread{
                     e.printStackTrace();
                     player.setInGame(false);
                 }
+
+                try {
+                    communicationController.updateView(gamePlayers, gameMap.createProxy());
+                } catch (ChannelClosedException e) {
+                    removeUser(findUser(e.name()));
+                }
             }
             if (!player.isInGame()) {
-                removeUser(communicationController.findUser(player));
+                removeUser(findUser(player.name()));
                 //todo update Map
                 announceParticipants();
             }
@@ -320,6 +361,13 @@ public class Match extends Thread{
     public Player findPlayer(User user) {
         if (userIsPlayer(user))
             return userToPlayer.get(user);
+        return null;
+    }
+
+    private User findUser(String name) {
+        for (User user: users())
+            if (user.name().equals(name))
+                return user;
         return null;
     }
 
