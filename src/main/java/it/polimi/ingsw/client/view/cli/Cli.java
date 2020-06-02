@@ -6,10 +6,12 @@ import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
-
-
+import static it.polimi.ingsw.client.view.cli.Coordinates.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.QUIT;
 
@@ -20,9 +22,11 @@ public class Cli implements View{
     private PlayerProxy myPlayer;
     private List<PlayerProxy> opponents;
 
+
     public ScreenView screenView(){
         return this.view;
     }
+
 
     public static String askAnswer() throws IOException {
         return commandline.readLine();
@@ -40,11 +44,115 @@ public class Cli implements View{
     }
 
     @Override
+    public int askPosition(List<int[]> positions) { //nuovo ask position che legge stringa
+        String answer=null;
+        boolean validAnswer;
+        boolean validConfirmation;
+        boolean sure=false;
+        int answerToInt=0;
+        Pattern pattern=Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
+        view.clearScreen();
+        view.turn();
+        printStream.println("enter the coordinates of a box on the board");
+        while(!sure) {
+            validAnswer = false;
+            validConfirmation=false;
+            while (!validAnswer) {
+                try {
+                    answer = askAnswer();
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (checkIfUserIsQuitting(answer))
+                    return -1;
+
+                Matcher matcher=pattern.matcher(answer);
+
+                if (matcher.find()) {
+                    validAnswer = true;
+                    answer=cleanPosition(answer, matcher);
+                } else {
+                    printStream.println("Not valid answer. Try again");
+                    printStream.println("You must enter a letter and a number that refer to a box on the board");
+                }
+            }
+            printStream.println("you entered box "+answer+ " are you sure?");
+            int confirm = 0;
+            while (!validConfirmation) {
+                try {
+                    confirm = askNumber();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NumberFormatException e) {
+                    confirm = 0;
+                }
+                if (confirm == 1 || confirm == 2 || confirm==-1)
+                    validConfirmation = true;
+
+                else {
+                    printStream.println("Not valid answer. Try again");
+                    printStream.println("1  yes     2   no");
+                }
+
+                if (confirm==-1)
+                    return confirm;
+            }
+            if (confirm == 1)
+                sure = true;
+        }
+
+        boolean found=false;
+        for(int i=0; i<positions.size()&& !found; i++){
+            if(Arrays.equals(positions.get(i), getCartesianCoodinates(answer))) {
+                answerToInt = i;
+                found=true;
+            }
+        }
+
+        return answerToInt;
+    }
+
+
+
+    public String cleanPosition(String answer, Matcher matcher){
+        char letter;
+       // matcher.find();
+        switch (answer.charAt(matcher.start())){
+            case ('a'):
+                letter='A';
+                break;
+            case ('b'):
+                letter='B';
+                break;
+            case ('c'):
+                letter='C';
+                break;
+            case ('d'):
+                letter='D';
+                break;
+            case ('e'):
+                letter='E';
+                break;
+            default: letter=answer.charAt(matcher.start());
+        }
+       return(""+letter+ answer.charAt(matcher.end()-1)+"");
+    }
+
+
+    /**  @Override
     public int askPosition(List<int[]> positions) {
         boolean valid = false;
         int answer = 0;
         for(int i = 0; i< positions.size(); i++){
-           printStream.print((i+1)+"   for box in"+convertCoordinates(positions.get(i))+"    ");
+           printStream.print((i+1)+"   for box in "+ convertToChessCoordinates(positions.get(i))+"    ");
+            if (positions.size()%4==0) {
+                if (i % 4 == 0)
+                    printStream.print("\n");
+            }
+            if (positions.size()%5==0) {
+                if (i % 5 == 0)
+                    printStream.print("\n");
+            }
         }
         while (!valid) {
 
@@ -59,19 +167,20 @@ public class Cli implements View{
                 valid = true;
             }
             else
-                System.out.println("Not valid answer. Try again");
+                printStream.println("Not valid answer. Try again");
+
         }
         if(answer!=-1)
             answer--;
         return answer;
-    }
+    }*/
 
     @Override
     public int askWorker(List<int[]> workers) {
         boolean valid = false;
         int answer = 0;
         for(int i=0; i<workers.size(); i++){
-            printStream.print((i+1)+"   for worker in"+convertCoordinates(workers.get(i))+"    ");
+            printStream.print((i+1)+"   for worker in"+ convertToChessCoordinates(workers.get(i))+"    ");
         }
         while (!valid) {
 
@@ -88,6 +197,8 @@ public class Cli implements View{
             else
                 System.out.println("Not valid answer. Try again");
         }
+        if (answer!=-1)
+            answer--;
         return answer;
 
     }
@@ -205,18 +316,16 @@ public class Cli implements View{
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
         switch(key) {
             case GODPOWER:
-                //view.clearScreen();
-                //view.updateMap();
+                view.clearScreen();
                 view.turn();
                 printStream.println("\nWould you like to use your power?");
                 printStream.println("1  YES;  2 NO");
                 break;
             case UNDO:
-                //view.clearScreen();
-                //view.updateMap();
+                view.clearScreen();
                 view.turn();
                 printStream.println("\nDo you want end your turn?");
-                printStream.println("1  UNDO;  2 GO AHEAD");
+                printStream.println("1  GO AHEAD;  2 UNDO");
                 break;
             }
         }
@@ -341,7 +450,7 @@ public class Cli implements View{
 
     @Override
     public String askUserName() throws IOException {
-        System.out.println("Write username:");
+        printStream.println("Write username:");
         return commandline.readLine();
     }
 
@@ -431,7 +540,7 @@ public class Cli implements View{
     }
 
 
-    public String convertCoordinates(int[] coordinates){
+    public String convertToChessCoordinates(int[] coordinates){
         char first;
         char second;
         switch(coordinates[0]) {

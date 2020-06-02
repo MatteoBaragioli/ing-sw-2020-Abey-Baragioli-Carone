@@ -6,6 +6,8 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.network.objects.*;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
