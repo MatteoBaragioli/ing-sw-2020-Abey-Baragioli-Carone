@@ -257,5 +257,6 @@ public class Client extends Thread {
         if(communicationChannel!=null) {
             communicationChannel.writeKeyWord(QUIT);
         }
+        stop();
     }
 }

@@ -87,7 +87,7 @@ public class GuiBox extends Button {
         setOpacity(opacity);
     }
 
-    public void setEffects(MatchScene match, List<int[]> chosableBoxes){
+    public void setEffects(MatchScene match){
         addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             changeOpacity(0.4);
             setHoverBlue();
@@ -103,7 +103,7 @@ public class GuiBox extends Button {
         });
         addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             match.setChosenBox(this);
-            for(int[] i : chosableBoxes){
+            for(int[] i : match.chosableBoxes()){
                 match.map().box(i[0], i[1]).setAsNotChosable();
             }
             setSelected();
@@ -127,12 +127,12 @@ public class GuiBox extends Button {
         addEventHandler(MouseEvent.MOUSE_CLICKED, Event::consume);
     }
 
-    public void setAsChosable(MatchScene match, List<int[]> chosableBoxes){
+    public void setAsChosable(MatchScene match){
         setBlue();
         setDisable(false);
         previousOpacity = getOpacity();
         changeOpacity(0.4);
-        setEffects(match, chosableBoxes);
+        setEffects(match);
     }
 
     public void setAsNotChosable(){
@@ -162,8 +162,8 @@ public class GuiBox extends Button {
     public void moveWorker(String color, String gender){
         Image workerImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/worker" + gender + color + ".png").toString());
         ImageView workerImgView = new ImageView(workerImg);
-        workerImgView.setFitWidth(boxWidth - boxWidth / 5);
-        workerImgView.setFitHeight(boxHeight - boxHeight / 5);
+        workerImgView.setFitWidth(boxWidth - boxWidth / 3);
+        workerImgView.setFitHeight(boxHeight - boxHeight / 4);
         worker.setGraphic(workerImgView);
         changeOpacity(1);
         previousOpacity = 1;

@@ -23,6 +23,7 @@ import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.geometry.Pos.*;
@@ -104,6 +105,24 @@ public class PlayerView extends StackPane {
     //undo button
     private ImageView usePowerView;
 
+    //confirm button images
+    private Image confirmImg;
+    private Image confirmImgHover;
+    private Image confirmInactiveImg;
+
+    //undo button images
+    Image undoImg;
+    Image undoImgHover;
+    Image undoInactiveImg;
+
+    //usePower button images
+    private Image usePowerImg;
+    private Image usePowerImgHover;
+    private Image usePowerInactiveImg;
+
+    //use power answer
+    private final AtomicInteger usePowerAnswer = new AtomicInteger(2);
+
     public PlayerView(double screenWidth, double screenHeight, GuiMap guiMap, Gui gui, MatchScene match) {
         standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
         lillybelle = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
@@ -172,36 +191,33 @@ public class PlayerView extends StackPane {
         godView = new ImageView(godImage);
 
         cardName = new Label();
-        cardName.setPrefSize(screenWidth/4, screenHeight/2);
+        cardName.setPrefSize(screenWidth/4, screenHeight/2.4);
         cardName.setFont(standardFont);
-        Insets namePadding = new Insets(screenWidth/50);
-        cardName.setPadding(namePadding);
         cardName.setAlignment(BOTTOM_CENTER);
         cardName.setTextAlignment(TextAlignment.CENTER);
 
 
         Label cardInfo = new Label();
-        cardInfo.setPrefSize(screenWidth/4, screenHeight/2);
-        Insets godPadding = new Insets(0, 0,screenWidth/400, 0);
-        cardInfo.setPadding(godPadding);
+        cardInfo.setPrefSize(screenWidth/4, screenHeight/3.3);
+        cardInfo.setPadding(new Insets(0, 0,screenWidth/400, 0));
         cardInfo.setAlignment(CENTER);
         cardInfo.setGraphic(godView);
 
         StackPane card = new StackPane();
         card.setAlignment(CENTER);
         card.setPrefWidth(screenWidth/4);
-        card.setPrefHeight(screenHeight/2);
-        card.getChildren().addAll(cardView, cardName, cardInfo);
+        card.setPrefHeight(screenHeight/3.3);
+        card.getChildren().addAll(cardView, cardInfo, cardName);
 
 
         //left BOTTOM
-        Image messagesImg = new Image(PlayerView.class.getResource("/img/messagesBox.png").toString(),screenWidth/4, screenHeight*3/16,false,false);
+        Image messagesImg = new Image(PlayerView.class.getResource("/img/messagesBox.png").toString(),screenWidth/4, screenHeight/4,false,false);
         ImageView messagesView = new ImageView(messagesImg);
 
         messagesBox = new Label("Good Luck!");
         messagesBox.setFont(lillybelle);
         messagesBox.setTextFill(WHITE);
-        messagesBox.setPrefWidth(screenWidth/4);
+        messagesBox.setPrefWidth(screenWidth/5);
         messagesBox.setPrefHeight(screenHeight/4);
         messagesBox.setWrapText(true);
         messagesBox.setAlignment(CENTER);
@@ -229,7 +245,7 @@ public class PlayerView extends StackPane {
         Image turnImg = new Image(PlayerView.class.getResource("/img/turn.png").toString(),screenWidth/4, screenHeight/12,false,false);
         ImageView turnView = new ImageView(turnImg);
 
-        currentTurn = new Label("Your turn");
+        currentTurn = new Label("Challenger's turn");
         currentTurn.setFont(standardFont);
         currentTurn.setTextFill(WHITE);
         currentTurn.setAlignment(CENTER);
@@ -254,6 +270,7 @@ public class PlayerView extends StackPane {
         textBox.setPrefHeight(screenHeight/8);
         textBox.setTextAlignment(TextAlignment.CENTER);
         textBox.setAlignment(CENTER);
+        textBox.setPadding(new Insets(0, 0, screenHeight/50, 0));
 
         StackPane playerName = new StackPane();
         playerName.setPrefWidth(screenWidth/2);
@@ -308,13 +325,23 @@ public class PlayerView extends StackPane {
 
 
         //right BOTTOM
+        confirmImg = new Image(PlayerView.class.getResource("/img/buttons/confirmAction.png").toString(),screenWidth/20, screenHeight/14,false,false);
+        confirmImgHover = new Image(PlayerView.class.getResource("/img/buttons/confirmActionHover.png").toString(),screenWidth/20, screenHeight/14,false,false);
+        confirmInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/confirmActionInactive.png").toString(),screenWidth/20, screenHeight/14,false,false);
+
+        undoImg = new Image(PlayerView.class.getResource("/img/buttons/undo.png").toString(),screenWidth/20, screenHeight/14,false,false);
+        undoImgHover = new Image(PlayerView.class.getResource("/img/buttons/undoHover.png").toString(),screenWidth/20, screenHeight/14,false,false);
+        undoInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/undoInactive.png").toString(),screenWidth/20, screenHeight/14,false,false);
+
+
+        usePowerImg = new Image(PlayerView.class.getResource("/img/buttons/usePower.png").toString(),screenWidth/20, screenHeight/14,false,false);
+        usePowerImgHover = new Image(PlayerView.class.getResource("/img/buttons/usePowerHover.png").toString(),screenWidth/20, screenHeight/14,false,false);
+        usePowerInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/usePowerInactive.png").toString(),screenWidth/20, screenHeight/14,false,false);
+
         HBox buttons = new HBox();
-        Image confirmImg = new Image(PlayerView.class.getResource("/img/buttons/confirmActionInactive.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        confirmView = new ImageView(confirmImg);
-        Image undoImg = new Image(PlayerView.class.getResource("/img/buttons/undoInactive.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        undoView = new ImageView(undoImg);
-        Image usePowerImg = new Image(PlayerView.class.getResource("/img/buttons/usePowerInactive.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        usePowerView = new ImageView(usePowerImg);
+        confirmView = new ImageView(confirmInactiveImg);
+        undoView = new ImageView(undoInactiveImg);
+        usePowerView = new ImageView(usePowerInactiveImg);
 
         buttons.getChildren().addAll(usePowerView, undoView, confirmView);
         buttons.setSpacing(screenWidth/50);
@@ -584,6 +611,8 @@ public class PlayerView extends StackPane {
         //set player's name
         textBox.setText(nickname);
         textBox.setTextFill(fontColor);
+        if(nickname.length()>20)
+            textBox.setFont(lillybelle);
 
         //set opponents attributes
         for(PlayerProxy opponent : opponents){
@@ -599,7 +628,12 @@ public class PlayerView extends StackPane {
             ImageView opponentView = new ImageView(opponentImg);
 
             Label opponentName = new Label(opponent.name);
-            opponentName.setFont(lillybelle);
+            if(opponent.name.length()>20)
+                opponentName.setFont(Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/100));
+            else
+                opponentName.setFont(lillybelle);
+            if(opponent.name.length()>10)
+                currentTurn.setFont(lillybelle);
             opponentName.setTextFill(fontColor(opponentColor));
             opponentName.setTextAlignment(TextAlignment.CENTER);
             opponentName.setPadding(new Insets(screenHeight/70, 0, 0, 0));
@@ -770,6 +804,7 @@ public class PlayerView extends StackPane {
      * @param messageString Message to show
      */
     public void changeMessage(String messageString){
+        messagesBox.setFont(lillybelle);
         messagesBox.setText(messageString);
     }
 
@@ -777,30 +812,13 @@ public class PlayerView extends StackPane {
      * This method activated undo and confirm buttons
      */
     public void activateButtons(){
-        AtomicReference<String> oldMessage = new AtomicReference<>();
-        Image confirmImg = new Image(PlayerView.class.getResource("/img/buttons/confirmAction.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        Image confirmImgHover = new Image(PlayerView.class.getResource("/img/buttons/confirmActionHover.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        Image confirmImgPressed = new Image(PlayerView.class.getResource("/img/buttons/confirmActionPressed.png").toString(),screenWidth/15, screenHeight/10,false,false);
         confirmView.setImage(confirmImg);
         confirmView.setOnMouseEntered(e -> {
-            oldMessage.set(getMessage());
             confirmView.setImage(confirmImgHover);
             confirmView.setCursor(Cursor.HAND);
-            changeMessage("Click here to confirm your action");
             e.consume();
         });
         confirmView.setOnMouseExited(e -> {
-            confirmView.setImage(confirmImg);
-            confirmView.setCursor(Cursor.DEFAULT);
-            changeMessage(oldMessage.toString());
-            e.consume();
-        });
-        confirmView.setOnMousePressed(e -> {
-            confirmView.setImage(confirmImgPressed);
-            confirmView.setCursor(Cursor.HAND);
-            e.consume();
-        });
-        confirmView.setOnMouseReleased(e -> {
             confirmView.setImage(confirmImg);
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -812,29 +830,14 @@ public class PlayerView extends StackPane {
             match.setDestinationReady(true);
             deactivateButtons();
         });
-        Image undoImg = new Image(PlayerView.class.getResource("/img/buttons/undo.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        Image undoImgHover = new Image(PlayerView.class.getResource("/img/buttons/undoHover.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        Image undoImgPressed = new Image(PlayerView.class.getResource("/img/buttons/undoPressed.png").toString(),screenWidth/15, screenHeight/10,false,false);
+
         undoView.setImage(undoImg);
         undoView.setOnMouseEntered(e -> {
-            oldMessage.set(getMessage());
             undoView.setImage(undoImgHover);
             undoView.setCursor(Cursor.HAND);
-            changeMessage("Click here to cancel your action");
             e.consume();
         });
         undoView.setOnMouseExited(e -> {
-            undoView.setImage(undoImg);
-            undoView.setCursor(Cursor.DEFAULT);
-            changeMessage(oldMessage.toString());
-            e.consume();
-        });
-        undoView.setOnMousePressed(e -> {
-            undoView.setImage(undoImgPressed);
-            undoView.setCursor(Cursor.HAND);
-            e.consume();
-        });
-        undoView.setOnMouseReleased(e -> {
             undoView.setImage(undoImg);
             undoView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -842,7 +845,7 @@ public class PlayerView extends StackPane {
         undoView.setOnMouseClicked(e -> {
             match.chosenBox().removeColor();
             for (int[] i : match.chosableBoxes()) {
-                match.map().box(i[0], i[1]).setAsChosable(match, match.chosableBoxes());
+                match.map().box(i[0], i[1]).setAsChosable(match);
             }
             match.playerView().deactivateButtons();
         });
@@ -852,8 +855,7 @@ public class PlayerView extends StackPane {
      * This method deactivates undo and confirm button
      */
     public void deactivateButtons() {
-        Image confirmImg = new Image(PlayerView.class.getResource("/img/buttons/confirmActionInactive.png").toString(), screenWidth / 15, screenHeight / 10, false, false);
-        confirmView.setImage(confirmImg);
+        confirmView.setImage(confirmInactiveImg);
         confirmView.setOnMouseEntered(e -> {
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -862,16 +864,11 @@ public class PlayerView extends StackPane {
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
-        confirmView.setOnMousePressed(e -> {
+        confirmView.setOnMouseClicked(e -> {
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
-        confirmView.setOnMouseReleased(e -> {
-            confirmView.setCursor(Cursor.DEFAULT);
-            e.consume();
-        });
-        Image undoImg = new Image(PlayerView.class.getResource("/img/buttons/undoInactive.png").toString(), screenWidth / 15, screenHeight / 10, false, false);
-        undoView.setImage(undoImg);
+        undoView.setImage(undoInactiveImg);
         undoView.setOnMouseEntered(e -> {
             undoView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -880,11 +877,7 @@ public class PlayerView extends StackPane {
             undoView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
-        undoView.setOnMousePressed(e -> {
-            undoView.setCursor(Cursor.DEFAULT);
-            e.consume();
-        });
-        undoView.setOnMouseReleased(e -> {
+        undoView.setOnMouseClicked(e -> {
             undoView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
@@ -894,34 +887,38 @@ public class PlayerView extends StackPane {
      * This method activates use power button
      */
     public void activateUsePower(){
-        //todo usePower dà 0
-        AtomicReference<String> oldMessage = new AtomicReference<>();
-        Image usePowerImg = new Image(PlayerView.class.getResource("/img/buttons/usePower.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        Image usePowerImgHover = new Image(PlayerView.class.getResource("/img/buttons/usePowerHover.png").toString(),screenWidth/15, screenHeight/10,false,false);
-        Image usePowerImgPressed = new Image(PlayerView.class.getResource("/img/buttons/usePowerPressed.png").toString(),screenWidth/15, screenHeight/10,false,false);
+        usePowerAnswer.set(2);
         usePowerView.setImage(usePowerImg);
         usePowerView.setOnMouseEntered(e -> {
-            oldMessage.set(getMessage());
             usePowerView.setImage(usePowerImgHover);
             usePowerView.setCursor(Cursor.HAND);
-            changeMessage("Click here to use your power");
             e.consume();
         });
         usePowerView.setOnMouseExited(e -> {
             usePowerView.setImage(usePowerImg);
             usePowerView.setCursor(Cursor.DEFAULT);
-            changeMessage(oldMessage.toString());
             e.consume();
         });
-        usePowerView.setOnMousePressed(e -> {
-            usePowerView.setImage(usePowerImgPressed);
+        usePowerView.setOnMouseClicked(e -> {
+            setUsePowerAnswer(0);
             usePowerView.setCursor(Cursor.HAND);
             e.consume();
         });
-        usePowerView.setOnMouseReleased(e -> {
-            usePowerView.setImage(usePowerImg);
-            usePowerView.setCursor(Cursor.DEFAULT);
+
+        confirmView.setImage(confirmImg);
+        confirmView.setOnMouseEntered(e -> {
+            confirmView.setImage(confirmImgHover);
+            confirmView.setCursor(Cursor.HAND);
             e.consume();
+        });
+        confirmView.setOnMouseExited(e -> {
+            confirmView.setImage(confirmImg);
+            confirmView.setCursor(Cursor.DEFAULT);
+            e.consume();
+        });
+        confirmView.setOnMouseClicked(e -> {
+            setUsePowerAnswer(1);
+            deactivateUsePower();
         });
     }
 
@@ -929,8 +926,7 @@ public class PlayerView extends StackPane {
      * This method deactivates use power button
      */
     public void deactivateUsePower() {
-        Image usePowerImg = new Image(PlayerView.class.getResource("/img/buttons/usePowerInactive.png").toString(), screenWidth / 15, screenHeight / 10, false, false);
-        usePowerView.setImage(usePowerImg);
+        usePowerView.setImage(usePowerInactiveImg);
         usePowerView.setOnMouseEntered(e -> {
             usePowerView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -947,6 +943,38 @@ public class PlayerView extends StackPane {
             usePowerView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
+
+        confirmView.setImage(confirmInactiveImg);
+        confirmView.setOnMouseEntered(e -> {
+            confirmView.setCursor(Cursor.DEFAULT);
+            e.consume();
+        });
+        confirmView.setOnMouseExited(e -> {
+            confirmView.setCursor(Cursor.DEFAULT);
+            e.consume();
+        });
+        confirmView.setOnMouseClicked(e -> {
+            confirmView.setCursor(Cursor.DEFAULT);
+            e.consume();
+        });
+    }
+
+    private synchronized void setUsePowerAnswer(int answer){
+        usePowerAnswer.set(answer);
+        deactivateUsePower();
+        notifyAll();
+    }
+
+    public synchronized int askUsePower(){
+        activateUsePower();
+        while (usePowerAnswer.get()==2){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return usePowerAnswer.get();
     }
 
     /**
@@ -955,10 +983,29 @@ public class PlayerView extends StackPane {
      * @return Font color
      */
     public Color fontColor(String color){
-        if(color=="White"){
+        if(color.equals("White")){
             return BLACK;
         }else{
             return WHITE;
         }
+    }
+
+    public void setCurrentTurn(String currentTurnMessage){
+        FadeTransition currentTurnFadeOut = new FadeTransition(Duration.millis(500), currentTurn);
+        currentTurnFadeOut.setFromValue(1);
+        currentTurnFadeOut.setToValue(0);
+        currentTurnFadeOut.play();
+        FadeTransition currentTurnFadeIn = new FadeTransition(Duration.millis(500), currentTurn);
+        currentTurnFadeIn.setFromValue(0);
+        currentTurnFadeIn.setToValue(1);
+
+        Timeline hidingTimer = new Timeline(new KeyFrame(
+                Duration.millis(500),
+                ae -> {
+                    currentTurnFadeIn.play();
+                    currentTurn.setText(currentTurnMessage);
+                }));
+        hidingTimer.play();
+        changeMessage("Wait for other players to finish their turns");
     }
 }

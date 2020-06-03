@@ -12,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +25,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MatchScene {
@@ -105,7 +107,23 @@ public class MatchScene {
     //info description when a player has to choose their card
     private final Text infoGodDescription = new Text("Go on a card to see the power");
 
+    //variable that is true when chosen box is ready
     private final AtomicBoolean destinationReady = new AtomicBoolean(false);
+
+    //confirm turn popup
+    private final StackPane confirmTurn = new StackPane();
+
+    //yes button of confirm turn popup
+    private Button yesPopupButton;
+
+    //no button of confirm turn popup
+    private Button noPopupButton;
+
+    //turn confirmation answer
+    private AtomicInteger answer = new AtomicInteger(2);
+
+    //variable that is true when player has given an answer to confirm turn popup
+    private AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
 
 
 
@@ -133,9 +151,12 @@ public class MatchScene {
 
         StackPane playerViewPane = playerView.getPlayerViewStackPane();
 
-        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, chooseCardsBox, chooseCard);
+        confirmTurn();
+
+        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, chooseCardsBox, chooseCard, confirmTurn);
         chooseCardsBox.setVisible(false);
         chooseCard.setVisible(false);
+        confirmTurn.setVisible(false);
     }
 
     //_________________________________________________SETTER____________________________________________________________
@@ -234,7 +255,7 @@ public class MatchScene {
         int index = 0;
         for(int[] i : possibleDestinations){
             map().box(i[0], i[1]).setIndex(index);
-            map().box(i[0], i[1]).setAsChosable(this, possibleDestinations);
+            map().box(i[0], i[1]).setAsChosable(this);
             index++;
         }
         setChosableBoxes(possibleDestinations);
@@ -288,6 +309,10 @@ public class MatchScene {
         cardsList.setPrefHeight(screenHeight/1.5);
         cardsList.setSpacing(60);
         cardsList.setPadding(new Insets(0,0,0,screenWidth/14));
+
+        //list to save all cards images in order to change their border when one is selected
+        List<ImageView> cardsChosable = new ArrayList<>();
+
         for(GodCardProxy card : godCards){
             Image cardImg = new Image(MatchScene.class.getResource("/img/godCards/"+card.name+".png").toString(), screenWidth/10, screenHeight/5, false, false);
             ImageView cardView = new ImageView(cardImg);
@@ -333,8 +358,8 @@ public class MatchScene {
                     cardView.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
                     cardView.setCursor(Cursor.DEFAULT);
                 });
-                for(Node box : cardsList.getChildren()){
-                    if(!box.equals(cardBox)) {
+                for(Node box : cardsChosable){
+                    if(!box.equals(cardView)) {
                         box.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)");
                         box.setOnMouseExited(k -> {
                             box.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)");
@@ -343,6 +368,7 @@ public class MatchScene {
                     }
                 }
             });
+            cardsChosable.add(cardView);
             cardsList.getChildren().add(cardBox);
         }
 
@@ -737,5 +763,98 @@ public class MatchScene {
 
         }
         return cardIndex;
+    }
+
+    /**
+     * This method creates confirm popup
+     */
+    public void confirmTurn(){
+        confirmTurn.setPrefWidth(screenWidth/5);
+        confirmTurn.setPrefHeight(screenHeight/5);
+
+        Image confirmFrame = new Image(Gui.class.getResource("/img/frame2.png").toString(), screenWidth/5, screenHeight/5, false, false);
+        ImageView confirmView = new ImageView(confirmFrame);
+
+        VBox confirmBox = new VBox();
+
+        Text questionPopup = new Text("Do you confirm your turn?");
+        questionPopup.setFont(lillybelleFont);
+        HBox answers = new HBox();
+        yesPopupButton = new Button("Yes");
+        noPopupButton = new Button("No");
+
+        yesPopupButton.setFont(lillybelleFont);
+        yesPopupButton.setCursor(Cursor.HAND);
+        noPopupButton.setFont(lillybelleFont);
+        noPopupButton.setCursor(Cursor.HAND);
+
+
+
+        answers.getChildren().addAll(yesPopupButton, noPopupButton);
+        answers.setSpacing(50);
+        answers.setAlignment(Pos.CENTER);
+
+        yesPopupButton.setOnAction(e -> {
+            answer.set(0);
+            setClickedConfirmation();
+        });
+        noPopupButton.setOnAction(e -> {
+            answer.set(1);
+            setClickedConfirmation();
+        });
+
+
+        confirmBox.setSpacing(10);
+        confirmBox.getChildren().addAll(questionPopup, answers);
+
+        confirmTurn.getChildren().addAll(confirmView, confirmBox);
+        confirmTurn.setAlignment(Pos.CENTER);
+        confirmBox.setAlignment(Pos.CENTER);
+    }
+
+    private synchronized void setClickedConfirmation(){
+        clickedConfirmation.set(true);
+
+        FadeTransition confirmTurnFadeOut = new FadeTransition(Duration.millis(1000), confirmTurn);
+        confirmTurnFadeOut.setFromValue(1);
+        confirmTurnFadeOut.setToValue(0);
+
+        confirmTurnFadeOut.play();
+        Timeline hidingTimer = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    confirmTurn.setVisible(false);
+                }));
+        hidingTimer.play();
+
+        notifyAll();
+    }
+
+    public synchronized int showConfirmTurn(){
+        clickedConfirmation.set(false);
+        FadeTransition confirmTurnFadeIn = new FadeTransition(Duration.millis(1000), confirmTurn);
+        confirmTurnFadeIn.setFromValue(0);
+        confirmTurnFadeIn.setToValue(1);
+
+        confirmTurnFadeIn.play();
+        confirmTurn.setVisible(true);
+
+        while (!clickedConfirmation.get()){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return answer.get();
+    }
+
+    public void setMyTurn(){
+        playerView.setCurrentTurn("Your Turn");
+
+    }
+
+    public void setOpponentTurn(String playerTurnName){
+        playerView.setCurrentTurn(playerTurnName + "'s Turn");
     }
 }

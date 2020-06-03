@@ -306,8 +306,12 @@ public class Match extends Thread{
             for (int i = 0; i<2 && player.isInGame(); i++) {
                 possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
                 try {
+                    Worker worker;
                     position = communicationController.chooseStartPosition(player, possibleSetUpPosition);
-                    Worker worker = new Worker(position, player.colour());
+                    if(i==0)
+                        worker = new Worker(position, player.colour(), true);
+                    else
+                        worker = new Worker(position, player.colour(), false);
                     freeMap.remove(position);
                     player.assignWorker(worker);
                 } catch (TimeoutException e) {

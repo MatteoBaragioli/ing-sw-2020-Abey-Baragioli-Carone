@@ -20,6 +20,13 @@ public class Worker {
         this.position.occupy(this);
     }
 
+    public Worker(Box position, Colour colour, boolean gender){
+        this.position = position;
+        this.gender=gender;
+        this.position.occupy(this);
+        this.colour = colour;
+    }
+
     public Box position() {
         return position;
     }

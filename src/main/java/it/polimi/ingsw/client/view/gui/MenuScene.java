@@ -100,6 +100,9 @@ public class MenuScene {
     //page to show of the how to play
     private int howToPlayPage;
 
+    //variable that is true if user gives an answer
+    private final AtomicBoolean clicked = new AtomicBoolean(false);
+
 
 
     public MenuScene(Gui gui, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage, StackPane howToPlayBox) {
@@ -599,10 +602,10 @@ public class MenuScene {
      * This method is called by the client and shows the ip request form. It waits for the user to insert an Ip and returns it to the client
      * @return String (Ip address)
      */
-    public String askIp() {
+    public synchronized String askIp() {
         loadingIcon.setVisible(false);
         confirmButton.setVisible(true);
-        AtomicBoolean clicked = new AtomicBoolean(false);
+        clicked.set(false);
         setIp(null);
         formText.setText("Ip Address");
         formField.clear();
@@ -615,11 +618,15 @@ public class MenuScene {
                 setIp(formField.getText());
                 errorMessage.setVisible(false);
                 errorMessage.setManaged(false);
-                clicked.set(true);
+                setClicked();
             }
         });
         while(!clicked.get()){
-
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         return ip();
@@ -629,9 +636,9 @@ public class MenuScene {
      * This method is called by the client and shows the port request form. It waits for the user to insert a port number and returns it to the client
      * @return int (port number)
      */
-    public int askPort() {
+    public synchronized int askPort() {
         setPort(0);
-        AtomicBoolean clicked = new AtomicBoolean(false);
+        clicked.set(false);
         AtomicBoolean valid = new AtomicBoolean(false);
         formText.setText("Port Number");
         while (!valid.get()){
@@ -651,9 +658,14 @@ public class MenuScene {
                     errorMessage.setManaged(true);
                     setErrorMessage("Port must be a number");
                 }
-                clicked.set(true);
+                setClicked();
             });
             while (!clicked.get()){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         confirmButton.setVisible(false);
@@ -667,7 +679,7 @@ public class MenuScene {
      * This method is called by the client and shows the nickname request form. It waits for the user to insert a nickname and returns it to the client
      * @return String (User nickname)
      */
-    public String askNickname() {
+    public synchronized String askNickname() {
         if(nickname!=null){
             setErrorMessage("Nickname already used");
         }
@@ -675,16 +687,21 @@ public class MenuScene {
         loadingIcon.setManaged(false);
         confirmButton.setVisible(true);
         confirmButton.setManaged(true);
-        AtomicBoolean clicked = new AtomicBoolean(false);
+        clicked.set(false);
         formText.setText("Nickname");
         formField.clear();
         confirmButton.setOnMouseClicked(e -> {
             setNickname(formField.getText());
-            clicked.set(true);
+            setClicked();
             errorMessage.setVisible(false);
             errorMessage.setManaged(false);
         });
         while (!clicked.get()){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return nickname();
     }
@@ -694,8 +711,8 @@ public class MenuScene {
      * This method is called by the client and shows the match type request form. It waits for the user to insert the number of players for the match and returns the match type
      * @return int (match type -> 1 if the user chooses 2 players, 2 if the user chooses 3 players)
      */
-    public int askNumberOfPlayers() {
-        AtomicBoolean clicked = new AtomicBoolean(false);
+    public synchronized int askNumberOfPlayers() {
+        clicked.set(false);
         formView.setVisible(false);
         matchTypeNumber.setVisible(true);
         playGroup.setVisible(true);
@@ -707,15 +724,24 @@ public class MenuScene {
             Timeline readyTimer = new Timeline(new KeyFrame(
                     Duration.millis(6000),
                     ae -> {
-                        clicked.set(true);
+                        setClicked();
                     }));
             readyTimer.play();
             event.consume();
         });
         while (!clicked.get()){
-
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return numberOfPlayers();
+    }
+
+    private synchronized void setClicked(){
+        clicked.set(true);
+        notifyAll();
     }
 
     //-----------------------------------------------End Form and Communication------------------------------------------------------------

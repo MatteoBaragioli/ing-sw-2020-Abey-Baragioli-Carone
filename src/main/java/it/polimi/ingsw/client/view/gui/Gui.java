@@ -46,7 +46,8 @@ public class Gui extends Application implements View {
     private MenuScene menuScene;
     private MatchScene matchScene;
     private AtomicInteger answer;
-    private AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
+    private final AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
+    private final AtomicBoolean readyForTheMatch = new AtomicBoolean(false);
 
 
 
@@ -64,9 +65,7 @@ public class Gui extends Application implements View {
 
     private final StackPane transitionClouds = new StackPane();
 
-    private final StackPane confirmPopup = new StackPane();
-
-    private Text questionPopup;
+    private final StackPane closePopup = new StackPane();
 
     private Button yesPopupButton;
 
@@ -76,7 +75,7 @@ public class Gui extends Application implements View {
     private TranslateTransition translateRightTransitionIn;
 
 
-    private StackPane matchPage = new StackPane();
+    private final StackPane matchPage = new StackPane();
 
 
 
@@ -90,16 +89,16 @@ public class Gui extends Application implements View {
     public void start(Stage primaryStage){
         window = primaryStage;
         windowStyle();
-        confirmPopup();
+        closePopup();
 
 
-        mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, confirmPopup);
+        mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, closePopup);
         openingPage.setVisible(true);
         menuPage.setVisible(false);
         loadingPage.setVisible(false);
         transitionClouds.setVisible(false);
-        confirmPopup.setVisible(false);
-        confirmPopup.setAlignment(Pos.CENTER);
+        closePopup.setVisible(false);
+        closePopup.setAlignment(Pos.CENTER);
         matchPage.setVisible(false);
         howToPlayBox.setVisible(false);
 
@@ -130,12 +129,12 @@ public class Gui extends Application implements View {
     }
 
     public void windowStyle(){
-        //window.setMaximized(true);
-        window.setWidth(1280);
+        window.setMaximized(true);
+        /*window.setWidth(1280);
         window.setHeight(720);
         screenWidth = 1280;
-        screenHeight = 720;
-        window.initStyle(StageStyle.DECORATED);
+        screenHeight = 720;*/
+        window.initStyle(StageStyle.UNDECORATED);
         window.setTitle("Santorini");
         window.setOnCloseRequest(e -> {
             e.consume();
@@ -164,50 +163,22 @@ public class Gui extends Application implements View {
             menuPage.setEffect(new BoxBlur(0, 0, 0));
             openingPage.setEffect(new BoxBlur(0, 0, 0));
             loadingPage.setEffect(new BoxBlur(0, 0, 0));
-            confirmPopup.setVisible(false);
+            closePopup.setVisible(false);
         });
-        createConfirmPopup("Do you really want to quit the game?");
+        createClosePopup();
     }
 
-    public synchronized int undoTurn(){
-        clickedConfirmation.set(false);
-        answer = new AtomicInteger(2);
-        createConfirmPopup("Do you confirm your turn?");
-        while(!clickedConfirmation.get()){
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-        }
-        return answer.get();
-    }
+    private void closePopup(){
+        closePopup.setPrefWidth(screenWidth/4);
+        closePopup.setPrefHeight(screenHeight/4);
 
-    public void setUndoButtons(){
-        yesPopupButton.setOnAction(e -> {
-            answer.set(0);
-            setClickedConfirmation(true);
-            confirmPopup.setVisible(false);
-        });
-        noPopupButton.setOnAction(e -> {
-            answer.set(1);
-            setClickedConfirmation(true);
-            confirmPopup.setVisible(false);
-        });
-    }
-
-    private void confirmPopup(){
-        confirmPopup.setPrefWidth(screenWidth/4);
-        confirmPopup.setPrefHeight(screenHeight/4);
-
-        Image confirmFrame = new Image(Gui.class.getResource("/img/frame.png").toString(), screenWidth/2, screenHeight/2, false, false);
-        ImageView confirmView = new ImageView(confirmFrame);
+        Image closeFrame = new Image(Gui.class.getResource("/img/frame.png").toString(), screenWidth/2, screenHeight/2, false, false);
+        ImageView closeView = new ImageView(closeFrame);
 
         VBox confirmBox = new VBox();
 
-        questionPopup = new Text();
+        Text questionPopup = new Text("Do you really want to quit the game?");
         questionPopup.setFont(lillybelleFont);
-
         HBox answers = new HBox();
         yesPopupButton = new Button("Yes");
         noPopupButton = new Button("No");
@@ -229,18 +200,20 @@ public class Gui extends Application implements View {
         confirmBox.setSpacing(10);
         confirmBox.getChildren().addAll(questionPopup, answers);
 
-        confirmPopup.getChildren().addAll(confirmView, confirmBox);
-        confirmPopup.setAlignment(Pos.CENTER);
+        closePopup.getChildren().addAll(closeView, confirmBox);
+        closePopup.setAlignment(Pos.CENTER);
         confirmBox.setAlignment(Pos.CENTER);
 
     }
 
-    private void createConfirmPopup(String question){
-        questionPopup.setText(question);
+    private void createClosePopup(){
         menuPage.setEffect(new BoxBlur(5, 10, 10));
         openingPage.setEffect(new BoxBlur(5, 10, 10));
         loadingPage.setEffect(new BoxBlur(5, 10, 10));
-        confirmPopup.setVisible(true);
+        matchPage.setEffect(new BoxBlur(5, 10, 10));
+        transitionClouds.setEffect(new BoxBlur(5, 10, 10));
+        howToPlayBox.setEffect(new BoxBlur(5, 10, 10));
+        closePopup.setVisible(true);
     }
 
 
@@ -371,17 +344,18 @@ public class Gui extends Application implements View {
     public int askConfirmation(CommunicationProtocol key) {
         switch (key){
             case UNDO:
-                Platform.runLater(this::setUndoButtons);
-                return undoTurn();
+                return matchScene.showConfirmTurn();
             case GOD_POWER:
+                return matchScene.playerView().askUsePower();
 
         }
-        return undoTurn();
+        return -1;
     }
 
     @Override
     public String askIp() {
-        return menuScene.askIp();
+        return "127.0.0.1";
+        //todo return menuScene.askIp();
     }
 
     @Override
@@ -392,7 +366,8 @@ public class Gui extends Application implements View {
 
     @Override
     public int askPort() {
-        return menuScene.askPort();
+        return 1234;
+        //todo return menuScene.askPort();
     }
 
     @Override
@@ -409,7 +384,26 @@ public class Gui extends Application implements View {
 
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
-
+        switch (key){
+            case GOD_POWER:
+                Platform.runLater(() -> matchScene.playerView().changeMessage("If you want to use your power click on the Power button, otherwise click on Confirm button to go on with the match"));
+                break;
+            case START_POSITION:
+                Platform.runLater(() -> matchScene.playerView().changeMessage("Choose starting boxes for your workers"));
+                break;
+            case BUILD:
+                Platform.runLater(() -> matchScene.playerView().changeMessage("Choose where to build"));
+                break;
+            case WORKER:
+                Platform.runLater(() -> matchScene.playerView().changeMessage("Choose a worker for this turn"));
+                break;
+            case DESTINATION:
+                Platform.runLater(() -> matchScene.playerView().changeMessage("Choose where to move"));
+                break;
+            case REMOVAL:
+                Platform.runLater(() -> matchScene.playerView().changeMessage("Choose a block to remove"));
+                break;
+        }
 
 
     }
@@ -478,8 +472,8 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public void startMatch(){
-        AtomicBoolean ready = new AtomicBoolean(false);
+    public synchronized void startMatch(){
+        readyForTheMatch.set(false);
         playTransitionClouds();
 
         Platform.runLater(() -> matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents));
@@ -497,18 +491,30 @@ public class Gui extends Application implements View {
                     matchPage.setVisible(true);
                     matchFade.setToValue(1.0);
                     matchFade.play();
-                    ready.set(true);
+                    setReadyForTheMatch();
                 }));
         matchTimer.play();
 
-        while(!ready.get()){
-
+        while(!readyForTheMatch.get()){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void setCurrentPlayer(PlayerProxy player) {
+        if(player.name.equals(nickname))
+            Platform.runLater(() -> matchScene.setMyTurn());
+        else
+            Platform.runLater(() -> matchScene.setOpponentTurn(player.name));
+    }
 
+    private synchronized void setReadyForTheMatch(){
+        readyForTheMatch.set(true);
+        notifyAll();
     }
 
     @Override

@@ -12,13 +12,21 @@ public class RemoveAdjacentBlockPower extends BuildModifier{
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, MatchStory matchStory) throws TimeoutException, ChannelClosedException {
         //buildPower - Ares
-        boolean usePower = communicationController.chooseToUsePower(player);
         for (Worker worker : player.workers()) {
             if (!player.turnSequence().movedWorkers().contains(worker)) {
                 player.turnSequence().setChosenWorker(worker);
-                usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);
-            } else {
-                //todo comunicare all'utente che non può usare il suo potere aggiuntivo
+                player.turnSequence().clearPossibleBuilds();
+                for(Box box : map.adjacent(player.turnSequence().chosenWorker().position())){
+                    if(box.level() > 0 && box.isFree()){
+                        player.turnSequence().addPossibleBuild(box);
+                    }
+                }
+                if(!player.turnSequence().possibleBuilds().isEmpty()) {
+                    boolean usePower = communicationController.chooseToUsePower(player);
+                    usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);
+                } else {
+                    //todo comunicare all'utente che non può usare il suo potere aggiuntivo
+                }
             }
         }
     }
@@ -26,22 +34,12 @@ public class RemoveAdjacentBlockPower extends BuildModifier{
     @Override
     public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower, MatchStory matchStory) throws TimeoutException, ChannelClosedException {
         if(usePower) {
-            player.turnSequence().clearPossibleBuilds();
-            for(Box box : map.adjacent(player.turnSequence().chosenWorker().position())){
-                if(box.level() > 0 && box.isFree()){
-                    player.turnSequence().addPossibleBuild(box);
-                }
-            }
-            if(!player.turnSequence().possibleBuilds().isEmpty()) {
-                Box chosenBox = communicationController.chooseRemoval(player, player.turnSequence().possibleBuilds());
-                if (chosenBox != null) {
-                    executePower(player, actionController, chosenBox, matchStory);
-                    communicationController.updateView(player, map.createProxy());
-                } else {
-                    //todo errore chosenBox
-                }
+            Box chosenBox = communicationController.chooseRemoval(player, player.turnSequence().possibleBuilds());
+            if (chosenBox != null) {
+                executePower(player, actionController, chosenBox, matchStory);
+                communicationController.updateView(player, map.createProxy());
             } else {
-                //todo comunicare all'utente che non può usare il suo potere aggiuntivo
+                //todo errore chosenBox
             }
         }
     }
