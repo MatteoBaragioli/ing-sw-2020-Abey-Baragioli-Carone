@@ -27,4 +27,5 @@ public interface View {
     void startMatch();
     void setCurrentPlayer(PlayerProxy player);
     void tellStory(String content);
+    void manageCountdown();
 }

@@ -113,6 +113,7 @@ public class ClientController {
     }
 
     public void manageCountDown(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+        view.manageCountdown();
         communicationChannel.popMessage();
     }
 

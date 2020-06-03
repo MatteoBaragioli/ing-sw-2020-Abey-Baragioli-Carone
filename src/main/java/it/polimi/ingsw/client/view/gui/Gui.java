@@ -78,7 +78,6 @@ public class Gui extends Application implements View {
     private final StackPane matchPage = new StackPane();
 
 
-
     private String nickname;
     private String color;
     private int numberOfPlayers;
@@ -118,7 +117,6 @@ public class Gui extends Application implements View {
 
         Scene fullScene = new Scene(mainScene);
         window.setScene(fullScene);
-
         window.show();
     }
 
@@ -354,8 +352,7 @@ public class Gui extends Application implements View {
 
     @Override
     public String askIp() {
-        return "127.0.0.1";
-        //todo return menuScene.askIp();
+        return menuScene.askIp();
     }
 
     @Override
@@ -366,8 +363,7 @@ public class Gui extends Application implements View {
 
     @Override
     public int askPort() {
-        return 1234;
-        //todo return menuScene.askPort();
+        return menuScene.askPort();
     }
 
     @Override
@@ -469,6 +465,11 @@ public class Gui extends Application implements View {
     @Override
     public void connectionFailed(String host) {
         menuScene().setErrorMessage("Connection refused");
+    }
+
+    @Override
+    public void manageCountdown() {
+        //todo
     }
 
     @Override

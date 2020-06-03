@@ -598,6 +598,11 @@ public class Cli implements View {
         return first+","+second;
     }
 
+    @Override
+    public void manageCountdown() {
+
+    }
+
     public static void main(String[] args){
         Cli cli = new Cli();
         Client client = new Client(cli);

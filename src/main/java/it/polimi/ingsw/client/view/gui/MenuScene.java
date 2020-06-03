@@ -286,8 +286,8 @@ public class MenuScene {
      * @return ImageView (Play button)
      */
     private ImageView playButton(){
-        Image playImg = new Image(MenuScene.class.getResource("/img/play.png").toString(), screenWidth/8, screenHeight/4, false, false);
-        Image playHoverImg = new Image(MenuScene.class.getResource("/img/play_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
+        Image playImg = new Image(MenuScene.class.getResource("/img/buttons/play.png").toString(), screenWidth/8, screenHeight/4, false, false);
+        Image playHoverImg = new Image(MenuScene.class.getResource("/img/buttons/play_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
         playView = new ImageView(playImg);
         playView.setEffect(new DropShadow(10, Color.BLACK));
         playView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
@@ -324,8 +324,8 @@ public class MenuScene {
      * @return ImageView (Quit button)
      */
     private ImageView quitButton(){
-        Image quitImg = new Image(MenuScene.class.getResource("/img/quit_normal.png").toString(), screenWidth/8, screenHeight/4, false, false);
-        Image quitHoverImg = new Image(MenuScene.class.getResource("/img/quit_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
+        Image quitImg = new Image(MenuScene.class.getResource("/img/buttons/quit_normal.png").toString(), screenWidth/8, screenHeight/4, false, false);
+        Image quitHoverImg = new Image(MenuScene.class.getResource("/img/buttons/quit_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
         ImageView quitView = new ImageView(quitImg);
 
         quitView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
@@ -759,10 +759,9 @@ public class MenuScene {
         Image loadingImg = new Image(MenuScene.class.getResource("/img/loading.png").toString(), screenWidth, screenHeight, false, false);
         ImageView loadingImageView = new ImageView(loadingImg);
         loadingPage.setBackground(new Background(new BackgroundFill(WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        Image quitLoadingImg = new Image(MenuScene.class.getResource("/img/quit_normal.png").toString(), screenWidth/12, screenHeight/8, false, false);
-        Image quitLoadingHoverImg = new Image(MenuScene.class.getResource("/img/quit_hover.png").toString(),screenWidth/12, screenHeight/8, false, false);
-        Image quitLoadingClickImg = new Image(MenuScene.class.getResource("/img/quit_clicked.png").toString(),screenWidth/12, screenHeight/8, false, false);
-        ImageView quitLoading = new ImageView(quitLoadingImg);
+        Image quitLoadingImg = new Image(MenuScene.class.getResource("/img/buttons/quit_normal.png").toString(), screenWidth/12, screenHeight/8, false, false);
+        Image quitLoadingHoverImg = new Image(MenuScene.class.getResource("/img/buttons/quit_hover.png").toString(),screenWidth/12, screenHeight/8, false, false);
+         ImageView quitLoading = new ImageView(quitLoadingImg);
 
         quitLoading.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
             quitLoading.setImage(quitLoadingHoverImg);
@@ -776,7 +775,6 @@ public class MenuScene {
         });
 
         quitLoading.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            quitLoading.setImage(quitLoadingClickImg);
             gui.closeProgram();
             event.consume();
         });

@@ -125,6 +125,15 @@ public class MatchScene {
     //variable that is true when player has given an answer to confirm turn popup
     private AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
 
+    //pauseMenu
+    StackPane pausePane = new StackPane();
+
+    //active powers pane
+    StackPane activePowers = new StackPane();
+
+    //helper pane
+    StackPane helper = new StackPane();
+
 
 
 
@@ -147,16 +156,20 @@ public class MatchScene {
         mapView = new ImageView(mapImg);
         ImageView matchBackground = matchBackground(screenWidth, screenHeight);
 
-        playerView = new PlayerView(screenWidth, screenHeight, guiMap, gui, this);
+
+        playerView = new PlayerView(screenWidth, screenHeight, gui, this, pausePane, activePowers, helper);
 
         StackPane playerViewPane = playerView.getPlayerViewStackPane();
 
         confirmTurn();
 
-        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, chooseCardsBox, chooseCard, confirmTurn);
+        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, pausePane, activePowers, helper, chooseCardsBox, chooseCard, confirmTurn);
         chooseCardsBox.setVisible(false);
         chooseCard.setVisible(false);
         confirmTurn.setVisible(false);
+        pausePane.setVisible(false);
+        activePowers.setVisible(false);
+        helper.setVisible(false);
     }
 
     //_________________________________________________SETTER____________________________________________________________

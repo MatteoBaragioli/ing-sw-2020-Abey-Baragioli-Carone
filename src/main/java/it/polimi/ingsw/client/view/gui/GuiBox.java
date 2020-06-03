@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.view.gui;
 
 import javafx.event.Event;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -13,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -22,9 +24,9 @@ public class GuiBox extends Button {
     private final int y;
     private final double boxWidth;
     private final double boxHeight;
-    private Group graphics = new Group();
-    private final Label building = new Label();
-    private final Label worker = new Label();
+    private StackPane graphics = new StackPane();
+    private final ImageView building = new ImageView();
+    private final ImageView worker = new ImageView();
     private double previousOpacity;
     private int index = -1;
     private final double screenWidth;
@@ -43,11 +45,11 @@ public class GuiBox extends Button {
         building.setOpacity(1);
         worker.setOpacity(1);
         graphics.getChildren().addAll(building, worker);
-        graphics.autoSizeChildrenProperty();
         graphics.maxWidth(boxWidth);
         graphics.prefWidth(boxWidth);
         graphics.maxHeight(boxHeight);
         graphics.prefHeight(boxHeight);
+        graphics.setAlignment(Pos.CENTER);
         setGraphic(graphics);
     }
 
@@ -145,32 +147,26 @@ public class GuiBox extends Button {
     public void build(int level){
         Image levelImg;
         if(level==0){
-            building.setGraphic(null);
+            building.setImage(null);
             return;
         }else if(level==4) {
-            levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/levelDome.png").toString());
+            levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/levelDome.png").toString(), boxWidth - boxWidth / 5, boxHeight - boxHeight / 5, false, false);
         }else {
-            levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/level" + level + ".png").toString());
+            levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/level" + level + ".png").toString(), boxWidth - boxWidth / 5, boxHeight - boxHeight / 5, false, false);
         }
-        ImageView levelImgView = new ImageView(levelImg);
-        levelImgView.setFitWidth(boxWidth - boxWidth / 5);
-        levelImgView.setFitHeight(boxHeight - boxHeight / 5);
-        building.setGraphic(levelImgView);
+        building.setImage(levelImg);
         setOpacity(1);
     }
 
     public void moveWorker(String color, String gender){
-        Image workerImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/worker" + gender + color + ".png").toString());
-        ImageView workerImgView = new ImageView(workerImg);
-        workerImgView.setFitWidth(boxWidth - boxWidth / 3);
-        workerImgView.setFitHeight(boxHeight - boxHeight / 4);
-        worker.setGraphic(workerImgView);
+        Image workerImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/worker" + gender + color + ".png").toString(), boxWidth - boxWidth / 6, boxHeight - boxHeight / 8, false, false);
+        worker.setImage(workerImg);
         changeOpacity(1);
         previousOpacity = 1;
     }
 
     public void removeWorker(){
-        worker.setGraphic(null);
+        worker.setImage(null);
     }
 
 }

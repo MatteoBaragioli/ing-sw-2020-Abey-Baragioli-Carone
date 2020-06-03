@@ -2,15 +2,11 @@ package it.polimi.ingsw.client.view.gui;
 
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import it.polimi.ingsw.server.model.Colour;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +20,6 @@ import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.geometry.Pos.*;
 import static javafx.scene.paint.Color.*;
@@ -47,9 +42,6 @@ public class PlayerView extends StackPane {
 
     //reference to gui
     private final Gui gui;
-
-    //reference to map
-    private final GuiMap guiMap;
 
     //Match scene
     private final MatchScene match;
@@ -76,13 +68,13 @@ public class PlayerView extends StackPane {
     private Label textBox;
 
     //active powers pane
-    private StackPane activePowers;
+    private final StackPane activePowers;
 
     //pause menu
-    private StackPane pausePane;
+    private final StackPane pausePane;
 
     //helper pane
-    private StackPane helper;
+    private final StackPane helper;
 
     //helper page number
     private int helperPage;
@@ -111,9 +103,9 @@ public class PlayerView extends StackPane {
     private Image confirmInactiveImg;
 
     //undo button images
-    Image undoImg;
-    Image undoImgHover;
-    Image undoInactiveImg;
+    private Image undoImg;
+    private Image undoImgHover;
+    private Image undoInactiveImg;
 
     //usePower button images
     private Image usePowerImg;
@@ -123,14 +115,22 @@ public class PlayerView extends StackPane {
     //use power answer
     private final AtomicInteger usePowerAnswer = new AtomicInteger(2);
 
-    public PlayerView(double screenWidth, double screenHeight, GuiMap guiMap, Gui gui, MatchScene match) {
+    //timer minutes
+    private String min = "02";
+
+    //timer seconds
+    private String sec = "00";
+
+    public PlayerView(double screenWidth, double screenHeight, Gui gui, MatchScene match, StackPane pausePane, StackPane activePowers, StackPane helper) {
         standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
         lillybelle = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.guiMap = guiMap;
         this.gui = gui;
         this.match = match;
+        this.pausePane = pausePane;
+        this.activePowers = activePowers;
+        this.helper = helper;
         create();
     }
 
@@ -164,6 +164,8 @@ public class PlayerView extends StackPane {
 
 
         //left TOP
+
+        //pause
         Image pauseImg = new Image(PlayerView.class.getResource("/img/buttons/pause.png").toString(),screenWidth/12, screenHeight/8,false,false);
         Image pauseHoverImg = new Image(PlayerView.class.getResource("/img/buttons/pauseHover.png").toString(),screenWidth/12, screenHeight/8,false,false);
         ImageView pauseView = new ImageView(pauseImg);
@@ -178,35 +180,58 @@ public class PlayerView extends StackPane {
         pauseView.setOnMouseClicked(e -> {
             showPane(pausePane);
         });
-
         StackPane pause = new StackPane();
         pause.getChildren().add(pauseView);
         pause.setPrefWidth(screenWidth/4);
-        pause.setPrefHeight(screenHeight*3/16);
+        pause.setPrefHeight(screenHeight/8);
+        pause.setAlignment(TOP_LEFT);
+
+        //timer
+        StackPane timer = new StackPane();
+        timer.setPrefWidth(screenWidth/4);
+        timer.setPrefHeight(screenHeight/5);
+
+        Label timerBackground = new Label();
+        Image timerImg = new Image(PlayerView.class.getResource("/img/buttons/timer.png").toString(),screenWidth/4, screenHeight/5,false,false);
+        ImageView timerView = new ImageView(timerImg);
+        timerBackground.setGraphic(timerView);
+
+
+        Label timerCounter = new Label();
+        timerCounter.setText(min + " : " + sec);
+        timerCounter.setFont(standardFont);
+        timerCounter.setTextAlignment(TextAlignment.CENTER);
+        timerCounter.setPadding(new Insets(screenHeight/23, 0, 0, 0));
+
+        timer.getChildren().addAll(timerBackground, timerCounter);
+        timerCounter.setAlignment(BOTTOM_CENTER);
+
 
 
         //left CENTER
         cardView = new ImageView();
-        Image godImage = new Image(PlayerView.class.getResource("/img/godCards/noGod.png").toString(),(screenWidth/7), screenHeight/3.3,false,false);
-        godView = new ImageView(godImage);
+        Image godImg = new Image(PlayerView.class.getResource("/img/godCards/noGod.png").toString(),(screenWidth/7), screenHeight/3.3,false,false);
+        godView = new ImageView(godImg);
+
 
         cardName = new Label();
         cardName.setPrefSize(screenWidth/4, screenHeight/2.4);
         cardName.setFont(standardFont);
         cardName.setAlignment(BOTTOM_CENTER);
         cardName.setTextAlignment(TextAlignment.CENTER);
+        cardName.setPadding(new Insets(0, 0, screenHeight/33, 0));
 
 
         Label cardInfo = new Label();
         cardInfo.setPrefSize(screenWidth/4, screenHeight/3.3);
-        cardInfo.setPadding(new Insets(0, 0,screenWidth/400, 0));
+        cardInfo.setPadding(new Insets(0, 0,screenWidth/26, 0));
         cardInfo.setAlignment(CENTER);
         cardInfo.setGraphic(godView);
 
         StackPane card = new StackPane();
         card.setAlignment(CENTER);
         card.setPrefWidth(screenWidth/4);
-        card.setPrefHeight(screenHeight/3.3);
+        card.setPrefHeight(screenHeight/2.5);
         card.getChildren().addAll(cardView, cardInfo, cardName);
 
 
@@ -226,12 +251,12 @@ public class PlayerView extends StackPane {
         StackPane messages = new StackPane();
         messages.setAlignment(CENTER);
         messages.setPrefWidth(screenWidth/4);
-        messages.setPrefHeight(screenHeight*3/16);
+        messages.setPrefHeight(screenHeight/4);
         messages.getChildren().addAll(messagesView, messagesBox);
+        messages.setPadding(new Insets(0,0,screenHeight/100, 0));
 
 
-        leftView.getChildren().addAll(pause, card, messages);
-        leftView.setSpacing(screenHeight/16);
+        leftView.getChildren().addAll(pause, timer, card, messages);
 
         //--------------------------------------------END LEFT-----------------------------
 
@@ -357,7 +382,6 @@ public class PlayerView extends StackPane {
 
         //--------------------------------------ACTIVE POWERS----------------------------------
 
-        activePowers = new StackPane();
         Image activePowersImg = new Image(PlayerView.class.getResource("/img/activePowers.png").toString(),screenWidth/1.5, screenHeight/1.5,false,false);
         ImageView activePowersView = new ImageView(activePowersImg);
         activePowersBox = new VBox();
@@ -378,7 +402,7 @@ public class PlayerView extends StackPane {
             exitButton.setCursor(Cursor.DEFAULT);
         });
         exitButton.setOnMouseClicked(e -> {
-            hidePane(activePowers, true);
+            hidePane(activePowers);
         });
         VBox exit = new VBox(exitButton);
         exit.setPadding(new Insets(screenHeight/10, 0, 0, screenWidth/10));
@@ -392,7 +416,6 @@ public class PlayerView extends StackPane {
 
 
         //--------------------------------------PAUSE----------------------------------------------
-        pausePane = new StackPane();
         Image pausePaneImg = new Image(PlayerView.class.getResource("/img/pauseMenu.png").toString(),screenWidth/2.5, screenHeight-screenHeight/20,false,false);
         ImageView pausePaneView = new ImageView(pausePaneImg);
         VBox pauseOptions = new VBox();
@@ -451,7 +474,7 @@ public class PlayerView extends StackPane {
             backToMatchView.setCursor(Cursor.DEFAULT);
         });
         backToMatchView.setOnMouseClicked((e -> {
-            hidePane(pausePane, true);
+            hidePane(pausePane);
         }));
 
         pauseOptions.getChildren().addAll(backToMatchView, howToPlayView, helperView, surrenderView);
@@ -489,7 +512,7 @@ public class PlayerView extends StackPane {
             exitHelperButton.setCursor(Cursor.DEFAULT);
         });
         exitHelperButton.setOnMouseClicked(e -> {
-            hidePane(helper, false);
+            hidePane(helper);
         });
 
         helperPage = 1;
@@ -571,8 +594,6 @@ public class PlayerView extends StackPane {
         helperRaw.setPrefWidth(screenWidth/1.5);
         helperRaw.setPrefHeight(screenHeight/1.5);
 
-        helper = new StackPane();
-
         helper.getChildren().addAll(helperBoxContainerView, helperRaw, exitHelperButton);
         helper.setPrefWidth(screenWidth/1.5);
         helper.setPrefHeight(screenHeight/1.5);
@@ -581,10 +602,7 @@ public class PlayerView extends StackPane {
         //---------------------------------------END HELPER------------------------------
 
         matchView.getChildren().addAll(leftView, centerView, rightView);
-        playerView.getChildren().addAll(matchView, activePowers, pausePane, helper);
-        activePowers.setVisible(false);
-        pausePane.setVisible(false);
-        helper.setVisible(false);
+        playerView.getChildren().addAll(matchView);
 
     }
 
@@ -598,7 +616,7 @@ public class PlayerView extends StackPane {
         Color fontColor = fontColor(color);
 
         //set god card frame with player's color
-        Image cardImg = new Image(PlayerView.class.getResource("/img/godFrame"+color+".png").toString(),screenWidth/4, screenHeight/2,false,false);
+        Image cardImg = new Image(PlayerView.class.getResource("/img/godFrame"+color+".png").toString(),screenWidth/4, screenHeight/2.3,false,false);
         cardView.setImage(cardImg);
 
         //set card name font color
@@ -733,7 +751,6 @@ public class PlayerView extends StackPane {
      * @param pane Pane to show
      */
     private void showPane(StackPane pane){
-        guiMap.setVisible(false);
         FadeTransition paneFadeIn = new FadeTransition(Duration.millis(1000), pane);
         paneFadeIn.setFromValue(0);
         paneFadeIn.setToValue(1);
@@ -763,9 +780,8 @@ public class PlayerView extends StackPane {
     /**
      *  This method hides panes and re-shows the map if parameter showMap is true
      * @param pane Pane to hide
-     * @param showMap If true, the method shows the GuiMap
      */
-    private void hidePane(StackPane pane, boolean showMap){
+    private void hidePane(StackPane pane){
         FadeTransition paneFadeOut = new FadeTransition(Duration.millis(1000), pane);
         paneFadeOut.setFromValue(1);
         paneFadeOut.setToValue(0);
@@ -793,8 +809,6 @@ public class PlayerView extends StackPane {
                 Duration.millis(2000),
                 ae -> {
                     pane.setVisible(false);
-                    if(showMap)
-                        guiMap.setVisible(true);
                 }));
         hidingTimer2.play();
     }
@@ -1007,5 +1021,35 @@ public class PlayerView extends StackPane {
                 }));
         hidingTimer.play();
         changeMessage("Wait for other players to finish their turns");
+    }
+
+    public void playTimer(){
+        min = "02";
+        sec = "00";
+        AtomicInteger seconds = new AtomicInteger(0);
+        AtomicInteger minutes = new AtomicInteger(2);
+        final Timeline timeline = new Timeline(
+                new KeyFrame(
+                        Duration.millis( 1000 ),
+                        event -> {
+                            seconds.getAndDecrement();
+                            if(seconds.get()<0) {
+                                seconds.set(59);
+                                minutes.getAndDecrement();
+                                if(minutes.get()<0){
+                                    //todo tempo scaduto
+                                }
+                            }
+                            if(seconds.get()<10){
+                                sec = "0"+seconds.get();
+                            } else {
+                                sec = "" + seconds.get();
+                            }
+                            min = "0" + minutes.get();
+                        }
+                )
+        );
+        timeline.setCycleCount( Animation.INDEFINITE );
+        timeline.play();
     }
 }
