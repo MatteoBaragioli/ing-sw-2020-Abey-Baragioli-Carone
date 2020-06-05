@@ -116,6 +116,20 @@ public class CommunicationController {
         return user.sendCurrentPlayer(new Gson().toJson(playerProxy, type));
     }
 
+    public boolean announceWinner(Player player, Player winner) throws ChannelClosedException {
+        User user = findUser(player);
+        PlayerProxy playerProxy = winner.createProxy();
+        Type type = new TypeToken<PlayerProxy>() {}.getType();
+        return user.sendWinner(new Gson().toJson(playerProxy, type));
+    }
+
+    public boolean announceLoser(Player player, Player loser) throws ChannelClosedException {
+        User user = findUser(player);
+        PlayerProxy playerProxy = loser.createProxy();
+        Type type = new TypeToken<PlayerProxy>() {}.getType();
+        return user.sendLoser(new Gson().toJson(playerProxy, type));
+    }
+
     /**
      * This method asks the user to choose one worker from a list
      * @param user User

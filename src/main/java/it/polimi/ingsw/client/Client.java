@@ -124,7 +124,7 @@ public class Client extends Thread {
                     break;
                 case COUNTDOWN:
                     try {
-                        clientController.manageCountDown(communicationChannel, view);
+                        communicationChannel.popMessage();
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         System.err.println("Connection closed COUNTDOWN");

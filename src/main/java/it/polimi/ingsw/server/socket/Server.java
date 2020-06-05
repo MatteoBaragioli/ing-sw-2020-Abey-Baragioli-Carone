@@ -34,14 +34,18 @@ public class Server {
         boolean closed = false;
 
         while (!closed) {
+            Socket socket = null;
             try {
-                Socket socket = serverSocket.accept();
-                System.out.println(socket + " tried to connect");
-                executor.submit(new ClientHandler(dataBase, socket));
+                socket = serverSocket.accept();
             } catch(IOException e) {
+                socket = null;
                 closed = true;
                 e.printStackTrace();
                 System.err.println("ServerSocket is not accepting");
+            }
+            if(socket!=null) {
+                System.out.println(socket + " tried to connect");
+                executor.submit(new ClientHandler(dataBase, socket));
             }
         }
         executor.shutdown();

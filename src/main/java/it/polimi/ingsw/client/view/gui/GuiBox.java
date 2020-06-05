@@ -27,6 +27,7 @@ public class GuiBox extends Button {
     private StackPane graphics = new StackPane();
     private final ImageView building = new ImageView();
     private final ImageView worker = new ImageView();
+    private final ImageView dome = new ImageView();
     private double previousOpacity;
     private int index = -1;
     private final double screenWidth;
@@ -44,7 +45,8 @@ public class GuiBox extends Button {
         setContentDisplay(ContentDisplay.CENTER);
         building.setOpacity(1);
         worker.setOpacity(1);
-        graphics.getChildren().addAll(building, worker);
+        dome.setOpacity(1);
+        graphics.getChildren().addAll(building, worker, dome);
         graphics.maxWidth(boxWidth);
         graphics.prefWidth(boxWidth);
         graphics.maxHeight(boxHeight);
@@ -144,17 +146,18 @@ public class GuiBox extends Button {
         clearEffects();
     }
 
-    public void build(int level){
+    public void build(int level, boolean isThereDome){
         Image levelImg;
         if(level==0){
             building.setImage(null);
-            return;
-        }else if(level==4) {
-            levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/levelDome.png").toString(), boxWidth - boxWidth / 5, boxHeight - boxHeight / 5, false, false);
         }else {
             levelImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/level" + level + ".png").toString(), boxWidth - boxWidth / 5, boxHeight - boxHeight / 5, false, false);
+            building.setImage(levelImg);
         }
-        building.setImage(levelImg);
+        if(isThereDome) {
+            Image domeImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/dome.png").toString(), boxWidth - boxWidth / 5, boxHeight - boxHeight / 5, false, false);
+            dome.setImage(domeImg);
+        }
         setOpacity(1);
     }
 

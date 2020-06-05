@@ -467,6 +467,16 @@ public class CommunicationChannel {
         return copy();
     }
 
+    public boolean sendWinner(String winner) throws ChannelClosedException {
+        write(keyToString(WINNER) + SEPARATOR + winner);
+        return copy();
+    }
+
+    public boolean sendLoser(String loser) throws ChannelClosedException {
+        write(keyToString(LOSER) + SEPARATOR + loser);
+        return copy();
+    }
+
     /**
      * this method sends to the user the map and tells if it was received
      * @param map

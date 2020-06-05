@@ -85,6 +85,24 @@ public class User {
         }
     }
 
+    public boolean sendWinner(String winner) throws ChannelClosedException {
+        try {
+            return communicationChannel().sendWinner(winner);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
+    }
+
+    public boolean sendLoser(String loser) throws ChannelClosedException {
+        try {
+            return communicationChannel().sendLoser(loser);
+        } catch (ChannelClosedException e) {
+            e.setName(name());
+            throw e;
+        }
+    }
+
     /**
      * This method sends to the user the map and tells if it was received
      * @param map

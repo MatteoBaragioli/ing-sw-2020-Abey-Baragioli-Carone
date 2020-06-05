@@ -191,7 +191,7 @@ public class MenuScene {
         errorMessage.setFont(errorFont);
         errorMessage.setFill(Color.DARKRED);
         errorMessage.setTextAlignment(TextAlignment.CENTER);
-        Image loadingImg = new Image(MenuScene.class.getResource("/img/loadingIcon.gif").toString(), screenWidth / 20, screenHeight / 16, false, false);
+        Image loadingImg = new Image(MenuScene.class.getResource("/img/loadingAndPopups/loadingIcon.gif").toString(), screenWidth / 20, screenHeight / 16, false, false);
         loadingIcon = new ImageView(loadingImg);
 
         formView = new VBox();
@@ -231,7 +231,6 @@ public class MenuScene {
 
         Group quitGroup = quitGroup();
         playGroup = playGroup();
-        createHowToPlay();
         menuBox.getChildren().addAll(formGroup, matchTypeNumber);
 
 
@@ -260,7 +259,7 @@ public class MenuScene {
      * @return Background (Menu page background)
      */
     private Background background() {
-        BackgroundImage backgroundImage = new BackgroundImage(new Image(MenuScene.class.getResource("/img/background.png").toString(), screenWidth, screenHeight, false, false), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage backgroundImage = new BackgroundImage(new Image(MenuScene.class.getResource("/img/menuPage/background.png").toString(), screenWidth, screenHeight, false, false), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         return new Background(backgroundImage);
     }
 
@@ -270,7 +269,7 @@ public class MenuScene {
      * @return StackPane (Form container)
      */
     private StackPane menuGroup() {
-        Image menuBoxImg = new Image(MenuScene.class.getResource("/img/menu_box_background.png").toString(), screenWidth / 2, screenHeight / 1.1, false, false);
+        Image menuBoxImg = new Image(MenuScene.class.getResource("/img/menuPage/menu_box_background.png").toString(), screenWidth / 2, screenHeight / 1.1, false, false);
         ImageView menuBoxView = new ImageView(menuBoxImg);
         menuBoxView.setEffect(new DropShadow(10, Color.BLACK));
         StackPane menuBox = new StackPane();
@@ -371,11 +370,6 @@ public class MenuScene {
             showHowToPlay();
             event.consume();
         });
-        howToPlayView.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
-            howToPlayView.setImage(howToPlayImg);
-            event.consume();
-        });
-
         return howToPlayView;
     }
 
@@ -530,18 +524,19 @@ public class MenuScene {
     /**
      * This method shows How to play box
      */
-    private void showHowToPlay(){
-        FadeTransition howToPlayFadeIn = new FadeTransition(Duration.millis(1000), howToPlayBox);
+    public void showHowToPlay(){
+        createHowToPlay();
+        FadeTransition howToPlayFadeIn = new FadeTransition(Duration.millis(700), howToPlayBox);
         howToPlayFadeIn.setFromValue(0);
         howToPlayFadeIn.setToValue(1);
 
-        ScaleTransition howToPlayZoomIn1 = new ScaleTransition(Duration.millis(1000), howToPlayBox);
+        ScaleTransition howToPlayZoomIn1 = new ScaleTransition(Duration.millis(700), howToPlayBox);
         howToPlayZoomIn1.setFromX(0);
         howToPlayZoomIn1.setToX(1);
         howToPlayZoomIn1.setFromY(0.01);
         howToPlayZoomIn1.setToY(0.01);
 
-        ScaleTransition howToPlayZoomIn2 = new ScaleTransition(Duration.millis(1000), howToPlayBox);
+        ScaleTransition howToPlayZoomIn2 = new ScaleTransition(Duration.millis(700), howToPlayBox);
         howToPlayZoomIn2.setFromY(0.01);
         howToPlayZoomIn2.setToY(1);
 
@@ -550,7 +545,7 @@ public class MenuScene {
         howToPlayZoomIn1.play();
 
         Timeline showingTimer = new Timeline(new KeyFrame(
-                Duration.millis(1000),
+                Duration.millis(700),
                 ae -> {
                     howToPlayZoomIn2.play();
                 }));
@@ -562,31 +557,31 @@ public class MenuScene {
      * This method hides How to play box
      */
     private void hideHowToPlay(){
-        FadeTransition howToPlayFadeOut = new FadeTransition(Duration.millis(1000), howToPlayBox);
+        FadeTransition howToPlayFadeOut = new FadeTransition(Duration.millis(700), howToPlayBox);
         howToPlayFadeOut.setFromValue(1);
         howToPlayFadeOut.setToValue(0);
 
-        ScaleTransition howToPlayZoomOut1 = new ScaleTransition(Duration.millis(1000), howToPlayBox);
+        ScaleTransition howToPlayZoomOut1 = new ScaleTransition(Duration.millis(700), howToPlayBox);
         howToPlayZoomOut1.setFromY(1);
         howToPlayZoomOut1.setToY(0.01);
         howToPlayZoomOut1.setFromX(1);
         howToPlayZoomOut1.setToX(1);
 
-        ScaleTransition howToPlayZoomIn2 = new ScaleTransition(Duration.millis(1000), howToPlayBox);
+        ScaleTransition howToPlayZoomIn2 = new ScaleTransition(Duration.millis(700), howToPlayBox);
         howToPlayZoomIn2.setFromX(1);
         howToPlayZoomIn2.setToX(0);
 
         howToPlayZoomOut1.play();
 
         Timeline hidingTimer1 = new Timeline(new KeyFrame(
-                Duration.millis(1000),
+                Duration.millis(700),
                 ae -> {
                     howToPlayZoomIn2.play();
                     howToPlayFadeOut.play();
                 }));
         hidingTimer1.play();
         Timeline hidingTimer2 = new Timeline(new KeyFrame(
-                Duration.millis(2000),
+                Duration.millis(1400),
                 ae -> {
                     howToPlayBox.setVisible(false);
                 }));
@@ -754,9 +749,9 @@ public class MenuScene {
      * This method creates and shows the loading page
      */
     private void setLoadingPage(){
-        Image loadingGif = new Image(MenuScene.class.getResource("/img/loading.gif").toString(), screenWidth/4, screenHeight/4, false, false);
+        Image loadingGif = new Image(MenuScene.class.getResource("/img/loadingAndPopups/loading.gif").toString(), screenWidth/4, screenHeight/4, false, false);
         ImageView loadingImageGif = new ImageView(loadingGif);
-        Image loadingImg = new Image(MenuScene.class.getResource("/img/loading.png").toString(), screenWidth, screenHeight, false, false);
+        Image loadingImg = new Image(MenuScene.class.getResource("/img/loadingAndPopups/loading.png").toString(), screenWidth, screenHeight, false, false);
         ImageView loadingImageView = new ImageView(loadingImg);
         loadingPage.setBackground(new Background(new BackgroundFill(WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         Image quitLoadingImg = new Image(MenuScene.class.getResource("/img/buttons/quit_normal.png").toString(), screenWidth/12, screenHeight/8, false, false);
@@ -783,16 +778,16 @@ public class MenuScene {
         quitPane.getChildren().add(quitLoading);
         loadingPage.getChildren().addAll(loadingImageGif, loadingImageView, quitPane);
         gui.playTransitionClouds();
-        FadeTransition menuFadeOut = new FadeTransition(Duration.millis(2000), menuPage);
+        FadeTransition menuFadeOut = new FadeTransition(Duration.millis(1500), menuPage);
         menuFadeOut.setFromValue(1);
         menuFadeOut.setToValue(0);
         menuFadeOut.play();
 
         Timeline loadingTimer = new Timeline(new KeyFrame(
-                Duration.millis(2000),
+                Duration.millis(1500),
                 ae -> {
                     menuPage.setVisible(false);
-                    FadeTransition loadingFade = new FadeTransition(Duration.millis(4000), loadingPage);
+                    FadeTransition loadingFade = new FadeTransition(Duration.millis(2000), loadingPage);
                     loadingFade.setFromValue(0.0);
                     loadingFade.setToValue(1.0);
                     loadingFade.play();

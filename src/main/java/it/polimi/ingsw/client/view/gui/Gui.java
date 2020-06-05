@@ -1,8 +1,11 @@
 package it.polimi.ingsw.client.view.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.server.model.Colour;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import javafx.animation.FadeTransition;
@@ -29,6 +32,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -161,6 +165,9 @@ public class Gui extends Application implements View {
             menuPage.setEffect(new BoxBlur(0, 0, 0));
             openingPage.setEffect(new BoxBlur(0, 0, 0));
             loadingPage.setEffect(new BoxBlur(0, 0, 0));
+            matchPage.setEffect(new BoxBlur(0, 0, 0));
+            transitionClouds.setEffect(new BoxBlur(0, 0, 0));
+            howToPlayBox.setEffect(new BoxBlur(0, 0, 0));
             closePopup.setVisible(false);
         });
         createClosePopup();
@@ -170,7 +177,7 @@ public class Gui extends Application implements View {
         closePopup.setPrefWidth(screenWidth/4);
         closePopup.setPrefHeight(screenHeight/4);
 
-        Image closeFrame = new Image(Gui.class.getResource("/img/frame.png").toString(), screenWidth/2, screenHeight/2, false, false);
+        Image closeFrame = new Image(Gui.class.getResource("/img/loadingAndPopups/frame.png").toString(), screenWidth/2, screenHeight/2, false, false);
         ImageView closeView = new ImageView(closeFrame);
 
         VBox confirmBox = new VBox();
@@ -272,19 +279,19 @@ public class Gui extends Application implements View {
     }
 
     private void createTransitionClouds(){
-        Image leftCloudImg = new Image(Gui.class.getResource("/img/transitionCloudLeft.png").toString(), screenWidth, screenHeight*2, false, false);
+        Image leftCloudImg = new Image(Gui.class.getResource("/img/loadingAndPopups/transitionCloudLeft.png").toString(), screenWidth, screenHeight*2, false, false);
         ImageView leftCloud = new ImageView(leftCloudImg);
-        Image rightCloudImg = new Image(Gui.class.getResource("/img/transitionCloudRight.png").toString(), screenWidth, screenHeight*2, false, false);
+        Image rightCloudImg = new Image(Gui.class.getResource("/img/loadingAndPopups/transitionCloudRight.png").toString(), screenWidth, screenHeight*2, false, false);
         ImageView rightCloud = new ImageView(rightCloudImg);
 
         transitionClouds.getChildren().addAll(rightCloud, leftCloud);
 
-        translateLeftTransitionIn = new TranslateTransition(Duration.millis(2000), leftCloud);
+        translateLeftTransitionIn = new TranslateTransition(Duration.millis(1500), leftCloud);
         translateLeftTransitionIn.setFromX(-screenWidth);
         translateLeftTransitionIn.setByX(screenWidth-screenWidth/4);
         translateLeftTransitionIn.setAutoReverse(true);
 
-        translateRightTransitionIn = new TranslateTransition(Duration.millis(2000), rightCloud);
+        translateRightTransitionIn = new TranslateTransition(Duration.millis(1500), rightCloud);
         translateRightTransitionIn.setFromX(screenWidth);
         translateRightTransitionIn.setByX(-screenWidth+screenWidth/4);
         translateRightTransitionIn.setAutoReverse(true);
@@ -297,7 +304,7 @@ public class Gui extends Application implements View {
         translateRightTransitionIn.setCycleCount(2);
         translateRightTransitionIn.play();
         Timeline cloudsTimer = new Timeline(new KeyFrame(
-                Duration.millis(4000),
+                Duration.millis(3000),
                 ae -> {
                     transitionClouds.setVisible(false);
                 }));
@@ -323,6 +330,7 @@ public class Gui extends Application implements View {
     @Override
     public int askPosition(List<int[]> positions) {
         Platform.runLater(() -> matchScene.chooseDestination(positions));
+        Platform.runLater(() -> matchScene.playerView().playTimer());
         return matchScene.chosenDestination();
     }
 
@@ -352,7 +360,8 @@ public class Gui extends Application implements View {
 
     @Override
     public String askIp() {
-        return menuScene.askIp();
+        return "127.0.0.1";
+        //todo return menuScene.askIp();
     }
 
     @Override
@@ -363,7 +372,8 @@ public class Gui extends Application implements View {
 
     @Override
     public int askPort() {
-        return menuScene.askPort();
+        return 1234;
+        //todo return menuScene.askPort();
     }
 
     @Override
@@ -375,6 +385,7 @@ public class Gui extends Application implements View {
 
     @Override
     public int askWorker(List<int[]> workers) {
+        Platform.runLater(() -> matchScene.playerView().playTimer());
         return askPosition(workers);
     }
 
@@ -408,10 +419,7 @@ public class Gui extends Application implements View {
     public void updateMap(List<BoxProxy> boxes) {
         Platform.runLater(() -> matchScene.map().clearMap());
         for(BoxProxy box : boxes){
-            if(box.dome)
-                Platform.runLater(() -> matchScene.map().box(box.position[0], box.position[1]).build(4));
-            else if(box.level!=0)
-                Platform.runLater(() -> matchScene.map().box(box.position[0], box.position[1]).build(box.level));
+            Platform.runLater(() -> matchScene.map().box(box.position[0], box.position[1]).build(box.level, box.dome));
             if(box.occupier!=null){
                 //occupier color
                 String occupierColor;
@@ -468,11 +476,6 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public void manageCountdown() {
-        //todo
-    }
-
-    @Override
     public synchronized void startMatch(){
         readyForTheMatch.set(false);
         playTransitionClouds();
@@ -484,14 +487,14 @@ public class Gui extends Application implements View {
         loadingFadeOut.play();
 
         Timeline matchTimer = new Timeline(new KeyFrame(
-                Duration.millis(2000),
+                Duration.millis(1500),
                 ae -> {
                     loadingPage.setVisible(false);
-                    FadeTransition matchFade = new FadeTransition(Duration.millis(3000), matchPage);
+                    FadeTransition matchFade = new FadeTransition(Duration.millis(2000), matchPage);
                     matchFade.setFromValue(0.0);
-                    matchPage.setVisible(true);
                     matchFade.setToValue(1.0);
                     matchFade.play();
+                    matchPage.setVisible(true);
                     setReadyForTheMatch();
                 }));
         matchTimer.play();
@@ -509,8 +512,10 @@ public class Gui extends Application implements View {
     public void setCurrentPlayer(PlayerProxy player) {
         if(player.name.equals(nickname))
             Platform.runLater(() -> matchScene.setMyTurn());
-        else
+        else {
             Platform.runLater(() -> matchScene.setOpponentTurn(player.name));
+            Platform.runLater(() -> matchScene.playerView().stopTimer());
+        }
     }
 
     private synchronized void setReadyForTheMatch(){
@@ -521,5 +526,31 @@ public class Gui extends Application implements View {
     @Override
     public void tellStory(List<String> events) {
 
+        for(String event : events){
+            String[] content = event.split(MatchStory.STORY_SEPARATOR);
+
+            String player = content[0];
+
+            Type chosenWorkerType = new TypeToken<int[]>() {}.getType();
+            int[] chosenWorker = new Gson().fromJson(content[1], chosenWorkerType);
+
+            Type actionType = new TypeToken<CommunicationProtocol>() {}.getType();
+            CommunicationProtocol action = new Gson().fromJson(content[2], actionType);
+
+            Type destinationType = new TypeToken<int[]>() {}.getType();
+            int[] destination = new Gson().fromJson(content[3], destinationType);
+
+            Platform.runLater(() -> matchScene.playerView().writeStory(player, chosenWorker, action, destination));
+        }
+    }
+
+    @Override
+    public void setWinner(PlayerProxy player) {
+        System.out.println("WIIIIIIIIIIIIIIIIIIIIIIIINNNNNNNEEEEEEEEEEEEEEEEEEEEEEEEEEERRRRRRR");
+    }
+
+    @Override
+    public void setLoser(PlayerProxy player) {
+        System.out.println("LLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEERRRRRRRRR");
     }
 }

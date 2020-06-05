@@ -27,5 +27,6 @@ public interface View {
     void startMatch();
     void setCurrentPlayer(PlayerProxy player);
     void tellStory(List<String> events);
-    void manageCountdown();
+    void setWinner(PlayerProxy player);
+    void setLoser(PlayerProxy player);
 }

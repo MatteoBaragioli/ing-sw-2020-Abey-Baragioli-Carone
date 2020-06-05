@@ -30,20 +30,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MatchScene {
 
-    //font used for
     private final Font lillybelleFont;
     private final Font godInfoFont;
-    private final Gui gui;
     private final double screenWidth;
     private final double screenHeight;
     private final StackPane matchPage;
 
     private final double dimension;
-    private double marginDim;
-    private double totalMargin;
-    private double mapDim;
+    private final double totalMargin;
 
-
+    //map image
     private final ImageView mapView;
 
     //number of players of the match
@@ -91,9 +87,12 @@ public class MatchScene {
     //variable that saves the currently selected card box from the entire list of all the cards
     private HBox selectedCardBox;
 
+    //variable to synchronise challenger choice
     private final AtomicBoolean confirmChallengerCards = new AtomicBoolean(false);
 
+    //indexes of cards chosen by the challenger
     private int[] cardsIndexes;
+
 
     private final StackPane chooseCard = new StackPane();
 
@@ -113,63 +112,61 @@ public class MatchScene {
     //confirm turn popup
     private final StackPane confirmTurn = new StackPane();
 
-    //yes button of confirm turn popup
-    private Button yesPopupButton;
-
-    //no button of confirm turn popup
-    private Button noPopupButton;
-
     //turn confirmation answer
-    private AtomicInteger answer = new AtomicInteger(2);
+    private final AtomicInteger answer = new AtomicInteger(2);
 
     //variable that is true when player has given an answer to confirm turn popup
-    private AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
+    private final AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
 
-    //pauseMenu
-    StackPane pausePane = new StackPane();
-
-    //active powers pane
-    StackPane activePowers = new StackPane();
-
-    //helper pane
-    StackPane helper = new StackPane();
-
-
+    //my turn pane (to show in the center of the window when it's my turn)
+    StackPane myTurn = new StackPane();
 
 
     public MatchScene(Gui gui, double screenWidth, double screenHeight, StackPane matchPage) {
         lillybelleFont = Font.loadFont(MatchScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/70);
         godInfoFont = Font.loadFont(MatchScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
-        this.gui = gui;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.matchPage = matchPage;
 
         dimension = screenHeight - screenHeight / 20;
-        marginDim = dimension / 28.05421687;
+        double marginDim = dimension / 28.05421687;
         totalMargin = dimension / 6.504189944;
-        mapDim = dimension - (2 * marginDim);
+        double mapDim = dimension - (2 * marginDim);
 
         guiMap = new GuiMap(gui.mapRowsNumber(),gui.mapColumnsNumber(), mapDim, screenWidth, screenHeight);
 
-        Image mapImg = new Image(MatchScene.class.getResource("/img/board.png").toString(),dimension,dimension,false,false);
+        Image mapImg = new Image(MatchScene.class.getResource("/img/matchPage/board.png").toString(),dimension,dimension,false,false);
         mapView = new ImageView(mapImg);
         ImageView matchBackground = matchBackground(screenWidth, screenHeight);
 
 
-        playerView = new PlayerView(screenWidth, screenHeight, gui, this, pausePane, activePowers, helper);
+        //pauseMenu
+        StackPane pausePane = new StackPane();
+        //active powers pane
+        StackPane activePowers = new StackPane();
+        //helper pane
+        StackPane helper = new StackPane();
+        //story pane
+        StackPane turnStory = new StackPane();
+
+        playerView = new PlayerView(screenWidth, screenHeight, gui, this, pausePane, activePowers, helper, turnStory);
 
         StackPane playerViewPane = playerView.getPlayerViewStackPane();
 
         confirmTurn();
 
-        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, pausePane, activePowers, helper, chooseCardsBox, chooseCard, confirmTurn);
+        createMyTurnImage();
+
+        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, pausePane, activePowers, helper, turnStory, chooseCardsBox, chooseCard, myTurn, confirmTurn);
         chooseCardsBox.setVisible(false);
         chooseCard.setVisible(false);
         confirmTurn.setVisible(false);
         pausePane.setVisible(false);
         activePowers.setVisible(false);
         helper.setVisible(false);
+        turnStory.setVisible(false);
+        myTurn.setVisible(false);
     }
 
     //_________________________________________________SETTER____________________________________________________________
@@ -260,7 +257,7 @@ public class MatchScene {
     }
 
     public ImageView matchBackground(double screenWidth, double screenHeight){
-        Image matchBackgroundImg = new Image(MatchScene.class.getResource("/img/match_background.png").toString(),screenWidth,screenHeight,false,false);
+        Image matchBackgroundImg = new Image(MatchScene.class.getResource("/img/matchPage/match_background.png").toString(),screenWidth,screenHeight,false,false);
         return new ImageView(matchBackgroundImg);
     }
 
@@ -306,7 +303,7 @@ public class MatchScene {
         Image removeGodInactiveImg = new Image(MatchScene.class.getResource("/img/buttons/removeGodInactive.png").toString(), screenWidth/12, screenHeight/12, false, false);
         ImageView removeGod = new ImageView(removeGodInactiveImg);
 
-        Image chooseCardsImg = new Image(MatchScene.class.getResource("/img/chooseCardsBackground.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
+        Image chooseCardsImg = new Image(MatchScene.class.getResource("/img/matchPage/chooseCardsBackground.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
         ImageView chooseCardsView = new ImageView(chooseCardsImg);
         ScrollPane allCards = new ScrollPane();
         allCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -446,7 +443,7 @@ public class MatchScene {
             confirmChoices.setImage(confirmImg);
         });
         confirmChoices.setOnMouseClicked(e -> {
-            confirmChallengerCards.set(true);
+            setConfirmChallengerCards();
             hideChooseCards(chooseCardsBox);
         });
         choices.getChildren().add(confirmChoices);
@@ -472,17 +469,22 @@ public class MatchScene {
         chooseCardsBoxZoomIn2.setFromY(0.01);
         chooseCardsBoxZoomIn2.setToY(1);
 
-        chooseCardsBoxFadeIn.play();
-        chooseCardsBoxZoomIn1.play();
+        Timeline waitingReadyTimer = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    chooseCardsBoxFadeIn.play();
+                    chooseCardsBoxZoomIn1.play();
+                }));
+        waitingReadyTimer.play();
 
         Timeline showingTimer1 = new Timeline(new KeyFrame(
-                Duration.millis(1000),
+                Duration.millis(1700),
                 ae -> {
                     chooseCardsBox.setVisible(true);
                 }));
         showingTimer1.play();
         Timeline showingTimer = new Timeline(new KeyFrame(
-                Duration.millis(1000),
+                Duration.millis(1700),
                 ae -> {
                     chooseCardsBoxZoomIn2.play();
                 }));
@@ -592,7 +594,7 @@ public class MatchScene {
      * This method asks player to choose their card
      */
     public void chooseCard(List<GodCardProxy> cards){
-        Image chooseCardImg = new Image(MatchScene.class.getResource("/img/chooseCard.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
+        Image chooseCardImg = new Image(MatchScene.class.getResource("/img/matchPage/chooseCard.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
         ImageView chooseCardBackground = new ImageView(chooseCardImg);
 
         List<ImageView> cardChoiceBoxes = new ArrayList<>();
@@ -628,7 +630,7 @@ public class MatchScene {
             confirmChoice.setImage(confirmChoiceImg);
         });
         confirmChoice.setOnMouseClicked(e -> {
-            confirmMyCards.set(true);
+            setConfirmMyCards();
             hideChooseCards(chooseCard);
         });
 
@@ -716,13 +718,13 @@ public class MatchScene {
         chooseCardBoxZoomIn1.play();
 
         Timeline showingTimer1 = new Timeline(new KeyFrame(
-                Duration.millis(200),
+                Duration.millis(100),
                 ae -> {
                     chooseCard.setVisible(true);
                 }));
         showingTimer1.play();
         Timeline showingTimer = new Timeline(new KeyFrame(
-                Duration.millis(1000),
+                Duration.millis(700),
                 ae -> {
                     chooseCardBoxZoomIn2.play();
                 }));
@@ -733,47 +735,65 @@ public class MatchScene {
      * This method hides choose cards box
      */
     private void hideChooseCards(StackPane pane){
-        FadeTransition chooseCardsFadeOut = new FadeTransition(Duration.millis(1000), pane);
+        FadeTransition chooseCardsFadeOut = new FadeTransition(Duration.millis(700), pane);
         chooseCardsFadeOut.setFromValue(1);
         chooseCardsFadeOut.setToValue(0);
 
-        ScaleTransition chooseCardsZoomOut1 = new ScaleTransition(Duration.millis(1000), pane);
+        ScaleTransition chooseCardsZoomOut1 = new ScaleTransition(Duration.millis(700), pane);
         chooseCardsZoomOut1.setFromY(1);
         chooseCardsZoomOut1.setToY(0.01);
         chooseCardsZoomOut1.setFromX(1);
         chooseCardsZoomOut1.setToX(1);
 
-        ScaleTransition chooseCardsZoomIn2 = new ScaleTransition(Duration.millis(1000), pane);
+        ScaleTransition chooseCardsZoomIn2 = new ScaleTransition(Duration.millis(700), pane);
         chooseCardsZoomIn2.setFromX(1);
         chooseCardsZoomIn2.setToX(0);
 
         chooseCardsZoomOut1.play();
 
         Timeline hidingTimer1 = new Timeline(new KeyFrame(
-                Duration.millis(1000),
+                Duration.millis(700),
                 ae -> {
                     chooseCardsZoomIn2.play();
                     chooseCardsFadeOut.play();
                 }));
         hidingTimer1.play();
         Timeline hidingTimer2 = new Timeline(new KeyFrame(
-                Duration.millis(2000),
+                Duration.millis(1400),
                 ae -> {
                     pane.setVisible(false);
                 }));
         hidingTimer2.play();
     }
 
-    public int[] chosenCards(){
-        while(!confirmChallengerCards.get()){
+    private synchronized void setConfirmChallengerCards(){
+        confirmChallengerCards.set(true);
+        notifyAll();
+    }
 
+    public synchronized int[] chosenCards(){
+        while(!confirmChallengerCards.get()){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return cardsIndexes;
     }
 
-    public int chosenCard(){
-        while(!confirmMyCards.get()){
+    public synchronized void setConfirmMyCards(){
+        confirmMyCards.set(true);
+        notifyAll();
+    }
 
+    public synchronized int chosenCard(){
+        while(!confirmMyCards.get()){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return cardIndex;
     }
@@ -785,7 +805,7 @@ public class MatchScene {
         confirmTurn.setPrefWidth(screenWidth/5);
         confirmTurn.setPrefHeight(screenHeight/5);
 
-        Image confirmFrame = new Image(Gui.class.getResource("/img/frame2.png").toString(), screenWidth/5, screenHeight/5, false, false);
+        Image confirmFrame = new Image(Gui.class.getResource("/img/loadingAndPopups/frame2.png").toString(), screenWidth/5, screenHeight/5, false, false);
         ImageView confirmView = new ImageView(confirmFrame);
 
         VBox confirmBox = new VBox();
@@ -793,8 +813,10 @@ public class MatchScene {
         Text questionPopup = new Text("Do you confirm your turn?");
         questionPopup.setFont(lillybelleFont);
         HBox answers = new HBox();
-        yesPopupButton = new Button("Yes");
-        noPopupButton = new Button("No");
+        //yes button of confirm turn popup
+        Button yesPopupButton = new Button("Yes");
+        //no button of confirm turn popup
+        Button noPopupButton = new Button("No");
 
         yesPopupButton.setFont(lillybelleFont);
         yesPopupButton.setCursor(Cursor.HAND);
@@ -863,11 +885,57 @@ public class MatchScene {
     }
 
     public void setMyTurn(){
-        playerView.setCurrentTurn("Your Turn");
+        if(!playerView.currentTurn().getText().equals("Your Turn")) {
+            playerView.setCurrentTurn("Your Turn");
+            showMyTurn();
+        }
+    }
 
+    private void createMyTurnImage(){
+        Image myTurnImg = new Image(PlayerView.class.getResource("/img/matchPage/myTurn.png").toString(),screenWidth/3, screenHeight/4,false,false);
+        ImageView myTurnView = new ImageView(myTurnImg);
+        myTurn.getChildren().add(myTurnView);
+        myTurn.setAlignment(Pos.CENTER);
+        myTurn.setPrefWidth(screenWidth/3);
+        myTurn.setPrefHeight(screenHeight/4);
+    }
+
+    private void showMyTurn(){
+        FadeTransition myTurnFadeIn = new FadeTransition(Duration.millis(500), myTurn);
+        myTurnFadeIn.setFromValue(0);
+        myTurnFadeIn.setToValue(1);
+
+        FadeTransition myTurnFadeOut = new FadeTransition(Duration.millis(500), myTurn);
+        myTurnFadeOut.setFromValue(1);
+        myTurnFadeOut.setToValue(0);
+
+        ScaleTransition myTurnZoomIn = new ScaleTransition(Duration.millis(2000), myTurn);
+        myTurnZoomIn.setFromX(0.5);
+        myTurnZoomIn.setToX(2);
+        myTurnZoomIn.setFromY(0.5);
+        myTurnZoomIn.setToY(2);
+
+        myTurnFadeIn.play();
+        myTurn.setVisible(true);
+        myTurnZoomIn.play();
+
+        Timeline showingTimer = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    myTurnFadeOut.play();
+                }));
+        showingTimer.play();
+        Timeline hidingTimer = new Timeline(new KeyFrame(
+                Duration.millis(1500),
+                ae -> {
+                    myTurn.setVisible(false);
+                }));
+        hidingTimer.play();
     }
 
     public void setOpponentTurn(String playerTurnName){
-        playerView.setCurrentTurn(playerTurnName + "'s Turn");
+        if(!playerView.currentTurn().getText().equals(playerTurnName + "'s Turn")) {
+            playerView.setCurrentTurn(playerTurnName + "'s Turn");
+        }
     }
 }

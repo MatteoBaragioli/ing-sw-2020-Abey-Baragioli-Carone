@@ -85,7 +85,11 @@ public class ClientController {
             case CURRENT_PLAYER:
                 view.setCurrentPlayer(player);
                 break;
+            case WINNER:
+                view.setWinner(player);
+                break;
             case LOSER:
+                view.setLoser(player);
                 break;
         }
         communicationChannel.writeKeyWord(RECEIVED);
@@ -110,11 +114,6 @@ public class ClientController {
 
     public void waitForPlayers(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         communicationChannel.writeKeyWord(RECEIVED);
-    }
-
-    public void manageCountDown(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-        view.manageCountdown();
-        communicationChannel.popMessage();
     }
 
     public void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {

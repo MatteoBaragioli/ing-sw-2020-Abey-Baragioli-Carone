@@ -56,7 +56,7 @@ public class GuiMap extends GridPane {
         int i, j;
         for (i = 0; i < rows; i++) {
             for(j = 0;  j < columns; j++) {
-                box(i,j).build(0);
+                box(i,j).build(0, false);
                 box(i,j).removeWorker();
             }
         }

@@ -145,6 +145,9 @@ public class Match extends Thread{
                 currentPlayerIndex--;
                 if(gamePlayers.size()==1)
                     winner=gamePlayers.get(0);
+                else
+                    //todo vediamo se va
+                    announceLoser(currentPlayer);
             }
             if(currentPlayerIndex >= gamePlayers.size()-1){
                 currentPlayerIndex=0;
@@ -153,10 +156,10 @@ public class Match extends Thread{
             }
         }
         if(winner!=null)
-            System.out.println(winner.name());
+            announceWinner();
 
         //END MATCH
-        //todo dire chi ha vinto
+        //todo endGame()
     }
 
     private void takeTurn(Player player) throws ChannelClosedException, TimeoutException, IOException {
@@ -229,6 +232,28 @@ public class Match extends Thread{
         }
     }
 
+    private void announceWinner() {
+        for (Player player: gamePlayers) {
+            try {
+                communicationController.announceWinner(player, winner);
+            } catch (ChannelClosedException e) {
+                removeUser(findUser(e.name()));
+                endGame();
+            }
+        }
+    }
+
+    private void announceLoser(Player loser) {
+        for (Player player: gamePlayers) {
+            try {
+                communicationController.announceLoser(player, loser);
+            } catch (ChannelClosedException e) {
+                removeUser(findUser(e.name()));
+                endGame();
+            }
+        }
+    }
+
     private void endGame() {
         //todo
     }
@@ -258,7 +283,6 @@ public class Match extends Thread{
         CardConstructor cardConstructor = new CardConstructor();
         List<GodCard> deck = cardConstructor.cards();
         Player challenger = gamePlayers.get(0);
-        announceCurrentPlayer(challenger);
         try {
             cards = communicationController.chooseDeck(challenger, deck);
         } catch (TimeoutException e) {
@@ -277,6 +301,7 @@ public class Match extends Thread{
         List<GodCard> availableCards = new ArrayList<>(cards);
         for(int i = gamePlayers.size()-1; i>=0; i--){
             GodCard chosenCard = null;
+            announceCurrentPlayer(gamePlayers.get(i));
             try {
                 chosenCard = communicationController.chooseCard(gamePlayers.get(i), availableCards);
             } catch (TimeoutException e) {
@@ -306,6 +331,7 @@ public class Match extends Thread{
         for(Player player : setUpOrder){
             for (int i = 0; i<2 && player.isInGame(); i++) {
                 possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
+                announceCurrentPlayer(player);
                 try {
                     Worker worker;
                     position = communicationController.chooseStartPosition(player, possibleSetUpPosition);

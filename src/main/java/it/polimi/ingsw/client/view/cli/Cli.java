@@ -404,6 +404,16 @@ public class Cli implements View {
     }
 
     @Override
+    public void setWinner(PlayerProxy player) {
+
+    }
+
+    @Override
+    public void setLoser(PlayerProxy player) {
+
+    }
+
+    @Override
     public String askIp() {
         System.out.println("Write ip address to connect to:");
         try {
@@ -596,11 +606,6 @@ public class Cli implements View {
 
         }
         return first+","+second;
-    }
-
-    @Override
-    public void manageCountdown() {
-
     }
 
     public static void main(String[] args){
