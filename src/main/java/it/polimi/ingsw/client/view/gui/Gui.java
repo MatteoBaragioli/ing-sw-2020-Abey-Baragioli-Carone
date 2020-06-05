@@ -519,7 +519,7 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public void tellStory(String content) {
+    public void tellStory(List<String> events) {
 
     }
 }

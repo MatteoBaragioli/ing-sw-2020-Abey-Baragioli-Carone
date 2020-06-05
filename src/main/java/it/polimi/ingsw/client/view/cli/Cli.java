@@ -399,7 +399,7 @@ public class Cli implements View {
     }
 
     @Override
-    public void tellStory(String content) {
+    public void tellStory(List<String> events) {
 
     }
 

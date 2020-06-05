@@ -26,6 +26,6 @@ public interface View {
     void connectionFailed(String host);
     void startMatch();
     void setCurrentPlayer(PlayerProxy player);
-    void tellStory(String content);
+    void tellStory(List<String> events);
     void manageCountdown();
 }

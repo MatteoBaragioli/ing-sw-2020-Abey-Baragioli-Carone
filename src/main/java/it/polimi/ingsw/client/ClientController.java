@@ -119,7 +119,8 @@ public class ClientController {
 
     public void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         String message = communicationChannel.popMessage();
-        view.tellStory(communicationChannel.getContent(message));
+        Type type = new TypeToken<List<String>>() {}.getType();
+        view.tellStory(new Gson().fromJson(communicationChannel.getContent(message), type));
         communicationChannel.writeKeyWord(RECEIVED);
     }
 }

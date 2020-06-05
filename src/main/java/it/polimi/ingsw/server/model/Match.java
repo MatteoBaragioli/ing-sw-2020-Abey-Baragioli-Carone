@@ -258,6 +258,7 @@ public class Match extends Thread{
         CardConstructor cardConstructor = new CardConstructor();
         List<GodCard> deck = cardConstructor.cards();
         Player challenger = gamePlayers.get(0);
+        announceCurrentPlayer(challenger);
         try {
             cards = communicationController.chooseDeck(challenger, deck);
         } catch (TimeoutException e) {
