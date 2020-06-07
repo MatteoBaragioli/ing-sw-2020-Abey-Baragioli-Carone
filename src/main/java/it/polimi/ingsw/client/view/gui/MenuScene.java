@@ -686,10 +686,18 @@ public class MenuScene {
         formText.setText("Nickname");
         formField.clear();
         confirmButton.setOnMouseClicked(e -> {
-            setNickname(formField.getText());
-            setClicked();
-            errorMessage.setVisible(false);
-            errorMessage.setManaged(false);
+            if(formField.getText().isEmpty()){
+                formField.clear();
+                setErrorMessage("Write a nickname");
+            } else if(formField.getText().contains(" ")){
+                formField.clear();
+                setErrorMessage("Space not allowed");
+            } else {
+                setNickname(formField.getText());
+                setClicked();
+                errorMessage.setVisible(false);
+                errorMessage.setManaged(false);
+            }
         });
         while (!clicked.get()){
             try {
@@ -698,6 +706,7 @@ public class MenuScene {
                 e.printStackTrace();
             }
         }
+
         return nickname();
     }
 

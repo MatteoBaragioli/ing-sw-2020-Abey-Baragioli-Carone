@@ -107,14 +107,15 @@ public class Gui extends Application implements View {
 
 
 
-        //openingPage();
+        openingPage();
 
 
         //if not opening page todo toglierlo
-        openingPage.setVisible(false);
+        /*openingPage.setVisible(false);
         menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
         menuScene.setMenuScene();
-        startClient();
+        client.start();
+        */
 
         createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
@@ -122,6 +123,10 @@ public class Gui extends Application implements View {
         Scene fullScene = new Scene(mainScene);
         window.setScene(fullScene);
         window.show();
+    }
+
+    public HBox menuPage(){
+        return menuPage;
     }
 
 
@@ -143,10 +148,6 @@ public class Gui extends Application implements View {
             closeProgram();
         });
         window.setResizable(true);
-    }
-
-    public void startClient(){
-        client.start();
     }
 
 
@@ -360,8 +361,7 @@ public class Gui extends Application implements View {
 
     @Override
     public String askIp() {
-        return "127.0.0.1";
-        //todo return menuScene.askIp();
+        return menuScene.askIp();
     }
 
     @Override
@@ -372,8 +372,7 @@ public class Gui extends Application implements View {
 
     @Override
     public int askPort() {
-        return 1234;
-        //todo return menuScene.askPort();
+        return menuScene.askPort();
     }
 
     @Override

@@ -37,8 +37,12 @@ public class MatchScene {
     private final double screenHeight;
     private final StackPane matchPage;
 
+    private final Gui gui;
+
     private final double dimension;
     private final double totalMargin;
+
+
 
     //map image
     private final ImageView mapView;
@@ -149,6 +153,7 @@ public class MatchScene {
     public MatchScene(Gui gui, double screenWidth, double screenHeight, StackPane matchPage) {
         lillybelleFont = Font.loadFont(MatchScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/70);
         godInfoFont = Font.loadFont(MatchScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
+        this.gui = gui;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.matchPage = matchPage;
@@ -1008,7 +1013,7 @@ public class MatchScene {
         StackPane.setAlignment(winnerGoBackView, Pos.BOTTOM_CENTER);
 
 
-        FadeTransition winnerFadeIn = new FadeTransition(Duration.millis(2000), myTurn);
+        FadeTransition winnerFadeIn = new FadeTransition(Duration.millis(1000), winner);
         winnerFadeIn.setFromValue(0);
         winnerFadeIn.setToValue(1);
         winnerFadeIn.play();
@@ -1031,6 +1036,35 @@ public class MatchScene {
     }
 
     private void backToMenu(){
-        //todo
+        gui.playTransitionClouds();
+
+        FadeTransition matchFadeOut = new FadeTransition(Duration.millis(2000), matchPage);
+        matchFadeOut.setFromValue(1);
+        matchFadeOut.setToValue(0);
+        matchFadeOut.play();
+
+        Timeline menuTimer = new Timeline(new KeyFrame(
+                Duration.millis(1500),
+                ae -> {
+                    matchPage.setVisible(false);
+
+                    matchBackground.setEffect(new BoxBlur(0, 0, 0));
+                    mapView.setEffect(new BoxBlur(0, 0, 0));
+                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));
+                    guiMap.setEffect(new BoxBlur(0, 0, 0));
+                    pausePane.setEffect(new BoxBlur(0, 0, 0));
+                    activePowers.setEffect(new BoxBlur(0, 0, 0));
+                    helper.setEffect(new BoxBlur(0, 0, 0));
+                    turnStory.setEffect(new BoxBlur(0, 0, 0));
+                    myTurn.setEffect(new BoxBlur(0, 0, 0));
+
+                    FadeTransition menuFadeIn = new FadeTransition(Duration.millis(2000), gui.menuPage());
+                    menuFadeIn.setFromValue(0.0);
+                    menuFadeIn.setToValue(1.0);
+                    menuFadeIn.play();
+                    gui.menuPage().setVisible(true);
+                }));
+        menuTimer.play();
+
     }
 }
