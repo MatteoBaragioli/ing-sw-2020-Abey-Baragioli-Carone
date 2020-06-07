@@ -546,7 +546,13 @@ public class Gui extends Application implements View {
 
     @Override
     public void setWinner(PlayerProxy player) {
-        System.out.println("WIIIIIIIIIIIIIIIIIIIIIIIINNNNNNNEEEEEEEEEEEEEEEEEEEEEEEEEEERRRRRRR");
+        if(player.name.equals(nickname)){
+            Platform.runLater(() -> matchScene.winner(true));
+            Platform.runLater(() -> matchScene.playerView().changeMessage("You won the match"));
+        } else {
+            Platform.runLater(() -> matchScene.winner(false));
+            Platform.runLater(() -> matchScene.playerView().changeMessage(player.name + " won the match"));
+        }
     }
 
     @Override

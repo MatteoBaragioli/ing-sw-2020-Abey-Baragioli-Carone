@@ -14,6 +14,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -50,6 +51,24 @@ public class MatchScene {
 
     //map of the match
     private final GuiMap guiMap;
+
+    //pauseMenu
+    private final StackPane pausePane = new StackPane();
+
+    //active powers pane
+    private final StackPane activePowers = new StackPane();
+
+    //helper pane
+    private final StackPane helper = new StackPane();
+
+    //story pane
+    private final StackPane turnStory = new StackPane();
+
+    //match background
+    private final ImageView matchBackground;
+
+    //player view pane
+    private final StackPane playerViewPane;
 
     //current chosen worker new position
     private GuiBox chosenBox;
@@ -93,11 +112,13 @@ public class MatchScene {
     //indexes of cards chosen by the challenger
     private int[] cardsIndexes;
 
-
+    //pane to chose my card for the match
     private final StackPane chooseCard = new StackPane();
 
+    //my card choice index
     private int cardIndex;
 
+    //variable to synchronise my card choice
     private final AtomicBoolean confirmMyCards = new AtomicBoolean(false);
 
     //info name when a player has to choose their card
@@ -119,7 +140,10 @@ public class MatchScene {
     private final AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
 
     //my turn pane (to show in the center of the window when it's my turn)
-    StackPane myTurn = new StackPane();
+    private final StackPane myTurn = new StackPane();
+
+    //winner pane
+    private final StackPane winner = new StackPane();
 
 
     public MatchScene(Gui gui, double screenWidth, double screenHeight, StackPane matchPage) {
@@ -138,27 +162,17 @@ public class MatchScene {
 
         Image mapImg = new Image(MatchScene.class.getResource("/img/matchPage/board.png").toString(),dimension,dimension,false,false);
         mapView = new ImageView(mapImg);
-        ImageView matchBackground = matchBackground(screenWidth, screenHeight);
-
-
-        //pauseMenu
-        StackPane pausePane = new StackPane();
-        //active powers pane
-        StackPane activePowers = new StackPane();
-        //helper pane
-        StackPane helper = new StackPane();
-        //story pane
-        StackPane turnStory = new StackPane();
+        matchBackground = matchBackground(screenWidth, screenHeight);
 
         playerView = new PlayerView(screenWidth, screenHeight, gui, this, pausePane, activePowers, helper, turnStory);
 
-        StackPane playerViewPane = playerView.getPlayerViewStackPane();
+        playerViewPane = playerView.getPlayerViewStackPane();
 
         confirmTurn();
 
         createMyTurnImage();
 
-        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, pausePane, activePowers, helper, turnStory, chooseCardsBox, chooseCard, myTurn, confirmTurn);
+        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, pausePane, activePowers, helper, turnStory, chooseCardsBox, chooseCard, myTurn, confirmTurn, winner);
         chooseCardsBox.setVisible(false);
         chooseCard.setVisible(false);
         confirmTurn.setVisible(false);
@@ -167,6 +181,7 @@ public class MatchScene {
         helper.setVisible(false);
         turnStory.setVisible(false);
         myTurn.setVisible(false);
+        winner.setVisible(false);
     }
 
     //_________________________________________________SETTER____________________________________________________________
@@ -937,5 +952,85 @@ public class MatchScene {
         if(!playerView.currentTurn().getText().equals(playerTurnName + "'s Turn")) {
             playerView.setCurrentTurn(playerTurnName + "'s Turn");
         }
+    }
+
+    /**
+     * This method creates and shows winner pane to winner player and loser pane to other players
+     */
+    public void winner(boolean isWinner){
+        winner.setPrefWidth(screenWidth);
+        winner.setPrefHeight(screenHeight);
+
+        Image winnerImg;
+        ImageView winnerView;
+
+        Image winnerGoBackImg;
+        Image winnerGoBackHoverImg;
+        ImageView winnerGoBackView;
+
+
+        if(isWinner) {
+            Image winnerGif = new Image(PlayerView.class.getResource("/img/matchPage/winner.gif").toString(), screenWidth, screenHeight, false, false);
+            ImageView winnerGifView = new ImageView(winnerGif);
+
+            winnerImg = new Image(PlayerView.class.getResource("/img/matchPage/winner.png").toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);
+            winnerView = new ImageView(winnerImg);
+
+            winnerGoBackImg = new Image(PlayerView.class.getResource("/img/buttons/goBackWinner.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackHoverImg = new Image(PlayerView.class.getResource("/img/buttons/goBackWinnerHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackView = new ImageView(winnerGoBackImg);
+
+            winner.getChildren().add(winnerGifView);
+            StackPane.setAlignment(winnerGifView, Pos.CENTER);
+        } else {
+            winnerImg = new Image(PlayerView.class.getResource("/img/matchPage/loser.png").toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);
+            winnerView = new ImageView(winnerImg);
+
+            winnerGoBackImg = new Image(PlayerView.class.getResource("/img/buttons/goBackLoser.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackHoverImg = new Image(PlayerView.class.getResource("/img/buttons/goBackLoserHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackView = new ImageView(winnerGoBackImg);
+        }
+
+        winnerGoBackView.setOnMouseEntered(e -> {
+            winnerGoBackView.setCursor(Cursor.HAND);
+            winnerGoBackView.setImage(winnerGoBackHoverImg);
+        });
+        winnerGoBackView.setOnMouseExited(e -> {
+            winnerGoBackView.setCursor(Cursor.DEFAULT);
+            winnerGoBackView.setImage(winnerGoBackImg);
+        });
+        winnerGoBackView.setOnMouseClicked(e -> {
+            backToMenu();
+        });
+
+        winner.getChildren().addAll(winnerView, winnerGoBackView);
+        StackPane.setAlignment(winnerView, Pos.CENTER);
+        StackPane.setAlignment(winnerGoBackView, Pos.BOTTOM_CENTER);
+
+
+        FadeTransition winnerFadeIn = new FadeTransition(Duration.millis(2000), myTurn);
+        winnerFadeIn.setFromValue(0);
+        winnerFadeIn.setToValue(1);
+        winnerFadeIn.play();
+        winner.setVisible(true);
+
+        Timeline showingTimer = new Timeline(new KeyFrame(
+                Duration.millis(500),
+                ae -> {
+                    matchBackground.setEffect(new BoxBlur(5, 5, 5));
+                    mapView.setEffect(new BoxBlur(5, 5, 5));
+                    playerViewPane.setEffect(new BoxBlur(5, 5, 5));
+                    guiMap.setEffect(new BoxBlur(5, 5, 5));
+                    pausePane.setEffect(new BoxBlur(5, 5, 5));
+                    activePowers.setEffect(new BoxBlur(5, 5, 5));
+                    helper.setEffect(new BoxBlur(5, 5, 5));
+                    turnStory.setEffect(new BoxBlur(5, 5, 5));
+                    myTurn.setEffect(new BoxBlur(5, 5, 5));
+                }));
+        showingTimer.play();
+    }
+
+    private void backToMenu(){
+        //todo
     }
 }
