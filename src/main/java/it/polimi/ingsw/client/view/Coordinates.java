@@ -9,8 +9,8 @@ public class Coordinates{
     }
 
     public static int[] getServerCoordinates(String coordinates){
-        int x = Character.getNumericValue(coordinates.charAt(0) - 65);
-        int y = Character.getNumericValue(coordinates.charAt(1) - 1);
+        int x = Integer.parseInt(String.valueOf(coordinates.charAt(0))) - 65;
+        int y = Integer.parseInt(String.valueOf(coordinates.charAt(1))) -1;
         return new int[] {x,y};
     }
 }
