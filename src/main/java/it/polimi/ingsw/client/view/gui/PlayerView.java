@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.view.gui;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import it.polimi.ingsw.server.model.Colour;
+import static it.polimi.ingsw.client.view.Coordinates.*;
 import javafx.animation.*;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -563,7 +564,7 @@ public class PlayerView extends StackPane {
 
         VBox story = new VBox();
         story.getChildren().addAll(storyContent, closeStoryButton);
-        story.setSpacing(screenHeight/20);
+        story.setSpacing(0);
         story.setAlignment(CENTER);
         turnStory.getChildren().addAll(storyBackground, story);
 
@@ -576,6 +577,9 @@ public class PlayerView extends StackPane {
 
     }
 
+    /**
+     * This method creates helper pane
+     */
     private void createHelper(){
         Image helperBackground = new Image(MenuScene.class.getResource("/img/helper/helperBackground.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
         ImageView helperBackgroundView = new ImageView(helperBackground);
@@ -1056,12 +1060,20 @@ public class PlayerView extends StackPane {
         });
     }
 
+    /**
+     * This method sets answer to send to server and notify synchronized method that waits for sending it
+     * @param answer Answer to send to user
+     */
     private synchronized void setUsePowerAnswer(int answer){
         usePowerAnswer.set(answer);
         deactivateUsePower();
         notifyAll();
     }
 
+    /**
+     * This method waits for player to chose to use power or not and sends the answer to server
+     * @return Answer chosen by the player and sent to server
+     */
     public synchronized int askUsePower(){
         activateUsePower();
         while (usePowerAnswer.get()==2){
@@ -1087,6 +1099,10 @@ public class PlayerView extends StackPane {
         }
     }
 
+    /**
+     * This method shows current turn
+     * @param currentTurnMessage Message to show
+     */
     public void setCurrentTurn(String currentTurnMessage){
         FadeTransition currentTurnFadeOut = new FadeTransition(Duration.millis(500), currentTurn);
         currentTurnFadeOut.setFromValue(1);
@@ -1106,6 +1122,9 @@ public class PlayerView extends StackPane {
         changeMessage("Wait for other players to finish their turns");
     }
 
+    /**
+     * This method starts the timer
+     */
     public void playTimer(){
         if(timerTimeLine!=null)
             timerTimeLine.stop();
@@ -1151,6 +1170,9 @@ public class PlayerView extends StackPane {
         timerTimeLine.play();
     }
 
+    /**
+     * This method stops the timer and sets "Wait"
+     */
     public void stopTimer(){
         if(timerTimeLine!=null)
             timerTimeLine.stop();
@@ -1176,6 +1198,14 @@ public class PlayerView extends StackPane {
         timerTimeLine.play();
     }
 
+
+    /**
+     * This method writes last turn story in the story pane
+     * @param player Name of last turn player
+     * @param chosenWorker Position of chosen worker
+     * @param action Action made by the player
+     * @param destination Destination of the action
+     */
     public void writeStory(String player, int[] chosenWorker, CommunicationProtocol action, int[] destination){
         if(!playerStory.getText().equals(player + " played")){
             storyContent.getChildren().clear();
@@ -1185,7 +1215,7 @@ public class PlayerView extends StackPane {
 
         switch (action){
             case DESTINATION: {
-                Label destinationStory = new Label("Moved from box (" + coordinatesToMap(chosenWorker[0], true) + "," + coordinatesToMap(chosenWorker[1], false) + ") to box (" + coordinatesToMap(destination[0], true) + "," + coordinatesToMap(destination[1], false) + ")");
+                Label destinationStory = new Label("Moved from box (" + getViewCoordinates(chosenWorker) + ") to box (" + getViewCoordinates(destination) + ")");
                 destinationStory.setFont(lillybelle);
                 destinationStory.setTextAlignment(TextAlignment.CENTER);
                 destinationStory.setAlignment(CENTER);
@@ -1195,7 +1225,7 @@ public class PlayerView extends StackPane {
             }
             break;
             case BUILD:{
-                Label buildStory = new Label("Built on box (" + coordinatesToMap(destination[0], true) + "," + coordinatesToMap(destination[1], false) + ") with worker in box (" + coordinatesToMap(chosenWorker[0], true) + "," + coordinatesToMap(chosenWorker[1], false) + ")");
+                Label buildStory = new Label("Built on box (" + getViewCoordinates(destination) + ") with worker in box (" + getViewCoordinates(chosenWorker) + ")");
                 buildStory.setFont(lillybelle);
                 buildStory.setTextAlignment(TextAlignment.CENTER);
                 buildStory.setAlignment(CENTER);
@@ -1205,7 +1235,7 @@ public class PlayerView extends StackPane {
             }
             break;
             case REMOVAL:{
-                Label removalStory = new Label("Removed block on box (" + coordinatesToMap(destination[0], true) + "," + coordinatesToMap(destination[1], false) + ") with worker in box (" + coordinatesToMap(chosenWorker[0], true) + "," + coordinatesToMap(chosenWorker[1], false) + ")");
+                Label removalStory = new Label("Removed block on box (" + getViewCoordinates(destination) + ") with worker in box (" + getViewCoordinates(chosenWorker) + ")");
                 removalStory.setFont(lillybelle);
                 removalStory.setTextAlignment(TextAlignment.CENTER);
                 removalStory.setAlignment(CENTER);
@@ -1214,14 +1244,5 @@ public class PlayerView extends StackPane {
                 storyContent.getChildren().add(removalStory);
             }
         }
-    }
-
-    private String coordinatesToMap(int coordinate, boolean isX){
-        if(isX){
-            return Character.toString((char)(coordinate+65));
-        } else {
-            return String.valueOf(coordinate+1);
-        }
-
     }
 }

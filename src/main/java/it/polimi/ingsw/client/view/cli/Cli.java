@@ -1,12 +1,13 @@
 package it.polimi.ingsw.client.view.cli;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.view.Coordinates;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
-import static it.polimi.ingsw.client.view.cli.Coordinates.*;
+import static it.polimi.ingsw.client.view.Coordinates.*;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -105,7 +106,7 @@ public class Cli implements View {
 
         boolean found = false;
         for (int i = 0; i < positions.size() && !found; i++) {
-            if (Arrays.equals(positions.get(i), getCartesianCoodinates(answer))) {
+            if (Arrays.equals(positions.get(i), getServerCoordinates(answer))) {
                 answerToInt = i;
                 found = true;
             }

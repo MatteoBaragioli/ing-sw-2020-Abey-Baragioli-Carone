@@ -81,11 +81,14 @@ public class Gui extends Application implements View {
 
     private final StackPane matchPage = new StackPane();
 
-
+    private String ip;
+    private int port;
     private String nickname;
     private String color;
     private int numberOfPlayers;
     private List<PlayerProxy> opponents = new ArrayList<>();
+
+    private boolean newMatch = false;
 
 
     @Override
@@ -127,6 +130,10 @@ public class Gui extends Application implements View {
 
     public HBox menuPage(){
         return menuPage;
+    }
+
+    public void setNewMatch(boolean newMatch){
+        this.newMatch = newMatch;
     }
 
 
@@ -362,24 +369,29 @@ public class Gui extends Application implements View {
 
     @Override
     public String askIp() {
-        return menuScene.askIp();
+        if(!newMatch)
+            ip = menuScene.askIp();
+        return ip;
+    }
+
+    @Override
+    public int askPort() {
+        if(!newMatch)
+            port = menuScene.askPort();
+        return port;
+    }
+
+    @Override
+    public String askUserName() {
+        if(!newMatch)
+            nickname = menuScene.askNickname();
+        return nickname;
     }
 
     @Override
     public int askMatchType() {
         numberOfPlayers = menuScene.askNumberOfPlayers();
         return numberOfPlayers;
-    }
-
-    @Override
-    public int askPort() {
-        return menuScene.askPort();
-    }
-
-    @Override
-    public String askUserName() {
-        nickname = menuScene.askNickname();
-        return nickname;
     }
 
 
