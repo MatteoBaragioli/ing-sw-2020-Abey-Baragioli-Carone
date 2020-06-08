@@ -106,8 +106,10 @@ public class DataBase {
         boolean done = false;
         if (user != null) {
             done = addUserName(user.name());
-            if (done)
+            if (done) {
                 users.put(user.name(), user);
+                connectionToUser.put(user.communicationChannel(), user.name());
+            }
         }
         return done;
     }
@@ -147,6 +149,7 @@ public class DataBase {
             userQuitLobby(user);
             removeUser(user.name());
             deleteUserName(user.name());
+            connectionToUser.remove(user.communicationChannel());
         }
     }
 
@@ -156,6 +159,7 @@ public class DataBase {
      */
     public synchronized void deleteConnection(CommunicationChannel communicationChannel) {
         deleteUser(findUser(communicationChannel));
+        connections.remove(communicationChannel);
     }
 
     /**
@@ -217,7 +221,7 @@ public class DataBase {
             deleteUser(user);
             e.printStackTrace();
             System.err.println("Can't ask matchtype to " + user.name());
-            System.exit(-1);
+            return;
         }
 
         System.out.println("Looking for a lobby with " + nPlayers + " players for " + user.name());

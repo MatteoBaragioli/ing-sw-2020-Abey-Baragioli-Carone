@@ -107,15 +107,15 @@ public class Gui extends Application implements View {
 
 
 
-        openingPage();
+        //openingPage();
 
 
         //if not opening page todo toglierlo
-        /*openingPage.setVisible(false);
+        openingPage.setVisible(false);
         menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
         menuScene.setMenuScene();
         client.start();
-        */
+
 
         createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
@@ -148,6 +148,7 @@ public class Gui extends Application implements View {
             closeProgram();
         });
         window.setResizable(true);
+        window.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
     }
 
 

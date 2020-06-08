@@ -172,9 +172,6 @@ public class Client extends Thread {
                         System.exit(-1);
                     }
                     break;
-                case MATCH_START:
-                    clientController.manageMatchStart(communicationChannel, view);
-                    break;
                 case MATCH_STORY:
                     try {
                         clientController.manageMatchStory(communicationChannel, view);
@@ -256,6 +253,7 @@ public class Client extends Thread {
     public void end() throws ChannelClosedException {
         if(communicationChannel!=null) {
             communicationChannel.writeKeyWord(QUIT);
+            communicationChannel.close();
         }
         stop();
     }

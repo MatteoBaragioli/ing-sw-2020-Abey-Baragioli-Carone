@@ -33,7 +33,7 @@ public class ClientHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Can't get BufferReader Serverside");
-            System.exit(1);
+            return;
         }
 
         PrintWriter out = null;
@@ -42,7 +42,7 @@ public class ClientHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Can't get PrintWriter Serverside");
-            System.exit(1);
+            return;
         }
 
         CommunicationChannel communicationChannel = new CommunicationChannel(in, out);
@@ -52,7 +52,7 @@ public class ClientHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("IO Exception");
-            System.exit(1);
+            return;
         }
 
         Pinger pinger = new Pinger(communicationChannel);
@@ -81,7 +81,7 @@ public class ClientHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Can't get close socket Serverside");
-            System.exit(1);
+            return;
         }
     }
 }

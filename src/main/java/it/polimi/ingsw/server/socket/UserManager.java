@@ -33,7 +33,7 @@ public class UserManager extends Thread {
         } catch (ChannelClosedException e) {
             e.printStackTrace();
             dataBase.deleteConnection(communicationChannel);
-            System.exit(-1);
+            return;
         }
         boolean valid = false;
         while (!valid && !communicationChannel().isClosed()) {
@@ -43,7 +43,7 @@ public class UserManager extends Thread {
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     dataBase.deleteConnection(communicationChannel);
-                    System.exit(-1);
+                    return;
                 }
             }
             else
