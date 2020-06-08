@@ -1215,7 +1215,7 @@ public class PlayerView extends StackPane {
 
         switch (action){
             case DESTINATION: {
-                Label destinationStory = new Label("Moved from box (" + getViewCoordinates(chosenWorker) + ") to box (" + getViewCoordinates(destination) + ")");
+                Label destinationStory = new Label("Moved from box (" + getChessCoordinates(chosenWorker) + ") to box (" + getChessCoordinates(destination) + ")");
                 destinationStory.setFont(lillybelle);
                 destinationStory.setTextAlignment(TextAlignment.CENTER);
                 destinationStory.setAlignment(CENTER);
@@ -1225,7 +1225,7 @@ public class PlayerView extends StackPane {
             }
             break;
             case BUILD:{
-                Label buildStory = new Label("Built on box (" + getViewCoordinates(destination) + ") with worker in box (" + getViewCoordinates(chosenWorker) + ")");
+                Label buildStory = new Label("Built on box (" + getChessCoordinates(destination) + ") with worker in box (" + getChessCoordinates(chosenWorker) + ")");
                 buildStory.setFont(lillybelle);
                 buildStory.setTextAlignment(TextAlignment.CENTER);
                 buildStory.setAlignment(CENTER);
@@ -1235,7 +1235,7 @@ public class PlayerView extends StackPane {
             }
             break;
             case REMOVAL:{
-                Label removalStory = new Label("Removed block on box (" + getViewCoordinates(destination) + ") with worker in box (" + getViewCoordinates(chosenWorker) + ")");
+                Label removalStory = new Label("Removed block on box (" + getChessCoordinates(destination) + ") with worker in box (" + getChessCoordinates(chosenWorker) + ")");
                 removalStory.setFont(lillybelle);
                 removalStory.setTextAlignment(TextAlignment.CENTER);
                 removalStory.setAlignment(CENTER);

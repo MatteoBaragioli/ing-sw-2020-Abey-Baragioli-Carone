@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-
+import static it.polimi.ingsw.client.view.cli.Colors.*;
 public class ScreenView {
     private static final int mapDim=5;
     private static final int boxHeight=5;
@@ -61,9 +61,9 @@ public class ScreenView {
             for (j = 0, i = 0; j < boxHeight; j++) {
 
                 if (j!=2)
-                    ps.print (Colors.CYAN_BRIGHT+"  ");
+                    ps.print (CYAN_BRIGHT+"  ");
                 else
-                    ps.print (Colors.CYAN_BRIGHT+(mapDim-k)+" ");
+                    ps.print (CYAN_BRIGHT+(mapDim-k)+" ");
 
                 ps.print(this.map.position(0, mapDim-k-1).getLines().get(j));
 
@@ -88,8 +88,8 @@ public class ScreenView {
             }
         }
 
-        ps.print(Colors.CYAN_BRIGHT+"  +-----------------+-----------------+-----------------+-----------------+-----------------+\n");
-        ps.print(Colors.CYAN_BRIGHT+"           A                 B                 C                 D                 E\n"+Colors.RESET);
+        ps.print(CYAN_BRIGHT+"  +-----------------+-----------------+-----------------+-----------------+-----------------+\n");
+        ps.print(CYAN_BRIGHT+"           A                 B                 C                 D                 E\n"+RESET);
     }
 
     public List<String> boxMessage (List<String> message) {
@@ -98,10 +98,10 @@ public class ScreenView {
         int i;
         int j=2;
         String buffer;
-        messageBox.add(0,Colors.RESET+Colors.RED+"+----");
-        messageBox.add(1,Colors.RESET+Colors.RED+"|    ");
+        messageBox.add(0,RESET+RED+"+----");
+        messageBox.add(1,RESET+RED+"|    ");
         for(i=0 ; i<message.size(); i++, j++){
-            messageBox.add(j, Colors.RESET+Colors.RED+"|  "+Colors.RESET+message.get(i)+Colors.RED);
+            messageBox.add(j, RESET+RED+"|  "+RESET+message.get(i)+RED);
             if (message.get(i).contains("[") ){
                 buffer=messageBox.get(j);
                 buffer=buffer.concat("           ");
@@ -122,8 +122,8 @@ public class ScreenView {
             }
 
         }
-        messageBox.add(Colors.RESET+Colors.RED+"|    ");
-        messageBox.add(Colors.RESET+Colors.RED+"+----");
+        messageBox.add(RESET+RED+"|    ");
+        messageBox.add(RESET+RED+"+----");
 
         for(i=0; i<maxLength; i++) {
             buffer=messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "-";
@@ -145,16 +145,16 @@ public class ScreenView {
         }
 
         buffer=messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "┐";
-        buffer=buffer.concat("+"+Colors.RESET);
+        buffer=buffer.concat("+"+RESET);
         messageBox.set(0, buffer);
 
         buffer=messageBox.get(j+1); //adding to the last string in the list, which is the down frame, the char "┘";
-        buffer=buffer.concat("+"+Colors.RESET);
+        buffer=buffer.concat("+"+RESET);
         messageBox.set(j+1, buffer);
 
         for (i=1; i<messageBox.size()-1; i++){
             buffer=messageBox.get(i);
-            buffer=buffer.concat("|"+Colors.RESET);
+            buffer=buffer.concat("|"+RESET);
             messageBox.set(i, buffer);
         }
 
@@ -164,14 +164,14 @@ public class ScreenView {
     public void title()   {
         ps.println("\n");
         ps.println("\n");
-        ps.println(Colors.BLUE_BRIGHT+"                                                   Welcome to...");
-        ps.println(Colors.BLUE_BRIGHT+"                            _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____        ");
-        ps.println(Colors.BLUE_BRIGHT+"                          /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |   ");
-        ps.println(Colors.BLUE_BRIGHT+"                         |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |   ");
-        ps.println(Colors.BLUE_BRIGHT+"                          \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |  ");
-        ps.println(Colors.BLUE_BRIGHT+"                           _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |   ");
-        ps.println(Colors.BLUE_BRIGHT+"                          |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|    ");
-        ps.println(Colors.RESET+"\n");
+        ps.println(BLUE_BRIGHT+"                                                   Welcome to...");
+        ps.println(BLUE_BRIGHT+"                            _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____        ");
+        ps.println(BLUE_BRIGHT+"                          /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |   ");
+        ps.println(BLUE_BRIGHT+"                         |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |   ");
+        ps.println(BLUE_BRIGHT+"                          \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |  ");
+        ps.println(BLUE_BRIGHT+"                           _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |   ");
+        ps.println(BLUE_BRIGHT+"                          |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|    ");
+        ps.println(RESET+"\n");
         ps.println("\n");
 
     }
@@ -188,6 +188,7 @@ public class ScreenView {
                 //Runtime.getRuntime().exec("clear");
             }
         } catch (IOException | InterruptedException ignore) {}
+        System.out.println(" ");
     }
 
 

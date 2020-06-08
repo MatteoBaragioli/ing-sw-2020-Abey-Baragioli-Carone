@@ -1,14 +1,20 @@
 package it.polimi.ingsw.client.view.cli;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.view.Coordinates;
+
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
+import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import static it.polimi.ingsw.client.view.Coordinates.*;
+import static it.polimi.ingsw.client.view.cli.Colors.*;
 import java.io.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,6 +25,7 @@ public class Cli implements View {
     private PrintStream printStream = new PrintStream(System.out);
     private ScreenView view = new ScreenView(printStream);
     private PlayerProxy myPlayer;
+    private PlayerProxy currentPlayer;
     private List<PlayerProxy> opponents;
 
     public ScreenView screenView() {
@@ -51,15 +58,18 @@ public class Cli implements View {
         String answer = null;
         boolean validAnswer;
         boolean validConfirmation;
+        boolean found ;
         boolean sure = false;
         int answerToInt = 0;
         Pattern pattern = Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
         view.clearScreen();
         view.turn();
-        printStream.println("enter the coordinates of a box on the board");
+
         while (!sure) {
+            printStream.println("Enter the coordinates of a box on the board to choose it");
             validAnswer = false;
             validConfirmation = false;
+            found = false;
             while (!validAnswer) {
                 try {
                     answer = askAnswer();
@@ -72,14 +82,32 @@ public class Cli implements View {
                 Matcher matcher = pattern.matcher(answer);
 
                 if (matcher.find()) {
-                    validAnswer = true;
                     answer = cleanPosition(answer, matcher);
+                    printStream.println(answer);
+                    int[] paragon=getCartesianCoordinates(answer);
+                    for (int i = 0; i < positions.size() && !found; i++) {
+
+                        if (Arrays.equals(positions.get(i), paragon)) {
+                            answerToInt = i;
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        printStream.println("the box you chose is not available according to the game rules");
+                        printStream.println("You must enter a box between ");
+                        for(int[] position : positions){
+                            printStream.print(getChessCoordinates(position)+"  ");
+                        }
+                    }
+                    validAnswer=found;
+
                 } else {
                     printStream.println("Not valid answer. Try again");
                     printStream.println("You must enter a letter and a number that refer to a box on the board");
                 }
             }
             printStream.println("you entered box " + answer + " are you sure?");
+            printStream.println("1  yes     2   no");
             int confirm = 0;
             while (!validConfirmation) {
                 try {
@@ -102,14 +130,6 @@ public class Cli implements View {
             }
             if (confirm == 1)
                 sure = true;
-        }
-
-        boolean found = false;
-        for (int i = 0; i < positions.size() && !found; i++) {
-            if (Arrays.equals(positions.get(i), getServerCoordinates(answer))) {
-                answerToInt = i;
-                found = true;
-            }
         }
 
         return answerToInt;
@@ -184,7 +204,7 @@ public class Cli implements View {
         boolean valid = false;
         int answer = 0;
         for(int i=0; i<workers.size(); i++){
-            printStream.print((i+1)+"   for worker in"+ convertToChessCoordinates(workers.get(i))+"    ");
+            printStream.print((i+1)+"   for worker in"+ getChessCoordinates(workers.get(i))+"    ");
         }
         while (!valid) {
 
@@ -377,6 +397,16 @@ public class Cli implements View {
     @Override
     public void setOpponentsInfo(List<PlayerProxy> players) {
         opponents = players;
+        if(players.get(0).godCardProxy!=null && players.get(0).colour!=null) {
+            List<String> info = new ArrayList<>();
+            info.add(getActualWrittenColor(myPlayer.colour)+"your card is "+ myPlayer.godCardProxy.name+ Colors.RESET);
+            info.add("your opponents are:");
+            for(PlayerProxy opponent: players){
+                info.add(getActualWrittenColor(opponent.colour)+opponent.name+ ":"+Colors.RESET);
+                info.add(getActualWrittenColor(opponent.colour)+opponent.name+ "'s card is "+opponent.godCardProxy.name+Colors.RESET);
+            }
+            view.setInfoMessageBox(info);
+        }
     }
 
     @Override
@@ -396,12 +426,48 @@ public class Cli implements View {
 
     @Override
     public void setCurrentPlayer(PlayerProxy player) {
-
+        this.currentPlayer=currentPlayer;
     }
 
     @Override
     public void tellStory(List<String> events) {
+        List<String> turnMessage = new ArrayList<>();
+        for(String event : events){
+            String[] content = event.split(MatchStory.STORY_SEPARATOR);
 
+            String player = content[0];
+
+            Type chosenWorkerType = new TypeToken<int[]>() {}.getType();
+            int[] chosenWorker = new Gson().fromJson(content[1], chosenWorkerType);
+
+            Type actionType = new TypeToken<CommunicationProtocol>() {}.getType();
+            CommunicationProtocol action = new Gson().fromJson(content[2], actionType);
+
+            Type destinationType = new TypeToken<int[]>() {}.getType();
+            int[] destination = new Gson().fromJson(content[3], destinationType);
+            turnMessage.addAll(writeStory(player, chosenWorker, action, destination));
+        }
+        view.setTurnMessageBox(turnMessage);
+    }
+
+    public List<String> writeStory(String player, int[] chosenWorker, CommunicationProtocol action, int[] destination) {
+        List<String> turnEvent = new ArrayList<>();
+
+        switch (action) {
+            case DESTINATION: {
+                turnEvent.add(player+ " moved from box " + getChessCoordinates(chosenWorker) + " to box " + getChessCoordinates(destination));
+                break;
+            }
+            case BUILD:{
+                turnEvent.add(player+" Built on box "+ getChessCoordinates(destination) );
+                break;
+            }
+            case REMOVAL:{
+                turnEvent.add(player+" Removed block on box "+ getChessCoordinates(destination)+ " with worker in box (" + getChessCoordinates(destination));
+                break;
+            }
+        }
+        return turnEvent;
     }
 
     @Override
@@ -482,6 +548,9 @@ public class Cli implements View {
     @Override
     public int[] askDeck(List<GodCardProxy> cards) {
         boolean sure=false;
+        boolean sameCard;
+        boolean validCard;
+        boolean validConfirmation;
         int[] answer=new int[(opponents.size()+1)];
 
         while(!sure) {
@@ -503,8 +572,8 @@ public class Cli implements View {
             printStream.println("press the number displayed next to the god's name to choose it, you have to choose "+(opponents.size()+1)+"  cards");
 
             for (int i = 0; i < (opponents.size() + 1); i++) {
-                boolean valid = false;
-                while (!valid) {
+                validCard = false;
+                while (!validCard) {
                     try {
                         answer[i] = askNumber();
                     } catch (IOException e) {
@@ -513,7 +582,16 @@ public class Cli implements View {
                         answer[i] = 0;
                     }
                     if ((answer[i] <= cards.size() && answer[i] > 0) || answer[i]==-1) {
-                        valid = true;
+                        sameCard=false;
+                        for (int j=0; j<i && !sameCard; j++) {
+                            if (answer[i] == answer[j] && answer[i]!=-1) {
+                                sameCard=true;
+                                printStream.println("\nyou already chose " + cards.get((answer[i]-1)).name + " choose another card");
+
+                            }
+                        }
+                            if(!sameCard)
+                                validCard = true;
                     }
                      else {
                        printStream.println("Not valid answer. Try again");
@@ -538,9 +616,9 @@ public class Cli implements View {
             printStream.println("these will be the game cards, are you sure? ");
             printStream.println("1  yes     2   no");
 
-            boolean valid = false;
+            validConfirmation = false;
             int confirm = 0;
-            while (!valid) {
+            while (!validConfirmation) {
                 try {
                     confirm = askNumber();
                 } catch (IOException e) {
@@ -549,7 +627,7 @@ public class Cli implements View {
                     confirm = 0;
                 }
                 if (confirm == 1 || confirm == 2)
-                    valid = true;
+                    validConfirmation = true;
 
                 if (confirm == 1)
                     sure = true;
@@ -563,51 +641,6 @@ public class Cli implements View {
         return answer;
     }
 
-
-    public String convertToChessCoordinates(int[] coordinates){
-        char first;
-        char second;
-        switch(coordinates[0]) {
-            case 0:
-                first = 'A';
-                break;
-            case 1:
-                first = 'B';
-                break;
-            case 2:
-                first = 'C';
-                break;
-            case 3:
-                first = 'D';
-                break;
-            case 4:
-                first = 'E';
-                break;
-            default:
-                return "error in conversion of coordinates";
-        }
-        switch(coordinates[1]) {
-            case 0:
-                second = '1';
-                break;
-            case 1:
-                second = '2';
-                break;
-            case 2:
-                second = '3';
-                break;
-            case 3:
-                second = '4';
-                break;
-            case 4:
-                second = '5';
-                break;
-            default:
-                return "error in conversion of coordinates";
-
-        }
-        return first+","+second;
-    }
 
     public static void main(String[] args){
         Cli cli = new Cli();

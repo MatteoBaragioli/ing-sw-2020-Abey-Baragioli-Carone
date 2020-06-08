@@ -87,7 +87,19 @@ public class Colors {
         actualColors.put(Colour.WHITE, Colors.RED_BACKGROUND);
     }
 
+
     public static String getActualColor(Colour colour) {
         return actualColors.get(colour);
     }
+    private static final HashMap<Colour, String> actualWrittenColors ;
+    static {
+        actualWrittenColors= new HashMap<>();
+        actualWrittenColors.put(Colour.BLUE, Colors.CYAN_BRIGHT);
+        actualWrittenColors.put(Colour.GREY, Colors.GREEN_BRIGHT);
+        actualWrittenColors.put(Colour.WHITE, Colors.RED);
+    }
+    public static String getActualWrittenColor(Colour colour) {
+        return actualWrittenColors.get(colour);
+    }
+
 }
