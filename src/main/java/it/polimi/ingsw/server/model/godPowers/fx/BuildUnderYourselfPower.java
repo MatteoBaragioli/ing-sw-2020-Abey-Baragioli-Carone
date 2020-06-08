@@ -11,8 +11,9 @@ public class BuildUnderYourselfPower extends BuildModifier{
     @Override
     public void changePossibleOptions(Player player, ActionController actionController, Map map) {
         //buildPower - Zeus
-        if(player.turnSequence().chosenWorker().position().level()<3){
-            player.turnSequence().possibleBuilds().add(player.turnSequence().workersCurrentPosition(player.turnSequence().chosenWorker()));
+        Box currentBox=player.turnSequence().workersCurrentPosition(player.turnSequence().chosenWorker());
+        if(currentBox.level()<3){
+            player.turnSequence().possibleBuilds().add(currentBox);
         }
 
     }
