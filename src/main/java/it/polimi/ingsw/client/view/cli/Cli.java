@@ -472,11 +472,29 @@ public class Cli implements View {
 
     @Override
     public void setWinner(PlayerProxy player) {
+        view.clearScreen();
+        view.turn();
+        printStream.println("The match is over!");
+        if(player.equals(myPlayer)){
+            printStream.println("You won the match, congratulations! you are on the right patch to become a god!");
+        }
+        else{
+            printStream.println(player.name +" won the match, better luck next time!");
+        }
 
     }
 
     @Override
     public void setLoser(PlayerProxy player) {
+        view.clearScreen();
+        view.turn();
+        if(player.equals(myPlayer)){
+            printStream.println("You lost, better luck next time!");
+        }
+        else{
+            opponents.remove(player);
+            printStream.println(player.name +" lost!");
+        }
 
     }
 

@@ -12,7 +12,7 @@ public abstract class BuildModifier implements  TurnSequenceModifier{
     }
 
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, MatchStory matchStory) throws TimeoutException, ChannelClosedException {
-        boolean usePower = communicationController.chooseToUsePower(player);
+        boolean usePower = communicationController.chooseToUsePower(player); //todo chiedere questo all'interno di usePower
         usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);
 
     }
