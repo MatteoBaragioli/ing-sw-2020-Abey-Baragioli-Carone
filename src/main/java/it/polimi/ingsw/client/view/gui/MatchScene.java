@@ -1037,7 +1037,7 @@ public class MatchScene {
 
     private void backToMenu(){
         gui.playTransitionClouds();
-
+        gui.setNewMatch();
         FadeTransition matchFadeOut = new FadeTransition(Duration.millis(2000), matchPage);
         matchFadeOut.setFromValue(1);
         matchFadeOut.setToValue(0);

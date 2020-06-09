@@ -1036,11 +1036,7 @@ public class PlayerView extends StackPane {
             usePowerView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
-        usePowerView.setOnMousePressed(e -> {
-            usePowerView.setCursor(Cursor.DEFAULT);
-            e.consume();
-        });
-        usePowerView.setOnMouseReleased(e -> {
+        usePowerView.setOnMouseClicked(e -> {
             usePowerView.setCursor(Cursor.DEFAULT);
             e.consume();
         });

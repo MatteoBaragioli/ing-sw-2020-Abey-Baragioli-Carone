@@ -17,16 +17,21 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -36,65 +41,312 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static javafx.scene.paint.Color.*;
 
 public class Gui extends Application implements View {
 
+    //screen width
     private double screenWidth = Screen.getPrimary().getBounds().getWidth();
+
+    //screen height
     private double screenHeight = Screen.getPrimary().getBounds().getHeight();
+
+    //offset of the window relative to screen width
+    private double xOffset;
+
+    //offset of the window relative to screen height
+    private double yOffset;
+
+    //fonts
     private final Font lillybelleFont = Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
+    private final Font settingsFont = Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/110);
+
+    //number of rows and columns of the map
     private static final int mapRowsNumber = 5;
     private static final int mapColumnsNumber = 5;
+
+    //client
     private final Client client = new Client(this);
+
+    //setting window
+    private Stage settingStage;
+
+    //primary window
     private Stage window;
+
+    //menu scene
     private MenuScene menuScene;
+
+    //match scene
     private MatchScene matchScene;
-    private AtomicInteger answer;
-    private final AtomicBoolean clickedConfirmation = new AtomicBoolean(false);
-    private final AtomicBoolean readyForTheMatch = new AtomicBoolean(false);
 
-
-
-
+    //primary window pane
     private final StackPane mainScene = new StackPane();
 
-
+    //opening page
     private final StackPane openingPage = new StackPane();
 
+    //menu page
     private final HBox menuPage = new HBox();
 
+    //match page
+    private final StackPane matchPage = new StackPane();
+
+    //loading page
     private final StackPane loadingPage = new StackPane();
 
+    //how to play pane
     private final StackPane howToPlayBox = new StackPane();
 
+    //clouds animation pane
     private final StackPane transitionClouds = new StackPane();
 
+    //close popup pane
     private final StackPane closePopup = new StackPane();
 
+    //yes choice of popup
     private Button yesPopupButton;
 
+    //no choice od popup
     private Button noPopupButton;
 
+    //animations
     private TranslateTransition translateLeftTransitionIn;
     private TranslateTransition translateRightTransitionIn;
 
-
-    private final StackPane matchPage = new StackPane();
-
+    //connection variables
     private String ip;
     private int port;
+
+    //player's infos
     private String nickname;
     private String color;
+
+    //match number of players
     private int numberOfPlayers;
+
+    //opponents for the match
     private List<PlayerProxy> opponents = new ArrayList<>();
 
+    //variable that tells if user is doing a new match
     private boolean newMatch = false;
+
+    //settings window form variables
+    private Text ipForm;
+    private TextField ipFormField;
+    private Text portForm;
+    private TextField portFormField;
+    private Button connectionButton;
+    private ImageView loadingIcon;
+    private Text errorMessage;
+    private Text connectedText;
+    private Button disconnectionButton;
+    private Button enterGameButton;
+
+    //variable that is true when menu page is ready
+    private final AtomicBoolean gameIsReady = new AtomicBoolean(false);
+
+    //variable that is true when match page is ready
+    private final AtomicBoolean readyForTheMatch = new AtomicBoolean(false);
+
+    //variable that is true if user clicked "connect" on setting page
+    private final AtomicBoolean clicked = new AtomicBoolean(false);
+
+    //variable that is true if user clicks on play button in the settings window
+    private AtomicBoolean openGame = new AtomicBoolean(false);
+
+    //variable that is true if user clicks on disconnect button in the settings window
+    private AtomicBoolean restartConnection = new AtomicBoolean(false);
+
+    //variable that is true if user closes settings window
+    private final AtomicBoolean closeWindow = new AtomicBoolean(false);
+
+    //variable that is true if user writes valid ip and port
+    private AtomicBoolean valid = new AtomicBoolean(false);
+
+    //window size choices
+    private ComboBox screenSizeOptions;
+
+    //text that shows screen size errors
+    private Text screenSizeError;
+
+    //variable that is true when menu scene is displayed
+    private boolean inMenuPage = false;
 
 
     @Override
-    public void start(Stage primaryStage){
-        window = primaryStage;
-        windowStyle();
+    public void start(Stage settingsStage){
+        this.settingStage = settingsStage;
+        StackPane settings = new StackPane();
+
+        createSettingsPane(settings);
+
+        Scene settingsScene = new Scene(settings);
+
+        settingsStage.setScene(settingsScene);
+        settingsStage.setWidth(screenWidth/2);
+        settingsStage.setHeight(screenHeight/2);
+
+        client.start();
+
+        settingsStage.setResizable(false);
+        settingsStage.initStyle(StageStyle.UNDECORATED);
+        settingsStage.setX((screenWidth - settingsStage.getWidth()) / 2);
+        settingsStage.setY((screenHeight - settingsStage.getHeight()) / 2);
+
+        settingsStage.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
+        settingsStage.show();
+    }
+
+    //-----------------------------------------GETTER--------------------------------------------------
+
+    public HBox menuPage(){
+        return menuPage;
+    }
+
+    public MenuScene menuScene(){
+        return menuScene;
+    }
+
+    public int mapRowsNumber() {
+        return mapRowsNumber;
+    }
+
+    public int mapColumnsNumber() {
+        return mapColumnsNumber;
+    }
+
+    public int port(){
+        return port;
+    }
+
+    //-----------------------------------------END GETTER----------------------------------------------
+
+    //-----------------------------------------SETTER--------------------------------------------------
+
+    public void setIp(String ip){
+        this.ip = ip;
+    }
+
+    public void setPort(int port){
+        this.port = port;
+    }
+
+    /**
+     * This method writes errors in settings page
+     * @param message Error to show
+     */
+    private void setErrorMessage(String message){
+        errorMessage.setVisible(true);
+        errorMessage.setManaged(true);
+        errorMessage.setText(message);
+    }
+
+    public void setNewMatch(){
+        newMatch = true;
+    }
+
+    //-----------------------------------------END SETTER----------------------------------------------
+
+    //-----------------------------------------SYNCHRONIZATION METHODS---------------------------------
+
+    /**
+     * This method notifies closeWindow when user closes setting window. It also closes setting window and the client
+     */
+    public synchronized void setCloseWindow(){
+        closeWindow.set(true);
+        valid.set(true); //true --> in order to exit to cycles that are waiting for responses
+        settingStage.close();
+        try {
+            client.end();
+        } catch (ChannelClosedException ex) {
+            ex.printStackTrace();
+            System.err.println("Connection Lost");
+        }
+        notifyAll();
+    }
+
+    /**
+     * This method notifies clicked when user clicks on connect in the setting window
+     */
+    private synchronized void setClicked(){
+        clicked.set(true);
+        notifyAll();
+    }
+
+    /**
+     * This method notifies restartConnection when user clicks on disconnect in the setting window. It also restarts the client
+     */
+    private synchronized void restartConnection(){
+        restartConnection.set(true);
+        notifyAll();
+        try {
+            client.restartClient();
+        } catch (ChannelClosedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method notifies openGame when user clicks on play in the setting window
+     */
+    private synchronized void setOpenGame(){
+        openGame.set(true);
+        notifyAll();
+    }
+
+    /**
+     * This method notifies gameIsReady when menu scene is ready and displayed. Server is asking for username and this variable waits for menu scene to be ready to ask the username
+     */
+    private synchronized void setGameIsReady(){
+        gameIsReady.set(true);
+        notifyAll();
+    }
+
+    /**
+     * This method notifies readyForTheMatch when match scene is ready and displayed. Server will ask cards to challenger and this variable waits for match scene to be ready to ask cards to challenger
+     */
+    private synchronized void setReadyForTheMatch(){
+        readyForTheMatch.set(true);
+        notifyAll();
+    }
+
+    //-----------------------------------------END SYNCHRONIZATION METHODS-----------------------------
+
+    /**
+     * This method creates primary scene of the game (after setting window)
+     */
+    public void primaryScene(){
+        window = new Stage();
+        if(screenWidth == Screen.getPrimary().getBounds().getWidth() && screenHeight == Screen.getPrimary().getBounds().getHeight()) {
+            window.setMaximized(true);
+        } else {
+            window.setWidth(screenWidth);
+            window.setHeight(screenHeight);
+            //undecorated but movable
+            mainScene.setOnMousePressed(e -> {
+                xOffset = window.getX() - e.getScreenX();
+                yOffset = window.getY() - e.getScreenY();
+            });
+            mainScene.setOnMouseDragged(e -> {
+                window.setX(e.getScreenX() + xOffset);
+                window.setY(e.getScreenY() + yOffset);
+            });
+            window.setX((Screen.getPrimary().getBounds().getWidth() - window.getWidth()) / 2);
+            window.setY((Screen.getPrimary().getBounds().getHeight() - window.getHeight()) / 2);
+
+        }
+        window.initStyle(StageStyle.UNDECORATED);
+        window.setTitle("Santorini");
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram();
+        });
+        window.setResizable(false);
+        window.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
+
+
         closePopup();
 
 
@@ -108,17 +360,7 @@ public class Gui extends Application implements View {
         matchPage.setVisible(false);
         howToPlayBox.setVisible(false);
 
-
-
-        //openingPage();
-
-
-        //if not opening page todo toglierlo
-        openingPage.setVisible(false);
-        menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
-        menuScene.setMenuScene();
-        client.start();
-
+        openingPage();
 
         createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
@@ -128,37 +370,281 @@ public class Gui extends Application implements View {
         window.show();
     }
 
-    public HBox menuPage(){
-        return menuPage;
-    }
-
-    public void setNewMatch(boolean newMatch){
-        this.newMatch = newMatch;
-    }
 
 
-    public synchronized void setClickedConfirmation(boolean clicked) {
-        clickedConfirmation.set(clicked);
-        notifyAll();
-    }
+    //------------------------------------------SETTINGS PAGE----------------------------------------------------------
 
-    public void windowStyle(){
-        window.setMaximized(true);
-        /*window.setWidth(1280);
-        window.setHeight(720);
-        screenWidth = 1280;
-        screenHeight = 720;*/
-        window.initStyle(StageStyle.UNDECORATED);
-        window.setTitle("Santorini");
-        window.setOnCloseRequest(e -> {
-            e.consume();
-            closeProgram();
+    /**
+     * This method creates initial setting page
+     * @param settings Setting window
+     */
+    private void createSettingsPane(StackPane settings){
+
+        //title bar
+
+        HBox titleBar = new HBox();
+        titleBar.setMaxHeight(screenHeight/30);
+        titleBar.setPrefWidth(screenWidth/2);
+        titleBar.setStyle("-fx-background-color: rgba(160, 146, 134, 0.5)");
+
+
+        Image iconImg = new Image(MenuScene.class.getResource("/img/icon.png").toString(), screenWidth/35, screenHeight/30, false, false);
+        ImageView iconView = new ImageView(iconImg);
+        Label icon = new Label();
+        icon.setGraphic(iconView);
+        icon.setTextAlignment(TextAlignment.CENTER);
+        icon.setAlignment(Pos.TOP_LEFT);
+        icon.setPadding(new Insets(screenHeight/200));
+
+        Label exit = new Label("X");
+        exit.setFont(lillybelleFont);
+        exit.setTextAlignment(TextAlignment.RIGHT);
+        exit.setAlignment(Pos.TOP_RIGHT);
+
+        exit.setOnMouseEntered(e ->{
+            exit.setTextFill(GREY);
+            exit.setCursor(Cursor.HAND);
         });
-        window.setResizable(true);
-        window.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
+        exit.setOnMouseExited(e ->{
+            exit.setTextFill(BLACK);
+            exit.setCursor(Cursor.DEFAULT);
+        });
+        exit.setOnMouseClicked(e -> {
+            setCloseWindow();
+        });
+
+        Label minimize = new Label("-");
+        minimize.setFont(Font.font("Arial", screenWidth/50));
+        minimize.setTextAlignment(TextAlignment.RIGHT);
+        minimize.setAlignment(Pos.TOP_RIGHT);
+
+        minimize.setOnMouseEntered(e ->{
+            minimize.setTextFill(GREY);
+            minimize.setCursor(Cursor.HAND);
+        });
+        minimize.setOnMouseExited(e ->{
+            minimize.setTextFill(BLACK);
+            minimize.setCursor(Cursor.DEFAULT);
+        });
+        minimize.setOnMouseClicked(e -> {
+            settingStage.setIconified(true);
+        });
+
+        HBox titleActions = new HBox();
+        titleActions.setSpacing(screenWidth/100);
+        titleActions.getChildren().addAll(minimize, exit);
+
+        titleBar.getChildren().addAll(icon, titleActions);
+        titleBar.setSpacing((screenWidth/2)-screenWidth/15);
+
+        //end title bar
+
+        Image settingsBackground = new Image(MenuScene.class.getResource("/img/settingsPage/background.png").toString(), screenWidth/2, screenHeight/2, false, false);
+        ImageView settingsBackgroundView = new ImageView(settingsBackground);
+
+        HBox settingsPage = new HBox();
+
+        VBox connectionSettings = new VBox();
+        connectionSettings.setSpacing(screenHeight/50);
+        connectionSettings.setPrefWidth(screenWidth/4);
+        connectionSettings.setPrefHeight(screenHeight/2);
+        connectionSettings.setPadding(new Insets(screenHeight/20, 0, 0, 0));
+
+        ipForm = new Text ("Ip Address");
+        ipForm.setFont(lillybelleFont);
+        ipForm.setTextAlignment(TextAlignment.CENTER);
+        ipFormField = new TextField();
+        ipFormField.setFont(settingsFont);
+        ipFormField.setMaxWidth(screenWidth/10);
+
+        portForm = new Text("Port Number");
+        portForm.setFont(lillybelleFont);
+        portForm.setTextAlignment(TextAlignment.CENTER);
+        portFormField = new TextField();
+        portFormField.setFont(settingsFont);
+        portFormField.setMaxWidth(screenWidth/10);
+
+        connectionButton = new Button("Connect");
+        connectionButton.setFont(lillybelleFont);
+        connectionButton.setOnMouseEntered(e -> {
+            connectionButton.setCursor(Cursor.HAND);
+        });
+        connectionButton.setOnMouseExited(e -> {
+            connectionButton.setCursor(Cursor.DEFAULT);
+        });
+
+        Image loadingImg = new Image(MenuScene.class.getResource("/img/loadingAndPopups/loadingIcon.gif").toString(), screenWidth / 30, screenHeight / 25, false, false);
+        loadingIcon = new ImageView(loadingImg);
+
+        errorMessage = new Text();
+        errorMessage.setFont(settingsFont);
+        errorMessage.setFill(Color.DARKRED);
+        errorMessage.setTextAlignment(TextAlignment.CENTER);
+
+        connectedText = new Text("Connected");
+        connectedText.setFont(lillybelleFont);
+        connectedText.setFill(DARKGREEN);
+        disconnectionButton = new Button("Disconnect");
+        disconnectionButton.setFont(lillybelleFont);
+
+        connectionSettings.getChildren().addAll(ipForm, ipFormField, portForm, portFormField, connectionButton, loadingIcon, errorMessage, connectedText, disconnectionButton);
+        ipForm.setVisible(false);
+        ipFormField.setVisible(false);
+        portForm.setVisible(false);
+        portFormField.setVisible(false);
+        connectionButton.setVisible(false);
+        loadingIcon.setVisible(false);
+        loadingIcon.setManaged(false);
+        errorMessage.setVisible(false);
+        errorMessage.setManaged(false);
+        connectedText.setVisible(false);
+        connectedText.setManaged(false);
+        disconnectionButton.setVisible(false);
+        disconnectionButton.setManaged(false);
+
+        Text screenSizeText = new Text("Choose your favourite resolution");
+        screenSizeText.setFont(lillybelleFont);
+        screenSizeText.setWrappingWidth(screenWidth/5);
+
+        screenSizeOptions = new ComboBox(FXCollections.observableArrayList(
+                "Full Screen", "3840 x 2160", "2560 x 1440", "1920 x 1080", "1280 x 720", "854 x 480")
+        );
+        screenSizeOptions.getEditor().setAlignment(Pos.CENTER);
+        screenSizeOptions.getSelectionModel().selectFirst();
+        screenSizeOptions.setOnAction(e -> {
+            windowSize(screenSizeOptions.getSelectionModel().getSelectedIndex());
+        });
+
+        screenSizeError = new Text();
+        screenSizeError.setFont(settingsFont);
+        screenSizeError.setFill(DARKRED);
+        screenSizeError.setTextAlignment(TextAlignment.CENTER);
+        screenSizeError.setWrappingWidth(screenWidth/4);
+        screenSizeError.setVisible(false);
+        screenSizeError.setManaged(true);
+
+        VBox screenSize = new VBox();
+        screenSize.getChildren().addAll(screenSizeText, screenSizeOptions, screenSizeError);
+        screenSize.setSpacing(screenHeight/50);
+        screenSize.setPrefHeight(screenHeight/4);
+        screenSize.setAlignment(Pos.CENTER);
+
+        enterGameButton = new Button("Play");
+        enterGameButton.setFont(lillybelleFont);
+        enterGameButton.setTextFill(WHITE);
+        enterGameButton.setBackground(new Background(new BackgroundFill(DARKGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        enterGameButton.setEffect(new DropShadow(10, Color.BLACK));
+        enterGameButton.setOnMouseEntered(e -> {
+            enterGameButton.setEffect(new DropShadow(30, Color.BLACK));
+            enterGameButton.setCursor(Cursor.HAND);
+        });
+        enterGameButton.setOnMouseExited(e -> {
+            enterGameButton.setEffect(new DropShadow(10, Color.BLACK));
+            enterGameButton.setCursor(Cursor.DEFAULT);
+        });
+
+
+        VBox windowDimensionSettings = new VBox();
+        windowDimensionSettings.setPrefWidth(screenWidth/4);
+        windowDimensionSettings.setPrefHeight(screenHeight/2);
+
+        windowDimensionSettings.getChildren().addAll(screenSize, enterGameButton);
+        enterGameButton.setVisible(false);
+        enterGameButton.setManaged(true);
+
+        settingsPage.getChildren().addAll(connectionSettings, windowDimensionSettings);
+        connectionSettings.setAlignment(Pos.CENTER);
+        windowDimensionSettings.setAlignment(Pos.CENTER);
+        settingsPage.setAlignment(Pos.CENTER);
+        settingsPage.setPrefWidth(screenWidth/2);
+        settingsPage.setPrefHeight(screenHeight/2);
+
+        settings.getChildren().addAll(settingsBackgroundView, settingsPage, titleBar);
+        StackPane.setAlignment(titleBar, Pos.TOP_CENTER);
+
+        //undecorated but movable
+        settings.setOnMousePressed(e -> {
+            xOffset = settingStage.getX() - e.getScreenX();
+            yOffset = settingStage.getY() - e.getScreenY();
+        });
+        settings.setOnMouseDragged(e -> {
+            settingStage.setX(e.getScreenX() + xOffset);
+            settingStage.setY(e.getScreenY() + yOffset);
+        });
+
     }
 
+    //------------------------------------------END SETTINGS PAGE------------------------------------------------------
 
+    /**
+     * This method sets primary scene size based on size choice in the setting window
+     * @param sizeChoice Index of size choice in the list of options
+     */
+    private void windowSize(int sizeChoice){
+        switch (sizeChoice){
+            case 0:
+                break;
+            case 1:
+                if(Screen.getPrimary().getBounds().getWidth()<3840 || Screen.getPrimary().getBounds().getHeight()<2160){
+                    screenSizeError.setText("Your device doesn't support 3840x2160 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 3840;
+                    this.screenHeight = 2160;
+                }
+                break;
+            case 2:
+                if(Screen.getPrimary().getBounds().getWidth()<2560 || Screen.getPrimary().getBounds().getHeight()<1440){
+                    screenSizeError.setText("Your device doesn't support 2560x1440 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 2560;
+                    this.screenHeight = 1440;
+                }
+                break;
+            case 3:
+                if(Screen.getPrimary().getBounds().getWidth()<1920 || Screen.getPrimary().getBounds().getHeight()<1080){
+                    screenSizeError.setText("Your device doesn't support 1920x1080 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1920;
+                    this.screenHeight = 1080;
+                }
+                break;
+            case 4:
+                if(Screen.getPrimary().getBounds().getWidth()<1280 || Screen.getPrimary().getBounds().getHeight()<720){
+                    screenSizeError.setText("Your device doesn't support 1280x720 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1280;
+                    this.screenHeight = 720;
+                }
+                break;
+            case 5:
+                if(Screen.getPrimary().getBounds().getWidth()<854 || Screen.getPrimary().getBounds().getHeight()<480){
+                    screenSizeError.setText("Your device doesn't support 854x480 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 854;
+                    this.screenHeight = 480;
+                }
+                break;
+        }
+    }
+
+    /**
+     * This method closes primary window and the client when user clicks on quit and confirms their action
+     */
     public void closeProgram(){
         yesPopupButton.setOnAction(e -> {
             window.close();
@@ -182,6 +668,9 @@ public class Gui extends Application implements View {
         createClosePopup();
     }
 
+    /**
+     * This method creates close popup, that asks if user is sure to quit the game
+     */
     private void closePopup(){
         closePopup.setPrefWidth(screenWidth/4);
         closePopup.setPrefHeight(screenHeight/4);
@@ -197,7 +686,7 @@ public class Gui extends Application implements View {
         yesPopupButton = new Button("Yes");
         noPopupButton = new Button("No");
 
-        yesPopupButton.setFont(lillybelleFont);
+        yesPopupButton.setFont(Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80));
         yesPopupButton.setCursor(Cursor.HAND);
         noPopupButton.setFont(lillybelleFont);
         noPopupButton.setCursor(Cursor.HAND);
@@ -220,6 +709,9 @@ public class Gui extends Application implements View {
 
     }
 
+    /**
+     * This method shows close popup
+     */
     private void createClosePopup(){
         menuPage.setEffect(new BoxBlur(5, 10, 10));
         openingPage.setEffect(new BoxBlur(5, 10, 10));
@@ -231,6 +723,9 @@ public class Gui extends Application implements View {
     }
 
 
+    /**
+     * This method creates opening page and after that calls the method that creates menu scene
+     */
     private void openingPage(){
         Image openingImg = new Image(Gui.class.getResource("/img/opening/opening.png").toString(), screenWidth, screenHeight, false, false);
         ImageView openingView = new ImageView(openingImg);
@@ -282,11 +777,15 @@ public class Gui extends Application implements View {
                     openingPage.setVisible(false);
                     menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
                     menuScene.setMenuScene();
-                    client.start();
+                    setGameIsReady();
+                    inMenuPage = true;
                 }));
         menuTimer.play();
     }
 
+    /**
+     * This method creates clouds animation
+     */
     private void createTransitionClouds(){
         Image leftCloudImg = new Image(Gui.class.getResource("/img/loadingAndPopups/transitionCloudLeft.png").toString(), screenWidth, screenHeight*2, false, false);
         ImageView leftCloud = new ImageView(leftCloudImg);
@@ -306,6 +805,9 @@ public class Gui extends Application implements View {
         translateRightTransitionIn.setAutoReverse(true);
     }
 
+    /**
+     * This method plays clouds animation
+     */
     public void playTransitionClouds(){
         transitionClouds.setVisible(true);
         translateLeftTransitionIn.setCycleCount(2);
@@ -320,22 +822,208 @@ public class Gui extends Application implements View {
         cloudsTimer.play();
     }
 
-    public StackPane howToPlayBox(){
-        return howToPlayBox;
+
+    /**
+     * This method creates all the form about connection
+     */
+    private synchronized void askConnection(){
+        valid = new AtomicBoolean(false);
+        AtomicBoolean validPort = new AtomicBoolean(false);
+        ipForm.setVisible(true);
+        ipFormField.setVisible(true);
+        portForm.setVisible(true);
+        portFormField.setVisible(true);
+        connectionButton.setVisible(true);
+        connectionButton.setManaged(true);
+        loadingIcon.setVisible(false);
+        loadingIcon.setManaged(false);
+        clicked.set(false);
+        setIp(null);
+        ipFormField.clear();
+        portFormField.clear();
+        while (!valid.get() && !closeWindow.get()) {
+            clicked.set(false);
+            ipFormField.clear();
+            portFormField.clear();
+            connectionButton.setOnMouseClicked(e -> {
+                loadingIcon.setVisible(true);
+                loadingIcon.setManaged(true);
+                connectionButton.setVisible(false);
+                connectionButton.setManaged(false);
+                if (ipFormField.getText().isEmpty()) {      //if ip form is empty -> valid is false and error message
+                    errorMessage.setVisible(true);
+                    errorMessage.setManaged(true);
+                    setErrorMessage("You have to insert an Ip Address");
+                    loadingIcon.setVisible(false);
+                    loadingIcon.setManaged(false);
+                    connectionButton.setVisible(true);
+                    connectionButton.setManaged(true);
+                } else if (portFormField.getText().isEmpty()) {     //if port form is empty -> valid is false and error message
+                    errorMessage.setVisible(true);
+                    errorMessage.setManaged(true);
+                    setErrorMessage("You have to insert a port number");
+                    loadingIcon.setVisible(false);
+                    loadingIcon.setManaged(false);
+                    connectionButton.setVisible(true);
+                    connectionButton.setManaged(true);
+                } else {
+                    try {
+                        setPort(Integer.parseInt(portFormField.getText()));     //if user insert a number>1023 validPort is true
+                        errorMessage.setVisible(false);
+                        errorMessage.setManaged(false);
+                        if(port()>1023)
+                            validPort.set(true);
+                        else {
+                            setPort(0);
+                            setErrorMessage("Not valid port number");
+                            loadingIcon.setVisible(false);
+                            loadingIcon.setManaged(false);
+                            connectionButton.setVisible(true);
+                            connectionButton.setManaged(true);
+                        }
+                    } catch (Exception notInt) {
+                        errorMessage.setVisible(true);
+                        errorMessage.setManaged(true);
+                        setErrorMessage("Port must be a number");
+                        loadingIcon.setVisible(false);
+                        loadingIcon.setManaged(false);
+                        connectionButton.setVisible(true);
+                        connectionButton.setManaged(true);
+                    }
+                }
+                if(validPort.get()){
+                    setIp(ipFormField.getText());
+                    errorMessage.setVisible(false);
+                    errorMessage.setManaged(false);
+                    valid.set(true);
+                }
+                setClicked();
+            });
+            while (!clicked.get() && !closeWindow.get()){
+                try {
+                    wait();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
-    public MenuScene menuScene(){
-        return menuScene;
+    /**
+     * This method is called when user has connected to server. It shows disconnection button and play button. Firstly it wait for user choice, then, if user chooses to play, waits for menu scene to be ready and displayed
+     */
+    public synchronized void prepareToStart(){
+        openGame = new AtomicBoolean(false);
+        restartConnection = new AtomicBoolean(false);
+
+        loadingIcon.setManaged(false);
+        loadingIcon.setVisible(false);
+        connectionButton.setManaged(false);
+        connectionButton.setVisible(false);
+        connectedText.setManaged(true);
+        connectedText.setVisible(true);
+        disconnectionButton.setManaged(true);
+        disconnectionButton.setVisible(true);
+
+        enterGameButton.setManaged(true);
+        enterGameButton.setVisible(true);
+
+        //if user clicks disconnect
+        disconnectionButton.setOnAction(e -> {
+            connectedText.setVisible(false);
+            connectedText.setManaged(false);
+            disconnectionButton.setVisible(false);
+            disconnectionButton.setManaged(false);
+            loadingIcon.setVisible(true);
+            loadingIcon.setManaged(true);
+            enterGameButton.setVisible(false);
+            enterGameButton.setManaged(false);
+            restartConnection();
+        });
+
+        //if user clicks on play
+        enterGameButton.setOnAction(e -> {
+            setOpenGame();
+        });
+
+
+        while (!openGame.get() && !restartConnection.get() && !closeWindow.get()){
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if(openGame.get()){
+            Platform.runLater(() -> settingStage.close());
+            Platform.runLater(this::primaryScene);
+        }
+        while (!gameIsReady.get() && !restartConnection.get() && !closeWindow.get()){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public int mapRowsNumber() {
-        return mapRowsNumber;
+    /**
+     * This method asks ip to user
+     * If the user had already connected to server and wants to play a new match, this method returns saved ip without asking it to user again
+     * @return Ip address
+     */
+    @Override
+    public String askIp() {
+        if(!newMatch){
+            askConnection();
+        }
+        return ip;
     }
 
-    public int mapColumnsNumber() {
-        return mapColumnsNumber;
+    /**
+     * This method asks port to user
+     * If the user had already connected to server and wants to play a new match, this method returns saved port without asking it to user again
+     * @return Port
+     */
+    @Override
+    public int askPort() {
+        return port;
     }
 
+    /**
+     * This method asks username to user
+     * If the user had already connected to server and wants to play a new match, this method returns saved username without asking it to user again
+     * If the user is in the setting window the method calles prepareToStart
+     * If the user clicks on disconnect, this method doesn't ask username and returns null
+     * @return Username
+     */
+    @Override
+    public String askUserName() {
+        if(!newMatch) {
+            if(!inMenuPage)
+                prepareToStart();
+            if(!restartConnection.get() && !closeWindow.get())
+                nickname = menuScene.askNickname();
+        }
+        return nickname;
+    }
+
+    /**
+     * This method asks match type to user
+     * @return Match type
+     */
+    @Override
+    public int askMatchType() {
+        numberOfPlayers = menuScene.askNumberOfPlayers();
+        return numberOfPlayers;
+    }
+
+
+    /**
+     * This method asks a box from a given list. It is called for choosing workers starting position, worker for the current turn, destination of a move, a build or a remove
+     * @param positions List of possible boxes
+     * @return Chosen box
+     */
     @Override
     public int askPosition(List<int[]> positions) {
         Platform.runLater(() -> matchScene.chooseDestination(positions));
@@ -343,18 +1031,35 @@ public class Gui extends Application implements View {
         return matchScene.chosenDestination();
     }
 
-    @Override
-    public int askCards(List<GodCardProxy> cards) {
-        Platform.runLater(() -> matchScene.chooseCard(cards));
-        return matchScene.chosenCard();
-    }
-
+    /**
+     * This method asks cards of the match to challenger
+     * @param cards List of all cards of the game
+     * @return Chosen cards indexes
+     */
     @Override
     public int[] askDeck(List<GodCardProxy> cards) {
         Platform.runLater(() -> matchScene.chooseCards(cards));
         return matchScene.chosenCards();
     }
 
+    /**
+     * This method asks to user to chose a card to use in this match
+     * @param cards List of all cards chosen by the challenger
+     * @return Chosen card
+     */
+    @Override
+    public int askCards(List<GodCardProxy> cards) {
+        Platform.runLater(() -> matchScene.chooseCard(cards));
+        return matchScene.chosenCard();
+    }
+
+    /**
+     * This method asks confirmation to player
+     * It could ask if player wants to use his power
+     * It could ask if player wants to undo his turn
+     * @param key Key that tells which is the request for the player
+     * @return Answer by the player
+     */
     @Override
     public int askConfirmation(CommunicationProtocol key) {
         switch (key){
@@ -367,40 +1072,21 @@ public class Gui extends Application implements View {
         return -1;
     }
 
-    @Override
-    public String askIp() {
-        if(!newMatch)
-            ip = menuScene.askIp();
-        return ip;
-    }
-
-    @Override
-    public int askPort() {
-        if(!newMatch)
-            port = menuScene.askPort();
-        return port;
-    }
-
-    @Override
-    public String askUserName() {
-        if(!newMatch)
-            nickname = menuScene.askNickname();
-        return nickname;
-    }
-
-    @Override
-    public int askMatchType() {
-        numberOfPlayers = menuScene.askNumberOfPlayers();
-        return numberOfPlayers;
-    }
-
-
+    /**
+     * This method asks worker to move in current turn
+     * @param workers List of movable workers
+     * @return Chosen worker position
+     */
     @Override
     public int askWorker(List<int[]> workers) {
         Platform.runLater(() -> matchScene.playerView().playTimer());
         return askPosition(workers);
     }
 
+    /**
+     * This method shows different messages in the info box in match scene
+     * @param key Key that tells which message to show
+     */
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
         switch (key){
@@ -427,6 +1113,10 @@ public class Gui extends Application implements View {
 
     }
 
+    /**
+     * This method updates the map with new positions and buildings
+     * @param boxes List of all boxes of the map
+     */
     @Override
     public void updateMap(List<BoxProxy> boxes) {
         Platform.runLater(() -> matchScene.map().clearMap());
@@ -452,6 +1142,12 @@ public class Gui extends Application implements View {
         }
     }
 
+    /**
+     * This method sets player view
+     * If it is called for the first time it sets username and color
+     * If it is called for the second time it sets player's card
+     * @param player Player infos
+     */
     @Override
     public void setMyPlayer(PlayerProxy player) {
         if(player.godCardProxy==null){
@@ -467,6 +1163,12 @@ public class Gui extends Application implements View {
         }
     }
 
+    /**
+     * This method sets opponent in player's view
+     * If it is called for the first time it sets usernames and colors
+     * If it is called for the second time it sets opponents' cards
+     * @param opponents Opponents infos
+     */
     @Override
     public void setOpponentsInfo(List<PlayerProxy> opponents) {
         if(opponents.get(0).godCardProxy==null) {
@@ -477,18 +1179,29 @@ public class Gui extends Application implements View {
             Platform.runLater(() -> matchScene.playerView().setOpponentsCards(opponents));
     }
 
+    /**
+     * This method shows error message of connection lost
+     */
     @Override
     public void connectionLost() {
-
+        //todo
     }
 
+    /**
+     * This method shows error of connection refused
+     * @param host Host that refused the connection
+     */
     @Override
     public void connectionFailed(String host) {
-        menuScene().setErrorMessage("Connection refused");
+        setErrorMessage("Connection refused");
     }
 
+    /**
+     * This method starts the match and shows match scene
+     * It waits for the match scene to be ready and then returns
+     */
     @Override
-    public synchronized void startMatch(){
+    public synchronized void startMatch() {
         readyForTheMatch.set(false);
         playTransitionClouds();
 
@@ -511,7 +1224,7 @@ public class Gui extends Application implements View {
                 }));
         matchTimer.play();
 
-        while(!readyForTheMatch.get()){
+        while (!readyForTheMatch.get()) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -520,6 +1233,10 @@ public class Gui extends Application implements View {
         }
     }
 
+    /**
+     * This method sets current player
+     * @param player Current player
+     */
     @Override
     public void setCurrentPlayer(PlayerProxy player) {
         if(player.name.equals(nickname))
@@ -530,11 +1247,10 @@ public class Gui extends Application implements View {
         }
     }
 
-    private synchronized void setReadyForTheMatch(){
-        readyForTheMatch.set(true);
-        notifyAll();
-    }
-
+    /**
+     * This method tells what last player did in the last turn
+     * @param events List of action made in the last turn
+     */
     @Override
     public void tellStory(List<String> events) {
 
@@ -556,6 +1272,10 @@ public class Gui extends Application implements View {
         }
     }
 
+    /**
+     * This method tells who is the winner of the match
+     * @param player Winner
+     */
     @Override
     public void setWinner(PlayerProxy player) {
         if(player.name.equals(nickname)){
@@ -567,8 +1287,13 @@ public class Gui extends Application implements View {
         }
     }
 
+    /**
+     * This method tells if one opponent has lost the match (because of surrender or connection lost)
+     * @param player Loser
+     */
     @Override
     public void setLoser(PlayerProxy player) {
+        //todo
         System.out.println("LLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEERRRRRRRRR");
     }
 }

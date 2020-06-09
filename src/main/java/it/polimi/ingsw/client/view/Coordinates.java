@@ -19,6 +19,6 @@ public class Coordinates{
 
         System.out.println(x);
         System.out.println(y);
-        return new int[] {x,y};
+        return new int[]{x,y};
     }
 }
