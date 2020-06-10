@@ -31,18 +31,25 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MatchScene {
 
+    //fonts
     private final Font lillybelleFont;
     private final Font godInfoFont;
+
+    //window dimensions
     private final double screenWidth;
     private final double screenHeight;
+
+    //match page
     private final StackPane matchPage;
 
+    //gui
     private final Gui gui;
 
+    //dimension of the map
     private final double dimension;
+
+    //margin between map image and map
     private final double totalMargin;
-
-
 
     //map image
     private final ImageView mapView;
@@ -167,7 +174,9 @@ public class MatchScene {
 
         Image mapImg = new Image(MatchScene.class.getResource("/img/matchPage/board.png").toString(),dimension,dimension,false,false);
         mapView = new ImageView(mapImg);
-        matchBackground = matchBackground(screenWidth, screenHeight);
+
+        Image matchBackgroundImg = new Image(MatchScene.class.getResource("/img/matchPage/match_background.png").toString(),screenWidth,screenHeight,false,false);
+        matchBackground = new ImageView(matchBackgroundImg);
 
         playerView = new PlayerView(screenWidth, screenHeight, gui, this, pausePane, activePowers, helper, turnStory);
 
@@ -238,6 +247,49 @@ public class MatchScene {
     //_______________________________________________END GETTER__________________________________________________________
 
 
+    //-----------------------------------------SYNCHRONIZATION METHODS---------------------------------
+
+    /**
+     * This method notifies confirmChallengerCards when player (if he is the challenger) has chosen all the cards of the match
+     */
+    private synchronized void setConfirmChallengerCards(){
+        confirmChallengerCards.set(true);
+        notifyAll();
+    }
+
+    /**
+     * This method notifies confirmMyCards when player has chosen his card for the match
+     */
+    public synchronized void setConfirmMyCards(){
+        confirmMyCards.set(true);
+        notifyAll();
+    }
+
+    /**
+     * This method notifies clickedConfirmation when player chooses to undo or confirm his turn
+     * It also closes confirmTurn popup
+     */
+    private synchronized void setClickedConfirmation(){
+        clickedConfirmation.set(true);
+
+        FadeTransition confirmTurnFadeOut = new FadeTransition(Duration.millis(1000), confirmTurn);
+        confirmTurnFadeOut.setFromValue(1);
+        confirmTurnFadeOut.setToValue(0);
+
+        confirmTurnFadeOut.play();
+        Timeline hidingTimer = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    confirmTurn.setVisible(false);
+                }));
+        hidingTimer.play();
+
+        notifyAll();
+    }
+
+
+    //-----------------------------------------END SYNCHRONIZATION METHODS---------------------------------
+
     /**
      * This method clears chosable boxes list (every request has different chosable boxes)
      */
@@ -245,12 +297,13 @@ public class MatchScene {
         chosableBoxes = new ArrayList<>();
     }
 
-
-
-
-
-
-
+    /**
+     * This method sets nickname, opponents and colors in match page
+     * @param nickname Player nickname
+     * @param numberOfPlayers Number of players of the match
+     * @param color Color of player
+     * @param opponents Opponents (nickname and color)
+     */
     public void setMatchScene(String nickname, int numberOfPlayers, String color, List<PlayerProxy> opponents) {
         this.numberOfPlayers = numberOfPlayers;
 
@@ -276,11 +329,10 @@ public class MatchScene {
 
     }
 
-    public ImageView matchBackground(double screenWidth, double screenHeight){
-        Image matchBackgroundImg = new Image(MatchScene.class.getResource("/img/matchPage/match_background.png").toString(),screenWidth,screenHeight,false,false);
-        return new ImageView(matchBackgroundImg);
-    }
-
+    /**
+     * This method sets all possible destination as chosable
+     * @param possibleDestinations Possible destinations
+     */
     public void chooseDestination(List<int[]> possibleDestinations){
         int index = 0;
         for(int[] i : possibleDestinations){
@@ -290,18 +342,6 @@ public class MatchScene {
         }
         setChosableBoxes(possibleDestinations);
 
-    }
-
-    public synchronized int chosenDestination(){
-        while(!destinationReady.get()){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        destinationReady.set(false);
-        return chosenBoxIndex();
     }
 
     /**
@@ -786,11 +826,10 @@ public class MatchScene {
         hidingTimer2.play();
     }
 
-    private synchronized void setConfirmChallengerCards(){
-        confirmChallengerCards.set(true);
-        notifyAll();
-    }
-
+    /**
+     * This method waits for player (if he is the challenger) to choose all the cards of the match and returns them
+     * @return Chosen cards indexes (it refers to list of cards)
+     */
     public synchronized int[] chosenCards(){
         while(!confirmChallengerCards.get()){
             try {
@@ -802,11 +841,10 @@ public class MatchScene {
         return cardsIndexes;
     }
 
-    public synchronized void setConfirmMyCards(){
-        confirmMyCards.set(true);
-        notifyAll();
-    }
-
+    /**
+     * This method waits for player to choose his card for the match and returns it
+     * @return Chosen card index (it refers to list of cards)
+     */
     public synchronized int chosenCard(){
         while(!confirmMyCards.get()){
             try {
@@ -816,6 +854,22 @@ public class MatchScene {
             }
         }
         return cardIndex;
+    }
+
+    /**
+     * This method wait for player to chose a destination and returns it
+     * @return Chosen destination
+     */
+    public synchronized int chosenDestination(){
+        while(!destinationReady.get()){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        destinationReady.set(false);
+        return chosenBoxIndex();
     }
 
     /**
@@ -867,24 +921,12 @@ public class MatchScene {
         confirmBox.setAlignment(Pos.CENTER);
     }
 
-    private synchronized void setClickedConfirmation(){
-        clickedConfirmation.set(true);
 
-        FadeTransition confirmTurnFadeOut = new FadeTransition(Duration.millis(1000), confirmTurn);
-        confirmTurnFadeOut.setFromValue(1);
-        confirmTurnFadeOut.setToValue(0);
-
-        confirmTurnFadeOut.play();
-        Timeline hidingTimer = new Timeline(new KeyFrame(
-                Duration.millis(1000),
-                ae -> {
-                    confirmTurn.setVisible(false);
-                }));
-        hidingTimer.play();
-
-        notifyAll();
-    }
-
+    /**
+     * This method waits for player to choose to undo or confirm his turn and returns the answer
+     * It shows confirmTurn popup
+     * @return Undo or Confirm turn answer
+     */
     public synchronized int showConfirmTurn(){
         clickedConfirmation.set(false);
         FadeTransition confirmTurnFadeIn = new FadeTransition(Duration.millis(1000), confirmTurn);
@@ -904,6 +946,9 @@ public class MatchScene {
         return answer.get();
     }
 
+    /**
+     * This method sets my turn in CurrentTurn box
+     */
     public void setMyTurn(){
         if(!playerView.currentTurn().getText().equals("Your Turn")) {
             playerView.setCurrentTurn("Your Turn");
@@ -911,6 +956,9 @@ public class MatchScene {
         }
     }
 
+    /**
+     * This method creates my turn announce
+     */
     private void createMyTurnImage(){
         Image myTurnImg = new Image(PlayerView.class.getResource("/img/matchPage/myTurn.png").toString(),screenWidth/3, screenHeight/4,false,false);
         ImageView myTurnView = new ImageView(myTurnImg);
@@ -920,6 +968,9 @@ public class MatchScene {
         myTurn.setPrefHeight(screenHeight/4);
     }
 
+    /**
+     * This method shows my turn announce
+     */
     private void showMyTurn(){
         FadeTransition myTurnFadeIn = new FadeTransition(Duration.millis(500), myTurn);
         myTurnFadeIn.setFromValue(0);
@@ -953,6 +1004,10 @@ public class MatchScene {
         hidingTimer.play();
     }
 
+    /**
+     * This method sets the name of the opponent in CurrentTurn box
+     * @param playerTurnName Current player
+     */
     public void setOpponentTurn(String playerTurnName){
         if(!playerView.currentTurn().getText().equals(playerTurnName + "'s Turn")) {
             playerView.setCurrentTurn(playerTurnName + "'s Turn");
@@ -1035,6 +1090,9 @@ public class MatchScene {
         showingTimer.play();
     }
 
+    /**
+     * This method closes match page and shows menu page
+     */
     private void backToMenu(){
         gui.playTransitionClouds();
         gui.setNewMatch();

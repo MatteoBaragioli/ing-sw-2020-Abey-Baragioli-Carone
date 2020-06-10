@@ -248,7 +248,7 @@ public class PlayerView extends StackPane {
 
 
         //left BOTTOM
-        Image messagesImg = new Image(PlayerView.class.getResource("/img/matchPage/messagesBox.png").toString(),screenWidth/4, screenHeight/4,false,false);
+        Image messagesImg = new Image(PlayerView.class.getResource("/img/matchPage/messagesBox.png").toString(),screenWidth/4, screenHeight/4-screenHeight/100,false,false);
         ImageView messagesView = new ImageView(messagesImg);
 
         messagesBox = new Label("Good Luck!");
@@ -263,9 +263,8 @@ public class PlayerView extends StackPane {
         StackPane messages = new StackPane();
         messages.setAlignment(CENTER);
         messages.setPrefWidth(screenWidth/4);
-        messages.setPrefHeight(screenHeight/4);
+        messages.setPrefHeight(screenHeight/4-screenHeight/100);
         messages.getChildren().addAll(messagesView, messagesBox);
-        messages.setPadding(new Insets(0,0,screenHeight/100, 0));
 
 
         leftView.getChildren().addAll(pause, timer, card, messages);

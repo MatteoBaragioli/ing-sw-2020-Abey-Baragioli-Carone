@@ -257,6 +257,7 @@ public class Gui extends Application implements View {
     public synchronized void setCloseWindow(){
         closeWindow.set(true);
         valid.set(true); //true --> in order to exit to cycles that are waiting for responses
+        setPort(0); //set port because if user quits after disconnection, last port is saved and returns creating errors
         settingStage.close();
         try {
             client.end();
@@ -502,12 +503,12 @@ public class Gui extends Application implements View {
         disconnectionButton.setVisible(false);
         disconnectionButton.setManaged(false);
 
-        Text screenSizeText = new Text("Choose your favourite resolution");
+        Text screenSizeText = new Text("Choose window dimension");
         screenSizeText.setFont(lillybelleFont);
         screenSizeText.setWrappingWidth(screenWidth/5);
 
         screenSizeOptions = new ComboBox(FXCollections.observableArrayList(
-                "Full Screen", "3840 x 2160", "2560 x 1440", "1920 x 1080", "1280 x 720", "854 x 480")
+                "Full Screen", "1920 x 1080", "1680 x 1050", "1600 x 900", "1440 x 900", "1366 x 768", "1360 x 768", "1280 x 800", "1280 x 768", "1280 x 720")
         );
         screenSizeOptions.getEditor().setAlignment(Pos.CENTER);
         screenSizeOptions.getSelectionModel().selectFirst();
@@ -585,30 +586,8 @@ public class Gui extends Application implements View {
             case 0:
                 break;
             case 1:
-                if(Screen.getPrimary().getBounds().getWidth()<3840 || Screen.getPrimary().getBounds().getHeight()<2160){
-                    screenSizeError.setText("Your device doesn't support 3840x2160 resolution");
-                    screenSizeError.setVisible(true);
-                    screenSizeOptions.getSelectionModel().selectFirst();
-                } else {
-                    screenSizeError.setVisible(false);
-                    this.screenWidth = 3840;
-                    this.screenHeight = 2160;
-                }
-                break;
-            case 2:
-                if(Screen.getPrimary().getBounds().getWidth()<2560 || Screen.getPrimary().getBounds().getHeight()<1440){
-                    screenSizeError.setText("Your device doesn't support 2560x1440 resolution");
-                    screenSizeError.setVisible(true);
-                    screenSizeOptions.getSelectionModel().selectFirst();
-                } else {
-                    screenSizeError.setVisible(false);
-                    this.screenWidth = 2560;
-                    this.screenHeight = 1440;
-                }
-                break;
-            case 3:
                 if(Screen.getPrimary().getBounds().getWidth()<1920 || Screen.getPrimary().getBounds().getHeight()<1080){
-                    screenSizeError.setText("Your device doesn't support 1920x1080 resolution");
+                    screenSizeError.setText("Your device doesn't support 1920 x 1080 resolution");
                     screenSizeError.setVisible(true);
                     screenSizeOptions.getSelectionModel().selectFirst();
                 } else {
@@ -617,26 +596,92 @@ public class Gui extends Application implements View {
                     this.screenHeight = 1080;
                 }
                 break;
+            case 2:
+                if(Screen.getPrimary().getBounds().getWidth()<1680 || Screen.getPrimary().getBounds().getHeight()<1050){
+                    screenSizeError.setText("Your device doesn't support 1680 x 1050 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1680;
+                    this.screenHeight = 1050;
+                }
+                break;
+            case 3:
+                if(Screen.getPrimary().getBounds().getWidth()<1600 || Screen.getPrimary().getBounds().getHeight()<900){
+                    screenSizeError.setText("Your device doesn't support 1600 x 900 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1600;
+                    this.screenHeight = 900;
+                }
+                break;
             case 4:
+                if(Screen.getPrimary().getBounds().getWidth()<1440 || Screen.getPrimary().getBounds().getHeight()<900){
+                    screenSizeError.setText("Your device doesn't support 1440 x 900 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1440;
+                    this.screenHeight = 900;
+                }
+                break;
+            case 5:
+                if(Screen.getPrimary().getBounds().getWidth()<1366 || Screen.getPrimary().getBounds().getHeight()<768){
+                    screenSizeError.setText("Your device doesn't support 1366 x 768 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1366;
+                    this.screenHeight = 768;
+                }
+                break;
+            case 6:
+                if(Screen.getPrimary().getBounds().getWidth()<1360 || Screen.getPrimary().getBounds().getHeight()<768){
+                    screenSizeError.setText("Your device doesn't support 1360 x 768 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1360;
+                    this.screenHeight = 768;
+                }
+                break;
+            case 7:
+                if(Screen.getPrimary().getBounds().getWidth()<1280 || Screen.getPrimary().getBounds().getHeight()<800){
+                    screenSizeError.setText("Your device doesn't support 1280 x 800 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1280;
+                    this.screenHeight = 800;
+                }
+                break;
+            case 8:
+                if(Screen.getPrimary().getBounds().getWidth()<1280 || Screen.getPrimary().getBounds().getHeight()<768){
+                    screenSizeError.setText("Your device doesn't support 1280 x 768 resolution");
+                    screenSizeError.setVisible(true);
+                    screenSizeOptions.getSelectionModel().selectFirst();
+                } else {
+                    screenSizeError.setVisible(false);
+                    this.screenWidth = 1280;
+                    this.screenHeight = 768;
+                }
+                break;
+            case 9:
                 if(Screen.getPrimary().getBounds().getWidth()<1280 || Screen.getPrimary().getBounds().getHeight()<720){
-                    screenSizeError.setText("Your device doesn't support 1280x720 resolution");
+                    screenSizeError.setText("Your device doesn't support 1280 x 720 resolution");
                     screenSizeError.setVisible(true);
                     screenSizeOptions.getSelectionModel().selectFirst();
                 } else {
                     screenSizeError.setVisible(false);
                     this.screenWidth = 1280;
                     this.screenHeight = 720;
-                }
-                break;
-            case 5:
-                if(Screen.getPrimary().getBounds().getWidth()<854 || Screen.getPrimary().getBounds().getHeight()<480){
-                    screenSizeError.setText("Your device doesn't support 854x480 resolution");
-                    screenSizeError.setVisible(true);
-                    screenSizeOptions.getSelectionModel().selectFirst();
-                } else {
-                    screenSizeError.setVisible(false);
-                    this.screenWidth = 854;
-                    this.screenHeight = 480;
                 }
                 break;
         }
@@ -681,14 +726,14 @@ public class Gui extends Application implements View {
         VBox confirmBox = new VBox();
 
         Text questionPopup = new Text("Do you really want to quit the game?");
-        questionPopup.setFont(lillybelleFont);
+        questionPopup.setFont(Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80));
         HBox answers = new HBox();
         yesPopupButton = new Button("Yes");
         noPopupButton = new Button("No");
 
         yesPopupButton.setFont(Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80));
         yesPopupButton.setCursor(Cursor.HAND);
-        noPopupButton.setFont(lillybelleFont);
+        noPopupButton.setFont(Font.loadFont(Gui.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80));
         noPopupButton.setCursor(Cursor.HAND);
 
 

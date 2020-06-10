@@ -24,28 +24,24 @@ public class GuiBox extends Button {
     private final int y;
     private final double boxWidth;
     private final double boxHeight;
-    private StackPane graphics = new StackPane();
     private final ImageView building = new ImageView();
     private final ImageView worker = new ImageView();
     private final ImageView dome = new ImageView();
     private double previousOpacity;
     private int index = -1;
-    private final double screenWidth;
-    private final double screenHeight;
 
-    public GuiBox(int x, int y, double boxWidth, double boxHeight, double screenWidth, double screenHeight) {
+    public GuiBox(int x, int y, double boxWidth, double boxHeight) {
         this.x = x;
         this.y = y;
         this.boxWidth = boxWidth;
         this.boxHeight = boxHeight;
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
         setDisable(true);
         removeColor();
         setContentDisplay(ContentDisplay.CENTER);
         building.setOpacity(1);
         worker.setOpacity(1);
         dome.setOpacity(1);
+        StackPane graphics = new StackPane();
         graphics.getChildren().addAll(building, worker, dome);
         graphics.maxWidth(boxWidth);
         graphics.prefWidth(boxWidth);
@@ -55,42 +51,60 @@ public class GuiBox extends Button {
         setGraphic(graphics);
     }
 
-    public int boxX() {
-        return x;
-    }
-
-    public int boxY() {
-        return y;
-    }
-
-    public void setIndex(int index){
-        this.index = index;
-    }
-
     public int index() {
         return index;
     }
 
+    /**
+     * This method assigns an index when the box is in a chosable boxes list
+     * @param index Index in the list
+     */
+    public void setIndex(int index){
+        this.index = index;
+    }
+
+    /**
+     * This method sets box color in royal blue
+     */
     public void setBlue(){
         setBackground(new Background(new BackgroundFill(Color.ROYALBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
     }
+
+    /**
+     * This method sets the box as selected
+     */
     public void setSelected(){
         setBackground(new Background(new BackgroundFill(Color.DARKBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         changeOpacity(1);
         previousOpacity=1;
     }
 
+    /**
+     * This method sets box color in midnight blue
+     */
     public void setHoverBlue(){
         setBackground(new Background(new BackgroundFill(Color.MIDNIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
     }
+
+    /**
+     * This method removs box color
+     */
     public void removeColor(){
         setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
+    /**
+     * This method changes box opacity
+     * @param opacity New opacity
+     */
     public void changeOpacity(double opacity){
         setOpacity(opacity);
     }
 
+    /**
+     * This method sets chosable box effects
+     * @param match Match -> this method needs the match to have access to chosable boxes list
+     */
     public void setEffects(MatchScene match){
         addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             changeOpacity(0.4);
@@ -115,8 +129,10 @@ public class GuiBox extends Button {
         });
     }
 
+    /**
+     * This method removes chosable box effects
+     */
     public void clearEffects(){
-
         addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             changeOpacity(previousOpacity);
             setCursor(Cursor.DEFAULT);
@@ -131,6 +147,10 @@ public class GuiBox extends Button {
         addEventHandler(MouseEvent.MOUSE_CLICKED, Event::consume);
     }
 
+    /**
+     * This method sets box as chosable
+     * @param match
+     */
     public void setAsChosable(MatchScene match){
         setBlue();
         setDisable(false);
@@ -139,6 +159,9 @@ public class GuiBox extends Button {
         setEffects(match);
     }
 
+    /**
+     * This method sets box as not chosable
+     */
     public void setAsNotChosable(){
         removeColor();
         setDisable(true);
@@ -146,6 +169,11 @@ public class GuiBox extends Button {
         clearEffects();
     }
 
+    /**
+     * This method builds a level in the box
+     * @param level Level to build
+     * @param isThereDome If true it builds a dome
+     */
     public void build(int level, boolean isThereDome){
         Image levelImg;
         if(level==0){
@@ -161,6 +189,11 @@ public class GuiBox extends Button {
         setOpacity(1);
     }
 
+    /**
+     * This method puts a worker in the box
+     * @param color Worker's color
+     * @param gender Worker's gender
+     */
     public void moveWorker(String color, String gender){
         Image workerImg = new Image(PlayerView.class.getResource("/img/buildingsAndWorkers/worker" + gender + color + ".png").toString(), boxWidth - boxWidth / 6, boxHeight - boxHeight / 8, false, false);
         worker.setImage(workerImg);
@@ -168,6 +201,9 @@ public class GuiBox extends Button {
         previousOpacity = 1;
     }
 
+    /**
+     * This method removes a worker from the box
+     */
     public void removeWorker(){
         worker.setImage(null);
     }

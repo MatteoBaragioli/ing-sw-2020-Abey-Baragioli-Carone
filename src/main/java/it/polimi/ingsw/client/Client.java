@@ -20,7 +20,7 @@ import static it.polimi.ingsw.network.CommunicationProtocol.*;
 public class Client extends Thread {
 
     private final View view;
-    private CommunicationChannel communicationChannel = null;
+    private CommunicationChannel communicationChannel;
     private boolean restart = true;
     private boolean close = false;
 
@@ -39,6 +39,7 @@ public class Client extends Thread {
     public void run(){
         while(restart && !close) {
             restart = false;
+            communicationChannel = null;
             boolean valid = false;
             String hostName = null;
             int portNumber = 0;
@@ -253,17 +254,29 @@ public class Client extends Thread {
         }
     }
 
+    /**
+     * This method closes the client
+     * @throws ChannelClosedException
+     */
     public void end() throws ChannelClosedException {
         closeConnection();
         close = true;
         restart = false;
     }
 
+    /**
+     * This method restarts the client
+     * @throws ChannelClosedException
+     */
     public void restartClient() throws ChannelClosedException {
         closeConnection();
         restart = true;
     }
 
+    /**
+     * This method closes the connection between client and server
+     * @throws ChannelClosedException
+     */
     public void closeConnection()  throws ChannelClosedException {
         if(communicationChannel!=null) {
             communicationChannel.writeKeyWord(QUIT);

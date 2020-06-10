@@ -103,6 +103,9 @@ public class MenuScene {
     //variable that is true if user gives an answer
     private final AtomicBoolean clicked = new AtomicBoolean(false);
 
+    //variable that is true if user quits
+    private final AtomicBoolean close = new AtomicBoolean(false);
+
 
 
     public MenuScene(Gui gui, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage, StackPane howToPlayBox) {
@@ -339,6 +342,7 @@ public class MenuScene {
         });
 
         quitView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            setClose();
             gui.closeProgram();
             event.consume();
         });
@@ -623,7 +627,7 @@ public class MenuScene {
                 errorMessage.setManaged(false);
             }
         });
-        while (!clicked.get()){
+        while (!clicked.get() && !close.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -657,7 +661,7 @@ public class MenuScene {
             readyTimer.play();
             event.consume();
         });
-        while (!clicked.get()){
+        while (!clicked.get() && !close.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -669,6 +673,11 @@ public class MenuScene {
 
     private synchronized void setClicked(){
         clicked.set(true);
+        notifyAll();
+    }
+
+    private synchronized void setClose(){
+        close.set(true);
         notifyAll();
     }
 

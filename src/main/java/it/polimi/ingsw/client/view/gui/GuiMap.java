@@ -18,6 +18,14 @@ public class GuiMap extends GridPane {
         columns = columnsNumber;
     }
 
+    /**
+     * This method creates the map of the match
+     * @param mapDim Dimension of the map
+     * @param screenWidth Window width
+     * @param screenHeight Window height
+     * @param rowsNumber Number of rows
+     * @param columnsNumber Number of columns
+     */
     public void createMap(double mapDim, double screenWidth, double screenHeight, int rowsNumber, int columnsNumber) {
         int i, j, k;
         boxesList = new GuiBox[rowsNumber][columnsNumber];
@@ -38,7 +46,7 @@ public class GuiMap extends GridPane {
         double boxHeight = mapDim/rowsNumber-mapDim/20;
         for (j = 0, k=rowsNumber-1; j < rowsNumber; j++, k--) {
             for(i = 0;  i < columnsNumber; i++){
-                GuiBox guiBox = new GuiBox(i, k, boxWidth, boxHeight, screenWidth, screenHeight);
+                GuiBox guiBox = new GuiBox(i, k, boxWidth, boxHeight);
                 guiBox.setPrefWidth(boxWidth-boxWidth/5);
                 guiBox.setPrefHeight(boxHeight-boxHeight/5);
                 guiBox.setOpacity(0);
@@ -48,10 +56,19 @@ public class GuiMap extends GridPane {
         }
     }
 
+    /**
+     * This method returns a box of the map by coordinates
+     * @param x X of the box
+     * @param y Y of the box
+     * @return Box (x,y)
+     */
     public GuiBox box(int x, int y){
         return boxesList[x][y];
     }
 
+    /**
+     * This method clears the map (all boxes at level 0, free and without dome)
+     */
     public void clearMap(){
         int i, j;
         for (i = 0; i < rows; i++) {
