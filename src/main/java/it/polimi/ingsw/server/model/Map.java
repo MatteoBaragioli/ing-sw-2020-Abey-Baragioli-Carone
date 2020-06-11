@@ -53,6 +53,14 @@ public class Map {
         return out;
     }
 
+    public List<Box> freePositions() {
+        List<Box> ground = new ArrayList<>();
+        for (Box box: groundToList())
+            if (box.isFree())
+                ground.add(box);
+        return ground;
+    }
+
     /**
      * This method returns a list of Boxes that are adjacent to a Box
      * @param box Examined Box

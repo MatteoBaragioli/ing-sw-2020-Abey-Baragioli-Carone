@@ -178,7 +178,10 @@ public class Match extends Thread{
                 phaseIndex = 0;
             }
             else
-                phaseIndex++;
+                if (player.equals(player.turnSequence().possibleWinner()))
+                    phaseIndex = phasesSequence.size();
+                else
+                    phaseIndex++;
         }
         tellMatchStory(matchStory);
     }
@@ -190,7 +193,6 @@ public class Match extends Thread{
             } catch (ChannelClosedException e) {
                 e.printStackTrace();
                 removeUser(findUser(e.name()));
-                announceParticipants();
             }
         }
     }
@@ -210,9 +212,7 @@ public class Match extends Thread{
                 communicationController.announceParticipants(player, gamePlayers);
             } catch (ChannelClosedException e) {
                 removeUser(findUser(e.name()));
-                if (gamePlayers.size() > 1)
-                    announceParticipants();
-                else
+                if (gamePlayers.size() <= 1)
                     endGame();
             }
         }
@@ -224,9 +224,7 @@ public class Match extends Thread{
                 communicationController.announceCurrentPlayer(player, currentPlayer);
             } catch (ChannelClosedException e) {
                 removeUser(findUser(e.name()));
-                if (gamePlayers.size() > 1)
-                    announceParticipants();
-                else
+                if (gamePlayers.size() <= 1)
                     endGame();
             }
         }
@@ -249,7 +247,6 @@ public class Match extends Thread{
                 communicationController.announceLoser(player, loser);
             } catch (ChannelClosedException e) {
                 removeUser(findUser(e.name()));
-                endGame();
             }
         }
     }
@@ -317,7 +314,7 @@ public class Match extends Thread{
                 //todo
             } catch (ChannelClosedException e) {
                 e.printStackTrace();
-                //todo
+                removeUser(findUser(e.name()));
             }
             gamePlayers.get(i).assignCard(chosenCard);
             availableCards.remove(chosenCard);
@@ -329,7 +326,7 @@ public class Match extends Thread{
      * This method assignes two workers to every player. Every player chooses the starting position of their workers
      */
     protected void setUpWorkers(){
-        List<Box> freeMap = new ArrayList<>(gameMap.groundToList());
+
         List<Box> possibleSetUpPosition;
         Box position = null;
         List<Player> setUpOrder = new ArrayList<>(gamePlayers);
@@ -337,6 +334,7 @@ public class Match extends Thread{
             player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
         }
         for(Player player : setUpOrder){
+            List<Box> freeMap = new ArrayList<>(gameMap.freePositions());
             for (int i = 0; i<2 && player.isInGame(); i++) {
                 possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
                 announceCurrentPlayer(player);
@@ -380,7 +378,7 @@ public class Match extends Thread{
             worker.position().removeOccupier();
         }
         loser.workers().clear();
-        gamePlayers().remove(loser);
+        loser.setInGame(false);
     }
 
     /**
@@ -417,11 +415,21 @@ public class Match extends Thread{
     public synchronized void removeUser(User user) {
         if (userIsPlayer(user)) {
             Player player = findPlayer(user);
-            if (player.isInGame())
+            if (player.isInGame()) {
                 removePlayer(player);
+                gamePlayers.remove(player);
+            }
             communicationController.removeUser(player);
             userToPlayer.remove(user);
             users().remove(user);
+            if (!findPlayer(user).equals(winner))
+                announceLoser(player);
+            try {
+                communicationController.updateView(gamePlayers, gameMap.createProxy());
+            } catch (ChannelClosedException e) {
+                e.printStackTrace();
+                removeUser(findUser(e.name()));
+            }
         }
     }
 
