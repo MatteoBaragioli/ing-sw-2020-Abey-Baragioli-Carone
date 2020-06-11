@@ -23,24 +23,19 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier 
         }
         if (unmovedWorker != null && unmovedWorker.position().level() == 0) {
             player.turnSequence().setChosenWorker(unmovedWorker);
-            actionController.initialisePossibleBuilds(player.turnSequence(), map);
-            actionController.applyOpponentsCondition(player, opponents, 2, map);
             for (i = 0; i < 3 && !player.turnSequence().possibleBuilds().isEmpty() && usePower; i++) {
-                usePower = communicationController.chooseToUsePower(player);
-                usePower(player,communicationController, actionController, map, opponents, winConditions,usePower, matchStory);
-                if (actionController.currentPlayerHasWon(player) && usePower) {
+                actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
+                if (actionController.currentPlayerHasWon(player)) {
                     return;
                 }
                 actionController.initialisePossibleBuilds(player.turnSequence(), map);
                 actionController.applyOpponentsCondition(player, opponents, 2, map);
-            }
 
-            if (i < 3 && usePower) {
-                //todo comunicare all'utente che non può più usare il suo potere
+                if(!player.turnSequence().possibleBuilds().isEmpty()) {
+                    usePower = communicationController.chooseToUsePower(player);
+                    usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);
+                }
             }
-
-        } else {
-            //todo comunicare all'utente che non può usare il suo potere aggiuntivo
 
         }
         return;
@@ -49,17 +44,10 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier 
     @Override
     public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower, MatchStory matchStory) throws TimeoutException, ChannelClosedException {
         if (usePower) {
-            actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
-            if (actionController.currentPlayerHasWon(player)) {
-                return;
-            }
             Box chosenBox = communicationController.chooseBuild(player, player.turnSequence().possibleBuilds());
             if(chosenBox!=null) {
                 executePower(player, actionController, chosenBox, matchStory);
                 communicationController.updateView(player, map.createProxy());
-                actionController.verifyWinCondition(BUILD, winConditions, player, map, opponents);
-            }
-            else { //todo errore chosenBox
             }
         }
     }
@@ -68,6 +56,5 @@ public class AddThreeBuildsToUnmovedWorkerIfOnGroundPower extends BuildModifier 
         player.turnSequence().setChosenBox(chosenBox);
         matchStory.addEvent(player.turnSequence().workersCurrentPosition(player.turnSequence().chosenWorker()).position(), matchStory.build, player.turnSequence().chosenBox().position());
         actionController.updateBuiltOnBox(player.turnSequence());
-
     }
 }
