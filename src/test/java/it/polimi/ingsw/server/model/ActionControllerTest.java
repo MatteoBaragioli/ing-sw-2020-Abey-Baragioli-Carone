@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.server.model.Colour.GREY;
+import static it.polimi.ingsw.server.model.Colour.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -362,6 +362,42 @@ public class ActionControllerTest {
 
         actionController.verifyWinCondition(BUILD, winConditions,player, map, opponents);
         assertEquals(player.turnSequence().possibleWinner(), opponent);
+    }
 
+    @Test
+    public void canPlayerPlay() {
+        //---test1: a worker has no adjacent free to boxes to move to. Method must return false value-----------
+        boolean result;
+        ActionController actionController=new ActionController();
+        CardConstructor cardConstructor=new CardConstructor();
+        GodCard card1=cardConstructor.cards().get(0); //apollo
+        GodCard card2=cardConstructor.cards().get(cardConstructor.cards().size()-1); //zeus
+        Player player1 = new Player("Matteo", null, card1);
+        Player player2 = new Player("Francesca", null, card2);
+        List<Player> opponents=new ArrayList<>();
+        opponents.add(player2);
+        Map map=new Map();
+        Worker worker=new Worker(map.position(1,1), BLUE);
+        player1.assignWorker(worker);
+        for(Box adjacent: map.adjacent(map.position(1,1))){
+            adjacent.build();
+            adjacent.build();
+        }
+        result=actionController.canPlayerPlay(player1, opponents, map);
+        assertEquals(result, false);
+        // ---test2: a worker with apollo power can move to another worker's box but then is surrounded with domes. Method must return false value
+        map=new Map();
+        player1 = new Player("Matteo", BLUE, card1);
+        player2 = new Player("Francesca", WHITE, card2);
+        worker=new Worker(map.position(1,1), BLUE);
+        Worker worker2=new Worker(map.position(0,1), WHITE);
+        player1.assignWorker(worker);
+        player2.assignWorker(worker2);
+        for(Box adjacent: map.adjacent(map.position(1,1))){
+            if(!(adjacent.positionX()==0 && adjacent.positionY()==1))
+                adjacent.buildDome();
+        }
+        result=actionController.canPlayerPlay(player1,opponents, map);
+        assertEquals(result, false);
     }
 }
