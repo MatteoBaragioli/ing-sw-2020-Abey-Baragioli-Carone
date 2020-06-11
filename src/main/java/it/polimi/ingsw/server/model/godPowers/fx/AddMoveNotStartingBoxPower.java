@@ -10,26 +10,29 @@ import java.util.concurrent.TimeoutException;
 import static it.polimi.ingsw.server.model.Phase.MOVE;
 
 public class AddMoveNotStartingBoxPower extends MoveModifier{
+
+    @Override
+    public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, MatchStory matchStory) throws TimeoutException, ChannelClosedException {
+        actionController.verifyWinCondition(MOVE, winConditions, player, map, opponents);
+        if(actionController.currentPlayerHasWon(player)){
+            return;
+        }
+        actionController.initialisePossibleDestinations(player.turnSequence(), map);
+        actionController.applyOpponentsCondition(player, opponents, 2, map);
+        player.turnSequence().possibleDestinations().remove(player.turnSequence().previousBox()); //remove starting box
+        if(!player.turnSequence().possibleDestinations().isEmpty()){
+            boolean usePower = communicationController.chooseToUsePower(player);
+            usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);
+        }
+    }
+
     @Override
     public void usePower(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, boolean usePower, MatchStory matchStory) throws TimeoutException, ChannelClosedException {
         if(usePower) {
-            actionController.verifyWinCondition(MOVE, winConditions, player, map, opponents);
-            if(actionController.currentPlayerHasWon(player)){
-                return;
-            }
-            actionController.initialisePossibleDestinations(player.turnSequence(), map);
-            actionController.applyOpponentsCondition(player, opponents, 2, map);
-            player.turnSequence().possibleDestinations().remove(player.turnSequence().previousBox()); //remove starting box
-            if(player.turnSequence().possibleDestinations().isEmpty()){
-                //todo comunicare all'utente che non può usare il suo potere aggiuntivo
-                return;
-            }
             Box chosenBox = communicationController.chooseDestination(player, player.turnSequence().possibleDestinations());
             if(chosenBox!=null) {
                 executePower(player, actionController, chosenBox, matchStory);
                 communicationController.updateView(player, map.createProxy());
-            } else {
-                //todo errore chosenBox
             }
         }
     }

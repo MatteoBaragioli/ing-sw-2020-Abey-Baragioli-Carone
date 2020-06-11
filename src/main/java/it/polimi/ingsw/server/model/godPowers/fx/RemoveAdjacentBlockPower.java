@@ -24,8 +24,6 @@ public class RemoveAdjacentBlockPower extends BuildModifier{
                 if(!player.turnSequence().possibleBuilds().isEmpty()) {
                     boolean usePower = communicationController.chooseToUsePower(player);
                     usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);
-                } else {
-                    //todo comunicare all'utente che non può usare il suo potere aggiuntivo
                 }
             }
         }
@@ -38,8 +36,6 @@ public class RemoveAdjacentBlockPower extends BuildModifier{
             if (chosenBox != null) {
                 executePower(player, actionController, chosenBox, matchStory);
                 communicationController.updateView(player, map.createProxy());
-            } else {
-                //todo errore chosenBox
             }
         }
     }
