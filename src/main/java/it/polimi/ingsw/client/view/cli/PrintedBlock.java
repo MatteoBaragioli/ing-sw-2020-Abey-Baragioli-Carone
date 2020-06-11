@@ -6,13 +6,21 @@ import java.util.List;
 
 import static it.polimi.ingsw.client.view.cli.Colors.*;
 
+/**
+ * class used to represent a block on the game map
+ * attributes x & y represent the block's coordinates
+ */
 public class PrintedBlock {
     private int x;
     private int y;
     private List<String> lines = new ArrayList<>();
 
 
-
+    /**
+     * this constructor method initialises a block as a ground level block
+     * @param x
+     * @param y
+     */
     public PrintedBlock(int x,int y){ // this method creates a list of strings that if printed, print a ground level block
         this.x=x;
         this.y=y;
@@ -23,6 +31,9 @@ public class PrintedBlock {
         this.lines.add("|                 ");
     }
 
+    /**
+     * this method changes the block to a ground floor block in cli
+     */
     public void groundFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BRIGHT+"+-----------------");
@@ -32,6 +43,9 @@ public class PrintedBlock {
         this.lines.add(CYAN_BRIGHT+"|                 ");
     }
 
+    /**
+     * this method changes the block to a first floor block in cli
+     */
     public void firstFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
@@ -42,6 +56,10 @@ public class PrintedBlock {
 
     }
 
+
+    /**
+     * this method changes the block to a second floor block in cli
+     */
     public void secondFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
@@ -52,6 +70,9 @@ public class PrintedBlock {
 
     }
 
+    /**
+     * this method changes the block to a third floor block in cli
+     */
     public void thirdFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
@@ -62,6 +83,9 @@ public class PrintedBlock {
 
     }
 
+    /**
+     * this method displays a dome on block and depending on the block's level writes on what level the dome is
+     */
     public void domeBlock(){
         if (getLines().get(1).contains("3°level")) {
             this.lines.clear();
@@ -134,6 +158,11 @@ public class PrintedBlock {
         this.setLine(buffer, indexOfLine);
     }
 
+    /**
+     * this method displays a worker on a ground level block
+     * @param gender gender of the worker
+     * @param color worker's colour
+     */
     public void groundFloorWithWorker(boolean gender, Colour color){
         char genderChar;
         if (gender==true){
@@ -149,6 +178,12 @@ public class PrintedBlock {
         this.lines.add("|                "+CYAN_BRIGHT+" ");
 
     }
+
+    /**
+     * this method displays a worker on a first level block
+     * @param gender gender of the worker
+     * @param color worker's colour
+     */
     public void firstFloorWithWorker(boolean gender, Colour color){
         this.lines.clear();
         char genderChar;
@@ -165,6 +200,11 @@ public class PrintedBlock {
 
     }
 
+    /**
+     * this method displays aa worker on a second level block
+     * @param gender gender of the worker
+     * @param color worker's colour
+     */
     public void secondFloorWithWorker(boolean gender, Colour color){
         char genderChar;
         if (gender==true){
@@ -182,6 +222,11 @@ public class PrintedBlock {
 
     }
 
+    /**
+     * this method displays aa worker on a third level block
+     * @param gender gender of the worker
+     * @param color worker's colour
+     */
     public void thirdFloorWithWorker(boolean gender, Colour color){
         char genderChar;
         if (gender==true){
@@ -198,7 +243,11 @@ public class PrintedBlock {
 
     }
 
-
+    /**
+     * this method, depending on the case, uses the three previous methods to display a worker on a generic block
+     * @param gender
+     * @param color
+     */
     public void withWorker(boolean gender, Colour color) {
         if (getLines().get(1).contains("2°level")) {
             secondFloorWithWorker(gender, color);

@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import static it.polimi.ingsw.client.view.cli.Colors.*;
+
 public class ScreenView {
     private static final int mapDim=5;
     private static final int boxHeight=5;
@@ -50,38 +51,43 @@ public class ScreenView {
         return this.map;
     }
 
+    /**
+     * this method prints the game screen, including the map, the opponents info and the last turn events
+     */
     public void turn() {
         int i;
         int j;
         int k;
+        //i am so sorry for what you are about to witness
+        //these three for cycles are to correctly print the game map, which is made up of 'blocks' that are lists of strings
+        //this algorithm prints the map line per line
+        for (k = 0; k < mapDim; k++){ //k represents the y abscissa
 
-        for (k = 0; k < mapDim; k++){ //k è l'ascisse y
+            for (j = 0, i = 0; j < boxHeight; j++) { //j represents the index of the string contained in the block to print
 
-
-            for (j = 0, i = 0; j < boxHeight; j++) {
-
-                if (j!=2)
-                    ps.print (CYAN_BRIGHT+"  ");
+                if (j!=2)                        //at the second line of every row of blocks print the value of the Y coordinate
+                    ps.print (CYAN_BRIGHT+"  "); //or else print the equivalent empty space
                 else
                     ps.print (CYAN_BRIGHT+(mapDim-k)+" ");
 
                 ps.print(this.map.position(0, mapDim-k-1).getLines().get(j));
 
                 for (i = 1; i <= mapDim - 1; i++) {
-                    ps.append(this.map.position(i, mapDim - k - 1).getLines().get(j));
-                    if(i==mapDim-1 && j!=0){
-                        ps.append('|');
+                    ps.append(this.map.position(i, mapDim - k - 1).getLines().get(j)); //with method append multiple strings back to back can be printed
+                    if(i==mapDim-1 && j!=0){ //when the strings of 5 (mapDim-1) blocks have been appended, the character '|' gets appended
+                        ps.append('|');      //to confine the map
                     }
-                    if(i==mapDim-1 && j==0){
-                        ps.append('+');
+                    if(i==boxHeight-1 && j==0){ //also when a complete row has been printed
+                        ps.append('+');         //the character '+' gets appended to confine the map and to divide rows
                     }
                 }
-                if(infoMessageBox.size()>0 && (j+((boxHeight)*k)<infoMessageBox.size())){
-                    ps.append("        "+this.infoMessageBox.get(j+((boxHeight)*k)));
+                if(infoMessageBox.size()>0 && (j+((boxHeight)*k)<infoMessageBox.size())){ // this verifies the info message size
+                    ps.append("        "+this.infoMessageBox.get(j+((boxHeight)*k)));     // and prints it line per line next to the map
                 }
 
-                if((j+((boxHeight)*k)>=infoMessageBox.size()) && turnMessageBox.size()>0 && (j+((boxHeight)*k)-infoMessageBox.size()<turnMessageBox.size())){
-                    ps.append("        "+this.turnMessageBox.get(j+((boxHeight)*k)-infoMessageBox.size()));
+                if((j+((boxHeight)*k)>=infoMessageBox.size()) && turnMessageBox.size()>0 && (j+((boxHeight)*k)-infoMessageBox.size()<turnMessageBox.size())){ // this verifies the turn message size
+                    ps.append("        "+this.turnMessageBox.get(j+((boxHeight)*k)-infoMessageBox.size()));                                                   // and prints it line per line next to the map
+                                                                                                                                                              // and under the info message box
                 }
                 ps.append("\n");
 
@@ -92,6 +98,11 @@ public class ScreenView {
         ps.print(CYAN_BRIGHT+"           A                 B                 C                 D                 E\n"+RESET);
     }
 
+    /**
+     * this method given a list of strings puts a frame around it for it to be printed in cli
+     * @param message
+     * @return the same message framed
+     */
     public List<String> boxMessage (List<String> message) {
         List<String> messageBox=new ArrayList<>();
         int maxLength=0;
@@ -161,6 +172,9 @@ public class ScreenView {
         return messageBox;
     }
 
+    /**
+     * this method prints the title of the game
+     */
     public void title()   {
         ps.println("\n");
         ps.println("\n");
@@ -176,6 +190,9 @@ public class ScreenView {
 
     }
 
+    /**
+     * this method clears the screen in cli
+     */
     public void clearScreen()
     {
         //Clears Screen in java

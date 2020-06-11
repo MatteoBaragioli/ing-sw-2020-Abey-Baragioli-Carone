@@ -4,7 +4,9 @@ public class PrintedMap {
         private static final int mapDim=5;
         private PrintedBlock printedMap[][]=new PrintedBlock[mapDim][mapDim];
 
-
+    /**
+     * this contructor method initialises a map with all ground floor blocks
+     */
         public PrintedMap() {
             for (int i = 0; i < mapDim; i++)
                 for (int j = 0; j < mapDim; j++) {

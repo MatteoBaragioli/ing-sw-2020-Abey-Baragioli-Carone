@@ -7,7 +7,9 @@ import java.util.Map;
 
 public class Colors {
 
-
+    /**
+     * these are color codes for command line interface
+     */
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset
     public static final String RESET_BACKGROUND="\033[49m"; //reset background color
