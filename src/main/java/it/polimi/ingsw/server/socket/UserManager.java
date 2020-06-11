@@ -32,7 +32,7 @@ public class UserManager extends Thread {
             message = communicationChannel().askUsername();
         } catch (ChannelClosedException e) {
             e.printStackTrace();
-            dataBase.deleteConnection(communicationChannel);
+            //dataBase.deleteConnection(communicationChannel);
             return;
         }
         boolean valid = false;
@@ -42,7 +42,7 @@ public class UserManager extends Thread {
                     message = communicationChannel().askUniqueUsername();
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
-                    dataBase.deleteConnection(communicationChannel);
+                    //dataBase.deleteConnection(communicationChannel);
                     return;
                 }
             }

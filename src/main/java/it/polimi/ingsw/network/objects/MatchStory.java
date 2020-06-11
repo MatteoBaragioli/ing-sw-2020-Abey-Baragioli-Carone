@@ -37,8 +37,9 @@ public class MatchStory {
     }
 
     public void addEvent(int[] workerLocation, int action, int[] location) {
-        Type type =new TypeToken<int[]>() {}.getType();
-        story.add(playerName + STORY_SEPARATOR + new Gson().toJson(workerLocation, type) + STORY_SEPARATOR + CommunicationChannel.keyToString(actionConverter.get(action)) + STORY_SEPARATOR + new Gson().toJson(location, type));
+        Type type = new TypeToken<int[]>() {}.getType();
+        Type key = new TypeToken<CommunicationProtocol>() {}.getType();
+        story.add(playerName + STORY_SEPARATOR + new Gson().toJson(workerLocation, type) + STORY_SEPARATOR + new Gson().toJson(actionConverter.get(action), key) + STORY_SEPARATOR + new Gson().toJson(location, type));
     }
 
     public void clear() {

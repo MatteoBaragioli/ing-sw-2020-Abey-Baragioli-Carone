@@ -190,12 +190,11 @@ public class DataBase {
         }
     }
 
-    public synchronized Lobby createNewLobby(User user, int nPlayers) {
+    public synchronized void createNewLobby(User user, int nPlayers) {
         Lobby lobby = new Lobby(user, nPlayers);
         joinLobby(user, lobby);
         System.out.println("New lobby " + lobby + " with " + nPlayers + " players has been created for " + user.name());
         openLobbies.add(lobby);
-        return lobby;
     }
 
     /**
@@ -235,7 +234,6 @@ public class DataBase {
         }
 
         if (!found)
-            lobby = createNewLobby(user, nPlayers);
-
+            createNewLobby(user, nPlayers);
     }
 }
