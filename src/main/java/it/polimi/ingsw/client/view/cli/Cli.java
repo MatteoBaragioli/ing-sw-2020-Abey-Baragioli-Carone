@@ -36,6 +36,11 @@ public class Cli implements View {
         return commandline.readLine();
     }
 
+    /**
+     * this method checks if a user is trying to quit using regex
+     * @param answer String inserted by user
+     * @return boolean
+     */
     private boolean checkIfUserIsQuitting(String answer) {
         Pattern pattern1 = Pattern.compile("QUIT");
         Pattern pattern2 = Pattern.compile("Quit");
@@ -46,6 +51,12 @@ public class Cli implements View {
         return matcher1.find() || matcher2.find() || matcher3.find();
     }
 
+    /**
+     * this method handles the answer inserted by the player when expected a number
+     * @return int, the answer expected
+     * @throws IOException
+     * @throws NumberFormatException
+     */
     public int askNumber() throws IOException, NumberFormatException {
         String answer = askAnswer();
         if (checkIfUserIsQuitting(answer))
@@ -53,6 +64,11 @@ public class Cli implements View {
         return Integer.parseInt(answer);
     }
 
+    /**
+     * this method manages with regex the coordinates inserted in cli by the player, like A5 or B2
+     * @param positions list of coordinates available sent by the server
+     * @return int, index of the correspondent coordinate inserted by the user
+     */
     @Override
     public int askPosition(List<int[]> positions) { //nuovo ask position che legge stringa
         String answer = null;
@@ -135,10 +151,15 @@ public class Cli implements View {
         return answerToInt;
     }
 
+    /**
+     * this method "cleans" String answer of useless characters inserted by the player when inserting coordinates
+     * @param answer the coordinates inserted by the player that may contain wrong characters such as spaces or "ù" ecc
+     * @param matcher of regex pattern found in answer
+     * @return
+     */
 
     public String cleanPosition(String answer, Matcher matcher) {
         char letter;
-        // matcher.find();
         switch (answer.charAt(matcher.start())) {
             case ('a'):
                 letter = 'A';
@@ -161,50 +182,17 @@ public class Cli implements View {
         return ("" + letter + answer.charAt(matcher.end() - 1) + "");
     }
 
-
-
-    /*  @Override
-    public int askPosition(List<int[]> positions) {
-        boolean valid = false;
-        int answer = 0;
-        for(int i = 0; i< positions.size(); i++){
-           printStream.print((i+1)+"   for box in "+ convertToChessCoordinates(positions.get(i))+"    ");
-            if (positions.size()%4==0) {
-                if (i % 4 == 0)
-                    printStream.print("\n");
-            }
-            if (positions.size()%5==0) {
-                if (i % 5 == 0)
-                    printStream.print("\n");
-            }
-        }
-        while (!valid) {
-
-            try {
-                answer = askNumber();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NumberFormatException e) {
-                answer = 0;
-            }
-            if ((answer<= positions.size() && answer>0) || answer == -1) {
-                valid = true;
-            }
-            else
-                printStream.println("Not valid answer. Try again");
-
-        }
-        if(answer!=-1)
-            answer--;
-        return answer;
-    }*/
-
+    /**
+     * this method handles the choice of the worker for the player's turn
+     * @param workers is a list of coordinates that represent the workers' positions
+     * @return int is the index in 'workers' list that represent the worker chosen by the player
+     */
     @Override
     public int askWorker(List<int[]> workers) {
         boolean valid = false;
         int answer = 0;
         for(int i=0; i<workers.size(); i++){
-            printStream.print((i+1)+"   for worker in"+ getChessCoordinates(workers.get(i))+"    ");
+            printStream.print((i+1)+"   for worker in "+ getChessCoordinates(workers.get(i))+"    ");
         }
         while (!valid) {
 
@@ -227,6 +215,11 @@ public class Cli implements View {
 
     }
 
+    /**
+     * this method handles the choice of the player's Godcard
+     * @param cards list of cards to choose from
+     * @return int is the index in 'cards' list that represent the card chosen by the player
+     */
     @Override
     public int askCards(List<GodCardProxy> cards) {
         boolean sure=false;
@@ -283,7 +276,7 @@ public class Cli implements View {
             printStream.println("these will be your game card, are you sure? ");
             printStream.println("1  yes     2   no");
 
-
+        //todo change following code with ask confirmation
             int confirm = 0;
             while (!validConfirmation) {
                 try {
@@ -310,6 +303,11 @@ public class Cli implements View {
         return answer;
         }
 
+    /**
+     * this method manages the confirmation of the user when they can undo or use their GodCard power
+     * @param key indicates what the user is chosing for, undo or use power
+     * @return int that corresponds to the user's answer
+     */
     @Override
     public int askConfirmation(CommunicationProtocol key) {
 
@@ -336,6 +334,10 @@ public class Cli implements View {
         return answer;
     }
 
+    /**
+     * this method views additional communications depending on the key
+     * @param key is a communication protocol key that indicates what the server is about to send
+     */
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
         switch(key) {
@@ -354,7 +356,10 @@ public class Cli implements View {
             }
         }
 
-
+    /**
+     * this method updates the user's view, showing the changes made during the previous turn
+     * @param boxes, is the game map sent by the server as a list boxes (more precisely box proxys)
+     */
     @Override
     public void updateMap(List<BoxProxy> boxes) {
         for(BoxProxy boxProxy:boxes) {
@@ -388,22 +393,30 @@ public class Cli implements View {
         view.turn();
     }
 
+    /**
+     * this method stores the data of the UI's player
+     * @param player
+     */
     @Override
     public void setMyPlayer(PlayerProxy player) {
         this.myPlayer=player;
 
     }
 
+    /**
+     * this method stores the data of the opponents (just their color, name and card)
+     * @param players
+     */
     @Override
     public void setOpponentsInfo(List<PlayerProxy> players) {
         opponents = players;
         if(players.get(0).godCardProxy!=null && players.get(0).colour!=null) {
             List<String> info = new ArrayList<>();
-            info.add(getActualWrittenColor(myPlayer.colour)+"your card is "+ myPlayer.godCardProxy.name+ Colors.RESET);
+            info.add(getActualWrittenColor(myPlayer.colour)+"your card is "+ myPlayer.godCardProxy.name+ RESET);
             info.add("your opponents are:");
             for(PlayerProxy opponent: players){
-                info.add(getActualWrittenColor(opponent.colour)+opponent.name+ ":"+Colors.RESET);
-                info.add(getActualWrittenColor(opponent.colour)+opponent.name+ "'s card is "+opponent.godCardProxy.name+Colors.RESET);
+                info.add(getActualWrittenColor(opponent.colour)+opponent.name+ ":"+RESET);
+                info.add(getActualWrittenColor(opponent.colour)+opponent.name+ "'s card is "+opponent.godCardProxy.name+RESET);
             }
             view.setInfoMessageBox(info);
         }
@@ -414,6 +427,10 @@ public class Cli implements View {
 
     }
 
+    /**
+     * this method communicates to the user that the connection was refused
+     * @param host
+     */
     @Override
     public void connectionFailed(String host) {
         System.err.println("Refused connection to" + host + "\nRetry.");
@@ -424,11 +441,19 @@ public class Cli implements View {
 
     }
 
+    /**
+     * this method stores the player that is currently playing
+     * @param player
+     */
     @Override
     public void setCurrentPlayer(PlayerProxy player) {
         this.currentPlayer=currentPlayer;
     }
 
+    /**
+     * this method manages the string 'events' that represents the events that happened during the last turn and that is sent by the server
+     * @param events is a String that contains all the details necessary to recall what happened in the last turn
+     */
     @Override
     public void tellStory(List<String> events) {
         List<String> turnMessage = new ArrayList<>();
@@ -450,6 +475,14 @@ public class Cli implements View {
         view.setTurnMessageBox(turnMessage);
     }
 
+    /**
+     * this method writes the events occurred in the last turn in a readable way for the user
+     * @param player name of the player that made the action
+     * @param chosenWorker worker used
+     * @param action action made
+     * @param destination destination of the action
+     * @return
+     */
     public List<String> writeStory(String player, int[] chosenWorker, CommunicationProtocol action, int[] destination) {
         List<String> turnEvent = new ArrayList<>();
 
@@ -470,6 +503,10 @@ public class Cli implements View {
         return turnEvent;
     }
 
+    /**
+     * this method displays the winner
+     * @param player
+     */
     @Override
     public void setWinner(PlayerProxy player) {
         view.clearScreen();
@@ -484,6 +521,10 @@ public class Cli implements View {
 
     }
 
+    /**
+     * this method displays the name of the playes who has lost the game and updates the info message of attribute view
+     * @param player the player who has lost
+     */
     @Override
     public void setLoser(PlayerProxy player) {
         view.clearScreen();
@@ -492,12 +533,29 @@ public class Cli implements View {
             printStream.println("You lost, better luck next time!");
         }
         else{
+            List<String> info = new ArrayList<>();
+            info.add(getActualWrittenColor(myPlayer.colour)+"your card is "+ myPlayer.godCardProxy.name+RESET);
+            info.add("your opponents are:");
+            for(PlayerProxy opponent: opponents){
+                if(opponent.equals(player))
+                    info.add(getActualWrittenColor(opponent.colour)+opponent.name+ " (eliminated):"+RESET);
+                else
+                    info.add(getActualWrittenColor(opponent.colour)+opponent.name+ ":"+RESET);
+
+                info.add(getActualWrittenColor(opponent.colour)+opponent.name+ "'s card is "+opponent.godCardProxy.name+RESET);
+            }
+            view.setInfoMessageBox(info);
+
             opponents.remove(player);
             printStream.println(player.name +" lost!");
         }
 
     }
 
+    /**
+     * this method asks to user the ip address
+     * @return String
+     */
     @Override
     public String askIp() {
         System.out.println("Write ip address to connect to:");
@@ -509,6 +567,10 @@ public class Cli implements View {
         }
     }
 
+    /**
+     * this method asks to the user the match type they want to play
+     * @return int represents the number of the players
+     */
     @Override
     public int askMatchType() {
         boolean valid = false;
@@ -534,6 +596,10 @@ public class Cli implements View {
         return answer;
     }
 
+    /**
+     * this method asks to the user the port to connect to
+     * @return int
+     */
     @Override
     public int askPort() {
         boolean valid = false;
@@ -556,13 +622,22 @@ public class Cli implements View {
         return answer;
     }
 
+    /**
+     * this method asks the user name to the user
+     * @return String
+     * @throws IOException
+     */
     @Override
     public String askUserName() throws IOException {
         printStream.println("Write username:");
         return commandline.readLine();
     }
 
-
+    /**
+     * this method asks the challenger the game cards from which the other players will have to choose from
+     * @param cards these are all the game cards available
+     * @return int[] , a list of ints that represent the indexes of the chosen cards
+     */
     @Override
     public int[] askDeck(List<GodCardProxy> cards) {
         boolean sure=false;
@@ -659,7 +734,10 @@ public class Cli implements View {
         return answer;
     }
 
-
+    /**
+     * main method of cli
+     * @param args
+     */
     public static void main(String[] args){
         Cli cli = new Cli();
         Client client = new Client(cli);
