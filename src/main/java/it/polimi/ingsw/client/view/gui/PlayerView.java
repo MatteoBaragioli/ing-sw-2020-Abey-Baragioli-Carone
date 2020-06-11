@@ -31,6 +31,9 @@ public class PlayerView extends StackPane {
     //big font
     private final Font standardFont;
 
+    //active powers names font
+    private final Font activePowersFont;
+
     //medium font
     private final Font lillybelle;
 
@@ -136,6 +139,7 @@ public class PlayerView extends StackPane {
 
     public PlayerView(double screenWidth, double screenHeight, Gui gui, MatchScene match, StackPane pausePane, StackPane activePowers, StackPane helper, StackPane turnStory) {
         standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
+        activePowersFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/70);
         lillybelle = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/80);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -777,7 +781,7 @@ public class PlayerView extends StackPane {
             powerInfo.setText(player.godCardProxy.setUpDescription);
         else if(player.godCardProxy.opponentsFxDescription!=null)
             powerInfo.setText(player.godCardProxy.opponentsFxDescription);
-        powerName.setFont(standardFont);
+        powerName.setFont(activePowersFont);
         powerInfo.setFont(lillybelle);
         powerInfo.setWrappingWidth(screenWidth/2);
         powerInfo.setTextAlignment(TextAlignment.CENTER);
@@ -817,7 +821,7 @@ public class PlayerView extends StackPane {
             else if(opponent.godCardProxy.opponentsFxDescription!=null)
                 powerInfo.setText(opponent.godCardProxy.opponentsFxDescription);
 
-            powerName.setFont(standardFont);
+            powerName.setFont(activePowersFont);
             powerInfo.setFont(lillybelle);
             powerInfo.setWrappingWidth(screenWidth/2);
             powerInfo.setTextAlignment(TextAlignment.CENTER);

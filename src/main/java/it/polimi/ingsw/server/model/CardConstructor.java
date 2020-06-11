@@ -57,7 +57,7 @@ public class CardConstructor {
         fx.put(DO_NOTHING, new DoNothing());
         fx.put(SWAP, new SwapPower());
         fx.put(ADD_MOVE_NOT_STARTING_BOX, new AddMoveNotStartingBoxPower());
-        fx.put(OPPONENTS_CANT_MOVE_UP_IF_PLAYER_MOVES_UP, new OpponenentsCantMoveUpIfPlayerMovesUpPower());
+        fx.put(OPPONENTS_CANT_MOVE_UP_IF_PLAYER_MOVES_UP, new OpponentsCantMoveUpIfPlayerMovesUpPower());
         fx.put(BUILD_DOME_EVERYWHERE, new BuildDomeEverywherePower());
         fx.put(ADD_BUILD_NOT_SAME_BOX, new AddBuildNotSameBoxPower());
         fx.put(ADD_BUILD_ON_SAME_BOX, new AddBuildOnSameBoxPower());

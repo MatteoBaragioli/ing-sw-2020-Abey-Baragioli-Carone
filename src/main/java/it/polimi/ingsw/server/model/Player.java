@@ -75,6 +75,10 @@ public class Player {
         setInGame(false);
     }
 
+    /**
+     * This method creates player proxy for view
+     * @return Player proxy
+     */
     public PlayerProxy createProxy() {
         GodCardProxy godCardProxy = null;
         if (godCard() != null)

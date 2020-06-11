@@ -5,7 +5,7 @@ import it.polimi.ingsw.server.model.*;
 
 import java.util.List;
 
-public class OpponenentsCantMoveUpIfPlayerMovesUpPower extends MoveModifier {
+public class OpponentsCantMoveUpIfPlayerMovesUpPower extends MoveModifier {
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, MatchStory matchStory) {
         //endPower - Athena

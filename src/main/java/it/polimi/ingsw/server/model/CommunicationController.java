@@ -33,7 +33,7 @@ public class CommunicationController {
      * @param player
      * @return boolean
      */
-    private boolean playerIsUser(Player player) {
+    public boolean playerIsUser(Player player) {
         return playerToUser.containsKey(player);
     }
 
@@ -110,24 +110,36 @@ public class CommunicationController {
      * @return boolean if everything went well
      */
     public boolean announceCurrentPlayer(Player player, Player currentPlayer) throws ChannelClosedException {
-        User user = findUser(player);
-        PlayerProxy playerProxy = currentPlayer.createProxy();
-        Type type = new TypeToken<PlayerProxy>() {}.getType();
-        return user.sendCurrentPlayer(new Gson().toJson(playerProxy, type));
+        if(playerIsUser(player)) {
+            User user = findUser(player);
+            PlayerProxy playerProxy = currentPlayer.createProxy();
+            Type type = new TypeToken<PlayerProxy>() {
+            }.getType();
+            return user.sendCurrentPlayer(new Gson().toJson(playerProxy, type));
+        }
+        return true;
     }
 
     public boolean announceWinner(Player player, Player winner) throws ChannelClosedException {
-        User user = findUser(player);
-        PlayerProxy playerProxy = winner.createProxy();
-        Type type = new TypeToken<PlayerProxy>() {}.getType();
-        return user.sendWinner(new Gson().toJson(playerProxy, type));
+        if(playerIsUser(player)) {
+            User user = findUser(player);
+            PlayerProxy playerProxy = winner.createProxy();
+            Type type = new TypeToken<PlayerProxy>() {
+            }.getType();
+            return user.sendWinner(new Gson().toJson(playerProxy, type));
+        }
+        return true;
     }
 
     public boolean announceLoser(Player player, Player loser) throws ChannelClosedException {
-        User user = findUser(player);
-        PlayerProxy playerProxy = loser.createProxy();
-        Type type = new TypeToken<PlayerProxy>() {}.getType();
-        return user.sendLoser(new Gson().toJson(playerProxy, type));
+        if(playerIsUser(player)) {
+            User user = findUser(player);
+            PlayerProxy playerProxy = loser.createProxy();
+            Type type = new TypeToken<PlayerProxy>() {
+            }.getType();
+            return user.sendLoser(new Gson().toJson(playerProxy, type));
+        }
+        return true;
     }
 
     /**
@@ -327,6 +339,8 @@ public class CommunicationController {
             for (int i = 0; i<indexes.length ;i++){
                 chosenCards.add(cards.get(indexes[i]));
             }
+        } else {
+
         }
         return chosenCards;
     }
@@ -369,9 +383,13 @@ public class CommunicationController {
     }
 
     public boolean updateView(Player player , List<BoxProxy> boxes) throws ChannelClosedException {
-        User user = findUser(player);
-        Type type = new TypeToken<List<BoxProxy>>() {}.getType();
-        return user.sendMap(new Gson().toJson(boxes, type));
+        if(playerIsUser(player)) {
+            User user = findUser(player);
+            Type type = new TypeToken<List<BoxProxy>>() {
+            }.getType();
+            return user.sendMap(new Gson().toJson(boxes, type));
+        }
+        return true;
     }
 
     public int chooseFirstPlayer(Player chooser, List<Player> players){
@@ -394,8 +412,12 @@ public class CommunicationController {
      * @return
      */
     public boolean tellMatchStory(Player player, MatchStory matchStory) throws ChannelClosedException {
-        User user = findUser(player);
-        Type type = new TypeToken<List<String>>(){}.getType();
-        return user.tellStory(new Gson().toJson(matchStory.story(), type));
+        if(playerIsUser(player)) {
+            User user = findUser(player);
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            return user.tellStory(new Gson().toJson(matchStory.story(), type));
+        }
+        return true;
     }
 }

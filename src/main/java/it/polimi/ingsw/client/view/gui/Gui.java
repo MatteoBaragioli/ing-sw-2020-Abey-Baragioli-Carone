@@ -1112,7 +1112,6 @@ public class Gui extends Application implements View {
                 return matchScene.showConfirmTurn();
             case GOD_POWER:
                 return matchScene.playerView().askUsePower();
-
         }
         return -1;
     }
