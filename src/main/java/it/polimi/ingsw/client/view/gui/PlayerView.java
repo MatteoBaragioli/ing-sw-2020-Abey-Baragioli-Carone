@@ -91,8 +91,17 @@ public class PlayerView extends StackPane {
     //opponents list view
     private VBox opponentsView;
 
+    //opponents view background images list (I need it to set loser background)
+    private final HashMap<String, ImageView> opponentsViews = new HashMap<>();
+
+    //opponents view boxes list (I need it to set loser background)
+    private final HashMap<String, StackPane> opponentsBoxes = new HashMap<>();
+
     //opponents powers
     private final HashMap<String, Label> opponentsPowers = new HashMap<>();
+
+    //opponentsNames
+    private final HashMap<String, Label> opponentsNames = new HashMap<>();
 
     //active powers
     private VBox activePowersContent;
@@ -735,7 +744,10 @@ public class PlayerView extends StackPane {
             Image opponentImg = new Image(PlayerView.class.getResource("/img/matchPage/opponentView"+opponentColor+".png").toString(),screenWidth/5, screenHeight/5,false,false);
             ImageView opponentView = new ImageView(opponentImg);
 
+            opponentsViews.put(opponent.name, opponentView);
+
             Label opponentName = new Label(opponent.name);
+            opponentsNames.put(opponent.name, opponentName);
             if(opponent.name.length()>20)
                 opponentName.setFont(Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/100));
             else
@@ -757,6 +769,8 @@ public class PlayerView extends StackPane {
             opponentBox.getChildren().addAll(opponentView, opponentName, opponentCardName);
             setAlignment(opponentName, TOP_CENTER);
             opponentBox.setPrefHeight(screenHeight/5);
+
+            opponentsBoxes.put(opponent.name, opponentBox);
 
             opponentsView.getChildren().add(opponentBox);
         }
@@ -1244,4 +1258,28 @@ public class PlayerView extends StackPane {
             }
         }
     }
+
+    public void setLoser(String loser){
+        Image loserImg = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser.png").toString(),screenWidth/5, screenHeight/5,false,false);
+        opponentsViews.get(loser).setImage(loserImg);
+
+        Image loser2Img = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser2.png").toString(),screenWidth/5, screenHeight/5,false,false);
+        ImageView loserView = new ImageView(loser2Img);
+
+        opponentsBoxes.get(loser).getChildren().add(loserView);
+
+        opponentsNames.get(loser).setTextFill(WHITE);
+
+        opponentsPowers.get(loser).setVisible(false);
+        opponentsPowers.get(loser).setManaged(false);
+
+        Label loserStory = new Label(loser + " lost the match");
+        loserStory.setFont(lillybelle);
+        loserStory.setTextAlignment(TextAlignment.CENTER);
+        loserStory.setAlignment(CENTER);
+        loserStory.setMaxWidth(screenWidth/2.5);
+        loserStory.setWrapText(true);
+        storyContent.getChildren().add(loserStory);
+    }
+
 }

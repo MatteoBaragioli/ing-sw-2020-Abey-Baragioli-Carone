@@ -505,6 +505,7 @@ public class Gui extends Application implements View {
 
         Text screenSizeText = new Text("Choose window dimension");
         screenSizeText.setFont(lillybelleFont);
+        screenSizeText.setTextAlignment(TextAlignment.CENTER);
         screenSizeText.setWrappingWidth(screenWidth/5);
 
         screenSizeOptions = new ComboBox(FXCollections.observableArrayList(
@@ -1337,7 +1338,6 @@ public class Gui extends Application implements View {
      */
     @Override
     public void setLoser(PlayerProxy player) {
-        //todo
-        System.out.println("LLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEERRRRRRRRR");
+        Platform.runLater(() -> matchScene.playerView().setLoser(player.name));
     }
 }

@@ -38,6 +38,7 @@ public class Pinger extends Thread {
 
             if (!communicationChannel.isClosed() && (countdown == 0 || !communicationChannel.isPinged())) {
                 communicationChannel.close();
+                notifyAll();
                 System.out.println("Client non connesso");
             }
             else {
