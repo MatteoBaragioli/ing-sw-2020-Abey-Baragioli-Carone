@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model.godPowers.fx;
 
-import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.*;
 import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
@@ -8,15 +8,13 @@ import static org.junit.Assert.*;
 
 import it.polimi.ingsw.server.model.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeoutException;
 
 
 public class AddBuildBeforeMoveIfNotMoveUpPowerTest {
 
     @Test
-    public void usePower() throws IOException, TimeoutException, ChannelClosedException {
+    public void usePower() throws ChannelClosedException, TimeOutException {
         //-------------------------- Test 1 -------------------------------------------
 
         Map map = new  Map();

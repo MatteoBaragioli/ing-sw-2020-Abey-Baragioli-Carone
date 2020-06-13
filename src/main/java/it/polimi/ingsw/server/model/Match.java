@@ -1,12 +1,10 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.*;
 import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.server.model.phases.*;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeoutException;
 
 public class Match extends Thread{
     private int currentPlayerIndex;
@@ -127,10 +125,18 @@ public class Match extends Thread{
             announceCurrentPlayer(currentPlayer);
             try {
                 takeTurn(currentPlayer);
-            } catch (IOException | ChannelClosedException | TimeoutException e) {
+            }
+            catch (TimeOutException e) {
                 e.printStackTrace();
                 currentPlayer.setInGame(false);
                 currentPlayer.turnSequence().undo();
+
+            }
+            catch (ChannelClosedException e) {
+                e.printStackTrace();
+                currentPlayer.setInGame(false);
+                currentPlayer.turnSequence().undo();
+                removeUser(findUser(e.name()));
             }
 
             try {
@@ -162,7 +168,7 @@ public class Match extends Thread{
         //todo endGame()
     }
 
-    private void takeTurn(Player player) throws ChannelClosedException, TimeoutException, IOException {
+    private void takeTurn(Player player) throws ChannelClosedException, TimeOutException {
         int undoCounter = 0;
         MatchStory matchStory = new MatchStory(player);
         for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && player.isInGame();){
@@ -207,47 +213,61 @@ public class Match extends Thread{
     }
 
     public void announceParticipants() {
-        for (Player player: gamePlayers) {
-            try {
-                communicationController.announceParticipants(player, gamePlayers);
-            } catch (ChannelClosedException e) {
-                removeUser(findUser(e.name()));
-                if (gamePlayers.size() <= 1)
-                    endGame();
-            }
+        List<Player> receivers = new ArrayList<>();
+        for (int i = 0; i<gamePlayers.size() && gamePlayers.size()>1; i++) {
+            Player player = gamePlayers.get(i);
+            if (!receivers.contains(player))
+                try {
+                    communicationController.announceParticipants(player, gamePlayers);
+                    receivers.add(player);
+                } catch (ChannelClosedException e) {
+                    removeUser(findUser(e.name()));
+                    i = -1;
+                }
         }
     }
 
     private void announceCurrentPlayer(Player currentPlayer) {
-        for (Player player: gamePlayers) {
-            try {
-                communicationController.announceCurrentPlayer(player, currentPlayer);
-            } catch (ChannelClosedException e) {
-                removeUser(findUser(e.name()));
-                if (gamePlayers.size() <= 1)
-                    endGame();
-            }
+        List<Player> receivers = new ArrayList<>();
+        for (int i = 0; i<gamePlayers.size() && gamePlayers.size()>1; i++) {
+            Player player = gamePlayers.get(i);
+            if (!receivers.contains(player))
+                try {
+                    communicationController.announceCurrentPlayer(player, currentPlayer);
+                    receivers.add(player);
+                } catch (ChannelClosedException e) {
+                    removeUser(findUser(e.name()));
+                    i = -1;
+                }
         }
     }
 
     private void announceWinner() {
-        for (Player player: gamePlayers) {
-            try {
-                communicationController.announceWinner(player, winner);
-            } catch (ChannelClosedException e) {
-                removeUser(findUser(e.name()));
-                endGame();
-            }
+        List<Player> receivers = new ArrayList<>();
+        for (int i = 0; i<gamePlayers.size() && !gamePlayers.isEmpty(); i++) {
+            Player player = gamePlayers.get(i);
+            if(!receivers.contains(player))
+                try {
+                    communicationController.announceWinner(player, winner);
+                    receivers.add(player);
+                } catch (ChannelClosedException e) {
+                    removeUser(findUser(e.name()));
+                }
         }
     }
 
     private void announceLoser(Player loser) {
-        for (Player player: gamePlayers) {
-            try {
-                communicationController.announceLoser(player, loser);
-            } catch (ChannelClosedException e) {
-                removeUser(findUser(e.name()));
-            }
+        List<Player> receivers = new ArrayList<>();
+        for (int i = 0; i<gamePlayers.size() && !gamePlayers.isEmpty(); i++) {
+            Player player = gamePlayers.get(i);
+            if (!receivers.contains(player))
+                try {
+                    communicationController.announceLoser(player, loser);
+                    receivers.add(player);
+                } catch (ChannelClosedException e) {
+                    e.printStackTrace();
+                    removeUser(findUser(e.name()));
+                }
         }
     }
 
@@ -256,7 +276,7 @@ public class Match extends Thread{
     }
 
     /**
-     * This method assignes a colour to every player
+     * This method assigns a colour to every player
      */
     public void assignColour(){
         List<Colour> colours = new ArrayList<>();
@@ -279,22 +299,27 @@ public class Match extends Thread{
     protected void chooseCards()  {
         CardConstructor cardConstructor = new CardConstructor();
         List<GodCard> deck = cardConstructor.cards();
-        Player challenger = gamePlayers.get(0);
-        if(communicationController.playerIsUser(challenger)) {
-            try {
-                cards = communicationController.chooseDeck(challenger, deck);
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-                //todo
-            } catch (ChannelClosedException e) {
-                e.printStackTrace();
-                //todo
-            }
-        } else {
-            for(int i = 0; i<gamePlayers.size(); i++){
-                int index = new Random().nextInt(deck.size());
-                cards.add(deck.get(index));
-                deck.remove(index);
+        boolean valid = false;
+        while (!valid && gamePlayers.size()>1) {
+            Player challenger = gamePlayers.get(0);
+            if (communicationController.playerIsUser(challenger)) {
+                try {
+                    cards = communicationController.chooseDeck(challenger, deck);
+                    valid = true;
+                } catch (TimeOutException e) {
+                    e.printStackTrace();
+                    removeUser(findUser(e.name()));
+                } catch (ChannelClosedException e) {
+                    e.printStackTrace();
+                    removeUser(findUser(e.name()));
+                }
+            } else {
+                for (int i = 0; i < gamePlayers.size(); i++) {
+                    int index = new Random().nextInt(deck.size());
+                    cards.add(deck.get(index));
+                    deck.remove(index);
+                }
+                valid = true;
             }
         }
     }
@@ -304,20 +329,25 @@ public class Match extends Thread{
      */
     protected void assignCards() {
         List<GodCard> availableCards = new ArrayList<>(cards);
-        for(int i = gamePlayers.size()-1; i>=0; i--){
-            GodCard chosenCard = null;
-            announceCurrentPlayer(gamePlayers.get(i));
-            try {
-                chosenCard = communicationController.chooseCard(gamePlayers.get(i), availableCards);
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-                //todo
-            } catch (ChannelClosedException e) {
-                e.printStackTrace();
-                removeUser(findUser(e.name()));
+        for(int i = gamePlayers.size()-1; i>=0; i--) {
+            Player player = gamePlayers.get(i);
+
+            if (player.godCard()==null) {
+                announceCurrentPlayer(player);
+                try {
+                    GodCard chosenCard = communicationController.chooseCard(player, availableCards);
+                    player.assignCard(chosenCard);
+                    availableCards.remove(chosenCard);
+                    while (i>gamePlayers.size())
+                        i--;
+                } catch (TimeOutException e) {
+                    e.printStackTrace();
+                    removeUser(findUser(e.name()));
+                } catch (ChannelClosedException e) {
+                    e.printStackTrace();
+                    removeUser(findUser(e.name()));
+                }
             }
-            gamePlayers.get(i).assignCard(chosenCard);
-            availableCards.remove(chosenCard);
         }
     }
 
@@ -328,7 +358,7 @@ public class Match extends Thread{
     protected void setUpWorkers(){
 
         List<Box> possibleSetUpPosition;
-        Box position = null;
+        Box position;
         List<Player> setUpOrder = new ArrayList<>(gamePlayers);
         for(Player player : gamePlayers){
             player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
@@ -347,24 +377,26 @@ public class Match extends Thread{
                         worker = new Worker(position, player.colour(), false);
                     freeMap.remove(position);
                     player.assignWorker(worker);
-                } catch (TimeoutException e) {
+                } catch (TimeOutException e) {
                     e.printStackTrace();
                     player.setInGame(false);
+                    removeUser(findUser(e.name()));
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     player.setInGame(false);
+                    removeUser(findUser(e.name()));
                 }
 
                 try {
                     communicationController.updateView(gamePlayers, gameMap.createProxy());
                 } catch (ChannelClosedException e) {
+                    e.printStackTrace();
                     removeUser(findUser(e.name()));
                 }
             }
             if (!player.isInGame()) {
                 removeUser(findUser(player.name()));
                 //todo update Map
-                announceParticipants();
             }
         }
     }
@@ -415,6 +447,8 @@ public class Match extends Thread{
     public synchronized void removeUser(User user) {
         if (userIsPlayer(user)) {
             Player player = findPlayer(user);
+            if (player.godCard()!=null)
+                cards.add(player.godCard());
             if (player.isInGame()) {
                 removePlayer(player);
                 gamePlayers.remove(player);

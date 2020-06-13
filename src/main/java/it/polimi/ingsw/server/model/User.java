@@ -1,9 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.network.*;
-import it.polimi.ingsw.network.exceptions.ChannelClosedException;
-
-import java.util.concurrent.TimeoutException;
+import it.polimi.ingsw.network.exceptions.*;
 
 public class User {
     final private CommunicationChannel communicationChannel;
@@ -137,12 +135,15 @@ public class User {
      * This method sends a list of positions and waits for the users choice
      * @param positions Json object
      * @return int
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askStartPosition(String positions) throws TimeoutException, ChannelClosedException {
+    public int askStartPosition(String positions) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askStartPosition(positions);
+        } catch (TimeOutException e) {
+            e.setName(name());
+            throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;
@@ -153,12 +154,15 @@ public class User {
      * This method sends a list of workers' positions and waits for the users choice
      * @param workers Json object
      * @return int
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askWorker(String workers) throws TimeoutException, ChannelClosedException {
+    public int askWorker(String workers) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askWorker(workers);
+        } catch (TimeOutException e) {
+            e.setName(name());
+            throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;
@@ -169,12 +173,15 @@ public class User {
      * This method sends a list of possible destinations and waits for the users choice
      * @param destinations Json object
      * @return int
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askDestination(String destinations) throws TimeoutException, ChannelClosedException {
+    public int askDestination(String destinations) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askDestination(destinations);
+        } catch (TimeOutException e) {
+            e.setName(name());
+            throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;
@@ -185,12 +192,15 @@ public class User {
      * This method sends a list of build locations and waits for the users choice
      * @param builds Json object
      * @return int
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askBuild(String builds) throws TimeoutException, ChannelClosedException {
+    public int askBuild(String builds) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askBuild(builds);
+        } catch (TimeOutException e) {
+            e.setName(name());
+            throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;
@@ -201,12 +211,15 @@ public class User {
      * This method sends a list of blocks that can be removed and waits for the users choice
      * @param removals Json object
      * @return int
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askRemoval(String removals) throws TimeoutException, ChannelClosedException {
+    public int askRemoval(String removals) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askRemoval(removals);
+        } catch (TimeOutException e) {
+            e.setName(name());
+            throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;
@@ -217,12 +230,15 @@ public class User {
      * this method sends a list cards to choose from
      * @param cards json object
      * @return int
-     * @throws TimeoutException
+     * @throws TimeOutException
      * @throws ChannelClosedException
      */
-    public int askCard (String cards) throws TimeoutException, ChannelClosedException {
+    public int askCard (String cards) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askCard(cards);
+        } catch (TimeOutException e) {
+            e.setName(name());
+            throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;
@@ -233,12 +249,15 @@ public class User {
      * this method sends a list cards to choose from
      * @param deck json object
      * @return int
-     * @throws TimeoutException
+     * @throws TimeOutException
      * @throws ChannelClosedException
      */
-    public int[] askDeck (String deck) throws TimeoutException, ChannelClosedException {
+    public int[] askDeck (String deck) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askDeck(deck);
+        } catch (TimeOutException e) {
+          e.setName(name());
+          throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;
@@ -249,12 +268,15 @@ public class User {
      * this method asks for user confirmation, either to use a godpower or undo their turn, and waits for the users choice
      * @param key key of coms protocol
      * @return boolean
-     * @throws TimeoutException
+     * @throws TimeOutException
      * @throws ChannelClosedException
      */
-    public boolean askConfirmation(CommunicationProtocol key) throws TimeoutException, ChannelClosedException {
+    public boolean askConfirmation(CommunicationProtocol key) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askConfirmation(key);
+        } catch (TimeOutException e) {
+            e.setName(name());
+            throw e;
         } catch (ChannelClosedException e) {
             e.setName(name());
             throw e;

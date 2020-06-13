@@ -26,19 +26,18 @@ public class CountDown extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.err.println("WAIT NON FUNZIONA");
-                System.exit(-2);
+                return;
             }
             if (i%10 == 0) {
                 try {
                     communicationChannel.countdown(i);
                 } catch (ChannelClosedException e) {
                     System.err.println("Connection closed");
-                    System.exit(-1);
+                    return;
                 }
             }
             i--;
         }
-        communicationChannel.timeIsOut();
         notifyAll();
     }
 }

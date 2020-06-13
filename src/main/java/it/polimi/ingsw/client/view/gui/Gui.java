@@ -1344,4 +1344,9 @@ public class Gui extends Application implements View {
             Platform.runLater(() -> matchScene.playerView().setLoser(player.name));
         }
     }
+
+    @Override
+    public void timeOut() {
+
+    }
 }

@@ -1,24 +1,24 @@
 package it.polimi.ingsw.server.model.phases;
 
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.MatchStory;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.godPowers.fx.AddBuildBeforeMoveIfNotMoveUpPower;
 import it.polimi.ingsw.server.model.godPowers.fx.DoNothing;
 import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import it.polimi.ingsw.server.model.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class StartTest {
     @Test
-    public void executePhase() throws IOException, TimeoutException, ChannelClosedException {
+    public void executePhase() throws ChannelClosedException, TimeOutException {
         //-------------------------- Test 1 -----------------------------------------------------
         //this test tries a start for add build if not move up power
         Map map = new Map();

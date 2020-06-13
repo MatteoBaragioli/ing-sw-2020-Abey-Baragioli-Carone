@@ -29,4 +29,5 @@ public interface View {
     void tellStory(List<String> events);
     void setWinner(PlayerProxy player);
     void setLoser(PlayerProxy player);
+    void timeOut();
 }

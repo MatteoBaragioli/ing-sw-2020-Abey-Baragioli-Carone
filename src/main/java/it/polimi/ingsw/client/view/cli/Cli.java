@@ -552,6 +552,11 @@ public class Cli implements View {
 
     }
 
+    @Override
+    public void timeOut() {
+
+    }
+
     /**
      * this method asks to user the ip address
      * @return String

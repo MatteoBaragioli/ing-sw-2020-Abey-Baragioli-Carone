@@ -1,23 +1,22 @@
 package it.polimi.ingsw.server.model.phases;
 
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.MatchStory;
-import it.polimi.ingsw.server.model.godPowers.fx.*;
+import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.model.godPowers.fx.DoNothing;
 import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import it.polimi.ingsw.server.model.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.*;
 
 public class BuildTest {
 
     @Test
-    public void executePhase() throws IOException, TimeoutException, ChannelClosedException {
+    public void executePhase() throws ChannelClosedException, TimeOutException {
         //-------------------------- Test 1 ---------
         Map map = new  Map();
         ActionController actionController = new ActionController();

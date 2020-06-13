@@ -205,6 +205,14 @@ public class Client extends Thread {
                             //todo ho tolto exit
                         }
                         break;
+                    case TIMEOUT:
+                        try {
+                            clientController.manageTimeOut(communicationChannel, view);
+                        } catch (ChannelClosedException e) {
+                            e.printStackTrace();
+
+                        }
+                        break;
                     case UNIQUE_USERNAME:
                     case USERNAME:
                         try {
@@ -230,7 +238,11 @@ public class Client extends Thread {
                         }
                         break;
                     default:
-
+                        try {
+                            communicationChannel.popMessage();
+                        } catch (ChannelClosedException e) {
+                            e.printStackTrace();
+                        }
                 }
             }
 

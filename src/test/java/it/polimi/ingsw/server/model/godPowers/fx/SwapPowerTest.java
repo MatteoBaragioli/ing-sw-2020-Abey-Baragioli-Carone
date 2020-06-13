@@ -1,18 +1,17 @@
 package it.polimi.ingsw.server.model.godPowers.fx;
 
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.MatchStory;
-import it.polimi.ingsw.server.model.godPowers.fx.SwapPower;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import it.polimi.ingsw.server.model.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class SwapPowerTest {
@@ -107,7 +106,7 @@ public class SwapPowerTest {
     }
 
     @Test
-    public void executeAction() throws IOException, TimeoutException, ChannelClosedException {
+    public void executeAction() throws ChannelClosedException, TimeOutException {
         //-------------------------- Test 1 ---------
         //chosenWorker in (3,3) moves on (3,4) swapping the opponent's worker on (3,3)
         Map map = new  Map();

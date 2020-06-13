@@ -122,4 +122,10 @@ public class ClientController {
         view.tellStory(new Gson().fromJson(communicationChannel.getContent(message), type));
         communicationChannel.writeKeyWord(RECEIVED);
     }
+
+    public void manageTimeOut(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+        communicationChannel.popMessage();
+        view.timeOut();
+        communicationChannel.close();
+    }
 }

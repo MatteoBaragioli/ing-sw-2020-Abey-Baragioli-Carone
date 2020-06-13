@@ -1,27 +1,21 @@
 package it.polimi.ingsw.server.model.godPowers.fx;
 
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.MatchStory;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import it.polimi.ingsw.server.model.godPowers.fx.BuildDomeEverywherePower;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import it.polimi.ingsw.server.model.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.*;
 
 
 public class BuildDomeEverywherePowerTest {
 
     @Test
-    public void executeAction() throws IOException, TimeoutException, ChannelClosedException {
+    public void executeAction() throws ChannelClosedException, TimeOutException {
         //chosenWorker in (2,4) builds a dome on (1,3)
         Map map = new  Map();
         ActionController actionController = new ActionController();
@@ -60,7 +54,7 @@ public class BuildDomeEverywherePowerTest {
     }
 
     @Test
-    public void usePower() throws IOException, TimeoutException, ChannelClosedException {
+    public void usePower() throws ChannelClosedException, TimeOutException {
         Map map = new  Map();
         ActionController actionController = new ActionController();
         CommunicationController communicationController = new CommunicationController();

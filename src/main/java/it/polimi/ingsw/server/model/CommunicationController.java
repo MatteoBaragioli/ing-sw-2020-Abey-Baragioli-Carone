@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.model;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.network.CommunicationProtocol;
-import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.*;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.MatchStory;
@@ -12,7 +12,6 @@ import it.polimi.ingsw.network.objects.PlayerProxy;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
@@ -148,7 +147,7 @@ public class CommunicationController {
      * @param workers List of movable workers
      * @return list index
      */
-    public int askWorker(User user, List<Worker> workers) throws TimeoutException, ChannelClosedException {
+    public int askWorker(User user, List<Worker> workers) throws TimeOutException, ChannelClosedException {
         List<int[]> positions = new ArrayList<>();
         for (Worker worker: workers)
             positions.add(worker.position().position());
@@ -162,7 +161,7 @@ public class CommunicationController {
      * @param workers Workers
      * @return Chosen Worker
      */
-    public Worker chooseWorker(Player chooser, List<Worker> workers) throws TimeoutException, ChannelClosedException {
+    public Worker chooseWorker(Player chooser, List<Worker> workers) throws TimeOutException, ChannelClosedException {
         int index = new Random().nextInt(workers.size());
         if (playerIsUser(chooser))
             index = askWorker(findUser(chooser), workers);
@@ -187,10 +186,10 @@ public class CommunicationController {
      * @param user asked user
      * @param boxes available start positions
      * @return list index
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askStartPosition(User user, List<Box> boxes) throws TimeoutException, ChannelClosedException {
+    public int askStartPosition(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askStartPosition(convertBoxList(boxes));
     }
 
@@ -199,10 +198,10 @@ public class CommunicationController {
      * @param player player
      * @param boxes List of choices
      * @return Chosen Position
-     * @throws TimeoutException
+     * @throws TimeOutException
      * @throws ChannelClosedException
      */
-    public Box chooseStartPosition(Player player, List<Box> boxes) throws ChannelClosedException, TimeoutException {
+    public Box chooseStartPosition(Player player, List<Box> boxes) throws ChannelClosedException, TimeOutException {
         int index = new Random().nextInt(boxes.size());
         if (playerIsUser(player))
             index = askStartPosition(findUser(player), boxes);
@@ -215,10 +214,10 @@ public class CommunicationController {
      * @param user asked user
      * @param boxes available destinations
      * @return list index
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askDestination(User user, List<Box> boxes) throws TimeoutException, ChannelClosedException {
+    public int askDestination(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askDestination(convertBoxList(boxes));
     }
 
@@ -227,10 +226,10 @@ public class CommunicationController {
      * @param chooser player
      * @param boxes List of choices
      * @return Chosen Destination
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public Box chooseDestination(Player chooser, List<Box> boxes) throws TimeoutException, ChannelClosedException {
+    public Box chooseDestination(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         int index = new Random().nextInt(boxes.size());
         if (playerIsUser(chooser))
             index = askDestination(findUser(chooser), boxes);
@@ -242,10 +241,10 @@ public class CommunicationController {
      * @param user asked user
      * @param boxes available locations
      * @return list index
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askBuild(User user, List<Box> boxes) throws TimeoutException, ChannelClosedException {
+    public int askBuild(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askBuild(convertBoxList(boxes));
     }
 
@@ -254,10 +253,10 @@ public class CommunicationController {
      * @param chooser player
      * @param boxes List of choices
      * @return Chosen Location
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public Box chooseBuild(Player chooser, List<Box> boxes) throws TimeoutException, ChannelClosedException {
+    public Box chooseBuild(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         int index = new Random().nextInt(boxes.size());
         if (playerIsUser(chooser))
             index = askBuild(findUser(chooser), boxes);
@@ -269,10 +268,10 @@ public class CommunicationController {
      * @param user asked user
      * @param boxes available locations
      * @return list index
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public int askRemoval(User user, List<Box> boxes) throws TimeoutException, ChannelClosedException {
+    public int askRemoval(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askRemoval(convertBoxList(boxes));
     }
 
@@ -281,10 +280,10 @@ public class CommunicationController {
      * @param user asked user
      * @param key key of communication protocol
      * @return boolean value
-     * @throws TimeoutException
+     * @throws TimeOutException
      * @throws ChannelClosedException
      */
-    public boolean askConfirmation(User user, CommunicationProtocol key) throws TimeoutException, ChannelClosedException {
+    public boolean askConfirmation(User user, CommunicationProtocol key) throws TimeOutException, ChannelClosedException {
         return user.askConfirmation(key);
     }
 
@@ -293,10 +292,10 @@ public class CommunicationController {
      * @param user
      * @param cards
      * @return
-     * @throws TimeoutException
+     * @throws TimeOutException
      * @throws ChannelClosedException
      */
-    public int askCard(User user, List<GodCard> cards)throws TimeoutException, ChannelClosedException {
+    public int askCard(User user, List<GodCard> cards)throws TimeOutException, ChannelClosedException {
         List<GodCardProxy> proxyCards = new ArrayList<>();
 
         for (GodCard card: cards)
@@ -306,7 +305,7 @@ public class CommunicationController {
         return user.askCard(new Gson().toJson(proxyCards, listType));
     }
 
-    public GodCard chooseCard(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException{
+    public GodCard chooseCard(Player chooser, List<GodCard> cards) throws TimeOutException, ChannelClosedException{
         int index = new Random().nextInt(cards.size());
         if (playerIsUser(chooser))
             index = askCard(findUser(chooser), cards);
@@ -318,10 +317,10 @@ public class CommunicationController {
      * @param user
      * @param deck
      * @return
-     * @throws TimeoutException
+     * @throws TimeOutException
      * @throws ChannelClosedException
      */
-    public int[] askDeck(User user, List<GodCard> deck)throws TimeoutException, ChannelClosedException {
+    public int[] askDeck(User user, List<GodCard> deck)throws TimeOutException, ChannelClosedException {
         List<GodCardProxy> proxyDeck = new ArrayList<>();
 
         for (GodCard card: deck)
@@ -331,7 +330,7 @@ public class CommunicationController {
         return user.askDeck(new Gson().toJson(proxyDeck, listType));
     }
 
-    public List<GodCard> chooseDeck(Player chooser, List<GodCard> cards) throws TimeoutException, ChannelClosedException {
+    public List<GodCard> chooseDeck(Player chooser, List<GodCard> cards) throws TimeOutException, ChannelClosedException {
         List<GodCard> chosenCards = new ArrayList<>();
         int[] indexes;
         if (playerIsUser(chooser)) {
@@ -350,10 +349,10 @@ public class CommunicationController {
      * @param chooser player
      * @param boxes List of choices
      * @return Chosen Location
-     * @throws TimeoutException if user doesn't answer
+     * @throws TimeOutException if user doesn't answer
      * @throws ChannelClosedException if connection is lost
      */
-    public Box chooseRemoval(Player chooser, List<Box> boxes) throws TimeoutException, ChannelClosedException {
+    public Box chooseRemoval(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         int index = new Random().nextInt(boxes.size());
         if (playerIsUser(chooser))
             index = askRemoval(findUser(chooser), boxes);
@@ -364,7 +363,7 @@ public class CommunicationController {
         System.out.println("Hai perso");
     }
 
-    public boolean chooseToUsePower(Player chooser)throws TimeoutException, ChannelClosedException {
+    public boolean chooseToUsePower(Player chooser)throws TimeOutException, ChannelClosedException {
         boolean result=new Random().nextBoolean();
         boolean answer;
         if (playerIsUser(chooser))
@@ -398,7 +397,7 @@ public class CommunicationController {
         return index;
     }
 
-    public boolean confirmPhase(Player player)throws TimeoutException, ChannelClosedException{
+    public boolean confirmPhase(Player player)throws TimeOutException, ChannelClosedException{
         boolean result=new Random().nextBoolean();
         if (playerIsUser(player))
             result = askConfirmation(findUser(player), UNDO);

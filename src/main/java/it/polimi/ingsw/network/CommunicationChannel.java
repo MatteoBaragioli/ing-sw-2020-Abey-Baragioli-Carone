@@ -3,7 +3,7 @@ package it.polimi.ingsw.network;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +11,6 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
@@ -50,14 +49,6 @@ public class CommunicationChannel {
 
     public synchronized void resetPing() {
         ping = false;
-    }
-
-    public boolean isTimeout() {
-        return timeout;
-    }
-
-    public synchronized void timeIsOut() {
-        timeout = true;
     }
 
     public synchronized void resetTimeout() {
@@ -183,10 +174,10 @@ public class CommunicationChannel {
     /**
      * This method pops the first message in the buffer if it arrives in time
      * @return The popped message
-     * @throws TimeoutException if the time is out
+     * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public synchronized String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeoutException {
+    public synchronized String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeOutException {
         resetTimeout();
         CountDown countDown = new CountDown(this, key);
         countDown.start();
@@ -211,7 +202,8 @@ public class CommunicationChannel {
         if (isClosed())
             throw new ChannelClosedException();
         writeKeyWord(TIMEOUT);
-        throw new TimeoutException();
+        close();
+        throw new TimeOutException();
     }
 
     /**
@@ -412,10 +404,10 @@ public class CommunicationChannel {
      * This method sends a list of positions as json object and waits for a reply
      * @param workers Box coordinates
      * @return int list index
-     * @throws TimeoutException if the time is out
+     * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public int askWorker(String workers) throws TimeoutException, ChannelClosedException {
+    public int askWorker(String workers) throws TimeOutException, ChannelClosedException {
         while (!isClosed()) {
             write(keyToString(WORKER) + SEPARATOR + workers);
             String message = nextGameMessage(WORKER);
@@ -524,10 +516,10 @@ public class CommunicationChannel {
      * This method sends a list of positions as json object and waits for a reply
      * @param positions Box coordinates
      * @return int list index
-     * @throws TimeoutException if the time is out
+     * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public int askStartPosition(String positions) throws ChannelClosedException, TimeoutException {
+    public int askStartPosition(String positions) throws ChannelClosedException, TimeOutException {
         while (!isClosed()) {
             write(keyToString(START_POSITION) + SEPARATOR + positions);
             String message = nextGameMessage(START_POSITION);
@@ -541,10 +533,10 @@ public class CommunicationChannel {
      * This method sends a list of destinations as json object and waits for a reply
      * @param destinations Box coordinates
      * @return int list index
-     * @throws TimeoutException if the time is out
+     * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public int askDestination(String destinations) throws TimeoutException, ChannelClosedException {
+    public int askDestination(String destinations) throws TimeOutException, ChannelClosedException {
         while (!isClosed()) {
             write(keyToString(DESTINATION) + SEPARATOR + destinations);
             String message = nextGameMessage(DESTINATION);
@@ -558,10 +550,10 @@ public class CommunicationChannel {
      * This method sends a list of locations as json object and waits for a reply
      * @param builds Box coordinates
      * @return int list index
-     * @throws TimeoutException if the time is out
+     * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public int askBuild(String builds) throws TimeoutException, ChannelClosedException {
+    public int askBuild(String builds) throws TimeOutException, ChannelClosedException {
         while (!isClosed()) {
             write(keyToString(BUILD) + SEPARATOR + builds);
             String message = nextGameMessage(BUILD);
@@ -575,10 +567,10 @@ public class CommunicationChannel {
      * This method sends a list of locations as json object and waits for a reply
      * @param removals Box coordinates
      * @return int list index
-     * @throws TimeoutException if the time is out
+     * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public int askRemoval(String removals) throws TimeoutException, ChannelClosedException {
+    public int askRemoval(String removals) throws TimeOutException, ChannelClosedException {
         if (!isClosed()) {
             write(keyToString(REMOVAL) + SEPARATOR + removals);
             String message = nextGameMessage(REMOVAL);
@@ -587,7 +579,7 @@ public class CommunicationChannel {
         return -1;
     }
 
-    public int askCard(String cards) throws TimeoutException, ChannelClosedException {
+    public int askCard(String cards) throws TimeOutException, ChannelClosedException {
         if (!isClosed()) {
             write(keyToString(CARD) + SEPARATOR + cards);
             String message = nextGameMessage(CARD);
@@ -596,7 +588,7 @@ public class CommunicationChannel {
         return -1;
     }
 
-    public int[] askDeck(String deck) throws TimeoutException, ChannelClosedException {
+    public int[] askDeck(String deck) throws TimeOutException, ChannelClosedException {
         if (!isClosed()) {
             write(keyToString(DECK) + SEPARATOR + deck);
             String message = nextGameMessage(DECK);
@@ -614,7 +606,7 @@ public class CommunicationChannel {
      * @return boolean value of confirmation
      * @throws ChannelClosedException if there's no connection
      */
-    public boolean askConfirmation(CommunicationProtocol key) throws TimeoutException, ChannelClosedException {
+    public boolean askConfirmation(CommunicationProtocol key) throws TimeOutException, ChannelClosedException {
         if (!isClosed()) {
             write(keyToString(key));
             String message = nextGameMessage(key);
