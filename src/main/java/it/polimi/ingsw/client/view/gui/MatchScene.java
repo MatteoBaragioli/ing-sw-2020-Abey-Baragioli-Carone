@@ -312,7 +312,7 @@ public class MatchScene {
         guiMap.setAlignment(Pos.CENTER);
         guiMap.setPadding(new Insets(totalMargin));
 
-        Platform.runLater(() -> playerView.setPage(nickname, color, opponents));
+        Platform.runLater(() -> playerView.setPage(nickname, color, opponents, numberOfPlayers-1));
 
         chooseCardsBox.setVisible(false);
         matchPage.setPrefWidth(screenWidth);
@@ -879,7 +879,7 @@ public class MatchScene {
         confirmTurn.setPrefWidth(screenWidth/5);
         confirmTurn.setPrefHeight(screenHeight/5);
 
-        Image confirmFrame = new Image(Gui.class.getResource("/img/loadingAndPopups/frame2.png").toString(), screenWidth/5, screenHeight/5, false, false);
+        Image confirmFrame = new Image(MatchScene.class.getResource("/img/loadingAndPopups/frame2.png").toString(), screenWidth/5, screenHeight/5, false, false);
         ImageView confirmView = new ImageView(confirmFrame);
 
         VBox confirmBox = new VBox();
@@ -960,7 +960,7 @@ public class MatchScene {
      * This method creates my turn announce
      */
     private void createMyTurnImage(){
-        Image myTurnImg = new Image(PlayerView.class.getResource("/img/matchPage/myTurn.png").toString(),screenWidth/3, screenHeight/4,false,false);
+        Image myTurnImg = new Image(MatchScene.class.getResource("/img/matchPage/myTurn.png").toString(),screenWidth/3, screenHeight/4,false,false);
         ImageView myTurnView = new ImageView(myTurnImg);
         myTurn.getChildren().add(myTurnView);
         myTurn.setAlignment(Pos.CENTER);
@@ -1030,24 +1030,24 @@ public class MatchScene {
 
 
         if(isWinner) {
-            Image winnerGif = new Image(PlayerView.class.getResource("/img/matchPage/winner.gif").toString(), screenWidth, screenHeight, false, false);
+            Image winnerGif = new Image(MatchScene.class.getResource("/img/matchPage/winner.gif").toString(), screenWidth, screenHeight, false, false);
             ImageView winnerGifView = new ImageView(winnerGif);
 
-            winnerImg = new Image(PlayerView.class.getResource("/img/matchPage/winner.png").toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);
+            winnerImg = new Image(MatchScene.class.getResource("/img/matchPage/winner.png").toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);
             winnerView = new ImageView(winnerImg);
 
-            winnerGoBackImg = new Image(PlayerView.class.getResource("/img/buttons/goBackWinner.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
-            winnerGoBackHoverImg = new Image(PlayerView.class.getResource("/img/buttons/goBackWinnerHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackImg = new Image(MatchScene.class.getResource("/img/buttons/goBackWinner.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackHoverImg = new Image(MatchScene.class.getResource("/img/buttons/goBackWinnerHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
             winnerGoBackView = new ImageView(winnerGoBackImg);
 
             winner.getChildren().add(winnerGifView);
             StackPane.setAlignment(winnerGifView, Pos.CENTER);
         } else {
-            winnerImg = new Image(PlayerView.class.getResource("/img/matchPage/loser.png").toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);
+            winnerImg = new Image(MatchScene.class.getResource("/img/matchPage/loser.png").toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);
             winnerView = new ImageView(winnerImg);
 
-            winnerGoBackImg = new Image(PlayerView.class.getResource("/img/buttons/goBackLoser.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
-            winnerGoBackHoverImg = new Image(PlayerView.class.getResource("/img/buttons/goBackLoserHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackImg = new Image(MatchScene.class.getResource("/img/buttons/goBackLoser.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
+            winnerGoBackHoverImg = new Image(MatchScene.class.getResource("/img/buttons/goBackLoserHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
             winnerGoBackView = new ImageView(winnerGoBackImg);
         }
 
@@ -1063,11 +1063,103 @@ public class MatchScene {
             backToMenu();
         });
 
-        winner.getChildren().addAll(winnerView, winnerGoBackView);
+
+        Image exitImage = new Image(MatchScene.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
+        Image exitHoverImage = new Image(MatchScene.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
+        ImageView exitButton = new ImageView(exitImage);
+
+        exitButton.setOnMouseEntered(e -> {
+            exitButton.setCursor(Cursor.HAND);
+            exitButton.setImage(exitHoverImage);
+        });
+        exitButton.setOnMouseExited(e -> {
+            exitButton.setImage(exitImage);
+            exitButton.setCursor(Cursor.DEFAULT);
+        });
+        exitButton.setOnMouseClicked(e -> {
+            closeWinner();
+        });
+
+
+        winner.getChildren().addAll(winnerView, winnerGoBackView, exitButton);
         StackPane.setAlignment(winnerView, Pos.CENTER);
         StackPane.setAlignment(winnerGoBackView, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(exitButton, Pos.TOP_LEFT);
 
+        playerView.endTimer();
 
+        showWinner();
+
+    }
+
+    /**
+     * This method closes match page and shows menu page
+     */
+    private void backToMenu(){
+        gui.playTransitionClouds();
+        gui.setNewMatch();
+        FadeTransition matchFadeOut = new FadeTransition(Duration.millis(2000), matchPage);
+        matchFadeOut.setFromValue(1);
+        matchFadeOut.setToValue(0);
+        matchFadeOut.play();
+
+        Timeline menuTimer = new Timeline(new KeyFrame(
+                Duration.millis(1500),
+                ae -> {
+                    matchPage.setVisible(false);
+                    matchBackground.setEffect(new BoxBlur(0, 0, 0));
+                    mapView.setEffect(new BoxBlur(0, 0, 0));
+                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));
+                    guiMap.setEffect(new BoxBlur(0, 0, 0));
+                    pausePane.setEffect(new BoxBlur(0, 0, 0));
+                    activePowers.setEffect(new BoxBlur(0, 0, 0));
+                    helper.setEffect(new BoxBlur(0, 0, 0));
+                    turnStory.setEffect(new BoxBlur(0, 0, 0));
+                    myTurn.setEffect(new BoxBlur(0, 0, 0));
+
+                    FadeTransition menuFadeIn = new FadeTransition(Duration.millis(2000), gui.menuPage());
+                    menuFadeIn.setFromValue(0.0);
+                    menuFadeIn.setToValue(1.0);
+                    menuFadeIn.play();
+                    gui.menuPage().setVisible(true);
+                }));
+        menuTimer.play();
+    }
+
+    /**
+     * This method hides winner pane
+     */
+    private void closeWinner(){
+        FadeTransition winnerFadeOut = new FadeTransition(Duration.millis(1000), winner);
+        winnerFadeOut.setFromValue(1);
+        winnerFadeOut.setToValue(0);
+        winnerFadeOut.play();
+
+        Timeline closeWinnerTimer = new Timeline(new KeyFrame(
+                Duration.millis(500),
+                ae -> {
+                    winner.setVisible(false);
+                    matchBackground.setEffect(new BoxBlur(0, 0, 0));
+                    mapView.setEffect(new BoxBlur(0, 0, 0));
+                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));
+                    guiMap.setEffect(new BoxBlur(0, 0, 0));
+                    pausePane.setEffect(new BoxBlur(0, 0, 0));
+                    activePowers.setEffect(new BoxBlur(0, 0, 0));
+                    helper.setEffect(new BoxBlur(0, 0, 0));
+                    turnStory.setEffect(new BoxBlur(0, 0, 0));
+                    myTurn.setEffect(new BoxBlur(0, 0, 0));
+                }));
+        closeWinnerTimer.play();
+
+        playerView.pauseView().setOnMouseClicked(e -> {
+            showWinner();
+        });
+    }
+
+    /**
+     * This method shows winner pane
+     */
+    private void showWinner(){
         FadeTransition winnerFadeIn = new FadeTransition(Duration.millis(1000), winner);
         winnerFadeIn.setFromValue(0);
         winnerFadeIn.setToValue(1);
@@ -1088,41 +1180,5 @@ public class MatchScene {
                     myTurn.setEffect(new BoxBlur(5, 5, 5));
                 }));
         showingTimer.play();
-    }
-
-    /**
-     * This method closes match page and shows menu page
-     */
-    private void backToMenu(){
-        gui.playTransitionClouds();
-        gui.setNewMatch();
-        FadeTransition matchFadeOut = new FadeTransition(Duration.millis(2000), matchPage);
-        matchFadeOut.setFromValue(1);
-        matchFadeOut.setToValue(0);
-        matchFadeOut.play();
-
-        Timeline menuTimer = new Timeline(new KeyFrame(
-                Duration.millis(1500),
-                ae -> {
-                    matchPage.setVisible(false);
-
-                    matchBackground.setEffect(new BoxBlur(0, 0, 0));
-                    mapView.setEffect(new BoxBlur(0, 0, 0));
-                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));
-                    guiMap.setEffect(new BoxBlur(0, 0, 0));
-                    pausePane.setEffect(new BoxBlur(0, 0, 0));
-                    activePowers.setEffect(new BoxBlur(0, 0, 0));
-                    helper.setEffect(new BoxBlur(0, 0, 0));
-                    turnStory.setEffect(new BoxBlur(0, 0, 0));
-                    myTurn.setEffect(new BoxBlur(0, 0, 0));
-
-                    FadeTransition menuFadeIn = new FadeTransition(Duration.millis(2000), gui.menuPage());
-                    menuFadeIn.setFromValue(0.0);
-                    menuFadeIn.setToValue(1.0);
-                    menuFadeIn.play();
-                    gui.menuPage().setVisible(true);
-                }));
-        menuTimer.play();
-
     }
 }

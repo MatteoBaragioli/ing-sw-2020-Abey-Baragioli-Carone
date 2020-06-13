@@ -1338,6 +1338,10 @@ public class Gui extends Application implements View {
      */
     @Override
     public void setLoser(PlayerProxy player) {
-        Platform.runLater(() -> matchScene.playerView().setLoser(player.name));
+        if(player.name.equals(nickname)){
+            Platform.runLater(() -> matchScene.winner(false));
+        } else {
+            Platform.runLater(() -> matchScene.playerView().setLoser(player.name));
+        }
     }
 }

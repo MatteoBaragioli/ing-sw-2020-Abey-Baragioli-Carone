@@ -145,6 +145,9 @@ public class PlayerView extends StackPane {
     //story player name
     private Label playerStory;
 
+    //pause menu button
+    private ImageView pauseView;
+
 
     public PlayerView(double screenWidth, double screenHeight, Gui gui, MatchScene match, StackPane pausePane, StackPane activePowers, StackPane helper, StackPane turnStory) {
         standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
@@ -171,6 +174,10 @@ public class PlayerView extends StackPane {
         return currentTurn;
     }
 
+    public ImageView pauseView(){
+        return pauseView;
+    }
+
     //-------------------------------------END GETTER----------------------------------------------
 
     /**
@@ -195,7 +202,7 @@ public class PlayerView extends StackPane {
         //pause
         Image pauseImg = new Image(PlayerView.class.getResource("/img/buttons/pause.png").toString(),screenWidth/12, screenHeight/8,false,false);
         Image pauseHoverImg = new Image(PlayerView.class.getResource("/img/buttons/pauseHover.png").toString(),screenWidth/12, screenHeight/8,false,false);
-        ImageView pauseView = new ImageView(pauseImg);
+        pauseView = new ImageView(pauseImg);
         pauseView.setOnMouseEntered(e -> {
             pauseView.setImage(pauseHoverImg);
             pauseView.setCursor(Cursor.HAND);
@@ -436,8 +443,8 @@ public class PlayerView extends StackPane {
         noPowers.setFont(standardFont);
         activePowersContent.getChildren().add(noPowers);
 
-        Image closeActivePowersImage = new Image(MenuScene.class.getResource("/img/buttons/okButton.png").toString(), screenWidth/15, screenHeight/13, false, false);
-        Image closeActivePowersHoverImage = new Image(MenuScene.class.getResource("/img/buttons/okButtonHover.png").toString(), screenWidth/15, screenHeight/13, false, false);
+        Image closeActivePowersImage = new Image(PlayerView.class.getResource("/img/buttons/okButton.png").toString(), screenWidth/15, screenHeight/13, false, false);
+        Image closeActivePowersHoverImage = new Image(PlayerView.class.getResource("/img/buttons/okButtonHover.png").toString(), screenWidth/15, screenHeight/13, false, false);
         ImageView closeActivePowersButton = new ImageView(closeActivePowersImage);
         closeActivePowersButton.setOnMouseEntered(e -> {
             closeActivePowersButton.setCursor(Cursor.HAND);
@@ -538,7 +545,7 @@ public class PlayerView extends StackPane {
 
         //---------------------------------------STORY------------------------------
 
-        Image storyImage = new Image(MenuScene.class.getResource("/img/matchPage/activePowers.png").toString(), screenWidth/2, screenHeight/2, false, false);
+        Image storyImage = new Image(PlayerView.class.getResource("/img/matchPage/activePowers.png").toString(), screenWidth/2, screenHeight/2, false, false);
         ImageView storyBackground = new ImageView(storyImage);
 
         storyContent = new VBox();
@@ -559,8 +566,8 @@ public class PlayerView extends StackPane {
 
         storyContent.getChildren().add(storyContentDefault);
 
-        Image closeStoryImage = new Image(MenuScene.class.getResource("/img/buttons/okButton.png").toString(), screenWidth/15, screenHeight/13, false, false);
-        Image closeStoryHoverImage = new Image(MenuScene.class.getResource("/img/buttons/okButtonHover.png").toString(), screenWidth/15, screenHeight/13, false, false);
+        Image closeStoryImage = new Image(PlayerView.class.getResource("/img/buttons/okButton.png").toString(), screenWidth/15, screenHeight/13, false, false);
+        Image closeStoryHoverImage = new Image(PlayerView.class.getResource("/img/buttons/okButtonHover.png").toString(), screenWidth/15, screenHeight/13, false, false);
         ImageView closeStoryButton = new ImageView(closeStoryImage);
         closeStoryButton.setOnMouseEntered(e -> {
             closeStoryButton.setCursor(Cursor.HAND);
@@ -593,23 +600,23 @@ public class PlayerView extends StackPane {
      * This method creates helper pane
      */
     private void createHelper(){
-        Image helperBackground = new Image(MenuScene.class.getResource("/img/helper/helperBackground.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
+        Image helperBackground = new Image(PlayerView.class.getResource("/img/helper/helperBackground.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
         ImageView helperBackgroundView = new ImageView(helperBackground);
 
-        Image backImg = new Image(MenuScene.class.getResource("/img/buttons/backArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image backHoverImg = new Image(MenuScene.class.getResource("/img/buttons/backArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image backInactiveImg = new Image(MenuScene.class.getResource("/img/buttons/backArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
+        Image backImg = new Image(PlayerView.class.getResource("/img/buttons/backArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
+        Image backHoverImg = new Image(PlayerView.class.getResource("/img/buttons/backArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
+        Image backInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/backArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
         ImageView backView = new ImageView(backInactiveImg);
-        Image nextImg = new Image(MenuScene.class.getResource("/img/buttons/nextArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image nextHoverImg = new Image(MenuScene.class.getResource("/img/buttons/nextArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image nextInactiveImg = new Image(MenuScene.class.getResource("/img/buttons/nextArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
+        Image nextImg = new Image(PlayerView.class.getResource("/img/buttons/nextArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
+        Image nextHoverImg = new Image(PlayerView.class.getResource("/img/buttons/nextArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
+        Image nextInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/nextArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
         ImageView nextView = new ImageView(nextImg);
 
-        Image helperImage = new Image(MenuScene.class.getResource("/img/helper/helper1.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
+        Image helperImage = new Image(PlayerView.class.getResource("/img/helper/helper1.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
         ImageView helperView = new ImageView(helperImage);
 
-        Image exitImage = new Image(MenuScene.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
-        Image exitHoverImage = new Image(MenuScene.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
+        Image exitImage = new Image(PlayerView.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
+        Image exitHoverImage = new Image(PlayerView.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
         ImageView exitButton = new ImageView(exitImage);
 
         exitButton.setOnMouseEntered(e -> {
@@ -648,7 +655,7 @@ public class PlayerView extends StackPane {
             }
             if(helperPage!=1) {
                 helperPage--;
-                helperView.setImage(new Image(MenuScene.class.getResource("/img/helper/helper" + helperPage + ".png").toString(), screenWidth / 1.2, screenHeight / 1.2, false, false));
+                helperView.setImage(new Image(PlayerView.class.getResource("/img/helper/helper" + helperPage + ".png").toString(), screenWidth / 1.2, screenHeight / 1.2, false, false));
             }
         });
         nextView.setOnMouseEntered(e -> {
@@ -681,7 +688,7 @@ public class PlayerView extends StackPane {
             }
             if(helperPage!=3){
                 helperPage++;
-                helperView.setImage(new Image(MenuScene.class.getResource("/img/helper/helper" + helperPage + ".png").toString(), screenWidth/1.2, screenHeight/1.2, false, false));
+                helperView.setImage(new Image(PlayerView.class.getResource("/img/helper/helper" + helperPage + ".png").toString(), screenWidth/1.2, screenHeight/1.2, false, false));
             }
         });
 
@@ -711,7 +718,7 @@ public class PlayerView extends StackPane {
      * @param color Player's color
      * @param opponents Player's opponents
      */
-    public void setPage(String nickname, String color, List<PlayerProxy> opponents){
+    public void setPage(String nickname, String color, List<PlayerProxy> opponents, int numberOfOpponents){
         Color fontColor = fontColor(color);
 
         //set god card frame with player's color
@@ -771,6 +778,24 @@ public class PlayerView extends StackPane {
             opponentBox.setPrefHeight(screenHeight/5);
 
             opponentsBoxes.put(opponent.name, opponentBox);
+
+            opponentsView.getChildren().add(opponentBox);
+        }
+        if(opponents.size()<numberOfOpponents){
+            Image loserImg = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser.png").toString(),screenWidth/5, screenHeight/5,false,false);
+            ImageView loserView = new ImageView(loserImg);
+
+            Image loser2Img = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser2.png").toString(),screenWidth/5, screenHeight/5,false,false);
+            ImageView loserView2 = new ImageView(loser2Img);
+            Label opponentName = new Label("Player disconnected");
+            opponentName.setFont(lillybelle);
+            opponentName.setTextFill(WHITE);
+            opponentName.setTextAlignment(TextAlignment.CENTER);
+            opponentName.setPadding(new Insets(screenHeight/70, 0, 0, 0));
+            StackPane opponentBox = new StackPane();
+            opponentBox.getChildren().addAll(loserView, opponentName, loserView2);
+            setAlignment(opponentName, TOP_CENTER);
+            opponentBox.setPrefHeight(screenHeight/5);
 
             opponentsView.getChildren().add(opponentBox);
         }
@@ -1211,6 +1236,15 @@ public class PlayerView extends StackPane {
         timerTimeLine.play();
     }
 
+    /**
+     * This method stops the timer and hides texts
+     */
+    public void endTimer(){
+        if(timerTimeLine!=null)
+            timerTimeLine.stop();
+        timerCounter.setText("");
+    }
+
 
     /**
      * This method writes last turn story in the story pane
@@ -1259,27 +1293,32 @@ public class PlayerView extends StackPane {
         }
     }
 
+    /**
+     * This method sets an opponent as loser when he loses the match
+     * @param loser Opponent that loses the match
+     */
     public void setLoser(String loser){
-        Image loserImg = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser.png").toString(),screenWidth/5, screenHeight/5,false,false);
-        opponentsViews.get(loser).setImage(loserImg);
+        if(opponentsNames.containsKey(loser)) {
+            Image loserImg = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser.png").toString(), screenWidth / 5, screenHeight / 5, false, false);
+            opponentsViews.get(loser).setImage(loserImg);
 
-        Image loser2Img = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser2.png").toString(),screenWidth/5, screenHeight/5,false,false);
-        ImageView loserView = new ImageView(loser2Img);
+            Image loser2Img = new Image(PlayerView.class.getResource("/img/matchPage/opponentViewLoser2.png").toString(), screenWidth / 5, screenHeight / 5, false, false);
+            ImageView loserView = new ImageView(loser2Img);
 
-        opponentsBoxes.get(loser).getChildren().add(loserView);
+            opponentsBoxes.get(loser).getChildren().add(loserView);
 
-        opponentsNames.get(loser).setTextFill(WHITE);
+            opponentsNames.get(loser).setTextFill(WHITE);
 
-        opponentsPowers.get(loser).setVisible(false);
-        opponentsPowers.get(loser).setManaged(false);
+            opponentsPowers.get(loser).setVisible(false);
+            opponentsPowers.get(loser).setManaged(false);
 
-        Label loserStory = new Label(loser + " lost the match");
-        loserStory.setFont(lillybelle);
-        loserStory.setTextAlignment(TextAlignment.CENTER);
-        loserStory.setAlignment(CENTER);
-        loserStory.setMaxWidth(screenWidth/2.5);
-        loserStory.setWrapText(true);
-        storyContent.getChildren().add(loserStory);
+            Label loserStory = new Label(loser + " lost the match");
+            loserStory.setFont(lillybelle);
+            loserStory.setTextAlignment(TextAlignment.CENTER);
+            loserStory.setAlignment(CENTER);
+            loserStory.setMaxWidth(screenWidth / 2.5);
+            loserStory.setWrapText(true);
+            storyContent.getChildren().add(loserStory);
+        }
     }
-
 }
