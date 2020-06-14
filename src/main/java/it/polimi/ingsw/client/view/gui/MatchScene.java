@@ -14,7 +14,9 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -28,6 +30,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static javafx.scene.paint.Color.BLACK;
 
 public class MatchScene {
 
@@ -354,12 +358,10 @@ public class MatchScene {
         choicesImages = new ImageView[numberOfPlayers];
         choicesBoxes = new HBox[numberOfPlayers];
         Image addGodImg = new Image(MatchScene.class.getResource("/img/buttons/addGod.png").toString(), screenWidth/12, screenHeight/12, false, false);
-        Image addGodHoverImg = new Image(MatchScene.class.getResource("/img/buttons/addGodHover.png").toString(), screenWidth/12, screenHeight/12, false, false);
         Image addGodInactiveImg = new Image(MatchScene.class.getResource("/img/buttons/addGodInactive.png").toString(), screenWidth/12, screenHeight/12, false, false);
         ImageView addGod = new ImageView(addGodInactiveImg);
 
         Image removeGodImg = new Image(MatchScene.class.getResource("/img/buttons/removeGod.png").toString(), screenWidth/12, screenHeight/12, false, false);
-        Image removeGodHoverImg = new Image(MatchScene.class.getResource("/img/buttons/removeGodHover.png").toString(), screenWidth/12, screenHeight/12, false, false);
         Image removeGodInactiveImg = new Image(MatchScene.class.getResource("/img/buttons/removeGodInactive.png").toString(), screenWidth/12, screenHeight/12, false, false);
         ImageView removeGod = new ImageView(removeGodInactiveImg);
 
@@ -419,7 +421,7 @@ public class MatchScene {
             });
             cardView.setOnMouseClicked(e -> {
                 if(choicesCounter<numberOfPlayers)
-                    activateAddCardsButton(addGodImg, addGodHoverImg, addGodInactiveImg, addGod, removeGodImg, removeGodHoverImg, removeGodInactiveImg, removeGod, cardsIndexes, godCards);
+                    activateAddCardsButton(addGodImg, addGodInactiveImg, addGod, removeGodImg, removeGodInactiveImg, removeGod, cardsIndexes, godCards);
                 selectedCard = godName.getText();
                 selectedCardBox = cardBox;
                 cardView.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)");
@@ -492,15 +494,14 @@ public class MatchScene {
 
 
         Image confirmImg = new Image(MatchScene.class.getResource("/img/buttons/confirmChoices.png").toString(), screenWidth/8, screenHeight/10, false, false);
-        Image confirmHoverImg = new Image(MatchScene.class.getResource("/img/buttons/confirmChoicesHover.png").toString(), screenWidth/8, screenHeight/10, false, false);
         confirmChoices = new ImageView(confirmImg);
         confirmChoices.setOnMouseEntered(e ->{
             confirmChoices.setCursor(Cursor.HAND);
-            confirmChoices.setImage(confirmHoverImg);
+            confirmChoices.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         confirmChoices.setOnMouseExited(e ->{
             confirmChoices.setCursor(Cursor.HAND);
-            confirmChoices.setImage(confirmImg);
+            confirmChoices.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         });
         confirmChoices.setOnMouseClicked(e -> {
             setConfirmChallengerCards();
@@ -555,22 +556,21 @@ public class MatchScene {
     /**
      * This method activates add button in the Choose cards box when chosen cards are less than number of players
      * @param addGodImg Add button image
-     * @param addGodHoverImg Add button hover image
      * @param addGodInactiveImg Add button Inactive image
      * @param addGod Add button
      * @param removeGodImg Remove button image
-     * @param removeGodHoverImg Remove button hover image
      * @param removeGodInactiveImg Remove button inactive image
      * @param removeGod Remove button
      */
-    private void activateAddCardsButton(Image addGodImg, Image addGodHoverImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodHoverImg, Image removeGodInactiveImg, ImageView removeGod, int[] cardsIndexes, List<GodCardProxy> godCards){
+    private void activateAddCardsButton(Image addGodImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod, int[] cardsIndexes, List<GodCardProxy> godCards){
         addGod.setImage(addGodImg);
         addGod.setOnMouseEntered(e ->{
-            addGod.setImage(addGodHoverImg);
+            addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             addGod.setCursor(Cursor.HAND);
         });
         addGod.setOnMouseExited(e ->{
-            addGod.setImage(addGodImg);
+            addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
+            addGod.setCursor(Cursor.DEFAULT);
         });
         addGod.setOnMouseClicked(e ->{
             choicesCounter++;
@@ -586,7 +586,7 @@ public class MatchScene {
             selectedCardBox.setVisible(false);
             selectedCardBox.setManaged(false);
             if(choicesCounter==1)
-                activateRemoveCardsButton(removeGodImg, removeGodHoverImg, removeGodInactiveImg, removeGod);
+                activateRemoveCardsButton(removeGodImg, removeGodInactiveImg, removeGod);
             deactivateAddCardsButton(addGodInactiveImg, addGod);
             if(choicesCounter==numberOfPlayers)
                 confirmChoices.setVisible(true);
@@ -600,6 +600,7 @@ public class MatchScene {
      */
     private void deactivateAddCardsButton(Image addGodInactiveImg, ImageView addGod){
         addGod.setImage(addGodInactiveImg);
+        addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         addGod.setOnMouseEntered(e -> {
             addGod.setCursor(Cursor.DEFAULT);
         });
@@ -610,22 +611,22 @@ public class MatchScene {
     /**
      * This method activates remove button in the Choose cards box when chosen cards are 1 or more
      * @param removeGodImg Remove button image
-     * @param removeGodHoverImg Remove button hover image
      * @param removeGodInactiveImg Remove button inactive image
      * @param removeGod Remove button
      */
-    private void activateRemoveCardsButton(Image removeGodImg, Image removeGodHoverImg, Image removeGodInactiveImg, ImageView removeGod){
+    private void activateRemoveCardsButton(Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod){
         removeGod.setImage(removeGodImg);
         removeGod.setOnMouseEntered(e ->{
-            removeGod.setImage(removeGodHoverImg);
+            removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             removeGod.setCursor(Cursor.HAND);
         });
         removeGod.setOnMouseExited(e ->{
-            removeGod.setImage(removeGodImg);
+            removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         });
         removeGod.setOnMouseClicked(e ->{
             chosenCards.get(choicesCounter-1).setVisible(true);
             chosenCards.get(choicesCounter-1).setManaged(true);
+            chosenCards.get(choicesCounter-1).setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)");
             chosenCards.remove(choicesCounter-1);
             choicesBoxes[choicesCounter-1].setVisible(false);
             choicesCounter--;
@@ -643,6 +644,7 @@ public class MatchScene {
      */
     private void deactivateRemoveCardsButton(Image removeGodInactiveImg, ImageView removeGod){
         removeGod.setImage(removeGodInactiveImg);
+        removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         removeGod.setOnMouseEntered(e -> {
             removeGod.setCursor(Cursor.DEFAULT);
         });
@@ -679,15 +681,14 @@ public class MatchScene {
         infoBox.setPrefHeight(screenHeight/6);
 
         Image confirmChoiceImg = new Image(MatchScene.class.getResource("/img/buttons/confirmChoices.png").toString(), screenWidth/8, screenHeight/10, false, false);
-        Image confirmChoiceHoverImg = new Image(MatchScene.class.getResource("/img/buttons/confirmChoicesHover.png").toString(), screenWidth/8, screenHeight/10, false, false);
         ImageView confirmChoice = new ImageView(confirmChoiceImg);
         confirmChoice.setOnMouseEntered(e ->{
             confirmChoice.setCursor(Cursor.HAND);
-            confirmChoice.setImage(confirmChoiceHoverImg);
+            confirmChoice.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         confirmChoice.setOnMouseExited(e ->{
             confirmChoice.setCursor(Cursor.HAND);
-            confirmChoice.setImage(confirmChoiceImg);
+            confirmChoice.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         });
         confirmChoice.setOnMouseClicked(e -> {
             setConfirmMyCards();
@@ -1025,7 +1026,6 @@ public class MatchScene {
         ImageView winnerView;
 
         Image winnerGoBackImg;
-        Image winnerGoBackHoverImg;
         ImageView winnerGoBackView;
 
 
@@ -1037,7 +1037,6 @@ public class MatchScene {
             winnerView = new ImageView(winnerImg);
 
             winnerGoBackImg = new Image(MatchScene.class.getResource("/img/buttons/goBackWinner.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
-            winnerGoBackHoverImg = new Image(MatchScene.class.getResource("/img/buttons/goBackWinnerHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
             winnerGoBackView = new ImageView(winnerGoBackImg);
 
             winner.getChildren().add(winnerGifView);
@@ -1047,17 +1046,16 @@ public class MatchScene {
             winnerView = new ImageView(winnerImg);
 
             winnerGoBackImg = new Image(MatchScene.class.getResource("/img/buttons/goBackLoser.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
-            winnerGoBackHoverImg = new Image(MatchScene.class.getResource("/img/buttons/goBackLoserHover.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
             winnerGoBackView = new ImageView(winnerGoBackImg);
         }
 
         winnerGoBackView.setOnMouseEntered(e -> {
             winnerGoBackView.setCursor(Cursor.HAND);
-            winnerGoBackView.setImage(winnerGoBackHoverImg);
+            winnerGoBackView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         winnerGoBackView.setOnMouseExited(e -> {
             winnerGoBackView.setCursor(Cursor.DEFAULT);
-            winnerGoBackView.setImage(winnerGoBackImg);
+            winnerGoBackView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         });
         winnerGoBackView.setOnMouseClicked(e -> {
             backToMenu();
@@ -1065,15 +1063,14 @@ public class MatchScene {
 
 
         Image exitImage = new Image(MatchScene.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
-        Image exitHoverImage = new Image(MatchScene.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
         ImageView exitButton = new ImageView(exitImage);
 
         exitButton.setOnMouseEntered(e -> {
             exitButton.setCursor(Cursor.HAND);
-            exitButton.setImage(exitHoverImage);
+            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         exitButton.setOnMouseExited(e -> {
-            exitButton.setImage(exitImage);
+            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             exitButton.setCursor(Cursor.DEFAULT);
         });
         exitButton.setOnMouseClicked(e -> {

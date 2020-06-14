@@ -10,6 +10,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -117,17 +119,14 @@ public class PlayerView extends StackPane {
 
     //confirm button images
     private Image confirmImg;
-    private Image confirmImgHover;
     private Image confirmInactiveImg;
 
     //undo button images
     private Image undoImg;
-    private Image undoImgHover;
     private Image undoInactiveImg;
 
     //usePower button images
     private Image usePowerImg;
-    private Image usePowerImgHover;
     private Image usePowerInactiveImg;
 
     //use power answer
@@ -201,14 +200,13 @@ public class PlayerView extends StackPane {
 
         //pause
         Image pauseImg = new Image(PlayerView.class.getResource("/img/buttons/pause.png").toString(),screenWidth/12, screenHeight/8,false,false);
-        Image pauseHoverImg = new Image(PlayerView.class.getResource("/img/buttons/pauseHover.png").toString(),screenWidth/12, screenHeight/8,false,false);
         pauseView = new ImageView(pauseImg);
         pauseView.setOnMouseEntered(e -> {
-            pauseView.setImage(pauseHoverImg);
+            pauseView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             pauseView.setCursor(Cursor.HAND);
         });
         pauseView.setOnMouseExited(e -> {
-            pauseView.setImage(pauseImg);
+            pauseView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             pauseView.setCursor(Cursor.DEFAULT);
         });
         pauseView.setOnMouseClicked(e -> {
@@ -359,15 +357,14 @@ public class PlayerView extends StackPane {
 
         //story
         Image storyImg = new Image(PlayerView.class.getResource("/img/buttons/story.png").toString(),screenWidth/10, screenHeight/6,false,false);
-        Image storyHoverImg = new Image(PlayerView.class.getResource("/img/buttons/storyHover.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView storyView = new ImageView(storyImg);
 
         storyView.setOnMouseEntered(e -> {
-            storyView.setImage(storyHoverImg);
+            storyView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             storyView.setCursor(Cursor.HAND);
         });
         storyView.setOnMouseExited(e -> {
-            storyView.setImage(storyImg);
+            storyView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             storyView.setCursor(Cursor.DEFAULT);
         });
         storyView.setOnMouseClicked(e -> {
@@ -376,15 +373,14 @@ public class PlayerView extends StackPane {
 
         //show powers
         Image powersImg = new Image(PlayerView.class.getResource("/img/buttons/showPowers.png").toString(),screenWidth/8, screenHeight/6,false,false);
-        Image powersHoverImg = new Image(PlayerView.class.getResource("/img/buttons/showPowersHover.png").toString(),screenWidth/8, screenHeight/6,false,false);
         ImageView powersView = new ImageView(powersImg);
 
         powersView.setOnMouseEntered(e -> {
-            powersView.setImage(powersHoverImg);
+            powersView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             powersView.setCursor(Cursor.HAND);
         });
         powersView.setOnMouseExited(e -> {
-            powersView.setImage(powersImg);
+            powersView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             powersView.setCursor(Cursor.DEFAULT);
         });
         powersView.setOnMouseClicked(e -> {
@@ -403,16 +399,13 @@ public class PlayerView extends StackPane {
 
         //right BOTTOM
         confirmImg = new Image(PlayerView.class.getResource("/img/buttons/confirmAction.png").toString(),screenWidth/20, screenHeight/14,false,false);
-        confirmImgHover = new Image(PlayerView.class.getResource("/img/buttons/confirmActionHover.png").toString(),screenWidth/20, screenHeight/14,false,false);
         confirmInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/confirmActionInactive.png").toString(),screenWidth/20, screenHeight/14,false,false);
 
         undoImg = new Image(PlayerView.class.getResource("/img/buttons/undo.png").toString(),screenWidth/20, screenHeight/14,false,false);
-        undoImgHover = new Image(PlayerView.class.getResource("/img/buttons/undoHover.png").toString(),screenWidth/20, screenHeight/14,false,false);
         undoInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/undoInactive.png").toString(),screenWidth/20, screenHeight/14,false,false);
 
 
         usePowerImg = new Image(PlayerView.class.getResource("/img/buttons/usePower.png").toString(),screenWidth/20, screenHeight/14,false,false);
-        usePowerImgHover = new Image(PlayerView.class.getResource("/img/buttons/usePowerHover.png").toString(),screenWidth/20, screenHeight/14,false,false);
         usePowerInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/usePowerInactive.png").toString(),screenWidth/20, screenHeight/14,false,false);
 
         HBox buttons = new HBox();
@@ -444,14 +437,13 @@ public class PlayerView extends StackPane {
         activePowersContent.getChildren().add(noPowers);
 
         Image closeActivePowersImage = new Image(PlayerView.class.getResource("/img/buttons/okButton.png").toString(), screenWidth/15, screenHeight/13, false, false);
-        Image closeActivePowersHoverImage = new Image(PlayerView.class.getResource("/img/buttons/okButtonHover.png").toString(), screenWidth/15, screenHeight/13, false, false);
         ImageView closeActivePowersButton = new ImageView(closeActivePowersImage);
         closeActivePowersButton.setOnMouseEntered(e -> {
             closeActivePowersButton.setCursor(Cursor.HAND);
-            closeActivePowersButton.setImage(closeActivePowersHoverImage);
+            closeActivePowersButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         closeActivePowersButton.setOnMouseExited(e -> {
-            closeActivePowersButton.setImage(closeActivePowersImage);
+            closeActivePowersButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             closeActivePowersButton.setCursor(Cursor.DEFAULT);
         });
         closeActivePowersButton.setOnMouseClicked(e -> {
@@ -477,14 +469,13 @@ public class PlayerView extends StackPane {
         VBox pauseOptions = new VBox();
 
         Image howToPlayImg = new Image(PlayerView.class.getResource("/img/buttons/howToPlay.png").toString(),screenWidth/10, screenHeight/6,false,false);
-        Image howToPlayHoverImg = new Image(PlayerView.class.getResource("/img/buttons/howToPlayHover.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView howToPlayView = new ImageView(howToPlayImg);
         howToPlayView.setOnMouseEntered(e -> {
-            howToPlayView.setImage(howToPlayHoverImg);
+            howToPlayView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             howToPlayView.setCursor(Cursor.HAND);
         });
         howToPlayView.setOnMouseExited(e -> {
-            howToPlayView.setImage(howToPlayImg);
+            howToPlayView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             howToPlayView.setCursor(Cursor.DEFAULT);
         });
         howToPlayView.setOnMouseClicked(e -> {
@@ -492,14 +483,13 @@ public class PlayerView extends StackPane {
         });
 
         Image helperImg = new Image(PlayerView.class.getResource("/img/buttons/helper.png").toString(),screenWidth/10, screenHeight/6,false,false);
-        Image helperHoverImg = new Image(PlayerView.class.getResource("/img/buttons/helperHover.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView helperView = new ImageView(helperImg);
         helperView.setOnMouseEntered(e -> {
-            helperView.setImage(helperHoverImg);
+            helperView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             helperView.setCursor(Cursor.HAND);
         });
         helperView.setOnMouseExited(e -> {
-            helperView.setImage(helperImg);
+            helperView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             helperView.setCursor(Cursor.DEFAULT);
         });
         helperView.setOnMouseClicked(e ->{
@@ -508,26 +498,25 @@ public class PlayerView extends StackPane {
         });
 
         Image surrenderImg = new Image(PlayerView.class.getResource("/img/buttons/surrender.png").toString(),screenWidth/10, screenHeight/6,false,false);
-        Image surrenderHoverImg = new Image(PlayerView.class.getResource("/img/buttons/surrenderHover.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView surrenderView = new ImageView(surrenderImg);
         surrenderView.setOnMouseEntered(e -> {
-            surrenderView.setImage(surrenderHoverImg);
+            surrenderView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             surrenderView.setCursor(Cursor.HAND);
         });
         surrenderView.setOnMouseExited(e -> {
-            surrenderView.setImage(surrenderImg);
+            surrenderView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             surrenderView.setCursor(Cursor.DEFAULT);
         });
+        //todo surrender action
 
         Image backToMatchImg = new Image(PlayerView.class.getResource("/img/buttons/backToMatch.png").toString(),screenWidth/10, screenHeight/6,false,false);
-        Image backToMatchHoverImg = new Image(PlayerView.class.getResource("/img/buttons/backToMatchHover.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView backToMatchView = new ImageView(backToMatchImg);
         backToMatchView.setOnMouseEntered(e -> {
-            backToMatchView.setImage(backToMatchHoverImg);
+            backToMatchView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             backToMatchView.setCursor(Cursor.HAND);
         });
         backToMatchView.setOnMouseExited(e -> {
-            backToMatchView.setImage(backToMatchImg);
+            backToMatchView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             backToMatchView.setCursor(Cursor.DEFAULT);
         });
         backToMatchView.setOnMouseClicked((e -> {
@@ -567,14 +556,13 @@ public class PlayerView extends StackPane {
         storyContent.getChildren().add(storyContentDefault);
 
         Image closeStoryImage = new Image(PlayerView.class.getResource("/img/buttons/okButton.png").toString(), screenWidth/15, screenHeight/13, false, false);
-        Image closeStoryHoverImage = new Image(PlayerView.class.getResource("/img/buttons/okButtonHover.png").toString(), screenWidth/15, screenHeight/13, false, false);
         ImageView closeStoryButton = new ImageView(closeStoryImage);
         closeStoryButton.setOnMouseEntered(e -> {
             closeStoryButton.setCursor(Cursor.HAND);
-            closeStoryButton.setImage(closeStoryHoverImage);
+            closeStoryButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         closeStoryButton.setOnMouseExited(e -> {
-            closeStoryButton.setImage(closeStoryImage);
+            closeStoryButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             closeStoryButton.setCursor(Cursor.DEFAULT);
         });
         closeStoryButton.setOnMouseClicked(e -> {
@@ -604,11 +592,9 @@ public class PlayerView extends StackPane {
         ImageView helperBackgroundView = new ImageView(helperBackground);
 
         Image backImg = new Image(PlayerView.class.getResource("/img/buttons/backArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image backHoverImg = new Image(PlayerView.class.getResource("/img/buttons/backArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
         Image backInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/backArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
         ImageView backView = new ImageView(backInactiveImg);
         Image nextImg = new Image(PlayerView.class.getResource("/img/buttons/nextArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image nextHoverImg = new Image(PlayerView.class.getResource("/img/buttons/nextArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
         Image nextInactiveImg = new Image(PlayerView.class.getResource("/img/buttons/nextArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
         ImageView nextView = new ImageView(nextImg);
 
@@ -616,15 +602,14 @@ public class PlayerView extends StackPane {
         ImageView helperView = new ImageView(helperImage);
 
         Image exitImage = new Image(PlayerView.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
-        Image exitHoverImage = new Image(PlayerView.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
         ImageView exitButton = new ImageView(exitImage);
 
         exitButton.setOnMouseEntered(e -> {
             exitButton.setCursor(Cursor.HAND);
-            exitButton.setImage(exitHoverImage);
+            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         exitButton.setOnMouseExited(e -> {
-            exitButton.setImage(exitImage);
+            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             exitButton.setCursor(Cursor.DEFAULT);
         });
         exitButton.setOnMouseClicked(e -> {
@@ -637,6 +622,7 @@ public class PlayerView extends StackPane {
             if(helperPage==2){
                 //deactivate back button
                 backView.setImage(backInactiveImg);
+                backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                 backView.setOnMouseEntered(f -> {
                     backView.setCursor(Cursor.DEFAULT);
                 });
@@ -645,11 +631,11 @@ public class PlayerView extends StackPane {
                 //activate next button
                 nextView.setImage(nextImg);
                 nextView.setOnMouseEntered(f -> {
-                    nextView.setImage(nextHoverImg);
+                    nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
                     nextView.setCursor(Cursor.HAND);
                 });
                 nextView.setOnMouseExited(f -> {
-                    nextView.setImage(nextImg);
+                    nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                     nextView.setCursor(Cursor.DEFAULT);
                 });
             }
@@ -659,11 +645,11 @@ public class PlayerView extends StackPane {
             }
         });
         nextView.setOnMouseEntered(e -> {
-            nextView.setImage(nextHoverImg);
+            nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             nextView.setCursor(Cursor.HAND);
         });
         nextView.setOnMouseExited(e -> {
-            nextView.setImage(nextImg);
+            nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             nextView.setCursor(Cursor.DEFAULT);
         });
         nextView.setOnMouseClicked(e -> {
@@ -671,16 +657,17 @@ public class PlayerView extends StackPane {
                 //activate back button
                 backView.setImage(backImg);
                 backView.setOnMouseEntered(f -> {
-                    backView.setImage(backHoverImg);
+                    backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
                     backView.setCursor(Cursor.HAND);
                 });
                 backView.setOnMouseExited(f -> {
-                    backView.setImage(backImg);
+                    backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                     backView.setCursor(Cursor.DEFAULT);
                 });
             } else if(helperPage==2){
                 //deactivate next button
                 nextView.setImage(nextInactiveImg);
+                nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                 nextView.setOnMouseEntered(f -> {
                     nextView.setCursor(Cursor.DEFAULT);
                 });
@@ -957,12 +944,12 @@ public class PlayerView extends StackPane {
     public void activateButtons(){
         confirmView.setImage(confirmImg);
         confirmView.setOnMouseEntered(e -> {
-            confirmView.setImage(confirmImgHover);
+            confirmView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 3, 3, 0, 0));
             confirmView.setCursor(Cursor.HAND);
             e.consume();
         });
         confirmView.setOnMouseExited(e -> {
-            confirmView.setImage(confirmImg);
+            confirmView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
@@ -976,12 +963,12 @@ public class PlayerView extends StackPane {
 
         undoView.setImage(undoImg);
         undoView.setOnMouseEntered(e -> {
-            undoView.setImage(undoImgHover);
+            undoView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 3, 3, 0, 0));
             undoView.setCursor(Cursor.HAND);
             e.consume();
         });
         undoView.setOnMouseExited(e -> {
-            undoView.setImage(undoImg);
+            undoView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             undoView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
@@ -999,6 +986,7 @@ public class PlayerView extends StackPane {
      */
     public void deactivateButtons() {
         confirmView.setImage(confirmInactiveImg);
+        confirmView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         confirmView.setOnMouseEntered(e -> {
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -1012,6 +1000,7 @@ public class PlayerView extends StackPane {
             e.consume();
         });
         undoView.setImage(undoInactiveImg);
+        undoView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         undoView.setOnMouseEntered(e -> {
             undoView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -1033,12 +1022,12 @@ public class PlayerView extends StackPane {
         usePowerAnswer.set(2);
         usePowerView.setImage(usePowerImg);
         usePowerView.setOnMouseEntered(e -> {
-            usePowerView.setImage(usePowerImgHover);
+            usePowerView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 3, 3, 0, 0));
             usePowerView.setCursor(Cursor.HAND);
             e.consume();
         });
         usePowerView.setOnMouseExited(e -> {
-            usePowerView.setImage(usePowerImg);
+            usePowerView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             usePowerView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
@@ -1050,12 +1039,12 @@ public class PlayerView extends StackPane {
 
         confirmView.setImage(confirmImg);
         confirmView.setOnMouseEntered(e -> {
-            confirmView.setImage(confirmImgHover);
+            confirmView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 3, 3, 0, 0));
             confirmView.setCursor(Cursor.HAND);
             e.consume();
         });
         confirmView.setOnMouseExited(e -> {
-            confirmView.setImage(confirmImg);
+            confirmView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();
         });
@@ -1070,6 +1059,7 @@ public class PlayerView extends StackPane {
      */
     public void deactivateUsePower() {
         usePowerView.setImage(usePowerInactiveImg);
+        usePowerView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         usePowerView.setOnMouseEntered(e -> {
             usePowerView.setCursor(Cursor.DEFAULT);
             e.consume();
@@ -1084,6 +1074,7 @@ public class PlayerView extends StackPane {
         });
 
         confirmView.setImage(confirmInactiveImg);
+        confirmView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         confirmView.setOnMouseEntered(e -> {
             confirmView.setCursor(Cursor.DEFAULT);
             e.consume();

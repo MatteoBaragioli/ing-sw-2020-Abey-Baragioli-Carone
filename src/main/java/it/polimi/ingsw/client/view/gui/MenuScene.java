@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,6 +27,7 @@ import javafx.util.Duration;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.WHITE;
 
 public class MenuScene {
@@ -77,19 +79,13 @@ public class MenuScene {
     private VBox formView;
 
     //box that contains play button
-    private Group playGroup;
+    private VBox playGroup;
 
     //play button
     private ImageView playView;
 
     //user nickname answer
     private String nickname;
-
-    //user ip answer
-    private String ip;
-
-    //user port answer
-    private int port;
 
     //user number of players answer
     private int numberOfPlayers;
@@ -127,14 +123,6 @@ public class MenuScene {
 
     //_________________________________________________SETTER____________________________________________________________
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     private void setNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -153,14 +141,6 @@ public class MenuScene {
 
 
     //_________________________________________________GETTER____________________________________________________________
-
-    public String ip() {
-        return ip;
-    }
-
-    public int port() {
-        return port;
-    }
 
     public String nickname() {
         return nickname;
@@ -232,14 +212,14 @@ public class MenuScene {
         matchTypeNumber.setVisible(false);
         errorMessage.setWrappingWidth(screenWidth/8);
 
-        Group quitGroup = quitGroup();
-        playGroup = playGroup();
+        VBox leftButtons = leftButtons();
+        playGroup = playColumn();
         menuBox.getChildren().addAll(formGroup, matchTypeNumber);
 
 
 
 
-        menuPage.getChildren().addAll(quitGroup, menuBox, playGroup);
+        menuPage.getChildren().addAll(leftButtons, menuBox, playGroup);
         menuPage.setBackground(background());
         menuPage.setAlignment(Pos.CENTER);
         playGroup.setVisible(false);
@@ -274,7 +254,7 @@ public class MenuScene {
     private StackPane menuGroup() {
         Image menuBoxImg = new Image(MenuScene.class.getResource("/img/menuPage/menu_box_background.png").toString(), screenWidth / 2, screenHeight / 1.1, false, false);
         ImageView menuBoxView = new ImageView(menuBoxImg);
-        menuBoxView.setEffect(new DropShadow(10, Color.BLACK));
+        menuBoxView.setEffect(new DropShadow(10, BLACK));
         StackPane menuBox = new StackPane();
         menuBox.setAlignment(Pos.CENTER);
         menuBox.getChildren().add(menuBoxView);
@@ -289,16 +269,15 @@ public class MenuScene {
      */
     private ImageView playButton(){
         Image playImg = new Image(MenuScene.class.getResource("/img/buttons/play.png").toString(), screenWidth/8, screenHeight/4, false, false);
-        Image playHoverImg = new Image(MenuScene.class.getResource("/img/buttons/play_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
         playView = new ImageView(playImg);
-        playView.setEffect(new DropShadow(10, Color.BLACK));
+        playView.setEffect(new DropShadow(10, BLACK));
         playView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
-            playView.setImage(playHoverImg);
+            playView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             playView.setCursor(Cursor.HAND);
             event.consume();
         });
         playView.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
-            playView.setImage(playImg);
+            playView.setEffect(new DropShadow(10, BLACK));
             event.consume();
         });
         return playView;
@@ -308,14 +287,14 @@ public class MenuScene {
      * This method creates play button container
      * @return Group (Play button container)
      */
-    private Group playGroup(){
+    private VBox playColumn(){
         ImageView playView = playButton();
 
-        Group playGroup = new Group();
-        playGroup.setAutoSizeChildren(true);
-        playGroup.getChildren().addAll(playView);
-        playGroup.prefWidth(screenWidth/8);
-        return playGroup;
+        VBox playButton = new VBox();
+        playButton.getChildren().addAll(playView);
+        playButton.prefHeight(screenHeight/2);
+        playButton.setAlignment(Pos.CENTER);
+        return playButton;
     }
 
     //-----------------------------------------------END Play Button------------------------------------------------------------
@@ -326,18 +305,17 @@ public class MenuScene {
      * @return ImageView (Quit button)
      */
     private ImageView quitButton(){
-        Image quitImg = new Image(MenuScene.class.getResource("/img/buttons/quit_normal.png").toString(), screenWidth/8, screenHeight/4, false, false);
-        Image quitHoverImg = new Image(MenuScene.class.getResource("/img/buttons/quit_hover.png").toString(),screenWidth/8, screenHeight/4, false, false);
+        Image quitImg = new Image(MenuScene.class.getResource("/img/buttons/quit.png").toString(), screenWidth/8, screenHeight/4, false, false);
         ImageView quitView = new ImageView(quitImg);
 
         quitView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
-            quitView.setImage(quitHoverImg);
+            quitView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             quitView.setCursor(Cursor.HAND);
             event.consume();
         });
 
         quitView.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
-            quitView.setImage(quitImg);
+            quitView.setEffect(new DropShadow(10, BLACK));
             event.consume();
         });
 
@@ -356,17 +334,16 @@ public class MenuScene {
      */
     private ImageView howToPlayButton(){
         Image howToPlayImg = new Image(MenuScene.class.getResource("/img/buttons/howToPlay.png").toString(), screenWidth/8, screenHeight/4, false, false);
-        Image howToPlayHoverImg = new Image(MenuScene.class.getResource("/img/buttons/howToPlayHover.png").toString(),screenWidth/8, screenHeight/4, false, false);
         ImageView howToPlayView = new ImageView(howToPlayImg);
 
         howToPlayView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
-            howToPlayView.setImage(howToPlayHoverImg);
+            howToPlayView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             howToPlayView.setCursor(Cursor.HAND);
             event.consume();
         });
 
         howToPlayView.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
-            howToPlayView.setImage(howToPlayImg);
+            howToPlayView.setEffect(new DropShadow(10, BLACK));
             event.consume();
         });
 
@@ -382,21 +359,17 @@ public class MenuScene {
      * This method creates quit button and how to play button container
      * @return Group (Quit button and how to play container)
      */
-    private Group quitGroup(){
+    private VBox leftButtons(){
         ImageView quitView = quitButton();
         ImageView howToPlayView = howToPlayButton();
-        quitView.setEffect(new DropShadow(10, Color.BLACK));
-        howToPlayView.setEffect(new DropShadow(10, Color.BLACK));
+        quitView.setEffect(new DropShadow(10, BLACK));
+        howToPlayView.setEffect(new DropShadow(10, BLACK));
         VBox buttons = new VBox();
         buttons.getChildren().addAll(howToPlayView, quitView);
         buttons.setSpacing(20);
+        buttons.setPrefHeight(screenHeight/2);
         buttons.setAlignment(Pos.CENTER);
-
-        Group quitGroup = new Group();
-        quitGroup.setAutoSizeChildren(true);
-        quitGroup.getChildren().addAll(buttons);
-        quitGroup.prefWidth(screenWidth/8);
-        return quitGroup;
+        return buttons;
     }
 
     /**
@@ -407,11 +380,9 @@ public class MenuScene {
         ImageView howToPlayBackgroundView = new ImageView(howToPlayBackground);
 
         Image backImg = new Image(MenuScene.class.getResource("/img/buttons/backArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image backHoverImg = new Image(MenuScene.class.getResource("/img/buttons/backArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
         Image backInactiveImg = new Image(MenuScene.class.getResource("/img/buttons/backArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
         ImageView backView = new ImageView(backInactiveImg);
         Image nextImg = new Image(MenuScene.class.getResource("/img/buttons/nextArrow.png").toString(), screenWidth/25, screenHeight/20, false, false);
-        Image nextHoverImg = new Image(MenuScene.class.getResource("/img/buttons/nextArrowHover.png").toString(), screenWidth/25, screenHeight/20, false, false);
         Image nextInactiveImg = new Image(MenuScene.class.getResource("/img/buttons/nextArrowInactive.png").toString(), screenWidth/25, screenHeight/20, false, false);
         ImageView nextView = new ImageView(nextImg);
 
@@ -419,14 +390,13 @@ public class MenuScene {
         ImageView howToPlayView = new ImageView(howToPlayImage);
 
         Image exitImage = new Image(MenuScene.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
-        Image exitHoverImage = new Image(MenuScene.class.getResource("/img/buttons/closeHover.png").toString(), screenWidth/15, screenHeight/10, false, false);
         ImageView exitButton = new ImageView(exitImage);
         exitButton.setOnMouseEntered(e -> {
             exitButton.setCursor(Cursor.HAND);
-            exitButton.setImage(exitHoverImage);
+            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
         });
         exitButton.setOnMouseExited(e -> {
-            exitButton.setImage(exitImage);
+            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             exitButton.setCursor(Cursor.DEFAULT);
         });
         exitButton.setOnMouseClicked(e -> {
@@ -442,6 +412,7 @@ public class MenuScene {
             if(howToPlayPage==2){
                 //deactivate back button
                 backView.setImage(backInactiveImg);
+                backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                 backView.setOnMouseEntered(f -> {
                     backView.setCursor(Cursor.DEFAULT);
                 });
@@ -450,11 +421,11 @@ public class MenuScene {
                 //activate next button
                 nextView.setImage(nextImg);
                 nextView.setOnMouseEntered(f -> {
-                    nextView.setImage(nextHoverImg);
+                    nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
                     nextView.setCursor(Cursor.HAND);
                 });
                 nextView.setOnMouseExited(f -> {
-                    nextView.setImage(nextImg);
+                    nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                     nextView.setCursor(Cursor.DEFAULT);
                 });
             }
@@ -465,11 +436,11 @@ public class MenuScene {
             }
         });
         nextView.setOnMouseEntered(e -> {
-            nextView.setImage(nextHoverImg);
+            nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             nextView.setCursor(Cursor.HAND);
         });
         nextView.setOnMouseExited(e -> {
-            nextView.setImage(nextImg);
+            nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             nextView.setCursor(Cursor.DEFAULT);
         });
         nextView.setOnMouseClicked(e -> {
@@ -477,16 +448,17 @@ public class MenuScene {
                 //activate back button
                 backView.setImage(backImg);
                 backView.setOnMouseEntered(f -> {
-                    backView.setImage(backHoverImg);
+                    backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
                     backView.setCursor(Cursor.HAND);
                 });
                 backView.setOnMouseExited(f -> {
-                    backView.setImage(backImg);
+                    backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                     backView.setCursor(Cursor.DEFAULT);
                 });
             } else if(howToPlayPage==3){
                 //deactivate next button
                 nextView.setImage(nextInactiveImg);
+                nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
                 nextView.setOnMouseEntered(f -> {
                     nextView.setCursor(Cursor.DEFAULT);
                 });
@@ -696,18 +668,17 @@ public class MenuScene {
         Image loadingImg = new Image(MenuScene.class.getResource("/img/loadingAndPopups/loading.png").toString(), screenWidth, screenHeight, false, false);
         ImageView loadingImageView = new ImageView(loadingImg);
         loadingPage.setBackground(new Background(new BackgroundFill(WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        Image quitLoadingImg = new Image(MenuScene.class.getResource("/img/buttons/quit_normal.png").toString(), screenWidth/12, screenHeight/8, false, false);
-        Image quitLoadingHoverImg = new Image(MenuScene.class.getResource("/img/buttons/quit_hover.png").toString(),screenWidth/12, screenHeight/8, false, false);
+        Image quitLoadingImg = new Image(MenuScene.class.getResource("/img/buttons/quit.png").toString(), screenWidth/12, screenHeight/8, false, false);
          ImageView quitLoading = new ImageView(quitLoadingImg);
 
         quitLoading.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
-            quitLoading.setImage(quitLoadingHoverImg);
+            quitLoading.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             quitLoading.setCursor(Cursor.HAND);
             event.consume();
         });
 
         quitLoading.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
-            quitLoading.setImage(quitLoadingImg);
+            quitLoading.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             event.consume();
         });
 
