@@ -115,6 +115,9 @@ public class MatchScene {
     //button to confirm chosen boxes by the challenger
     private ImageView confirmChoices;
 
+    //list to save all cards images in order to change their border when one is selected
+    private List<ImageView> cardsChosable;
+
     //variable that saves the currently selected card name from the entire list of all the cards
     private String selectedCard;
 
@@ -382,8 +385,7 @@ public class MatchScene {
         cardsList.setSpacing(60);
         cardsList.setPadding(new Insets(0,0,0,screenWidth/14));
 
-        //list to save all cards images in order to change their border when one is selected
-        List<ImageView> cardsChosable = new ArrayList<>();
+        cardsChosable = new ArrayList<>();
 
         for(GodCardProxy card : godCards){
             Image cardImg = new Image(MatchScene.class.getResource("/img/godCards/"+card.name+".png").toString(), screenWidth/10, screenHeight/5, false, false);
@@ -626,7 +628,8 @@ public class MatchScene {
         removeGod.setOnMouseClicked(e ->{
             chosenCards.get(choicesCounter-1).setVisible(true);
             chosenCards.get(choicesCounter-1).setManaged(true);
-            chosenCards.get(choicesCounter-1).setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)");
+            for(ImageView card : cardsChosable)
+                card.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)");
             chosenCards.remove(choicesCounter-1);
             choicesBoxes[choicesCounter-1].setVisible(false);
             choicesCounter--;
