@@ -256,8 +256,7 @@ public class ActionControllerTest {
 
     @Test
     public void applyOpponentsCondition() {
-
-
+        //the cards we implemented do not have effects that happen during other players' turn, although there are such cards in the game
     }
 
     @Test

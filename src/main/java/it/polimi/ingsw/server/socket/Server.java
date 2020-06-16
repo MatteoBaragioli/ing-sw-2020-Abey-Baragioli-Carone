@@ -58,7 +58,7 @@ public class Server {
         while (!valid) {
             System.out.println("Write port:");
             try {
-                port = Integer.parseInt(in.readLine());;
+                port = Integer.parseInt(in.readLine());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {

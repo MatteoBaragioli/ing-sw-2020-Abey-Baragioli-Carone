@@ -29,10 +29,12 @@ public class Client extends Thread {
     }
 
     public static void main(String[] args){
-        if (args.length > 2 && args[2].equals("-cli"))
-            Cli.main(args);
-        else
-            Application.launch(Gui.class, args);
+        new Cli().start();
+        //if (args.length > 2 && args[2].equals("-cli"))
+            //new Cli().run();
+
+       // else
+        //    Application.launch(Gui.class, args);
     }
 
     @Override
