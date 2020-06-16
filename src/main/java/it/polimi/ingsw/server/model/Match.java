@@ -113,6 +113,7 @@ public class Match extends Thread {
         assignCards();
         setUpWorkers();
         setUpWinConditions();
+        //OOOOOOOOOOOOOOOOOOOOOOOEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
         int firstPlayerIndex = communicationController.chooseFirstPlayer(winner, gamePlayers);
 
         //MATCH
