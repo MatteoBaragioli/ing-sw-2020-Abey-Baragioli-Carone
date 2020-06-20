@@ -507,7 +507,9 @@ public class PlayerView extends StackPane {
             surrenderView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             surrenderView.setCursor(Cursor.DEFAULT);
         });
-        //todo surrender action
+        surrenderView.setOnMouseClicked(e -> {
+            gui.matchScene().showWinnerOrSurrender("surrender");
+        });
 
         Image backToMatchImg = new Image(PlayerView.class.getResource("/img/buttons/backToMatch.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView backToMatchView = new ImageView(backToMatchImg);
@@ -1175,7 +1177,7 @@ public class PlayerView extends StackPane {
                                     timerTimeLine.stop();
                                     seconds.set(0);
                                     minutes.set(0);
-                                    //todo tempo scaduto e loser
+                                    gui.matchScene().setEndTimer();
                                 }
                             }
                             if(seconds.get()<10){

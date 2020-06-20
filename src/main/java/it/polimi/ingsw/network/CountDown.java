@@ -18,8 +18,8 @@ public class CountDown extends Thread {
         received = true;
     }
 
-    public synchronized void run() {
-        int i = 2*MINUTE;
+    public void run() {
+        int i = 2 * MINUTE;
         while (i > 0 && !communicationChannel.hasMessages(key) && !received) {
             try {
                 sleep(SECOND);
@@ -28,7 +28,7 @@ public class CountDown extends Thread {
                 System.err.println("WAIT NON FUNZIONA");
                 return;
             }
-            if (i%10 == 0) {
+            if (i % 10 == 0) {
                 try {
                     communicationChannel.countdown(i);
                 } catch (ChannelClosedException e) {
@@ -38,6 +38,19 @@ public class CountDown extends Thread {
             }
             i--;
         }
+        if (i == 0) {
+            notifyTimer();
+            return;
+        }
+        notifyEndThread();
+    }
+
+    private synchronized void notifyTimer(){
+        communicationChannel.setTimerEnded(true);
+        notifyAll();
+    }
+
+    private synchronized void notifyEndThread(){
         notifyAll();
     }
 }

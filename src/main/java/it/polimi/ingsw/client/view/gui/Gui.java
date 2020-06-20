@@ -209,6 +209,10 @@ public class Gui extends Application implements View {
         return menuScene;
     }
 
+    public MatchScene matchScene(){
+        return matchScene;
+    }
+
     public int mapRowsNumber() {
         return mapRowsNumber;
     }
@@ -261,6 +265,7 @@ public class Gui extends Application implements View {
         settingStage.close();
         try {
             client.end();
+            matchScene.setCloseMatch();
         } catch (ChannelClosedException ex) {
             ex.printStackTrace();
             System.err.println("Connection Lost");
@@ -282,11 +287,7 @@ public class Gui extends Application implements View {
     private synchronized void restartConnection(){
         restartConnection.set(true);
         notifyAll();
-        try {
-            client.restartClient();
-        } catch (ChannelClosedException e) {
-            e.printStackTrace();
-        }
+        restartClient();
     }
 
     /**
@@ -696,6 +697,7 @@ public class Gui extends Application implements View {
             window.close();
             try {
                 client.end();
+                matchScene.setCloseMatch();
             } catch (ChannelClosedException ex) {
                 ex.printStackTrace();
                 System.err.println("Connection Lost");
@@ -974,6 +976,14 @@ public class Gui extends Application implements View {
         enterGameButton.setManaged(true);
         enterGameButton.setVisible(true);
 
+        disconnectionButton.setOnMouseEntered(e -> {
+            disconnectionButton.setCursor(Cursor.HAND);
+        });
+
+        disconnectionButton.setOnMouseExited(e -> {
+            disconnectionButton.setCursor(Cursor.DEFAULT);
+        });
+
         //if user clicks disconnect
         disconnectionButton.setOnAction(e -> {
             connectedText.setVisible(false);
@@ -1010,6 +1020,17 @@ public class Gui extends Application implements View {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * This method restarts client
+     */
+    public void restartClient(){
+        try {
+            client.restartClient();
+        } catch (ChannelClosedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1110,7 +1131,7 @@ public class Gui extends Application implements View {
     public int askConfirmation(CommunicationProtocol key) {
         switch (key){
             case UNDO:
-                return matchScene.showConfirmTurn();
+                return matchScene.showConfirmTurnPopup();
             case GOD_POWER:
                 return matchScene.playerView().askUsePower();
         }
@@ -1347,6 +1368,7 @@ public class Gui extends Application implements View {
 
     @Override
     public void timeOut() {
-        System.out.println("TimeOut arrivatoooooooooooooooooooooooooooooooo");
+        matchScene.setTimeoutLoser(true);
+        //todo togliere setLoser(new PlayerProxy(nickname, Colour.BLUE, null));
     }
 }

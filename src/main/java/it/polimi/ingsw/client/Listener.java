@@ -28,6 +28,7 @@ public class Listener extends Thread {
                         System.exit(-1);
                     }
             } catch (IOException e) {
+                //todo chiusura o disconnessione del server
                 e.printStackTrace();
                 communicationChannel.close();
             }

@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
@@ -27,6 +28,9 @@ public class CommunicationChannel {
     final private int CURRENTMESSAGEINDEX = 0;
     final private int EMPTYBUFFER = 0;
     private final int quit = -1;
+
+    //todo ho modificato
+    private boolean timerEnded = false;
 
     private boolean timeout = false;
 
@@ -53,6 +57,11 @@ public class CommunicationChannel {
 
     public synchronized void resetTimeout() {
         timeout = false;
+    }
+
+    //todo ho messo
+    public void setTimerEnded(boolean timerEnded){
+        this.timerEnded = timerEnded;
     }
 
     /**
@@ -182,7 +191,7 @@ public class CommunicationChannel {
         CountDown countDown = new CountDown(this, key);
         countDown.start();
 
-        while (!isClosed() && countDown.isAlive()) {
+        while (!isClosed() && !timerEnded) {
             if (hasMessages(key)) {
                 countDown.finish();
                 return nextMessage(key);

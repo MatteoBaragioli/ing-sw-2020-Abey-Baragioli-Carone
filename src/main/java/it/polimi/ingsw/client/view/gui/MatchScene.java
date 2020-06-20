@@ -149,7 +149,7 @@ public class MatchScene {
     private final AtomicBoolean destinationReady = new AtomicBoolean(false);
 
     //confirm turn popup
-    private final StackPane confirmTurn = new StackPane();
+    private final StackPane askConfirmTurn = new StackPane();
 
     //turn confirmation answer
     private final AtomicInteger answer = new AtomicInteger(2);
@@ -162,6 +162,18 @@ public class MatchScene {
 
     //winner pane
     private final StackPane winner = new StackPane();
+
+    //surrender pane
+    private final StackPane surrender = new StackPane();
+
+    //variable that is true if player has lost the match because of timeout
+    private boolean timeoutLoser = false;
+
+    //variable that is true when user quits the match
+    private AtomicBoolean closeMatch = new AtomicBoolean(false);
+
+    //variable that is true when timer finished
+    private AtomicBoolean  endTimer = new AtomicBoolean(false);
 
 
     public MatchScene(Gui gui, double screenWidth, double screenHeight, StackPane matchPage) {
@@ -189,19 +201,22 @@ public class MatchScene {
 
         playerViewPane = playerView.getPlayerViewStackPane();
 
-        confirmTurn();
+        createConfirmTurnPopup();
 
         createMyTurnImage();
 
-        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, pausePane, activePowers, helper, turnStory, chooseCardsBox, chooseCard, myTurn, confirmTurn, winner);
+        createSurrenderPopup();
+
+        matchPage.getChildren().addAll(matchBackground,mapView, playerViewPane, guiMap, pausePane, activePowers, helper, turnStory, chooseCardsBox, chooseCard, myTurn, askConfirmTurn, surrender, winner);
         chooseCardsBox.setVisible(false);
         chooseCard.setVisible(false);
-        confirmTurn.setVisible(false);
+        askConfirmTurn.setVisible(false);
         pausePane.setVisible(false);
         activePowers.setVisible(false);
         helper.setVisible(false);
         turnStory.setVisible(false);
         myTurn.setVisible(false);
+        surrender.setVisible(false);
         winner.setVisible(false);
     }
 
@@ -220,10 +235,10 @@ public class MatchScene {
         this.chosenBox = chosenBox;
     }
 
-    public synchronized void setDestinationReady(boolean destinationReady) {
-        this.destinationReady.set(destinationReady);
-        notifyAll();
+    public void setTimeoutLoser(boolean isTimeoutLoser){
+        timeoutLoser = isTimeoutLoser;
     }
+
     //_______________________________________________END SETTER__________________________________________________________
 
 
@@ -250,11 +265,24 @@ public class MatchScene {
         return guiMap;
     }
 
+    public boolean isTimeoutLoser(){
+        return timeoutLoser;
+    }
+
 
     //_______________________________________________END GETTER__________________________________________________________
 
 
     //-----------------------------------------SYNCHRONIZATION METHODS---------------------------------
+
+    /**
+     * This method notifies destinationReady when player has chosen a destination
+     * @param destinationReady Chosen destination
+     */
+    public synchronized void setDestinationReady(boolean destinationReady) {
+        this.destinationReady.set(destinationReady);
+        notifyAll();
+    }
 
     /**
      * This method notifies confirmChallengerCards when player (if he is the challenger) has chosen all the cards of the match
@@ -279,18 +307,28 @@ public class MatchScene {
     private synchronized void setClickedConfirmation(){
         clickedConfirmation.set(true);
 
-        FadeTransition confirmTurnFadeOut = new FadeTransition(Duration.millis(1000), confirmTurn);
+        FadeTransition confirmTurnFadeOut = new FadeTransition(Duration.millis(500), askConfirmTurn);
         confirmTurnFadeOut.setFromValue(1);
         confirmTurnFadeOut.setToValue(0);
 
         confirmTurnFadeOut.play();
         Timeline hidingTimer = new Timeline(new KeyFrame(
-                Duration.millis(1000),
+                Duration.millis(500),
                 ae -> {
-                    confirmTurn.setVisible(false);
+                    askConfirmTurn.setVisible(false);
                 }));
         hidingTimer.play();
 
+        notifyAll();
+    }
+
+    public synchronized void setCloseMatch(){
+        closeMatch.set(true);
+        notifyAll();
+    }
+
+    public synchronized void setEndTimer(){
+        endTimer.set(true);
         notifyAll();
     }
 
@@ -835,13 +873,17 @@ public class MatchScene {
      * @return Chosen cards indexes (it refers to list of cards)
      */
     public synchronized int[] chosenCards(){
-        while(!confirmChallengerCards.get()){
+        while(!confirmChallengerCards.get() && !closeMatch.get() && !endTimer.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        if(closeMatch.get())
+            return new int[] {-1};
+        else if(endTimer.get())
+            return new int[] {0};
         return cardsIndexes;
     }
 
@@ -850,13 +892,17 @@ public class MatchScene {
      * @return Chosen card index (it refers to list of cards)
      */
     public synchronized int chosenCard(){
-        while(!confirmMyCards.get()){
+        while(!confirmMyCards.get() && !closeMatch.get() && !endTimer.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        if(closeMatch.get())
+            return -1;
+        else if(endTimer.get())
+            return 0;
         return cardIndex;
     }
 
@@ -865,7 +911,7 @@ public class MatchScene {
      * @return Chosen destination
      */
     public synchronized int chosenDestination(){
-        while(!destinationReady.get()){
+        while(!destinationReady.get() && !closeMatch.get() && !endTimer.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -873,15 +919,19 @@ public class MatchScene {
             }
         }
         destinationReady.set(false);
+        if(closeMatch.get())
+            return -1;
+        else if(endTimer.get())
+            return 0;
         return chosenBoxIndex();
     }
 
     /**
-     * This method creates confirm popup
+     * This method creates confirm turn popup
      */
-    public void confirmTurn(){
-        confirmTurn.setPrefWidth(screenWidth/5);
-        confirmTurn.setPrefHeight(screenHeight/5);
+    public void createConfirmTurnPopup(){
+        askConfirmTurn.setPrefWidth(screenWidth/5);
+        askConfirmTurn.setPrefHeight(screenHeight/5);
 
         Image confirmFrame = new Image(MatchScene.class.getResource("/img/loadingAndPopups/frame2.png").toString(), screenWidth/5, screenHeight/5, false, false);
         ImageView confirmView = new ImageView(confirmFrame);
@@ -891,9 +941,8 @@ public class MatchScene {
         Text questionPopup = new Text("Do you confirm your turn?");
         questionPopup.setFont(lillybelleFont);
         HBox answers = new HBox();
-        //yes button of confirm turn popup
+
         Button yesPopupButton = new Button("Yes");
-        //no button of confirm turn popup
         Button noPopupButton = new Button("No");
 
         yesPopupButton.setFont(lillybelleFont);
@@ -920,8 +969,8 @@ public class MatchScene {
         confirmBox.setSpacing(10);
         confirmBox.getChildren().addAll(questionPopup, answers);
 
-        confirmTurn.getChildren().addAll(confirmView, confirmBox);
-        confirmTurn.setAlignment(Pos.CENTER);
+        askConfirmTurn.getChildren().addAll(confirmView, confirmBox);
+        askConfirmTurn.setAlignment(Pos.CENTER);
         confirmBox.setAlignment(Pos.CENTER);
     }
 
@@ -931,16 +980,16 @@ public class MatchScene {
      * It shows confirmTurn popup
      * @return Undo or Confirm turn answer
      */
-    public synchronized int showConfirmTurn(){
+    public synchronized int showConfirmTurnPopup(){
         clickedConfirmation.set(false);
-        FadeTransition confirmTurnFadeIn = new FadeTransition(Duration.millis(1000), confirmTurn);
+        FadeTransition confirmTurnFadeIn = new FadeTransition(Duration.millis(1000), askConfirmTurn);
         confirmTurnFadeIn.setFromValue(0);
         confirmTurnFadeIn.setToValue(1);
 
         confirmTurnFadeIn.play();
-        confirmTurn.setVisible(true);
+        askConfirmTurn.setVisible(true);
 
-        while (!clickedConfirmation.get()){
+        while (!clickedConfirmation.get() && !closeMatch.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -1050,6 +1099,14 @@ public class MatchScene {
 
             winnerGoBackImg = new Image(MatchScene.class.getResource("/img/buttons/goBackLoser.png").toString(), screenWidth / 3, screenHeight / 3, false, false);
             winnerGoBackView = new ImageView(winnerGoBackImg);
+
+            if(isTimeoutLoser()){
+                Image timeoutImg = new Image(MatchScene.class.getResource("/img/matchPage/timeoutLoser.png").toString(), screenWidth / 2, screenHeight / 4, false, false);
+                ImageView timeoutView = new ImageView(timeoutImg);
+
+                winner.getChildren().add(timeoutView);
+                StackPane.setAlignment(timeoutView, Pos.TOP_CENTER);
+            }
         }
 
         winnerGoBackView.setOnMouseEntered(e -> {
@@ -1077,7 +1134,7 @@ public class MatchScene {
             exitButton.setCursor(Cursor.DEFAULT);
         });
         exitButton.setOnMouseClicked(e -> {
-            closeWinner();
+            closeWinnerOrSurrender(winner);
         });
 
 
@@ -1088,16 +1145,17 @@ public class MatchScene {
 
         playerView.endTimer();
 
-        showWinner();
+        showWinnerOrSurrender("winner");
 
     }
 
     /**
      * This method closes match page and shows menu page
      */
-    private void backToMenu(){
-        gui.playTransitionClouds();
+    public void backToMenu(){
+        setCloseMatch();
         gui.setNewMatch();
+        gui.playTransitionClouds();
         FadeTransition matchFadeOut = new FadeTransition(Duration.millis(2000), matchPage);
         matchFadeOut.setFromValue(1);
         matchFadeOut.setToValue(0);
@@ -1121,6 +1179,7 @@ public class MatchScene {
                     menuFadeIn.setFromValue(0.0);
                     menuFadeIn.setToValue(1.0);
                     menuFadeIn.play();
+                    gui.restartClient();
                     gui.menuPage().setVisible(true);
                 }));
         menuTimer.play();
@@ -1129,16 +1188,16 @@ public class MatchScene {
     /**
      * This method hides winner pane
      */
-    private void closeWinner(){
-        FadeTransition winnerFadeOut = new FadeTransition(Duration.millis(1000), winner);
-        winnerFadeOut.setFromValue(1);
-        winnerFadeOut.setToValue(0);
-        winnerFadeOut.play();
+    private void closeWinnerOrSurrender(StackPane pane){
+        FadeTransition paneFadeOut = new FadeTransition(Duration.millis(500), pane);
+        paneFadeOut.setFromValue(1);
+        paneFadeOut.setToValue(0);
+        paneFadeOut.play();
 
-        Timeline closeWinnerTimer = new Timeline(new KeyFrame(
+        Timeline closePaneTimer = new Timeline(new KeyFrame(
                 Duration.millis(500),
                 ae -> {
-                    winner.setVisible(false);
+                    pane.setVisible(false);
                     matchBackground.setEffect(new BoxBlur(0, 0, 0));
                     mapView.setEffect(new BoxBlur(0, 0, 0));
                     playerViewPane.setEffect(new BoxBlur(0, 0, 0));
@@ -1149,22 +1208,30 @@ public class MatchScene {
                     turnStory.setEffect(new BoxBlur(0, 0, 0));
                     myTurn.setEffect(new BoxBlur(0, 0, 0));
                 }));
-        closeWinnerTimer.play();
+        closePaneTimer.play();
 
-        playerView.pauseView().setOnMouseClicked(e -> {
-            showWinner();
-        });
+        if(pane.equals(winner)) {
+            playerView.pauseView().setOnMouseClicked(e -> {
+                showWinnerOrSurrender("winner");
+            });
+        }
     }
 
     /**
-     * This method shows winner pane
+     * This method shows a pane (winner and surrender)
+     * @param paneName Pane to show
      */
-    private void showWinner(){
-        FadeTransition winnerFadeIn = new FadeTransition(Duration.millis(1000), winner);
-        winnerFadeIn.setFromValue(0);
-        winnerFadeIn.setToValue(1);
-        winnerFadeIn.play();
-        winner.setVisible(true);
+    public void showWinnerOrSurrender(String paneName){
+        StackPane pane = new StackPane();
+        if(paneName.equals("winner"))
+            pane = winner;
+        else if(paneName.equals("surrender"))
+            pane = surrender;
+        FadeTransition paneFadeIn = new FadeTransition(Duration.millis(500), pane);
+        paneFadeIn.setFromValue(0);
+        paneFadeIn.setToValue(1);
+        paneFadeIn.play();
+        pane.setVisible(true);
 
         Timeline showingTimer = new Timeline(new KeyFrame(
                 Duration.millis(500),
@@ -1180,5 +1247,48 @@ public class MatchScene {
                     myTurn.setEffect(new BoxBlur(5, 5, 5));
                 }));
         showingTimer.play();
+    }
+
+    public void createSurrenderPopup(){
+        surrender.setPrefWidth(screenWidth/3);
+        surrender.setPrefHeight(screenHeight/3);
+
+        Image surrenderFrame = new Image(MatchScene.class.getResource("/img/loadingAndPopups/frame2.png").toString(), screenWidth/3, screenHeight/3, false, false);
+        ImageView surrenderView = new ImageView(surrenderFrame);
+
+        VBox confirmBox = new VBox();
+
+        Text questionPopup = new Text("Are you sure to lose and quit the match?");
+        questionPopup.setFont(lillybelleFont);
+        HBox answers = new HBox();
+
+        Button yesPopupButton = new Button("Yes");
+        Button noPopupButton = new Button("No");
+
+        yesPopupButton.setFont(lillybelleFont);
+        yesPopupButton.setCursor(Cursor.HAND);
+        noPopupButton.setFont(lillybelleFont);
+        noPopupButton.setCursor(Cursor.HAND);
+
+
+
+        answers.getChildren().addAll(yesPopupButton, noPopupButton);
+        answers.setSpacing(50);
+        answers.setAlignment(Pos.CENTER);
+
+        yesPopupButton.setOnAction(e -> {
+            backToMenu();
+        });
+        noPopupButton.setOnAction(e -> {
+            closeWinnerOrSurrender(surrender);
+        });
+
+
+        confirmBox.setSpacing(10);
+        confirmBox.getChildren().addAll(questionPopup, answers);
+
+        surrender.getChildren().addAll(surrenderView, confirmBox);
+        surrender.setAlignment(Pos.CENTER);
+        confirmBox.setAlignment(Pos.CENTER);
     }
 }
