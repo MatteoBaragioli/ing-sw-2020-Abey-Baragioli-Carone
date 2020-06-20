@@ -1159,12 +1159,16 @@ public class PlayerView extends StackPane {
     public void playTimer(){
         if(timerTimeLine!=null)
             timerTimeLine.stop();
-        AtomicReference<String> min = new AtomicReference<>("02");
-        AtomicReference<String> sec = new AtomicReference<>("00");
+        //AtomicReference<String> min = new AtomicReference<>("02");
+        //AtomicReference<String> sec = new AtomicReference<>("00");
+        AtomicReference<String> min = new AtomicReference<>("00");
+        AtomicReference<String> sec = new AtomicReference<>("30");
         timerCounter.setFont(standardFont);
         timerCounter.setText(min.toString() + " : " + sec.toString());
-        AtomicInteger seconds = new AtomicInteger(0);
-        AtomicInteger minutes = new AtomicInteger(2);
+        //AtomicInteger seconds = new AtomicInteger(0);
+        //AtomicInteger minutes = new AtomicInteger(2);
+        AtomicInteger seconds = new AtomicInteger(30);
+        AtomicInteger minutes = new AtomicInteger(0);
         timerTimeLine = new Timeline(
                 new KeyFrame(
                         Duration.millis( 1000 ),

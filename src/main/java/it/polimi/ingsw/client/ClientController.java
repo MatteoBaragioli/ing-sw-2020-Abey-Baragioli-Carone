@@ -126,6 +126,5 @@ public class ClientController {
     public void manageTimeOut(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         communicationChannel.popMessage();
         view.timeOut();
-        communicationChannel.close();
     }
 }

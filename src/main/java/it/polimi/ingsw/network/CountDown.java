@@ -4,10 +4,11 @@ import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 
 public class CountDown extends Thread {
     public final CommunicationChannel communicationChannel;
-    public final int MINUTE = 60;
+    public final int MINUTE = 15;
     public final int SECOND = 1000;
     public final CommunicationProtocol key;
     private boolean received = false;
+    private boolean ended = false;
 
     public CountDown(CommunicationChannel communicationChannel, CommunicationProtocol key) {
         this.communicationChannel = communicationChannel;
@@ -16,6 +17,14 @@ public class CountDown extends Thread {
 
     public void finish() {
         received = true;
+    }
+
+    public boolean isEnded() {
+        return ended;
+    }
+
+    public void end() {
+        ended = true;
     }
 
     public void run() {
@@ -38,16 +47,9 @@ public class CountDown extends Thread {
             }
             i--;
         }
-        if (i == 0) {
-            notifyTimer();
-            return;
-        }
+        if (i == 0)
+            end();
         notifyEndThread();
-    }
-
-    private synchronized void notifyTimer(){
-        communicationChannel.setTimerEnded(true);
-        notifyAll();
     }
 
     private synchronized void notifyEndThread(){

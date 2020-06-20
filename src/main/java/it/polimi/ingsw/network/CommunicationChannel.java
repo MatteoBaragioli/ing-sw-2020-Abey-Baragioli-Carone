@@ -29,9 +29,6 @@ public class CommunicationChannel {
     final private int EMPTYBUFFER = 0;
     private final int quit = -1;
 
-    //todo ho modificato
-    private boolean timerEnded = false;
-
     private boolean timeout = false;
 
     public CommunicationChannel(BufferedReader bufferedReader, PrintWriter printWriter) {
@@ -57,11 +54,6 @@ public class CommunicationChannel {
 
     public synchronized void resetTimeout() {
         timeout = false;
-    }
-
-    //todo ho messo
-    public void setTimerEnded(boolean timerEnded){
-        this.timerEnded = timerEnded;
     }
 
     /**
@@ -191,7 +183,7 @@ public class CommunicationChannel {
         CountDown countDown = new CountDown(this, key);
         countDown.start();
 
-        while (!isClosed() && !timerEnded) {
+        while (!isClosed() && !countDown.isEnded()) {
             if (hasMessages(key)) {
                 countDown.finish();
                 return nextMessage(key);
@@ -211,7 +203,6 @@ public class CommunicationChannel {
         if (isClosed())
             throw new ChannelClosedException();
         writeKeyWord(TIMEOUT);
-        close();
         throw new TimeOutException();
     }
 

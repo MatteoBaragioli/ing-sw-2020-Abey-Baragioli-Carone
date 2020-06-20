@@ -10,6 +10,7 @@ public class Match extends Thread{
     private int currentPlayerIndex;
     private List<User> users;
     private HashMap<User, Player> userToPlayer = new HashMap<>();
+    private List<Player> players = new ArrayList<>();
     private List<Player> gamePlayers = new ArrayList<>();
     private Map gameMap = new Map();
     private List<GodCard> cards = new ArrayList<>();
@@ -22,7 +23,7 @@ public class Match extends Thread{
     public Match(List<User>  users) {
         for (User user : users)
             addNewPlayer(user);
-        communicationController = new CommunicationController(users, gamePlayers);
+        communicationController = new CommunicationController(users, players);
         this.users = users;
     }
 
@@ -33,11 +34,13 @@ public class Match extends Thread{
     private void addNewPlayer(User user) {
         Player player = new Player(user);
         userToPlayer.put(user, player);
+        players.add(player);
         gamePlayers.add(player);
     }
 
     public Match(List<Player> gamePlayers, CommunicationController communicationController) {
         this.gamePlayers = gamePlayers;
+        this.players.addAll(gamePlayers);
         this.communicationController = communicationController;
     }
 
@@ -120,7 +123,7 @@ public class Match extends Thread{
         int firstPlayerIndex = communicationController.chooseFirstPlayer(winner, gamePlayers);
 
         //MATCH
-        for(currentPlayerIndex = firstPlayerIndex; currentPlayerIndex<gamePlayers.size()&&winner==null;){
+        for(currentPlayerIndex = firstPlayerIndex; gamePlayers.size()>1 && currentPlayerIndex<gamePlayers.size() && winner==null;){
             Player currentPlayer = gamePlayers.get(currentPlayerIndex);
             announceCurrentPlayer(currentPlayer);
             try {
@@ -128,24 +131,23 @@ public class Match extends Thread{
             }
             catch (TimeOutException e) {
                 e.printStackTrace();
-                currentPlayer.setInGame(false);
                 currentPlayer.turnSequence().undo();
-
+                removePlayer(currentPlayer);
+                announceRemovedPlayer(currentPlayer);
             }
             catch (ChannelClosedException e) {
                 e.printStackTrace();
-                currentPlayer.setInGame(false);
                 currentPlayer.turnSequence().undo();
                 removeUser(findUser(e.name()));
             }
 
             try {
-                communicationController.updateView(gamePlayers, gameMap.createProxy());
+                communicationController.updateView(players, gameMap.createProxy());
             } catch (ChannelClosedException e) {
                 removeUser(findUser(e.name()));
             }
 
-            winner = currentPlayer.turnSequence().possibleWinner();
+            setWinner(currentPlayer.turnSequence().possibleWinner());
             if(!currentPlayer.isInGame()){
                 removePlayer(currentPlayer);
                 currentPlayerIndex--;
@@ -161,6 +163,8 @@ public class Match extends Thread{
                 currentPlayerIndex++;
             }
         }
+        if (gamePlayers.size()==1)
+            winner = gamePlayers.get(0);
         if(winner!=null)
             announceWinner();
 
@@ -244,8 +248,8 @@ public class Match extends Thread{
 
     private void announceWinner() {
         List<Player> receivers = new ArrayList<>();
-        for (int i = 0; i<gamePlayers.size() && !gamePlayers.isEmpty(); i++) {
-            Player player = gamePlayers.get(i);
+        for (int i = 0; i<players.size() && !players.isEmpty(); i++) {
+            Player player = players.get(i);
             if(!receivers.contains(player))
                 try {
                     communicationController.announceWinner(player, winner);
@@ -258,8 +262,8 @@ public class Match extends Thread{
 
     private void announceLoser(Player loser) {
         List<Player> receivers = new ArrayList<>();
-        for (int i = 0; i<gamePlayers.size() && !gamePlayers.isEmpty(); i++) {
-            Player player = gamePlayers.get(i);
+        for (int i = 0; i<players.size() && !players.isEmpty(); i++) {
+            Player player = players.get(i);
             if (!receivers.contains(player))
                 try {
                     communicationController.announceLoser(player, loser);
@@ -268,6 +272,17 @@ public class Match extends Thread{
                     e.printStackTrace();
                     removeUser(findUser(e.name()));
                 }
+        }
+    }
+
+    public void announceRemovedPlayer(Player player) {
+        if (!player.equals(winner))
+            announceLoser(player);
+        try {
+            communicationController.updateView(players, gameMap.createProxy());
+        } catch (ChannelClosedException e) {
+            e.printStackTrace();
+            removeUser(findUser(e.name()));
         }
     }
 
@@ -308,10 +323,13 @@ public class Match extends Thread{
                     valid = true;
                 } catch (TimeOutException e) {
                     e.printStackTrace();
-                    removeUser(findUser(e.name()));
+                    removePlayer(challenger);
+                    announceRemovedPlayer(challenger);
+                    valid = false;
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     removeUser(findUser(e.name()));
+                    valid = false;
                 }
             } else {
                 for (int i = 0; i < gamePlayers.size(); i++) {
@@ -329,43 +347,47 @@ public class Match extends Thread{
      */
     protected void assignCards() {
         List<GodCard> availableCards = new ArrayList<>(cards);
-        for(int i = gamePlayers.size()-1; i>=0; i--) {
-            Player player = gamePlayers.get(i);
+        if (gamePlayers.size()>1)
+            for(int i = gamePlayers.size()-1; i>=0; i--) {
+                Player player = gamePlayers.get(i);
 
-            if (player.godCard()==null) {
-                announceCurrentPlayer(player);
-                try {
-                    GodCard chosenCard = communicationController.chooseCard(player, availableCards);
-                    player.assignCard(chosenCard);
-                    availableCards.remove(chosenCard);
-                    while (i>gamePlayers.size())
-                        i--;
-                } catch (TimeOutException e) {
-                    e.printStackTrace();
-                    removeUser(findUser(e.name()));
-                } catch (ChannelClosedException e) {
-                    e.printStackTrace();
-                    removeUser(findUser(e.name()));
+                if (player.godCard()==null) {
+                    announceCurrentPlayer(player);
+                    try {
+                        GodCard chosenCard = communicationController.chooseCard(player, availableCards);
+                        player.assignCard(chosenCard);
+                        availableCards.remove(chosenCard);
+                        while (i>gamePlayers.size())
+                            i--;
+                    } catch (TimeOutException e) {
+                        e.printStackTrace();
+                        removePlayer(player);
+                        announceRemovedPlayer(player);
+                    } catch (ChannelClosedException e) {
+                        e.printStackTrace();
+                        removeUser(findUser(e.name()));
+                    }
                 }
             }
-        }
     }
 
 
     /**
-     * This method assignes two workers to every player. Every player chooses the starting position of their workers
+     * This method assigns two workers to every player. Every player chooses the starting position of their workers
      */
     protected void setUpWorkers(){
 
         List<Box> possibleSetUpPosition;
         Box position;
+
         List<Player> setUpOrder = new ArrayList<>(gamePlayers);
         for(Player player : gamePlayers){
             player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
         }
+
         for(Player player : setUpOrder){
             List<Box> freeMap = new ArrayList<>(gameMap.freePositions());
-            for (int i = 0; i<2 && player.isInGame(); i++) {
+            for (int i = 0; i<2 && player.isInGame() && gamePlayers.size()>1; i++) {
                 possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);
                 announceCurrentPlayer(player);
                 try {
@@ -379,8 +401,8 @@ public class Match extends Thread{
                     player.assignWorker(worker);
                 } catch (TimeOutException e) {
                     e.printStackTrace();
-                    player.setInGame(false);
-                    removeUser(findUser(e.name()));
+                    removePlayer(player);
+                    announceRemovedPlayer(player);
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     player.setInGame(false);
@@ -388,15 +410,11 @@ public class Match extends Thread{
                 }
 
                 try {
-                    communicationController.updateView(gamePlayers, gameMap.createProxy());
+                    communicationController.updateView(players, gameMap.createProxy());
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     removeUser(findUser(e.name()));
                 }
-            }
-            if (!player.isInGame()) {
-                removeUser(findUser(player.name()));
-                //todo update Map
             }
         }
     }
@@ -411,6 +429,7 @@ public class Match extends Thread{
         }
         loser.workers().clear();
         loser.setInGame(false);
+        gamePlayers.remove(loser);
     }
 
     /**
@@ -447,23 +466,20 @@ public class Match extends Thread{
     public synchronized void removeUser(User user) {
         if (userIsPlayer(user)) {
             Player player = findPlayer(user);
-            if (player.godCard()!=null)
+
+            if (player.godCard()!=null) //if the player is lost before choosing a card
                 cards.add(player.godCard());
-            if (player.isInGame()) {
+
+            if (player.isInGame()) { //if the user was in game and is quitting
                 removePlayer(player);
-                gamePlayers.remove(player);
+                players.remove(player);
             }
+
             communicationController.removeUser(player);
             userToPlayer.remove(user);
             users().remove(user);
-            if (!findPlayer(user).equals(winner))
-                announceLoser(player);
-            try {
-                communicationController.updateView(gamePlayers, gameMap.createProxy());
-            } catch (ChannelClosedException e) {
-                e.printStackTrace();
-                removeUser(findUser(e.name()));
-            }
+
+            announceRemovedPlayer(player);
         }
     }
 
