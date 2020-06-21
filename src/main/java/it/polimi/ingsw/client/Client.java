@@ -89,7 +89,6 @@ public class Client extends Thread {
             } catch (ChannelClosedException e) {
                 e.printStackTrace();
                 view.connectionLost();
-                //todo ho tolto exit
             }
             ClientController clientController = new ClientController();
             Listener listener = new Listener(communicationChannel);
@@ -126,7 +125,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage CARDS");
-                                //todo ho tolto exit
                             }
                             break;
                         case COUNTDOWN:
@@ -135,7 +133,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed COUNTDOWN");
-                                //todo ho tolto exit
                             }
                             break;
                         case CURRENT_PLAYER:
@@ -147,7 +144,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage Player");
-                                //todo ho tolto exit
                             }
                             break;
                         case DECK:
@@ -156,7 +152,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage DECK");
-                                //todo ho tolto exit
                             }
                             break;
                         case GOD_POWER:
@@ -167,7 +162,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage CONFIRMATION");
-                                //todo ho tolto exit
                             }
                             break;
                         case MAP:
@@ -176,7 +170,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage MAP");
-                                //todo ho tolto exit
                             }
                             break;
                         case MATCH_STORY:
@@ -185,7 +178,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage MATCH_STORY");
-                                //todo ho tolto exit
                             }
                             break;
                         case MATCH_TYPE:
@@ -195,7 +187,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed MATCH_TYPE");
-                                //todo ho tolto exit
                             }
                             break;
                         case OPPONENTS:
@@ -204,7 +195,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed OPPONENTS");
-                                //todo ho tolto exit
                             }
                             break;
                         case TIMEOUT:
@@ -226,7 +216,6 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection Lost");
-                                //todo ho tolto exit
                             }
                             break;
                         default:
