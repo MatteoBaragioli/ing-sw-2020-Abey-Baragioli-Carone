@@ -667,8 +667,9 @@ public class Cli extends Thread implements View {
             eraseBuffer();
             answer = askAnswer();
             if (findQuitInString(answer)) {
-                if(manageQuit())
-                    ended=true;
+                if(manageQuit()) {
+                    ended = true;
+                }
             }
             else valid=true;
         }
@@ -888,7 +889,7 @@ public class Cli extends Thread implements View {
                 if (checkIfUserIsQuitting(input)) {
                     ended = true;
                     try {
-                        client.closeConnection();
+                        client.end();
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                     }
@@ -919,5 +920,10 @@ public class Cli extends Thread implements View {
                 return true;
         }
         return false;
+    }
+    
+    @Override
+    public void serverDisconnected() {
+
     }
 }

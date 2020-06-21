@@ -106,6 +106,9 @@ public class Gui extends Application implements View {
     //close popup pane
     private final StackPane closePopup = new StackPane();
 
+    //connection errors pane
+    private StackPane connectionError = new StackPane();
+
     //yes choice of popup
     private Button yesPopupButton;
 
@@ -117,8 +120,8 @@ public class Gui extends Application implements View {
     private TranslateTransition translateRightTransitionIn;
 
     //connection variables
-    private String ip;
-    private int port;
+    private String ip = null;
+    private int port = -1;
 
     //player's infos
     private String nickname;
@@ -144,6 +147,9 @@ public class Gui extends Application implements View {
     private Text connectedText;
     private Button disconnectionButton;
     private Button enterGameButton;
+
+    //connection error message
+    private Text connectionErrorMessage;
 
     //variable that is true when menu page is ready
     private final AtomicBoolean gameIsReady = new AtomicBoolean(false);
@@ -175,29 +181,13 @@ public class Gui extends Application implements View {
     //variable that is true when menu scene is displayed
     private boolean inMenuPage = false;
 
+    //variable that is true when there is a connection error
+    private boolean isConnectionError = false;
+
 
     @Override
     public void start(Stage settingsStage){
-        this.settingStage = settingsStage;
-        StackPane settings = new StackPane();
-
-        createSettingsPane(settings);
-
-        Scene settingsScene = new Scene(settings);
-
-        settingsStage.setScene(settingsScene);
-        settingsStage.setWidth(screenWidth/2);
-        settingsStage.setHeight(screenHeight/2);
-
-        client.start();
-
-        settingsStage.setResizable(false);
-        settingsStage.initStyle(StageStyle.UNDECORATED);
-        settingsStage.setX((screenWidth - settingsStage.getWidth()) / 2);
-        settingsStage.setY((screenHeight - settingsStage.getHeight()) / 2);
-
-        settingsStage.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
-        settingsStage.show();
+        createSettingStage(settingsStage);
     }
 
     //-----------------------------------------GETTER--------------------------------------------------
@@ -248,8 +238,16 @@ public class Gui extends Application implements View {
         errorMessage.setText(message);
     }
 
+    private void setConnectionErrorMessage(String message){
+        connectionErrorMessage.setText(message);
+    }
+
     public void setNewMatch(){
         secondMatch = true;
+    }
+
+    public void setIsConnectionError(boolean isConnectionError){
+        this.isConnectionError = isConnectionError;
     }
 
     //-----------------------------------------END SETTER----------------------------------------------
@@ -266,7 +264,6 @@ public class Gui extends Application implements View {
         settingStage.close();
         try {
             client.end();
-            //todo matchScene.setCloseMatch();
         } catch (ChannelClosedException ex) {
             ex.printStackTrace();
             System.err.println("Connection Lost");
@@ -317,6 +314,31 @@ public class Gui extends Application implements View {
 
     //-----------------------------------------END SYNCHRONIZATION METHODS-----------------------------
 
+    private void createSettingStage(Stage settingsStage){
+        this.settingStage = settingsStage;
+        StackPane settings = new StackPane();
+
+        createSettingsPane(settings);
+
+        Scene settingsScene = new Scene(settings);
+
+        settingsStage.setScene(settingsScene);
+        settingsStage.setWidth(screenWidth/2);
+        settingsStage.setHeight(screenHeight/2);
+
+        if(!isConnectionError)
+            client.start();
+
+        setIsConnectionError(false);
+        settingsStage.setResizable(false);
+        settingsStage.initStyle(StageStyle.UNDECORATED);
+        settingsStage.setX((screenWidth - settingsStage.getWidth()) / 2);
+        settingsStage.setY((screenHeight - settingsStage.getHeight()) / 2);
+
+        settingsStage.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
+        settingsStage.show();
+    }
+
     /**
      * This method creates primary scene of the game (after setting window)
      */
@@ -350,7 +372,9 @@ public class Gui extends Application implements View {
 
         matchPage = new StackPane();
 
-        mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, closePopup);
+        connectionError = createConnectionErrorPane();
+
+        mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, closePopup, connectionError);
         mainScene.setOnMousePressed(e -> {
             xOffset = window.getX() - e.getScreenX();
             yOffset = window.getY() - e.getScreenY();
@@ -384,6 +408,7 @@ public class Gui extends Application implements View {
         closePopup.setAlignment(Pos.CENTER);
         matchPage.setVisible(false);
         howToPlayBox.setVisible(false);
+        connectionError.setVisible(false);
 
         createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
@@ -511,11 +536,11 @@ public class Gui extends Application implements View {
         disconnectionButton.setFont(lillybelleFont);
 
         connectionSettings.getChildren().addAll(ipForm, ipFormField, portForm, portFormField, connectionButton, loadingIcon, errorMessage, connectedText, disconnectionButton);
-        ipForm.setVisible(false);
-        ipFormField.setVisible(false);
-        portForm.setVisible(false);
-        portFormField.setVisible(false);
-        connectionButton.setVisible(false);
+        ipForm.setVisible(true);
+        ipFormField.setVisible(true);
+        portForm.setVisible(true);
+        portFormField.setVisible(true);
+        connectionButton.setVisible(true);
         loadingIcon.setVisible(false);
         loadingIcon.setManaged(false);
         errorMessage.setVisible(false);
@@ -891,11 +916,75 @@ public class Gui extends Application implements View {
         cloudsTimer.play();
     }
 
+    private StackPane createConnectionErrorPane(){
+        StackPane connectionPane = new StackPane();
+
+        Image connectionFrame = new Image(MatchScene.class.getResource("/img/loadingAndPopups/frame2.png").toString(), screenWidth/3, screenHeight/3, false, false);
+        ImageView connectionErrorView = new ImageView(connectionFrame);
+
+        VBox connectionErrorBox = new VBox();
+
+        connectionErrorMessage = new Text("Connection lost");
+        connectionErrorMessage.setFont(lillybelleFont);
+        connectionErrorMessage.setFill(DARKRED);
+
+        Button okConnectionButton = new Button("Ok");
+        okConnectionButton.setFont(lillybelleFont);
+
+        okConnectionButton.setOnMouseEntered(e -> {
+            okConnectionButton.setCursor(Cursor.HAND);
+        });
+        okConnectionButton.setOnMouseExited(e -> {
+            okConnectionButton.setCursor(Cursor.DEFAULT);
+        });
+        okConnectionButton.setOnAction(e -> {
+            client.setRestart(true);
+            menuScene.setClose();
+            matchScene.setCloseMatch();
+            window.close();
+            setIsConnectionError(true);
+            createSettingStage(new Stage());
+        });
+
+        connectionErrorBox.getChildren().addAll(connectionErrorMessage, okConnectionButton);
+
+        connectionPane.getChildren().addAll(connectionErrorView, connectionErrorBox);
+        connectionErrorBox.setAlignment(Pos.CENTER);
+
+        return connectionPane;
+    }
+
+    public void showConnectionError(){
+        FadeTransition paneFadeIn = new FadeTransition(Duration.millis(500), connectionError);
+        paneFadeIn.setFromValue(0);
+        paneFadeIn.setToValue(1);
+        paneFadeIn.play();
+        connectionError.setVisible(true);
+
+        Timeline showingTimer = new Timeline(new KeyFrame(
+                Duration.millis(500),
+                ae -> {
+                    matchScene.matchBackground().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.mapView().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.playerViewPane().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.guiMap().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.pausePane().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.activePowers().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.helper().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.turnStory().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.myTurn().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.chooseCardsBox().setEffect(new BoxBlur(5, 5, 5));
+                    matchScene.chooseCardPane().setEffect(new BoxBlur(5, 5, 5));
+                }));
+        showingTimer.play();
+    }
+
 
     /**
      * This method creates all the form about connection
      */
     private synchronized void askConnection(){
+        closeWindow.set(false);
         valid = new AtomicBoolean(false);
         AtomicBoolean validPort = new AtomicBoolean(false);
         ipForm.setVisible(true);
@@ -1278,7 +1367,7 @@ public class Gui extends Application implements View {
      */
     @Override
     public void connectionLost() {
-        //todo
+        //todo ti sei disconnesso
     }
 
     /**
@@ -1397,6 +1486,25 @@ public class Gui extends Application implements View {
     @Override
     public void timeOut() {
         matchScene.setTimeoutLoser(true);
-        //todo togliere setLoser(new PlayerProxy(nickname, Colour.BLUE, null));
+    }
+
+    @Override
+    public void serverDisconnected() {
+        if(!inMenuPage) {
+            connectedText.setVisible(false);
+            connectedText.setManaged(false);
+            disconnectionButton.setVisible(false);
+            disconnectionButton.setManaged(false);
+            loadingIcon.setVisible(true);
+            loadingIcon.setManaged(true);
+            errorMessage.setVisible(true);
+            errorMessage.setManaged(true);
+            enterGameButton.setVisible(false);
+            enterGameButton.setManaged(false);
+            restartConnection();
+            setErrorMessage("Connection lost");
+        } else {
+            showConnectionError();
+        }
     }
 }

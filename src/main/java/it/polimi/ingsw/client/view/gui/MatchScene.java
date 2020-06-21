@@ -270,6 +270,49 @@ public class MatchScene {
         return timeoutLoser;
     }
 
+    public ImageView matchBackground(){
+        return matchBackground;
+    }
+
+    public StackPane turnStory(){
+        return turnStory;
+    }
+
+    public StackPane helper(){
+        return helper;
+    }
+
+    public StackPane activePowers(){
+        return activePowers;
+    }
+
+    public StackPane pausePane(){
+        return pausePane;
+    }
+
+    public ImageView mapView(){
+        return mapView;
+    }
+
+    public GuiMap guiMap(){
+        return guiMap;
+    }
+
+    public StackPane playerViewPane(){
+        return playerViewPane;
+    }
+
+    public StackPane myTurn(){
+        return myTurn;
+    }
+
+    public StackPane chooseCardsBox(){
+        return chooseCardsBox;
+    }
+
+    public StackPane chooseCardPane(){
+        return chooseCard;
+    }
 
     //_______________________________________________END GETTER__________________________________________________________
 

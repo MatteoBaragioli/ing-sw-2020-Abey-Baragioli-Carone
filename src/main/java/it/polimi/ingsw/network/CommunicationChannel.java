@@ -59,8 +59,9 @@ public class CommunicationChannel {
     /**
      * This method blocks every input and output communication
      */
-    public void close() {
+    public synchronized void close() {
         closed = true;
+        notifyAll();
     }
 
     /**

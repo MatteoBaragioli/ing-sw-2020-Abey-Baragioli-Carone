@@ -648,7 +648,7 @@ public class MenuScene {
         notifyAll();
     }
 
-    private synchronized void setClose(){
+    public synchronized void setClose(){
         close.set(true);
         notifyAll();
     }

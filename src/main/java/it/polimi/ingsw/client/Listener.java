@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.*;
 
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
@@ -9,10 +10,12 @@ import java.io.IOException;
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
 public class Listener extends Thread {
-    private final CommunicationChannel communicationChannel;
+    public final CommunicationChannel communicationChannel;
+    public final View view;
 
-    public Listener(CommunicationChannel communicationChannel) {
+    public Listener(CommunicationChannel communicationChannel, View view) {
         this.communicationChannel = communicationChannel;
+        this.view = view;
     }
 
     public void run() {
@@ -46,9 +49,9 @@ public class Listener extends Thread {
                         break;
                 }
             } catch (IOException e) {
-                //todo chiusura o disconnessione del server
                 e.printStackTrace();
                 communicationChannel.close();
+                view.serverDisconnected();
             }
         }
     }

@@ -37,6 +37,10 @@ public class Client extends Thread {
         //    Application.launch(Gui.class, args);
     }
 
+    public void setRestart(boolean restart){
+        this.restart = restart;
+    }
+
     @Override
     public void run(){
         while(restart && !close) {
@@ -88,10 +92,11 @@ public class Client extends Thread {
                 communicationChannel.writeKeyWord(HI);
             } catch (ChannelClosedException e) {
                 e.printStackTrace();
+                System.err.println("Connection lost");
                 view.connectionLost();
             }
             ClientController clientController = new ClientController();
-            Listener listener = new Listener(communicationChannel);
+            Listener listener = new Listener(communicationChannel, view);
             listener.start();
 
             while (!communicationChannel.isClosed()) {
@@ -117,6 +122,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Manage boxes error");
+                                restart = true;
                             }
                             break;
                         case CARD:
@@ -125,6 +131,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage CARDS");
+                                restart = true;
                             }
                             break;
                         case COUNTDOWN:
@@ -133,6 +140,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed COUNTDOWN");
+                                restart = true;
                             }
                             break;
                         case CURRENT_PLAYER:
@@ -144,6 +152,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage Player");
+                                restart = true;
                             }
                             break;
                         case DECK:
@@ -152,6 +161,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage DECK");
+                                restart = true;
                             }
                             break;
                         case GOD_POWER:
@@ -162,6 +172,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage CONFIRMATION");
+                                restart = true;
                             }
                             break;
                         case MAP:
@@ -170,6 +181,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage MAP");
+                                restart = true;
                             }
                             break;
                         case MATCH_STORY:
@@ -178,6 +190,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed Manage MATCH_STORY");
+                                restart = true;
                             }
                             break;
                         case MATCH_TYPE:
@@ -187,6 +200,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed MATCH_TYPE");
+                                restart = true;
                             }
                             break;
                         case OPPONENTS:
@@ -195,6 +209,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection closed OPPONENTS");
+                                restart = true;
                             }
                             break;
                         case TIMEOUT:
@@ -202,7 +217,7 @@ public class Client extends Thread {
                                 clientController.manageTimeOut(communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
-
+                                restart = true;
                             }
                             break;
                         case UNIQUE_USERNAME:
@@ -216,6 +231,7 @@ public class Client extends Thread {
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
                                 System.err.println("Connection Lost");
+                                restart = true;
                             }
                             break;
                         default:
@@ -223,6 +239,7 @@ public class Client extends Thread {
                                 communicationChannel.popMessage();
                             } catch (ChannelClosedException e) {
                                 e.printStackTrace();
+                                restart = true;
                             }
                     }
                 }
@@ -272,7 +289,7 @@ public class Client extends Thread {
      * @throws ChannelClosedException
      */
     public void closeConnection()  throws ChannelClosedException {
-        if(communicationChannel!=null) {
+        if(communicationChannel!=null && !communicationChannel.isClosed()) {
             communicationChannel.writeKeyWord(QUIT);
             communicationChannel.close();
         }
