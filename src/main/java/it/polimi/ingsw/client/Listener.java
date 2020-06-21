@@ -19,14 +19,32 @@ public class Listener extends Thread {
         while (!communicationChannel.isClosed()) {
             try {
                 CommunicationProtocol key = communicationChannel.nextKey();
-                if (key == PING)
-                    try {
-                        communicationChannel.writeKeyWord(PONG);
-                    } catch (ChannelClosedException e) {
-                        e.printStackTrace();
-                        System.err.println("PING Error");
-                        System.exit(-1);
-                    }
+                switch (key) {
+                    case PING:
+                        try {
+                            communicationChannel.writeKeyWord(PONG);
+                        } catch (ChannelClosedException e) {
+                            e.printStackTrace();
+                            System.err.println("PING Error");
+                        }
+                        break;
+                    case CURRENT_PLAYER:
+                    case LOSER:
+                    case MATCH_STORY:
+                    case MAP:
+                    case MY_PLAYER:
+                    case OPPONENTS:
+                    case TIMEOUT:
+                    case WINNER:           //todo c'è??
+
+                        try {
+                            communicationChannel.writeKeyWord(RECEIVED);
+                        } catch (ChannelClosedException e) {
+                            e.printStackTrace();
+                            System.err.println("RECEIVED Error");
+                        }
+                        break;
+                }
             } catch (IOException e) {
                 //todo chiusura o disconnessione del server
                 e.printStackTrace();

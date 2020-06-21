@@ -64,7 +64,7 @@ public class ClientHandler extends Thread {
             new UserManager(dataBase, communicationChannel).start();
         }
 
-        while (!communicationChannel.isClosed() && pinger.isAlive()) {
+        while (!communicationChannel.isClosed() && !pinger.isEnded()) {
             try {
                 if (communicationChannel.nextKey() == QUIT)
                     communicationChannel.close();

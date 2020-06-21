@@ -10,6 +10,7 @@ import it.polimi.ingsw.network.objects.*;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
@@ -21,12 +22,15 @@ public class ClientController {
         String content = communicationChannel.popMessage();
         Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
         cards = new Gson().fromJson(communicationChannel.getContent(content), listType);
-        index = view.askDeck(cards);
-
-        if (index[0] == -1)
-            communicationChannel.writeKeyWord(QUIT);
-        else
-            communicationChannel.writeChoicesFromList(DECK, index);
+        try {
+            index = view.askDeck(cards);
+            if (index[0] == -1)
+                communicationChannel.writeKeyWord(QUIT);
+            else
+                communicationChannel.writeChoicesFromList(DECK, index);
+        } catch (TimeoutException e) {
+            communicationChannel.writeKeyWord(TIMEOUT);
+        }
     }
 
     public void manageListOfCards(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
@@ -35,11 +39,15 @@ public class ClientController {
         String content = communicationChannel.popMessage();
         Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
         cards = new Gson().fromJson(communicationChannel.getContent(content), listType);
-        index = view.askCards(cards);
-        if (index == -1)
-            communicationChannel.writeKeyWord(QUIT);
-        else
-            communicationChannel.writeChoiceFromList(CARD, index);
+        try {
+            index = view.askCards(cards);
+            if (index == -1)
+                communicationChannel.writeKeyWord(QUIT);
+            else
+                communicationChannel.writeChoiceFromList(CARD, index);
+        } catch (TimeoutException e) {
+            communicationChannel.writeKeyWord(TIMEOUT);
+        }
     }
 
     public void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
@@ -49,7 +57,6 @@ public class ClientController {
         Type listType = new TypeToken<List<BoxProxy>>() {}.getType();
         boxes = new Gson().fromJson(communicationChannel.getContent(message), listType);
         view.updateMap(boxes);
-        communicationChannel.writeKeyWord(RECEIVED);
     }
 
     public void manageListOfPositions(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
@@ -61,15 +68,17 @@ public class ClientController {
 
         int index;
 
-        if (key == WORKER)
-            index = view.askWorker(positions);
-        else
-            index = view.askPosition(positions);
-
-        if (index == -1)
-            communicationChannel.writeKeyWord(QUIT);
-        else {
-            communicationChannel.writeChoiceFromList(key, index);
+        try {
+            if (key == WORKER)
+                index = view.askWorker(positions);
+            else
+                index = view.askPosition(positions);
+            if (index == -1)
+                communicationChannel.writeKeyWord(QUIT);
+            else
+                communicationChannel.writeChoiceFromList(key, index);
+        } catch (TimeoutException e) {
+            communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
 
@@ -92,7 +101,6 @@ public class ClientController {
                 view.setLoser(player);
                 break;
         }
-        communicationChannel.writeKeyWord(RECEIVED);
     }
 
     public void manageListOfOpponents(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
@@ -101,26 +109,16 @@ public class ClientController {
         Type listType = new TypeToken<List<PlayerProxy>>() {}.getType();
         players = new Gson().fromJson(communicationChannel.getContent(message), listType);
         view.setOpponentsInfo(players);
-        communicationChannel.writeKeyWord(RECEIVED);
     }
 
     public void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         communicationChannel.writeConfirmation(key, view.askConfirmation(key));
     }
 
-    public void manageMatchStart(CommunicationChannel communicationChannel, View view) {
-        //setting of players
-    }
-
-    public void waitForPlayers(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-        communicationChannel.writeKeyWord(RECEIVED);
-    }
-
     public void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         String message = communicationChannel.popMessage();
         Type type = new TypeToken<List<String>>() {}.getType();
         view.tellStory(new Gson().fromJson(communicationChannel.getContent(message), type));
-        communicationChannel.writeKeyWord(RECEIVED);
     }
 
     public void manageTimeOut(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {

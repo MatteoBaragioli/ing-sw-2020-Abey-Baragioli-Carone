@@ -749,7 +749,7 @@ public class Cli extends Thread implements View {
      * @throws IOException
      */
     @Override
-    public String askUserName() {
+    public String askUserName(CommunicationProtocol key) {
         boolean valid=false;
         String answer=null;
         while(!valid && !ended) {

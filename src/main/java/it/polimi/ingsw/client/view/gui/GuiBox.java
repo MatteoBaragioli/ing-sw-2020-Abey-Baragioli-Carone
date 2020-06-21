@@ -176,6 +176,7 @@ public class GuiBox extends Button {
      */
     public void build(int level, boolean isThereDome){
         Image levelImg;
+        dome.setImage(null);
         if(level==0){
             building.setImage(null);
         }else {

@@ -7,17 +7,18 @@ import it.polimi.ingsw.network.objects.PlayerProxy;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public interface View {
-    int askPosition(List<int[]> positions) ;
-    int askCards(List<GodCardProxy> cards);
-    int[] askDeck(List<GodCardProxy> cards);
+    int askPosition(List<int[]> positions) throws TimeoutException;
+    int askCards(List<GodCardProxy> cards) throws TimeoutException;
+    int[] askDeck(List<GodCardProxy> cards) throws TimeoutException;
     int askConfirmation(CommunicationProtocol key);
     String askIp();
     int askMatchType();
     int askPort();
-    String askUserName() throws IOException;
-    int askWorker(List<int[]> workers);
+    String askUserName(CommunicationProtocol key) throws IOException;
+    int askWorker(List<int[]> workers) throws TimeoutException;
     void prepareAdditionalCommunication(CommunicationProtocol key);
     void updateMap(List<BoxProxy> boxes);
     void setMyPlayer(PlayerProxy player);

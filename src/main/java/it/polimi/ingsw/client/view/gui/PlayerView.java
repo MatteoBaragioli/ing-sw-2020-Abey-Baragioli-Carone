@@ -550,7 +550,7 @@ public class PlayerView extends StackPane {
         playerStory.setAlignment(CENTER);
 
 
-        Label storyContentDefault = new Label("No one has player yet");
+        Label storyContentDefault = new Label("No one has played yet");
         storyContentDefault.setFont(lillybelle);
         storyContentDefault.setTextAlignment(TextAlignment.CENTER);
         storyContentDefault.setAlignment(CENTER);
@@ -1159,16 +1159,13 @@ public class PlayerView extends StackPane {
     public void playTimer(){
         if(timerTimeLine!=null)
             timerTimeLine.stop();
-        //AtomicReference<String> min = new AtomicReference<>("02");
-        //AtomicReference<String> sec = new AtomicReference<>("00");
-        AtomicReference<String> min = new AtomicReference<>("00");
-        AtomicReference<String> sec = new AtomicReference<>("30");
+        AtomicReference<String> min = new AtomicReference<>("02");
+        AtomicReference<String> sec = new AtomicReference<>("00");
         timerCounter.setFont(standardFont);
         timerCounter.setText(min.toString() + " : " + sec.toString());
-        //AtomicInteger seconds = new AtomicInteger(0);
-        //AtomicInteger minutes = new AtomicInteger(2);
-        AtomicInteger seconds = new AtomicInteger(30);
-        AtomicInteger minutes = new AtomicInteger(0);
+        timerCounter.setTextFill(BLACK);
+        AtomicInteger seconds = new AtomicInteger(0);
+        AtomicInteger minutes = new AtomicInteger(2);
         timerTimeLine = new Timeline(
                 new KeyFrame(
                         Duration.millis( 1000 ),
@@ -1213,9 +1210,10 @@ public class PlayerView extends StackPane {
             timerTimeLine.stop();
         timerCounter.setText("Wait");
         timerCounter.setFont(lillybelle);
+        timerCounter.setTextFill(BLACK);
         timerTimeLine = new Timeline(
                 new KeyFrame(
-                        Duration.millis( 800 ),
+                        Duration.millis(800),
                         event -> {
                             if(timerCounter.getText().equals("Wait")){
                                 timerCounter.setText("Wait.");

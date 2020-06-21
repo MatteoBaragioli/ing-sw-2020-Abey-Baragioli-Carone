@@ -40,6 +40,7 @@ import javafx.util.Duration;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javafx.scene.paint.Color.*;
@@ -73,7 +74,7 @@ public class Gui extends Application implements View {
     private Stage settingStage;
 
     //primary window
-    private Stage window;
+    private Stage window = null;
 
     //menu scene
     private MenuScene menuScene;
@@ -82,16 +83,16 @@ public class Gui extends Application implements View {
     private MatchScene matchScene;
 
     //primary window pane
-    private final StackPane mainScene = new StackPane();
+    private StackPane mainScene;
 
     //opening page
     private final StackPane openingPage = new StackPane();
 
     //menu page
-    private final HBox menuPage = new HBox();
+    private HBox menuPage;
 
     //match page
-    private final StackPane matchPage = new StackPane();
+    private StackPane matchPage;
 
     //loading page
     private final StackPane loadingPage = new StackPane();
@@ -130,7 +131,7 @@ public class Gui extends Application implements View {
     private List<PlayerProxy> opponents = new ArrayList<>();
 
     //variable that tells if user is doing a new match
-    private boolean newMatch = false;
+    private boolean secondMatch = false;
 
     //settings window form variables
     private Text ipForm;
@@ -248,7 +249,7 @@ public class Gui extends Application implements View {
     }
 
     public void setNewMatch(){
-        newMatch = true;
+        secondMatch = true;
     }
 
     //-----------------------------------------END SETTER----------------------------------------------
@@ -265,7 +266,7 @@ public class Gui extends Application implements View {
         settingStage.close();
         try {
             client.end();
-            matchScene.setCloseMatch();
+            //todo matchScene.setCloseMatch();
         } catch (ChannelClosedException ex) {
             ex.printStackTrace();
             System.err.println("Connection Lost");
@@ -320,49 +321,69 @@ public class Gui extends Application implements View {
      * This method creates primary scene of the game (after setting window)
      */
     public void primaryScene(){
-        window = new Stage();
-        if(screenWidth == Screen.getPrimary().getBounds().getWidth() && screenHeight == Screen.getPrimary().getBounds().getHeight()) {
-            window.setMaximized(true);
-        } else {
-            window.setWidth(screenWidth);
-            window.setHeight(screenHeight);
-            //undecorated but movable
-            mainScene.setOnMousePressed(e -> {
-                xOffset = window.getX() - e.getScreenX();
-                yOffset = window.getY() - e.getScreenY();
-            });
-            mainScene.setOnMouseDragged(e -> {
-                window.setX(e.getScreenX() + xOffset);
-                window.setY(e.getScreenY() + yOffset);
-            });
-            window.setX((Screen.getPrimary().getBounds().getWidth() - window.getWidth()) / 2);
-            window.setY((Screen.getPrimary().getBounds().getHeight() - window.getHeight()) / 2);
+        mainScene = new StackPane();
+        if(window==null) {
+            window = new Stage();
+            if (screenWidth == Screen.getPrimary().getBounds().getWidth() && screenHeight == Screen.getPrimary().getBounds().getHeight()) {
+                window.setMaximized(true);
+            } else {
+                window.setWidth(screenWidth);
+                window.setHeight(screenHeight);
+                window.setX((Screen.getPrimary().getBounds().getWidth() - window.getWidth()) / 2);
+                window.setY((Screen.getPrimary().getBounds().getHeight() - window.getHeight()) / 2);
 
+            }
+            window.initStyle(StageStyle.UNDECORATED);
+            window.setTitle("Santorini");
+            window.setOnCloseRequest(e -> {
+                e.consume();
+                closeProgram();
+            });
+            window.setResizable(false);
+            window.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
         }
-        window.initStyle(StageStyle.UNDECORATED);
-        window.setTitle("Santorini");
-        window.setOnCloseRequest(e -> {
-            e.consume();
-            closeProgram();
-        });
-        window.setResizable(false);
-        window.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
 
 
         closePopup();
 
+        menuPage = new HBox();
+
+        matchPage = new StackPane();
 
         mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, closePopup);
-        openingPage.setVisible(true);
-        menuPage.setVisible(false);
+        mainScene.setOnMousePressed(e -> {
+            xOffset = window.getX() - e.getScreenX();
+            yOffset = window.getY() - e.getScreenY();
+        });
+        mainScene.setOnMouseDragged(e -> {
+            window.setX(e.getScreenX() + xOffset);
+            window.setY(e.getScreenY() + yOffset);
+        });
+
+        openingPage.setVisible(!secondMatch);
+        menuPage.setVisible(secondMatch);
+
+        if(!secondMatch) {
+            openingPage();
+            transitionClouds.setVisible(false);
+        } else {
+            menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
+            menuScene.setMenuScene();
+            inMenuPage = true;
+            Timeline waitTransitionTimer = new Timeline(new KeyFrame(
+                    Duration.millis(1500),
+                    ae -> {
+                        transitionClouds.setVisible(false);
+                    }));
+            waitTransitionTimer.play();
+            restartClient();
+
+        }
         loadingPage.setVisible(false);
-        transitionClouds.setVisible(false);
         closePopup.setVisible(false);
         closePopup.setAlignment(Pos.CENTER);
         matchPage.setVisible(false);
         howToPlayBox.setVisible(false);
-
-        openingPage();
 
         createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
@@ -1041,7 +1062,7 @@ public class Gui extends Application implements View {
      */
     @Override
     public String askIp() {
-        if(!newMatch){
+        if(!secondMatch){
             askConnection();
         }
         return ip;
@@ -1065,11 +1086,16 @@ public class Gui extends Application implements View {
      * @return Username
      */
     @Override
-    public String askUserName() {
-        if(!newMatch) {
-            if(!inMenuPage)
+    public String askUserName(CommunicationProtocol key) {
+        if(key == CommunicationProtocol.USERNAME && !secondMatch) {
+            if (!inMenuPage)
                 prepareToStart();
-            if(!restartConnection.get() && !closeWindow.get())
+            if (!restartConnection.get() && !closeWindow.get())
+                nickname = menuScene.askNickname();
+        } else if (key == CommunicationProtocol.UNIQUE_USERNAME){
+            if (!inMenuPage)
+                prepareToStart();
+            if (!restartConnection.get() && !closeWindow.get())
                 nickname = menuScene.askNickname();
         }
         return nickname;
@@ -1092,7 +1118,7 @@ public class Gui extends Application implements View {
      * @return Chosen box
      */
     @Override
-    public int askPosition(List<int[]> positions) {
+    public int askPosition(List<int[]> positions) throws TimeoutException {
         Platform.runLater(() -> matchScene.chooseDestination(positions));
         Platform.runLater(() -> matchScene.playerView().playTimer());
         return matchScene.chosenDestination();
@@ -1104,8 +1130,9 @@ public class Gui extends Application implements View {
      * @return Chosen cards indexes
      */
     @Override
-    public int[] askDeck(List<GodCardProxy> cards) {
+    public int[] askDeck(List<GodCardProxy> cards) throws TimeoutException {
         Platform.runLater(() -> matchScene.chooseCards(cards));
+        Platform.runLater(() -> matchScene.playerView().playTimer());
         return matchScene.chosenCards();
     }
 
@@ -1115,8 +1142,9 @@ public class Gui extends Application implements View {
      * @return Chosen card
      */
     @Override
-    public int askCards(List<GodCardProxy> cards) {
+    public int askCards(List<GodCardProxy> cards) throws TimeoutException {
         Platform.runLater(() -> matchScene.chooseCard(cards));
+        Platform.runLater(() -> matchScene.playerView().playTimer());
         return matchScene.chosenCard();
     }
 
@@ -1144,7 +1172,7 @@ public class Gui extends Application implements View {
      * @return Chosen worker position
      */
     @Override
-    public int askWorker(List<int[]> workers) {
+    public int askWorker(List<int[]> workers) throws TimeoutException {
         Platform.runLater(() -> matchScene.playerView().playTimer());
         return askPosition(workers);
     }

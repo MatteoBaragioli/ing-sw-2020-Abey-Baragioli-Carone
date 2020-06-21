@@ -103,148 +103,139 @@ public class Client extends Thread {
                     e.printStackTrace();
                     System.err.println("Connection lost");
                     view.connectionLost();
-                    System.exit(1);
+                    key = INVALID;
                 }
+                if(key != INVALID) {
+                    view.prepareAdditionalCommunication(key);
+                    switch (key) {
+                        case BUILD:
+                        case DESTINATION:
+                        case REMOVAL:
+                        case START_POSITION:
+                        case WORKER:
+                            try {
+                                clientController.manageListOfPositions(key, communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Manage boxes error");
+                            }
+                            break;
+                        case CARD:
+                            try {
+                                clientController.manageListOfCards(communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed Manage CARDS");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case COUNTDOWN:
+                            try {
+                                communicationChannel.popMessage();
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed COUNTDOWN");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case CURRENT_PLAYER:
+                        case LOSER:
+                        case MY_PLAYER:
+                        case WINNER:
+                            try {
+                                clientController.managePlayer(key, communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed Manage Player");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case DECK:
+                            try {
+                                clientController.manageDeck(communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed Manage DECK");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case GOD_POWER:
+                        case UNDO:
+                            try {
+                                communicationChannel.popMessage();
+                                clientController.manageConfirmation(key, communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed Manage CONFIRMATION");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case MAP:
+                            try {
+                                clientController.manageMapAsListOfBoxes(communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed Manage MAP");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case MATCH_STORY:
+                            try {
+                                clientController.manageMatchStory(communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed Manage MATCH_STORY");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case MATCH_TYPE:
+                            try {
+                                communicationChannel.popMessage();
+                                communicationChannel.writeMatchType(view.askMatchType());
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed MATCH_TYPE");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case OPPONENTS:
+                            try {
+                                clientController.manageListOfOpponents(communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection closed OPPONENTS");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        case TIMEOUT:
+                            try {
+                                clientController.manageTimeOut(communicationChannel, view);
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
 
-                view.prepareAdditionalCommunication(key);
-                switch (key) {
-                    case BUILD:
-                    case DESTINATION:
-                    case REMOVAL:
-                    case START_POSITION:
-                    case WORKER:
-                        try {
-                            clientController.manageListOfPositions(key, communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Manage boxes error");
-                        }
-                        break;
-                    case CARD:
-                        try {
-                            clientController.manageListOfCards(communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed Manage CARDS");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case COUNTDOWN:
-                        try {
-                            communicationChannel.popMessage();
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed COUNTDOWN");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case CURRENT_PLAYER:
-                    case LOSER:
-                    case MY_PLAYER:
-                    case WINNER:
-                        try {
-                            clientController.managePlayer(key, communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed Manage Player");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case DECK:
-                        try {
-                            clientController.manageDeck(communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed Manage DECK");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case GOD_POWER:
-                    case UNDO:
-                        try {
-                            communicationChannel.popMessage();
-                            clientController.manageConfirmation(key, communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed Manage CONFIRMATION");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case MAP:
-                        try {
-                            clientController.manageMapAsListOfBoxes(communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed Manage MAP");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case MATCH_STORY:
-                        try {
-                            clientController.manageMatchStory(communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed Manage MATCH_STORY");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case MATCH_TYPE:
-                        try {
-                            communicationChannel.popMessage();
-                            communicationChannel.writeMatchType(view.askMatchType());
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed MATCH_TYPE");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case OPPONENTS:
-                        try {
-                            clientController.manageListOfOpponents(communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection closed OPPONENTS");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case TIMEOUT:
-                        try {
-                            clientController.manageTimeOut(communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-
-                        }
-                        break;
-                    case UNIQUE_USERNAME:
-                    case USERNAME:
-                        try {
-                            communicationChannel.popMessage();
-                            communicationChannel.writeUsername(view.askUserName());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            System.err.println("View Error");
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection Lost");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    case WAIT_FOR_PLAYERS:
-                        try {
-                            communicationChannel.popMessage();
-                            clientController.waitForPlayers(communicationChannel, view);
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                            System.err.println("Connection Lost");
-                            //todo ho tolto exit
-                        }
-                        break;
-                    default:
-                        try {
-                            communicationChannel.popMessage();
-                        } catch (ChannelClosedException e) {
-                            e.printStackTrace();
-                        }
+                            }
+                            break;
+                        case UNIQUE_USERNAME:
+                        case USERNAME:
+                            try {
+                                communicationChannel.popMessage();
+                                communicationChannel.writeUsername(view.askUserName(key));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                System.err.println("View Error");
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                                System.err.println("Connection Lost");
+                                //todo ho tolto exit
+                            }
+                            break;
+                        default:
+                            try {
+                                communicationChannel.popMessage();
+                            } catch (ChannelClosedException e) {
+                                e.printStackTrace();
+                            }
+                    }
                 }
             }
 

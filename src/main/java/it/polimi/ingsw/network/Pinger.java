@@ -7,9 +7,19 @@ import static it.polimi.ingsw.network.CommunicationProtocol.PING;
 public class Pinger extends Thread {
 
     final public CommunicationChannel communicationChannel;
+    private boolean ended = false;
 
     public Pinger(CommunicationChannel communicationChannel) {
         this.communicationChannel = communicationChannel;
+    }
+
+    public boolean isEnded() {
+        return ended;
+    }
+
+    public synchronized void end() {
+        ended = true;
+        notifyAll();
     }
 
     public void run() {
@@ -38,7 +48,7 @@ public class Pinger extends Thread {
 
             if (!communicationChannel.isClosed() && (countdown == 0 || !communicationChannel.isPinged())) {
                 communicationChannel.close();
-                notifyAll();
+                end();
                 System.out.println("Client non connesso");
             }
             else {

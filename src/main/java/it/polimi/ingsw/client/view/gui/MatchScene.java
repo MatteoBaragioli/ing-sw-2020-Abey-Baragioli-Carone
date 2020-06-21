@@ -27,6 +27,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -872,7 +873,7 @@ public class MatchScene {
      * This method waits for player (if he is the challenger) to choose all the cards of the match and returns them
      * @return Chosen cards indexes (it refers to list of cards)
      */
-    public synchronized int[] chosenCards(){
+    public synchronized int[] chosenCards() throws TimeoutException{
         while(!confirmChallengerCards.get() && !closeMatch.get() && !endTimer.get()){
             try {
                 wait();
@@ -883,7 +884,7 @@ public class MatchScene {
         if(closeMatch.get())
             return new int[] {-1};
         else if(endTimer.get())
-            return new int[] {0};
+            throw new TimeoutException();
         return cardsIndexes;
     }
 
@@ -891,7 +892,7 @@ public class MatchScene {
      * This method waits for player to choose his card for the match and returns it
      * @return Chosen card index (it refers to list of cards)
      */
-    public synchronized int chosenCard(){
+    public synchronized int chosenCard() throws TimeoutException{
         while(!confirmMyCards.get() && !closeMatch.get() && !endTimer.get()){
             try {
                 wait();
@@ -902,7 +903,7 @@ public class MatchScene {
         if(closeMatch.get())
             return -1;
         else if(endTimer.get())
-            return 0;
+            throw new TimeoutException();
         return cardIndex;
     }
 
@@ -910,7 +911,7 @@ public class MatchScene {
      * This method wait for player to chose a destination and returns it
      * @return Chosen destination
      */
-    public synchronized int chosenDestination(){
+    public synchronized int chosenDestination() throws TimeoutException{
         while(!destinationReady.get() && !closeMatch.get() && !endTimer.get()){
             try {
                 wait();
@@ -922,7 +923,7 @@ public class MatchScene {
         if(closeMatch.get())
             return -1;
         else if(endTimer.get())
-            return 0;
+            throw new TimeoutException();
         return chosenBoxIndex();
     }
 
@@ -1174,13 +1175,14 @@ public class MatchScene {
                     helper.setEffect(new BoxBlur(0, 0, 0));
                     turnStory.setEffect(new BoxBlur(0, 0, 0));
                     myTurn.setEffect(new BoxBlur(0, 0, 0));
+                    chooseCardsBox.setEffect(new BoxBlur(0, 0, 0));
+                    chooseCard.setEffect(new BoxBlur(0, 0, 0));
 
                     FadeTransition menuFadeIn = new FadeTransition(Duration.millis(2000), gui.menuPage());
                     menuFadeIn.setFromValue(0.0);
                     menuFadeIn.setToValue(1.0);
                     menuFadeIn.play();
-                    gui.restartClient();
-                    gui.menuPage().setVisible(true);
+                    Platform.runLater(gui::primaryScene);
                 }));
         menuTimer.play();
     }
@@ -1207,6 +1209,8 @@ public class MatchScene {
                     helper.setEffect(new BoxBlur(0, 0, 0));
                     turnStory.setEffect(new BoxBlur(0, 0, 0));
                     myTurn.setEffect(new BoxBlur(0, 0, 0));
+                    chooseCardsBox.setEffect(new BoxBlur(0, 0, 0));
+                    chooseCard.setEffect(new BoxBlur(0, 0, 0));
                 }));
         closePaneTimer.play();
 
@@ -1245,6 +1249,8 @@ public class MatchScene {
                     helper.setEffect(new BoxBlur(5, 5, 5));
                     turnStory.setEffect(new BoxBlur(5, 5, 5));
                     myTurn.setEffect(new BoxBlur(5, 5, 5));
+                    chooseCardsBox.setEffect(new BoxBlur(5, 5, 5));
+                    chooseCard.setEffect(new BoxBlur(5, 5, 5));
                 }));
         showingTimer.play();
     }
