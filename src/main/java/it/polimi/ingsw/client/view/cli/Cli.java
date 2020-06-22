@@ -44,30 +44,27 @@ public class Cli extends Thread implements View {
     public synchronized String askAnswer() throws TimeOutException{
         boolean received=false;
         String answer=null;
-        CountDown countDown=new CountDown();
+        CountDown countDown=new CountDown(buffer);
         countDown.start();
 
-            while (!received && !countDown.isFinished()) {
-
+            while (!received) {
                 if (!buffer.isEmpty()) {
                     received = true;
-                    countDown.notifyEndCountDown();
-                    System.out.println("answering, ending countdown");
                     answer = buffer.get(0);
+                    countDown.finish();
                     eraseBuffer();
                 } else {
+                    System.out.println("starting wait");
                     try {
-                        System.out.println("starting wait");
-                        wait();
-                        System.out.println("ending wait");
-                        if (countDown.isRunnedOut()) {
-                            System.out.println("throwing exception");
-                            throw new TimeOutException();
-                        }
+                        wait(countDown.getAvailableTime());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
+                    System.out.println("ending wait");
+                    if (countDown.isRunnedOut()) {
+                        System.out.println("throwing exception");
+                        throw new TimeOutException();
+                    }
                 }
             }
 
