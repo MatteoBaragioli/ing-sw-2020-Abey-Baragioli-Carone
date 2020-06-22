@@ -29,8 +29,6 @@ public class CommunicationChannel {
     final private int EMPTYBUFFER = 0;
     private final int quit = -1;
 
-    private boolean timeout = false;
-
     public CommunicationChannel(BufferedReader bufferedReader, PrintWriter printWriter) {
         in = bufferedReader;
         out = printWriter;
@@ -50,10 +48,6 @@ public class CommunicationChannel {
 
     public synchronized void resetPing() {
         ping = false;
-    }
-
-    public synchronized void resetTimeout() {
-        timeout = false;
     }
 
     /**
@@ -180,8 +174,6 @@ public class CommunicationChannel {
      * @throws ChannelClosedException if there's no connection
      */
     public synchronized String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeOutException {
-        resetTimeout();
-
         while (!isClosed()) {
             if(hasMessages(TIMEOUT)) {
                 nextMessage(TIMEOUT);
@@ -190,7 +182,6 @@ public class CommunicationChannel {
             if (hasMessages(key)) {
                 return nextMessage(key);
             }
-
             else {
                // System.out.println("Buffer vuoto");
                 try {
@@ -202,10 +193,7 @@ public class CommunicationChannel {
             }
 
         }
-        if (isClosed())
-            throw new ChannelClosedException();
-        writeKeyWord(TIMEOUT);
-        throw new TimeOutException();
+        throw new ChannelClosedException();
     }
 
     /**
