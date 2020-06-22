@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.server.model.Colour;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
@@ -40,7 +41,6 @@ import javafx.util.Duration;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javafx.scene.paint.Color.*;
@@ -1207,7 +1207,7 @@ public class Gui extends Application implements View {
      * @return Chosen box
      */
     @Override
-    public int askPosition(List<int[]> positions) throws TimeoutException {
+    public int askPosition(List<int[]> positions) throws TimeOutException {
         Platform.runLater(() -> matchScene.chooseDestination(positions));
         Platform.runLater(() -> matchScene.playerView().playTimer());
         return matchScene.chosenDestination();
@@ -1219,7 +1219,7 @@ public class Gui extends Application implements View {
      * @return Chosen cards indexes
      */
     @Override
-    public int[] askDeck(List<GodCardProxy> cards) throws TimeoutException {
+    public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
         Platform.runLater(() -> matchScene.chooseCards(cards));
         Platform.runLater(() -> matchScene.playerView().playTimer());
         return matchScene.chosenCards();
@@ -1231,7 +1231,7 @@ public class Gui extends Application implements View {
      * @return Chosen card
      */
     @Override
-    public int askCards(List<GodCardProxy> cards) throws TimeoutException {
+    public int askCards(List<GodCardProxy> cards) throws TimeOutException {
         Platform.runLater(() -> matchScene.chooseCard(cards));
         Platform.runLater(() -> matchScene.playerView().playTimer());
         return matchScene.chosenCard();
@@ -1261,7 +1261,7 @@ public class Gui extends Application implements View {
      * @return Chosen worker position
      */
     @Override
-    public int askWorker(List<int[]> workers) throws TimeoutException {
+    public int askWorker(List<int[]> workers) throws TimeOutException {
         Platform.runLater(() -> matchScene.playerView().playTimer());
         return askPosition(workers);
     }

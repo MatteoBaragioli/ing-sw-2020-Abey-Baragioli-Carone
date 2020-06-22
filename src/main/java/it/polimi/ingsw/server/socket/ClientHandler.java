@@ -66,8 +66,8 @@ public class ClientHandler extends Thread {
 
         while (!communicationChannel.isClosed() && !pinger.isEnded()) {
             try {
-                if (communicationChannel.nextKey() == QUIT)
-                    communicationChannel.close();
+                if (communicationChannel.nextKey() == QUIT) //metere come content del quit il nome del quitter o mandare in gson
+                    communicationChannel.close();           //il client stesso
             } catch (IOException e) {
                 e.printStackTrace();
                 System.err.println("Error in Client Handler");

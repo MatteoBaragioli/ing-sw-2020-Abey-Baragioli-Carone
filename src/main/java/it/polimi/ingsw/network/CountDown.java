@@ -1,35 +1,29 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.network.exceptions.ChannelClosedException;
-
 public class CountDown extends Thread {
-    public final CommunicationChannel communicationChannel;
     public final int MINUTE = 15;
     public final int SECOND = 1000;
-    public final CommunicationProtocol key;
-    private boolean received = false;
-    private boolean ended = false;
+    private boolean runnedOut = false;
+    private int availableTime=2*MINUTE;
+    private boolean finish =false;
 
-    public CountDown(CommunicationChannel communicationChannel, CommunicationProtocol key) {
-        this.communicationChannel = communicationChannel;
-        this.key = key;
+
+    public boolean isRunnedOut() {
+        return runnedOut;
+    }
+    public boolean isFinished() {
+        return finish;
     }
 
-    public void finish() {
-        received = true;
+    public void runOut() {
+        runnedOut = true;
     }
-
-    public boolean isEnded() {
-        return ended;
-    }
-
-    public void end() {
-        ended = true;
+    public void finish(){
+        finish=true;
     }
 
     public void run() {
-        int i = 2 * MINUTE;
-        while (i > 0 && !communicationChannel.hasMessages(key) && !received) {
+        while (availableTime > 0 && !finish) {
             try {
                 sleep(SECOND);
             } catch (InterruptedException e) {
@@ -37,22 +31,28 @@ public class CountDown extends Thread {
                 System.err.println("WAIT NON FUNZIONA");
                 return;
             }
-            if (i % 10 == 0) {
-                try {
-                    communicationChannel.countdown(i);
-                } catch (ChannelClosedException e) {
-                    System.err.println("Connection closed");
-                    return;
-                }
+            availableTime--;
+            if (availableTime <= 5)
+                System.out.println(availableTime);
+            if (availableTime == 0) {
+                runOut();
+                System.out.println("time runned out");
             }
-            i--;
         }
-        if (i == 0)
-            end();
-        notifyEndThread();
+
+        notifyEndCountDown();
+
     }
 
-    private synchronized void notifyEndThread(){
-        notifyAll();
+    public synchronized void notifyEndCountDown(){
+        if(!isFinished()) {
+            finish();
+            notifyAll();
+            System.out.println("notifying");
+        }
+    }
+
+    public int getAvailableTime() {
+        return availableTime;
     }
 }

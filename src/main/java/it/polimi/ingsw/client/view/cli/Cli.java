@@ -6,7 +6,9 @@ import it.polimi.ingsw.client.Client;
 
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.CountDown;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.MatchStory;
@@ -32,27 +34,42 @@ public class Cli extends Thread implements View {
     private boolean opponentsAnnounced=false;
     private List<String> buffer=new ArrayList<>();
     private boolean started=false;
+//salvare ip e porta per nuova partita
 
 
     public ScreenView screenView() {
         return this.view;
     }
 
-    public synchronized String askAnswer() {
+    public synchronized String askAnswer() throws TimeOutException{
         boolean received=false;
         String answer=null;
-            while (!received)
+        CountDown countDown=new CountDown();
+        countDown.start();
+
+            while (!received && !countDown.isFinished()) {
+
                 if (!buffer.isEmpty()) {
                     received = true;
+                    countDown.notifyEndCountDown();
+                    System.out.println("answering, ending countdown");
                     answer = buffer.get(0);
                     eraseBuffer();
-                }
-                else
+                } else {
                     try {
+                        System.out.println("starting wait");
                         wait();
+                        System.out.println("ending wait");
+                        if (countDown.isRunnedOut()) {
+                            System.out.println("throwing exception");
+                            throw new TimeOutException();
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
+                }
+            }
 
         return answer;
     }
@@ -98,20 +115,22 @@ public class Cli extends Thread implements View {
         String input;
         int answer = 0;
         while (!valid) {
-            if (started &&(!myTurn()||myPlayer.godCardProxy==null)) {
-                try {
-                    input = read();//però questo metodo la lancia
+            if (started &&(!myTurn()||myPlayer.godCardProxy==null)) { //dopo aver letto quit nella fase iniziale del match
+                try {                                                 //non ho ho caricato l'input nel buffer
+                    input = read();                                   //quindi leggo la conferma del quit  tramite read
                     answer = Integer.parseInt(input);
                 } catch (IOException e) {
                     answer = 0;
-                } catch (NumberFormatException e) { //verificare catch: in teoria non fa il catch del number format perchè ask answer non lo fa
+                } catch (NumberFormatException e) {
                     answer = 0;
                 }
-            }else {
-                try{
+            }else {  // se non sono nella fase iniziale della partita, ossia se sono già state scelte le carte di ciascun giocatore
+                try{ // il quit è stato caricato nel buffer e allora può essere gestito da askNumber()
                     answer=askNumber();
                 }catch (NumberFormatException e) { //verificare catch: in teoria non fa il catch del number format perchè ask answer non lo fa
                     answer = 0;
+                }catch (TimeOutException ignored){
+
                 }
             }
         if (answer == -1 || answer == 1 || answer == 2) {
@@ -134,7 +153,7 @@ public class Cli extends Thread implements View {
      * @throws IOException
      * @throws NumberFormatException
      */
-    public int askNumber() throws NumberFormatException {
+    public int askNumber() throws NumberFormatException, TimeOutException {
         String answer = askAnswer();
         if(findQuitInString(answer))
             return -1;
@@ -148,7 +167,7 @@ public class Cli extends Thread implements View {
      * @return int, index of the correspondent coordinate inserted by the user
      */
     @Override
-    public int askPosition(List<int[]> positions) { //nuovo ask position che legge stringa
+    public int askPosition(List<int[]> positions) throws TimeOutException { //nuovo ask position che legge stringa
         String answer = null;
         boolean validAnswer;
         boolean validConfirmation;
@@ -158,8 +177,7 @@ public class Cli extends Thread implements View {
         Pattern pattern = Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
         view.clearScreen();
         view.turn();
-
-        while (!sure) {
+        while (!sure ) {
             printStream.println("Enter the coordinates of a box on the board to choose it");
             eraseBuffer();
             validAnswer = false;
@@ -196,7 +214,8 @@ public class Cli extends Thread implements View {
                 }
             }
             printStream.println("you entered box " + answer + " are you sure?");
-            printStream.println("1  yes     2   no");
+            printStream.println("Press");
+            printStream.println("1  for Yes | 2  for No");
             int confirm = 0;
             while (!validConfirmation) {
                 try {
@@ -209,7 +228,8 @@ public class Cli extends Thread implements View {
 
                 else {
                     printStream.println("Not valid answer. Try again");
-                    printStream.println("1  yes     2   no");
+                    printStream.println("Press");
+                    printStream.println("1  for Yes | 2  for No");
                 }
 
                 if (confirm == -1)
@@ -261,7 +281,7 @@ public class Cli extends Thread implements View {
      * @return int is the index in 'workers' list that represent the worker chosen by the player
      */
     @Override
-    public int askWorker(List<int[]> workers) {
+    public int askWorker(List<int[]> workers) throws TimeOutException {
         boolean valid = false;
         int answer = 0;
         for (int i = 0; i < workers.size(); i++) {
@@ -294,12 +314,11 @@ public class Cli extends Thread implements View {
      * @return int is the index in 'cards' list that represent the card chosen by the player
      */
     @Override
-    public int askCards(List<GodCardProxy> cards) {
+    public int askCards(List<GodCardProxy> cards) throws TimeOutException {
         boolean sure = false;
         boolean validCard = false;
         boolean validConfirmation = false;
         int answer = 0;
-
         if (cards.size() == 1)
             return 0;
 
@@ -346,7 +365,8 @@ public class Cli extends Thread implements View {
 
             printStream.println(" ");
             printStream.println("these will be your game card, are you sure? ");
-            printStream.println("1  yes     2   no");
+            printStream.println("Press");
+            printStream.println("1  for Yes | 2  for No");
 
             //todo change following code with ask confirmation
             int confirm = 0;
@@ -361,7 +381,8 @@ public class Cli extends Thread implements View {
 
                 else {
                     printStream.println("Not valid answer. Try again");
-                    printStream.println("1  yes     2   no");
+                    printStream.println("Press");
+                    printStream.println("1  for Yes | 2  for No");
                 }
 
                 if (confirm == -1)
@@ -381,7 +402,7 @@ public class Cli extends Thread implements View {
      * @return int that corresponds to the user's answer
      */
     @Override
-    public int askConfirmation(CommunicationProtocol key) {
+    public int askConfirmation(CommunicationProtocol key) throws TimeOutException {
 
         boolean valid = false;
         int answer = 0;
@@ -415,7 +436,8 @@ public class Cli extends Thread implements View {
                 view.clearScreen();
                 view.turn();
                 printStream.println("\nWould you like to use your power?");
-                printStream.println("1  YES;  2 NO");
+                printStream.println("Press");
+                printStream.println("1  for Yes | 2  for No");
                 break;
             case UNDO:
                 view.clearScreen();
@@ -605,6 +627,7 @@ public class Cli extends Thread implements View {
     public void setWinner(PlayerProxy player) {
         view.clearScreen();
         view.turn();
+        ended=true;
         printStream.println("The match is over!");
         if (player.equals(myPlayer)) {
             printStream.println("You won the match, congratulations! you are on the right patch to become a god!");
@@ -615,8 +638,7 @@ public class Cli extends Thread implements View {
     }
 
     /**
-     * this method displays the name of the playes who has lost the game and updates the info message of attribute view
-     *
+     * this method displays the name of the player who has lost the game and updates the info message of attribute view
      * @param player the player who has lost
      */
     @Override
@@ -625,8 +647,9 @@ public class Cli extends Thread implements View {
         view.turn();
         if (player.equals(myPlayer)) {
             printStream.println("You lost, better luck next time!");
+            ended=true;
         } else {
-            if(!opponents.isEmpty()) {
+            if(!opponents.isEmpty() && opponents.get(0).godCardProxy!=null) {
                 List<String> info = new ArrayList<>();
                 info.add(getActualWrittenColor(myPlayer.colour) + "your card is " + myPlayer.godCardProxy.name + RESET);
                 info.add("your opponents are:");
@@ -665,13 +688,17 @@ public class Cli extends Thread implements View {
         while(!valid && !ended) {
             System.out.println("Write ip address to connect to:");
             eraseBuffer();
-            answer = askAnswer();
-            if (findQuitInString(answer)) {
-                if(manageQuit()) {
-                    ended = true;
+
+            try {
+                answer = askAnswer();
+                if (findQuitInString(answer)) {
+                    if(manageQuit())
+                        ended=true;
                 }
-            }
-            else valid=true;
+                else valid=true;
+            } catch (TimeOutException ignored) {
+                }
+
         }
         if(valid)
             return answer;
@@ -692,19 +719,22 @@ public class Cli extends Thread implements View {
             printStream.println("Choose match type:\n" + "1   for 1 vs 1\n" + "2   Three For All");
             try {
                 answer = askNumber();
+                if (answer == -1 ) {//|| answer == 1 || answer == 2) {
+                    if (manageQuit()) {
+                        valid = true;
+                        ended=true;
+                    }
+                }
+                else if(answer == 1 || answer == 2)
+                    valid=true;
+                else
+                    System.out.println("Not valid answer. Try again");
+
             } catch (NumberFormatException e) {
                 answer = 0;
+            } catch (TimeOutException ignored){
+
             }
-            if (answer == -1 ) {//|| answer == 1 || answer == 2) {
-                if (manageQuit()) {
-                    valid = true;
-                    ended=true;
-                }
-            }
-            else if(answer == 1 || answer == 2)
-                valid=true;
-            else
-                System.out.println("Not valid answer. Try again");
         }
         if (answer != -1)
             answer++;
@@ -726,20 +756,23 @@ public class Cli extends Thread implements View {
             System.out.println("Write port:");
             try {
                 answer = askNumber();
+                if (answer >= 1024) {
+                    valid = true;
+                }
+                else if(answer==-1) {
+                    if (manageQuit()) {
+                        valid = true;
+                        ended=true;
+                    }
+                }
+                else
+                    System.out.println("Not valid answer. Try again");
             } catch (NumberFormatException e) {
                 answer = 0;
+            } catch (TimeOutException ignored){
+
             }
-            if (answer >= 1024) {
-                valid = true;
-            }
-            else if(answer==-1) {
-                if (manageQuit()) {
-                    valid = true;
-                    ended=true;
-                }
-            }
-            else
-                System.out.println("Not valid answer. Try again");
+
         }
         return answer;
     }
@@ -756,16 +789,20 @@ public class Cli extends Thread implements View {
         while(!valid && !ended) {
             printStream.println("Write username:");
             eraseBuffer();
-            answer = askAnswer();
-            if(findQuitInString(answer)) {
-                if (manageQuit()) {
-                    valid = true;
-                    ended=true;
+            try {
+                answer = askAnswer();
+                if(findQuitInString(answer)) {
+                    if (manageQuit()) {
+                        valid = true;
+                        ended=true;
+                    }
                 }
+                else if(!answer.equals("")) {
+                    valid = true;
+                }
+            } catch (TimeOutException ingnored) {
             }
-            else if(!answer.equals("")) {
-                valid = true;
-            }
+
         }
         if(ended)
             System.exit(0);
@@ -779,7 +816,7 @@ public class Cli extends Thread implements View {
      * @return int[] , a list of ints that represent the indexes of the chosen cards
      */
     @Override
-    public int[] askDeck(List<GodCardProxy> cards) {
+    public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
         boolean sure = false;
         boolean sameCard;
         boolean validCard;
@@ -845,7 +882,8 @@ public class Cli extends Thread implements View {
             }
             printStream.println(" ");
             printStream.println("these will be the game cards, are you sure? ");
-            printStream.println("1  yes     2   no");
+            printStream.println("Press");
+            printStream.println("1  for Yes | 2  for No");
 
             validConfirmation = false;
             int confirm = 0;
@@ -862,7 +900,8 @@ public class Cli extends Thread implements View {
                     sure = true;
                 else {
                     printStream.println("Not valid answer. Try again");
-                    printStream.println("1  yes     2   no");
+                    printStream.println("Press");
+                    printStream.println("1  for Yes | 2  for No");
                 }
 
             }
@@ -886,6 +925,7 @@ public class Cli extends Thread implements View {
                 input = "";
                 ended = true;
             }
+            if (started &&(!myTurn()||myPlayer.godCardProxy==null)) {
                 if (checkIfUserIsQuitting(input)) {
                     ended = true;
                     try {
@@ -893,13 +933,13 @@ public class Cli extends Thread implements View {
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                     }
-                } else if (!input.equals("") && !findQuitInString(input))
-                    updateBuffer(input);
-                //else(cli.printstream.println("answer previous question"))
-        }
-        if(ended)
-            System.exit(0);
+                }else if (!input.equals(""))
+                updateBuffer(input);
+            } else if (!input.equals(""))
+                updateBuffer(input);
 
+        }
+        //System.exit(0);
     }
 
     public String read() throws IOException {
@@ -921,7 +961,7 @@ public class Cli extends Thread implements View {
         }
         return false;
     }
-    
+
     @Override
     public void serverDisconnected() {
 

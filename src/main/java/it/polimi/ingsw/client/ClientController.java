@@ -9,10 +9,11 @@ import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
+import it.polimi.ingsw.network.objects.*;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
@@ -30,7 +31,7 @@ public class ClientController {
                 communicationChannel.writeKeyWord(QUIT);
             else
                 communicationChannel.writeChoicesFromList(DECK, index);
-        } catch (TimeoutException e) {
+        } catch (TimeOutException e) {
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -42,12 +43,13 @@ public class ClientController {
         Type listType = new TypeToken<List<GodCardProxy>>() {}.getType();
         cards = new Gson().fromJson(communicationChannel.getContent(content), listType);
         try {
-            index = view.askCards(cards);
+            index = view.askCards(cards );
             if (index == -1)
                 communicationChannel.writeKeyWord(QUIT);
             else
                 communicationChannel.writeChoiceFromList(CARD, index);
-        } catch (TimeoutException e) {
+
+        } catch (TimeOutException e) {
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -79,7 +81,7 @@ public class ClientController {
                 communicationChannel.writeKeyWord(QUIT);
             else
                 communicationChannel.writeChoiceFromList(key, index);
-        } catch (TimeoutException e) {
+        } catch (TimeOutException e) {
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -114,7 +116,11 @@ public class ClientController {
     }
 
     public void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-        communicationChannel.writeConfirmation(key, view.askConfirmation(key));
+        try {
+            communicationChannel.writeConfirmation(key, view.askConfirmation(key));
+        } catch (TimeOutException e) {
+            communicationChannel.writeKeyWord(TIMEOUT);
+        }
     }
 
     public void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {

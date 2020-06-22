@@ -181,14 +181,16 @@ public class CommunicationChannel {
      */
     public synchronized String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeOutException {
         resetTimeout();
-        CountDown countDown = new CountDown(this, key);
-        countDown.start();
 
-        while (!isClosed() && !countDown.isEnded()) {
+        while (!isClosed()) {
+            if(hasMessages(TIMEOUT)) {
+                nextMessage(TIMEOUT);
+                throw new TimeOutException();
+            }
             if (hasMessages(key)) {
-                countDown.finish();
                 return nextMessage(key);
             }
+
             else {
                // System.out.println("Buffer vuoto");
                 try {
@@ -200,7 +202,6 @@ public class CommunicationChannel {
             }
 
         }
-
         if (isClosed())
             throw new ChannelClosedException();
         writeKeyWord(TIMEOUT);
