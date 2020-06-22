@@ -95,16 +95,16 @@ public class Gui extends Application implements View {
     private StackPane matchPage;
 
     //loading page
-    private final StackPane loadingPage = new StackPane();
+    private StackPane loadingPage = new StackPane();
 
     //how to play pane
-    private final StackPane howToPlayBox = new StackPane();
+    private StackPane howToPlayBox = new StackPane();
 
     //clouds animation pane
-    private final StackPane transitionClouds = new StackPane();
+    private StackPane transitionClouds = new StackPane();
 
     //close popup pane
-    private final StackPane closePopup = new StackPane();
+    private StackPane closePopup = new StackPane();
 
     //connection errors pane
     private StackPane connectionError = new StackPane();
@@ -137,11 +137,11 @@ public class Gui extends Application implements View {
     private boolean secondMatch = false;
 
     //settings window form variables
-    private Text ipForm;
+    private Text ipForm = new Text ("Ip Address");;
     private TextField ipFormField;
-    private Text portForm;
+    private Text portForm = new Text("Port Number");
     private TextField portFormField;
-    private Button connectionButton;
+    private Button connectionButton = new Button("Connect");
     private ImageView loadingIcon;
     private Text errorMessage;
     private Text connectedText;
@@ -152,13 +152,13 @@ public class Gui extends Application implements View {
     private Text connectionErrorMessage;
 
     //variable that is true when menu page is ready
-    private final AtomicBoolean gameIsReady = new AtomicBoolean(false);
+    private  AtomicBoolean gameIsReady = new AtomicBoolean(false);
 
     //variable that is true when match page is ready
-    private final AtomicBoolean readyForTheMatch = new AtomicBoolean(false);
+    private  AtomicBoolean readyForTheMatch = new AtomicBoolean(false);
 
     //variable that is true if user clicked "connect" on setting page
-    private final AtomicBoolean clicked = new AtomicBoolean(false);
+    private  AtomicBoolean clicked = new AtomicBoolean(false);
 
     //variable that is true if user clicks on play button in the settings window
     private AtomicBoolean openGame = new AtomicBoolean(false);
@@ -167,7 +167,7 @@ public class Gui extends Application implements View {
     private AtomicBoolean restartConnection = new AtomicBoolean(false);
 
     //variable that is true if user closes settings window
-    private final AtomicBoolean closeWindow = new AtomicBoolean(false);
+    private  AtomicBoolean closeWindow = new AtomicBoolean(false);
 
     //variable that is true if user writes valid ip and port
     private AtomicBoolean valid = new AtomicBoolean(false);
@@ -315,9 +315,20 @@ public class Gui extends Application implements View {
     //-----------------------------------------END SYNCHRONIZATION METHODS-----------------------------
 
     private void createSettingStage(Stage settingsStage){
+        //initialization --> I need it if we restart the setting page after a connection lost
+        screenWidth = Screen.getPrimary().getBounds().getWidth();
+        screenHeight = Screen.getPrimary().getBounds().getHeight();
+        gameIsReady = new AtomicBoolean(false);
+        readyForTheMatch = new AtomicBoolean(false);
+        clicked = new AtomicBoolean(false);
+        openGame = new AtomicBoolean(false);
+        restartConnection = new AtomicBoolean(false);
+        closeWindow = new AtomicBoolean(false);
+        valid = new AtomicBoolean(false);
+
         this.settingStage = settingsStage;
         StackPane settings = new StackPane();
-
+        inMenuPage = false;
         createSettingsPane(settings);
 
         Scene settingsScene = new Scene(settings);
@@ -498,21 +509,18 @@ public class Gui extends Application implements View {
         connectionSettings.setPrefHeight(screenHeight/2);
         connectionSettings.setPadding(new Insets(screenHeight/20, 0, 0, 0));
 
-        ipForm = new Text ("Ip Address");
         ipForm.setFont(lillybelleFont);
         ipForm.setTextAlignment(TextAlignment.CENTER);
         ipFormField = new TextField();
         ipFormField.setFont(settingsFont);
         ipFormField.setMaxWidth(screenWidth/10);
 
-        portForm = new Text("Port Number");
         portForm.setFont(lillybelleFont);
         portForm.setTextAlignment(TextAlignment.CENTER);
         portFormField = new TextField();
         portFormField.setFont(settingsFont);
         portFormField.setMaxWidth(screenWidth/10);
 
-        connectionButton = new Button("Connect");
         connectionButton.setFont(lillybelleFont);
         connectionButton.setOnMouseEntered(e -> {
             connectionButton.setCursor(Cursor.HAND);
@@ -536,11 +544,6 @@ public class Gui extends Application implements View {
         disconnectionButton.setFont(lillybelleFont);
 
         connectionSettings.getChildren().addAll(ipForm, ipFormField, portForm, portFormField, connectionButton, loadingIcon, errorMessage, connectedText, disconnectionButton);
-        ipForm.setVisible(true);
-        ipFormField.setVisible(true);
-        portForm.setVisible(true);
-        portFormField.setVisible(true);
-        connectionButton.setVisible(true);
         loadingIcon.setVisible(false);
         loadingIcon.setManaged(false);
         errorMessage.setVisible(false);
@@ -923,7 +926,7 @@ public class Gui extends Application implements View {
         ImageView connectionErrorView = new ImageView(connectionFrame);
 
         VBox connectionErrorBox = new VBox();
-
+        connectionErrorBox.setSpacing(screenHeight/30);
         connectionErrorMessage = new Text("Connection lost");
         connectionErrorMessage.setFont(lillybelleFont);
         connectionErrorMessage.setFill(DARKRED);
@@ -938,12 +941,12 @@ public class Gui extends Application implements View {
             okConnectionButton.setCursor(Cursor.DEFAULT);
         });
         okConnectionButton.setOnAction(e -> {
-            client.setRestart(true);
             menuScene.setClose();
             matchScene.setCloseMatch();
-            window.close();
             setIsConnectionError(true);
             createSettingStage(new Stage());
+            window.close();
+            window = null;
         });
 
         connectionErrorBox.getChildren().addAll(connectionErrorMessage, okConnectionButton);
@@ -1504,6 +1507,12 @@ public class Gui extends Application implements View {
             restartConnection();
             setErrorMessage("Connection lost");
         } else {
+            screenWidth = Screen.getPrimary().getBounds().getWidth();
+            screenHeight = Screen.getPrimary().getBounds().getHeight();
+            ipForm = new Text ("Ip Address");
+            portForm = new Text("Port Number");
+            connectionButton = new Button("Connect");
+            client.setRestart(true);
             showConnectionError();
         }
     }

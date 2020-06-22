@@ -97,10 +97,10 @@ public class MenuScene {
     private int howToPlayPage;
 
     //variable that is true if user gives an answer
-    private final AtomicBoolean clicked = new AtomicBoolean(false);
+    private AtomicBoolean clicked = new AtomicBoolean(false);
 
     //variable that is true if user quits
-    private final AtomicBoolean close = new AtomicBoolean(false);
+    private AtomicBoolean close = new AtomicBoolean(false);
 
 
 
@@ -116,8 +116,6 @@ public class MenuScene {
         this.howToPlayBox = howToPlayBox;
         menuPage.setPrefWidth(screenWidth);
         menuPage.setPrefHeight(screenHeight);
-
-
     }
 
 
@@ -606,7 +604,6 @@ public class MenuScene {
                 e.printStackTrace();
             }
         }
-
         return nickname();
     }
 

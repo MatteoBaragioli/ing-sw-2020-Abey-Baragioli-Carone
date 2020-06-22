@@ -50,8 +50,8 @@ public class Listener extends Thread {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                communicationChannel.close();
                 view.serverDisconnected();
+                communicationChannel.close();
             }
         }
     }
