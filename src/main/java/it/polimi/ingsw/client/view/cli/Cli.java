@@ -626,7 +626,7 @@ public class Cli extends Thread implements View {
         view.turn();
         ended=true;
         printStream.println("The match is over!");
-        if (player.equals(myPlayer)) {
+        if (player.name.equals(myPlayer.name)) {
             printStream.println("You won the match, congratulations! you are on the right patch to become a god!");
         } else {
             printStream.println(player.name + " won the match, better luck next time!");

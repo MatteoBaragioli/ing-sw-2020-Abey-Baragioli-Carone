@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
@@ -85,11 +86,14 @@ public class CommunicationChannel {
      * @param key
      */
     public synchronized boolean hasMessages(CommunicationProtocol key) {
+        return buffer.stream().anyMatch(x -> getKey(x) == key);
+        /*
         for (String message: buffer) {
             if (getKey(message) == key)
                 return true;
         }
         return false;
+        */
     }
 
     public synchronized boolean isEmpty() {
@@ -142,6 +146,13 @@ public class CommunicationChannel {
         while (!isClosed()) {
             if (hasMessages(key)) {
                 String message;
+                Optional<String> optional = buffer.stream().filter(x -> getKey(x) == key).findFirst();
+                if (optional.isPresent()) {
+                    message = optional.get();
+                    buffer.remove(message);
+                    return message;
+                }
+                /*
                 for (int i = 0; i < buffer.size(); i++) {
                     message = buffer.get(i);
                     if (getKey(message) == key) {
@@ -149,15 +160,14 @@ public class CommunicationChannel {
                         return message;
                     }
                 }
+                */
             }
-            else {
-                //System.out.println("Buffer vuoto");
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    System.err.println("Non waita");
-                }
+            //System.out.println("Buffer vuoto");
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.err.println("Non waita");
             }
         }
         throw new ChannelClosedException();
@@ -182,16 +192,12 @@ public class CommunicationChannel {
             if (hasMessages(key)) {
                 return nextMessage(key);
             }
-            else {
-               // System.out.println("Buffer vuoto");
-                try {
-                    if (!hasMessages(key))
-                        wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+           // System.out.println("Buffer vuoto");
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
         }
         throw new ChannelClosedException();
     }
