@@ -1383,14 +1383,6 @@ public class Gui extends Application implements View {
     }
 
     /**
-     * This method shows error message of connection lost
-     */
-    @Override
-    public void connectionLost() {
-        //todo ti sei disconnesso
-    }
-
-    /**
      * This method shows error of connection refused
      * @param host Host that refused the connection
      */
@@ -1508,8 +1500,11 @@ public class Gui extends Application implements View {
         matchScene.setTimeoutLoser(true);
     }
 
+    /**
+     * This method shows error message of connection lost
+     */
     @Override
-    public synchronized void serverDisconnected() {
+    public synchronized void connectionLost() {
         if(!inMenuPage && !secondWindow) {
             connectedText.setVisible(false);
             connectedText.setManaged(false);

@@ -23,13 +23,12 @@ public interface View {
     void updateMap(List<BoxProxy> boxes);
     void setMyPlayer(PlayerProxy player);
     void setOpponentsInfo(List<PlayerProxy> players);
-    void connectionLost();
     void connectionFailed(String host);
     void startMatch();
     void setCurrentPlayer(PlayerProxy player);
     void tellStory(List<String> events);
     void setWinner(PlayerProxy player);
     void setLoser(PlayerProxy player);
-    void serverDisconnected();
+    void connectionLost();
     void timeOut();
 }

@@ -93,7 +93,6 @@ public class Client extends Thread {
             } catch (ChannelClosedException e) {
                 e.printStackTrace();
                 System.err.println("Connection lost");
-                view.connectionLost();
             }
             ClientController clientController = new ClientController();
             Listener listener = new Listener(communicationChannel, view);
@@ -106,7 +105,6 @@ public class Client extends Thread {
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     System.err.println("Connection lost");
-                    view.connectionLost();
                     key = INVALID;
                 }
                 if(key != INVALID) {

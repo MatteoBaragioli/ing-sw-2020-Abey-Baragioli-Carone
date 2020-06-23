@@ -527,11 +527,6 @@ public class Cli extends Thread implements View {
         }
     }
 
-    @Override
-    public void connectionLost() {
-
-    }
-
     /**
      * this method communicates to the user that the connection was refused
      *
@@ -960,7 +955,7 @@ public class Cli extends Thread implements View {
     }
 
     @Override
-    public void serverDisconnected() {
+    public void connectionLost() {
 
     }
 }
