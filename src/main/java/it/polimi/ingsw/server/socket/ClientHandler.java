@@ -49,7 +49,7 @@ public class ClientHandler extends Thread {
         CommunicationProtocol key = null;
         try {
             key = communicationChannel.nextKey();
-        } catch (IOException e) {
+        } catch (IOException | ChannelClosedException e) {
             e.printStackTrace();
             System.err.println("IO Exception");
             return;
@@ -68,7 +68,7 @@ public class ClientHandler extends Thread {
             try {
                 if (communicationChannel.nextKey() == QUIT) //metere come content del quit il nome del quitter o mandare in gson
                     communicationChannel.close();           //il client stesso
-            } catch (IOException e) {
+            } catch (IOException | ChannelClosedException e) {
                 e.printStackTrace();
                 System.err.println("Error in Client Handler");
                 communicationChannel.close();

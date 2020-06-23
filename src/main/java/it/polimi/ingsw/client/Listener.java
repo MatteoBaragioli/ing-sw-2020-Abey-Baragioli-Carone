@@ -48,7 +48,7 @@ public class Listener extends Thread {
                         }
                         break;
                 }
-            } catch (IOException e) {
+            } catch (IOException | ChannelClosedException e) {
                 e.printStackTrace();
                 view.connectionLost();
                 communicationChannel.close();

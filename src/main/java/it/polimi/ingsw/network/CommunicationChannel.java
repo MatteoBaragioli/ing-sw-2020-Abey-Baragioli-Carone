@@ -268,18 +268,20 @@ public class CommunicationChannel {
      * @throws IOException in case of network error
      * @throws ChannelClosedException if connection is lost
      */
-    public CommunicationProtocol nextKey() throws IOException {
-        String message = read();
-        System.out.println("\nReceiving:\n" + message + "\n");
-        CommunicationProtocol key = getKey(message);
+    public CommunicationProtocol nextKey() throws IOException, ChannelClosedException {
+        if(!closed) {
+            String message = read();
+            System.out.println("\nReceiving:\n" + message + "\n");
+            CommunicationProtocol key = getKey(message);
 
-        if (key != PING && key != PONG)
-            saveMessage(message);
-        else
-            if (key == PONG)
+            if (key != PING && key != PONG)
+                saveMessage(message);
+            else if (key == PONG)
                 ping();
 
-        return key;
+            return key;
+        }
+        throw new ChannelClosedException();
     }
 
     /**
@@ -327,6 +329,8 @@ public class CommunicationChannel {
      */
     public void writeKeyWord(CommunicationProtocol key) throws ChannelClosedException {
         write(keyToString(key));
+        if(key==QUIT)
+            close();
     }
 
     /**

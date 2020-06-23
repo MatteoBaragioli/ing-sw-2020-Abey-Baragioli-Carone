@@ -32,6 +32,7 @@ public class ClientController {
             else
                 communicationChannel.writeChoicesFromList(DECK, index);
         } catch (TimeOutException e) {
+            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -50,6 +51,7 @@ public class ClientController {
                 communicationChannel.writeChoiceFromList(CARD, index);
 
         } catch (TimeOutException e) {
+            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -82,6 +84,7 @@ public class ClientController {
             else
                 communicationChannel.writeChoiceFromList(key, index);
         } catch (TimeOutException e) {
+            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -119,6 +122,7 @@ public class ClientController {
         try {
             communicationChannel.writeConfirmation(key, view.askConfirmation(key));
         } catch (TimeOutException e) {
+            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }

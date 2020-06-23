@@ -41,29 +41,36 @@ public class Cli extends Thread implements View {
         return this.view;
     }
 
-    public synchronized String askAnswer() throws TimeOutException{
+    public synchronized String askAnswer(boolean needCountDown) throws TimeOutException{
         boolean received=false;
         String answer=null;
-        CountDown countDown=new CountDown(buffer);
-        countDown.start();
-
-            while (!received) {
+        CountDown countDown = new CountDown(buffer);
+        if (needCountDown) {
+            countDown.start();
+        }
+            while (!received ) {
                 if (!buffer.isEmpty()) {
                     received = true;
                     answer = buffer.get(0);
-                    countDown.finish();
+                    if (needCountDown)
+                        countDown.finish();
                     eraseBuffer();
                 } else {
                     System.out.println("starting wait");
                     try {
-                        wait(countDown.getAvailableTime());
+                        if(needCountDown)
+                            wait(countDown.getAvailableTime());
+                        else
+                            wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     System.out.println("ending wait");
-                    if (countDown.isRunnedOut()) {
-                        System.out.println("throwing exception");
-                        throw new TimeOutException();
+                    if(needCountDown) {
+                        if (countDown.isRunnedOut()) {
+                            System.out.println("throwing exception");
+                            throw new TimeOutException();
+                        }
                     }
                 }
             }
@@ -123,7 +130,7 @@ public class Cli extends Thread implements View {
                 }
             }else {  // se non sono nella fase iniziale della partita, ossia se sono già state scelte le carte di ciascun giocatore
                 try{ // il quit è stato caricato nel buffer e allora può essere gestito da askNumber()
-                    answer=askNumber();
+                    answer=askNumber(true);
                 }catch (NumberFormatException e) { //verificare catch: in teoria non fa il catch del number format perchè ask answer non lo fa
                     answer = 0;
                 }catch (TimeOutException ignored){
@@ -149,9 +156,10 @@ public class Cli extends Thread implements View {
      * @return int, the answer expected
      * @throws IOException
      * @throws NumberFormatException
+     * @param needCountDown
      */
-    public int askNumber() throws NumberFormatException, TimeOutException {
-        String answer = askAnswer();
+    public int askNumber(boolean needCountDown) throws NumberFormatException, TimeOutException {
+        String answer = askAnswer(needCountDown);
         if(findQuitInString(answer))
             return -1;
         return Integer.parseInt(answer);
@@ -175,13 +183,14 @@ public class Cli extends Thread implements View {
         view.clearScreen();
         view.turn();
         while (!sure ) {
-            printStream.println("Enter the coordinates of a box on the board to choose it");
+
             eraseBuffer();
             validAnswer = false;
             validConfirmation = false;
             found = false;
             while (!validAnswer) {
-                answer = askAnswer();
+                printStream.println("Enter the coordinates of a box on the board to choose it");
+                answer = askAnswer(true);
 
                 Matcher matcher = pattern.matcher(answer);
 
@@ -205,18 +214,26 @@ public class Cli extends Thread implements View {
                     }
                     validAnswer = found;
 
-                } else {
-                    printStream.println("Not valid answer. Try again");
-                    printStream.println("You must enter a letter and a number that refer to a box on the board");
+                } else { //possibilità di quittare
+                    if(findQuitInString(answer)) {
+                        if (checkIfUserIsQuitting(answer)) {
+                            ended = true;
+                            return -1;
+                        }
+                    } else {
+                        printStream.println("Not valid answer. Try again");
+                        printStream.println("You must enter a letter and a number that refer to a box on the board");
+                    }
                 }
             }
-            printStream.println("you entered box " + answer + " are you sure?");
-            printStream.println("Press");
-            printStream.println("1  for Yes | 2  for No");
+
             int confirm = 0;
             while (!validConfirmation) {
+                printStream.println("you entered box " + answer + " are you sure?");
+                printStream.println("Press");
+                printStream.println("1  for Yes | 2  for No");
                 try {
-                    confirm = askNumber();
+                    confirm = askNumber(true);
                 } catch (NumberFormatException e) {
                     confirm = 0;
                 }
@@ -230,7 +247,11 @@ public class Cli extends Thread implements View {
                 }
 
                 if (confirm == -1)
-                    return confirm;
+                   if(manageQuit()) {
+                       ended=true;
+                       return -1;
+                   }
+                   else validConfirmation=false;
             }
             if (confirm == 1)
                 sure = true;
@@ -281,19 +302,24 @@ public class Cli extends Thread implements View {
     public int askWorker(List<int[]> workers) throws TimeOutException {
         boolean valid = false;
         int answer = 0;
-        for (int i = 0; i < workers.size(); i++) {
-            printStream.print((i + 1) + "   for worker in " + getChessCoordinates(workers.get(i)) + "    ");
-        }
-        while (!valid) {
 
+        while (!valid) {
+            for (int i = 0; i < workers.size(); i++) {
+                printStream.print((i + 1) + "   for worker in " + getChessCoordinates(workers.get(i)) + "    ");
+            }
             try {
-                answer = askNumber();
+                answer = askNumber(true);
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if ((answer <= workers.size() && answer > 0) || answer == -1) {
+            if (answer <= workers.size() && answer > 0) {
                 valid = true;
-            } else
+            }else if(answer==-1) {
+                if (manageQuit()) {
+                    ended = true;
+                    valid = true;
+                }
+            }else
                 System.out.println("Not valid answer. Try again");
         }
         if (answer != -1)
@@ -323,67 +349,71 @@ public class Cli extends Thread implements View {
             answer = 0;
             validCard = false;
             validConfirmation = false;
-            view.clearScreen();
-            printStream.println("\n choose your game card!");
 
-            for (int i = 0; i < cards.size(); i++) {
-                printStream.println((i + 1) + " " + cards.get(i).name + ":    ");
-                if (cards.get(i).setUpDescription != null)
-                    printStream.println(cards.get(i).setUpDescription);
-                if (cards.get(i).description != null)
-                    printStream.println(cards.get(i).description);
-                if (cards.get(i).winDescription != null)
-                    printStream.println(cards.get(i).winDescription);
-            }
-            printStream.print("\n");
-            printStream.println("press the number displayed next to the god's name to choose it");
+
 
             while (!validCard) {
+                view.clearScreen();
+                printStream.println("\n choose your game card!");
+                for (int i = 0; i < cards.size(); i++) {
+                    printStream.println((i + 1) + " " + cards.get(i).name + ":    ");
+                    if (cards.get(i).setUpDescription != null)
+                        printStream.println(cards.get(i).setUpDescription);
+                    if (cards.get(i).description != null)
+                        printStream.println(cards.get(i).description);
+                    if (cards.get(i).winDescription != null)
+                        printStream.println(cards.get(i).winDescription);
+                }
+                printStream.print("\n");
+                printStream.println("press the number displayed next to the god's name to choose it");
                 try {
-                    answer = askNumber();
+                    answer = askNumber(true);
                     printStream.println(answer);
                 } catch (NumberFormatException e) {
                     answer = 0;
                 }
                 if ((answer <= cards.size() && answer > 0) ) {
                     validCard = true;
-                } else if(answer == -1)
-                    if(manageQuit())
+                } else if(answer == -1) {
+                    if (manageQuit()) {
+                        ended = true;
                         return answer;
-                else {
+                    }
+                }else {
                     printStream.println("Not valid answer. Try again");
                     printStream.println("press the number displayed next to the god's name to choose it");
                 }
             }
             answer--;
 
-            printStream.print("you chose:");
-            printStream.print("   " + cards.get(answer).name);
-
-            printStream.println(" ");
-            printStream.println("these will be your game card, are you sure? ");
-            printStream.println("Press");
-            printStream.println("1  for Yes | 2  for No");
-
-            //todo change following code with ask confirmation
             int confirm = 0;
             while (!validConfirmation) {
+                printStream.print("you chose:");
+                printStream.print("   " + cards.get(answer).name);
+
+                printStream.println(" ");
+                printStream.println("these will be your game card, are you sure? ");
+                printStream.println("Press");
+                printStream.println("1  for Yes | 2  for No");
                 try {
-                    confirm = askNumber();
+                    confirm = askNumber(true);
                 } catch (NumberFormatException e) {
                     confirm = 0;
                 }
-                if (confirm == 1 || confirm == 2 || confirm == -1)
+                if (confirm == 1 || confirm == 2 )
                     validConfirmation = true;
-
+                else
+                    if (confirm == -1) {
+                        if (manageQuit()) {
+                            ended = true;
+                            return -1;
+                        }
+                    }
                 else {
                     printStream.println("Not valid answer. Try again");
                     printStream.println("Press");
                     printStream.println("1  for Yes | 2  for No");
                 }
-
-                if (confirm == -1)
-                    return confirm;
             }
             if (confirm == 1)
                 sure = true;
@@ -406,17 +436,22 @@ public class Cli extends Thread implements View {
         while (!valid) {
 
             try {
-                answer = askNumber();
+                answer = askNumber(true);
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer == -1 || answer == 1 || answer == 2) {
+            if ( answer == 1 || answer == 2) {
                 valid = true;
-            } else
+            } else if(answer==-1) {
+                if (manageQuit()) {
+                    ended = true;
+                    return -1;
+                }
+            }else
                 printStream.println("Not valid answer. Try again");
         }
-        if (answer != -1)
-            answer--;
+
+        answer--;
         view.clearScreen();
         return answer;
     }
@@ -441,6 +476,16 @@ public class Cli extends Thread implements View {
                 view.turn();
                 printStream.println("\nDo you want end your turn?");
                 printStream.println("1  GO AHEAD;  2 UNDO");
+                break;
+            case BUILD:
+                view.clearScreen();
+                view.turn();
+                printStream.println("\nwhere do you want to build? ");
+                break;
+            case DESTINATION:
+                view.clearScreen();
+                view.turn();
+                printStream.println("\nwhere do you want to build? ");
                 break;
         }
     }
@@ -622,7 +667,7 @@ public class Cli extends Thread implements View {
         ended=true;
         printStream.println("The match is over!");
         if (player.name.equals(myPlayer.name)) {
-            printStream.println("You won the match, congratulations! you are on the right patch to become a god!");
+            printStream.println("You won the match, congratulations! you are on the right path to become a god!");
         } else {
             printStream.println(player.name + " won the match, better luck next time!");
         }
@@ -635,31 +680,32 @@ public class Cli extends Thread implements View {
      */
     @Override
     public void setLoser(PlayerProxy player) {
-        view.clearScreen();
-        view.turn();
-        if (player.equals(myPlayer)) {
+        if (player.name.equals(myPlayer.name)) { //mettere di fianco al mio nome che ho perso
             printStream.println("You lost, better luck next time!");
             ended=true;
-        } else {
-            if(!opponents.isEmpty() && opponents.get(0).godCardProxy!=null) {
-                List<String> info = new ArrayList<>();
+        }//aggiornare non riscrivere
+        if(!opponents.isEmpty()) {
+            List<String> info = new ArrayList<>();
+            if (player.name.equals(myPlayer.name))
+                info.add(getActualWrittenColor(myPlayer.colour)+myPlayer.name+" (eliminated):"+RESET);
+            else info.add(getActualWrittenColor(myPlayer.colour)+myPlayer.name+RESET);
+            if(opponents.get(0).godCardProxy!=null)
                 info.add(getActualWrittenColor(myPlayer.colour) + "your card is " + myPlayer.godCardProxy.name + RESET);
-                info.add("your opponents are:");
-                for (PlayerProxy opponent : opponents) {
-                    if (opponent.equals(player))
-                        info.add(getActualWrittenColor(opponent.colour) + opponent.name + " (eliminated):" + RESET);
-                    else
-                        info.add(getActualWrittenColor(opponent.colour) + opponent.name + ":" + RESET);
-
+            info.add("your opponents are:");
+            for (PlayerProxy opponent : opponents) {
+                if (opponent.name.equals(player.name))
+                    info.add(getActualWrittenColor(opponent.colour) + opponent.name + " (eliminated):" + RESET);
+                else
+                    info.add(getActualWrittenColor(opponent.colour) + opponent.name + ":" + RESET);
+                if(opponents.get(0).godCardProxy!=null)
                     info.add(getActualWrittenColor(opponent.colour) + opponent.name + "'s card is " + opponent.godCardProxy.name + RESET);
-                }
-                view.setInfoMessageBox(info);
-
-                opponents.remove(player);
-                printStream.println(player.name + " lost!");
             }
-            else printStream.println("a player lost connection or quit at the beginning of match");
+            view.setInfoMessageBox(info);
+            opponents.remove(player);
+            printStream.println(player.name + " lost!");
         }
+        else printStream.println("a player lost connection or quit at the beginning of match");
+
 
     }
 
@@ -682,7 +728,7 @@ public class Cli extends Thread implements View {
             eraseBuffer();
 
             try {
-                answer = askAnswer();
+                answer = askAnswer(false);
                 if (findQuitInString(answer)) {
                     if(manageQuit())
                         ended=true;
@@ -710,7 +756,7 @@ public class Cli extends Thread implements View {
         while (!valid) {
             printStream.println("Choose match type:\n" + "1   for 1 vs 1\n" + "2   Three For All");
             try {
-                answer = askNumber();
+                answer = askNumber(false);
                 if (answer == -1 ) {//|| answer == 1 || answer == 2) {
                     if (manageQuit()) {
                         valid = true;
@@ -737,7 +783,6 @@ public class Cli extends Thread implements View {
 
     /**
      * this method asks to the user the port to connect to
-     *
      * @return int
      */
     @Override
@@ -747,7 +792,7 @@ public class Cli extends Thread implements View {
         while (!valid) {
             System.out.println("Write port:");
             try {
-                answer = askNumber();
+                answer = askNumber(false);
                 if (answer >= 1024) {
                     valid = true;
                 }
@@ -782,7 +827,7 @@ public class Cli extends Thread implements View {
             printStream.println("Write username:");
             eraseBuffer();
             try {
-                answer = askAnswer();
+                answer = askAnswer(false);
                 if(findQuitInString(answer)) {
                     if (manageQuit()) {
                         valid = true;
@@ -805,7 +850,7 @@ public class Cli extends Thread implements View {
      * this method asks the challenger the game cards from which the other players will have to choose from
      *
      * @param cards these are all the game cards available
-     * @return int[] , a list of ints that represent the indexes of the chosen cards
+     * @return int[] , a list of numbers that represent the indexes of the chosen cards
      */
     @Override
     public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
@@ -817,27 +862,28 @@ public class Cli extends Thread implements View {
 
         while (!sure) {
             view.clearScreen();
-            printStream.println("\nYou are the challenger, choose the game cards! One for each player");
+            printStream.println("You are the challenger, choose the game cards! One for each player");
             printStream.println("GAME CARDS:");
-
-            for (int i = 0; i < cards.size(); i++) {
-                printStream.println((i + 1) + " " + cards.get(i).name + ":    ");
-                if (cards.get(i).setUpDescription != null)
-                    printStream.println(cards.get(i).setUpDescription);
-                if (cards.get(i).description != null)
-                    printStream.println(cards.get(i).description);
-                if (cards.get(i).winDescription != null)
-                    printStream.println(cards.get(i).winDescription);
-
-            }
-            printStream.print("\n");
-            printStream.println("press the number displayed next to the god's name to choose it, you have to choose " + (opponents.size() + 1) + "  cards");
-
             for (int i = 0; i < (opponents.size() + 1); i++) {
+                for (int j = 0; j < cards.size(); j++) {
+                    printStream.println((j + 1) + " " + cards.get(j).name + ":    ");
+                    if (cards.get(j).setUpDescription != null)
+                        printStream.println(cards.get(j).setUpDescription);
+                    if (cards.get(j).description != null)
+                        printStream.println(cards.get(j).description);
+                    if (cards.get(j).winDescription != null)
+                        printStream.println(cards.get(j).winDescription);
+                    if (cards.get(j).opponentsFxDescription!=null)
+                        printStream.println(cards.get(j).opponentsFxDescription);
+
+                }
+                printStream.print("\n");
+                printStream.println("press the number displayed next to the god's name to choose it, you have to choose " + (opponents.size() + 1) + " cards");
+
                 validCard = false;
                 while (!validCard) {
                     try {
-                        answer[i] = askNumber();
+                        answer[i] = askNumber(true);
                     } catch (NumberFormatException e) {
                         answer[i] = 0;
                     }
@@ -856,6 +902,8 @@ public class Cli extends Thread implements View {
                             answer[0] = -1;
                             ended=true;
                             return answer;
+                        }else{//answer i rimane a -1; no buono
+                            i--;
                         }
                     } else {
                         printStream.println("Not valid answer. Try again");
@@ -881,7 +929,7 @@ public class Cli extends Thread implements View {
             int confirm = 0;
             while (!validConfirmation) {
                 try {
-                    confirm = askNumber();
+                    confirm = askNumber(true);
                 } catch (NumberFormatException e) {
                     confirm = 0;
                 }
@@ -925,7 +973,7 @@ public class Cli extends Thread implements View {
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                     }
-                }else if (!input.equals(""))
+                }else if (!input.equals("") && !findQuitInString(input))
                 updateBuffer(input);
             } else if (!input.equals(""))
                 updateBuffer(input);
@@ -947,10 +995,8 @@ public class Cli extends Thread implements View {
     }
 
     public boolean myTurn() {
-        if(currentPlayer!=null) {
-            if (myPlayer.name.equals(currentPlayer.name))
-                return true;
-        }
+        if(currentPlayer!=null)
+            return myPlayer.name.equals(currentPlayer.name);
         return false;
     }
 
