@@ -70,6 +70,9 @@ public class Gui extends Application implements View {
     //client
     private final Client client = new Client(this);
 
+    //scene of the primary window
+    private Scene fullScene;
+
     //setting window
     private Stage settingStage;
 
@@ -101,13 +104,13 @@ public class Gui extends Application implements View {
     private StackPane howToPlayBox = new StackPane();
 
     //clouds animation pane
-    private StackPane transitionClouds = new StackPane();
+    private StackPane transitionClouds;
 
     //close popup pane
-    private StackPane closePopup = new StackPane();
+    private StackPane closePopup;
 
     //connection errors pane
-    private StackPane connectionError = new StackPane();
+    private StackPane connectionError;
 
     //yes choice of popup
     private Button yesPopupButton;
@@ -183,6 +186,9 @@ public class Gui extends Application implements View {
 
     //variable that is true when there is a connection error
     private boolean isConnectionError = false;
+
+    //variable that is true when second window is opened
+    private boolean secondWindow;
 
 
     @Override
@@ -312,6 +318,11 @@ public class Gui extends Application implements View {
         notifyAll();
     }
 
+    private synchronized void setInMenuPage(boolean inMenuPage){
+        this.inMenuPage = inMenuPage;
+        notifyAll();
+    }
+
     //-----------------------------------------END SYNCHRONIZATION METHODS-----------------------------
 
     private void createSettingStage(Stage settingsStage){
@@ -325,10 +336,11 @@ public class Gui extends Application implements View {
         restartConnection = new AtomicBoolean(false);
         closeWindow = new AtomicBoolean(false);
         valid = new AtomicBoolean(false);
+        secondWindow = false;
 
         this.settingStage = settingsStage;
         StackPane settings = new StackPane();
-        inMenuPage = false;
+        setInMenuPage(false);
         createSettingsPane(settings);
 
         Scene settingsScene = new Scene(settings);
@@ -354,8 +366,8 @@ public class Gui extends Application implements View {
      * This method creates primary scene of the game (after setting window)
      */
     public void primaryScene(){
-        mainScene = new StackPane();
         if(window==null) {
+            mainScene = new StackPane();
             window = new Stage();
             if (screenWidth == Screen.getPrimary().getBounds().getWidth() && screenHeight == Screen.getPrimary().getBounds().getHeight()) {
                 window.setMaximized(true);
@@ -376,24 +388,27 @@ public class Gui extends Application implements View {
             window.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
         }
 
-
+        createTransitionClouds();
         closePopup();
+        createConnectionErrorPane();
 
         menuPage = new HBox();
 
         matchPage = new StackPane();
 
-        connectionError = createConnectionErrorPane();
-
+        mainScene.getChildren().clear();
         mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, closePopup, connectionError);
-        mainScene.setOnMousePressed(e -> {
-            xOffset = window.getX() - e.getScreenX();
-            yOffset = window.getY() - e.getScreenY();
-        });
-        mainScene.setOnMouseDragged(e -> {
-            window.setX(e.getScreenX() + xOffset);
-            window.setY(e.getScreenY() + yOffset);
-        });
+
+        if(screenWidth != Screen.getPrimary().getBounds().getWidth() && screenHeight != Screen.getPrimary().getBounds().getHeight()) {
+            mainScene.setOnMousePressed(e -> {
+                xOffset = window.getX() - e.getScreenX();
+                yOffset = window.getY() - e.getScreenY();
+            });
+            mainScene.setOnMouseDragged(e -> {
+                window.setX(e.getScreenX() + xOffset);
+                window.setY(e.getScreenY() + yOffset);
+            });
+        }
 
         openingPage.setVisible(!secondMatch);
         menuPage.setVisible(secondMatch);
@@ -402,9 +417,10 @@ public class Gui extends Application implements View {
             openingPage();
             transitionClouds.setVisible(false);
         } else {
+            menuScene = null;
             menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
             menuScene.setMenuScene();
-            inMenuPage = true;
+            setInMenuPage(true);
             Timeline waitTransitionTimer = new Timeline(new KeyFrame(
                     Duration.millis(1500),
                     ae -> {
@@ -421,11 +437,12 @@ public class Gui extends Application implements View {
         howToPlayBox.setVisible(false);
         connectionError.setVisible(false);
 
-        createTransitionClouds();
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
 
-        Scene fullScene = new Scene(mainScene);
+        if(!secondMatch)
+            fullScene = new Scene(mainScene);
         window.setScene(fullScene);
+        secondWindow = true;
         window.show();
     }
 
@@ -769,6 +786,7 @@ public class Gui extends Application implements View {
      * This method creates close popup, that asks if user is sure to quit the game
      */
     private void closePopup(){
+        closePopup = new StackPane();
         closePopup.setPrefWidth(screenWidth/4);
         closePopup.setPrefHeight(screenHeight/4);
 
@@ -875,7 +893,7 @@ public class Gui extends Application implements View {
                     menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
                     menuScene.setMenuScene();
                     setGameIsReady();
-                    inMenuPage = true;
+                    setInMenuPage(true);
                 }));
         menuTimer.play();
     }
@@ -884,6 +902,7 @@ public class Gui extends Application implements View {
      * This method creates clouds animation
      */
     private void createTransitionClouds(){
+        transitionClouds = new StackPane();
         Image leftCloudImg = new Image(Gui.class.getResource("/img/loadingAndPopups/transitionCloudLeft.png").toString(), screenWidth, screenHeight*2, false, false);
         ImageView leftCloud = new ImageView(leftCloudImg);
         Image rightCloudImg = new Image(Gui.class.getResource("/img/loadingAndPopups/transitionCloudRight.png").toString(), screenWidth, screenHeight*2, false, false);
@@ -919,8 +938,8 @@ public class Gui extends Application implements View {
         cloudsTimer.play();
     }
 
-    private StackPane createConnectionErrorPane(){
-        StackPane connectionPane = new StackPane();
+    private void createConnectionErrorPane(){
+        connectionError = new StackPane();
 
         Image connectionFrame = new Image(MatchScene.class.getResource("/img/loadingAndPopups/frame2.png").toString(), screenWidth/3, screenHeight/3, false, false);
         ImageView connectionErrorView = new ImageView(connectionFrame);
@@ -951,10 +970,8 @@ public class Gui extends Application implements View {
 
         connectionErrorBox.getChildren().addAll(connectionErrorMessage, okConnectionButton);
 
-        connectionPane.getChildren().addAll(connectionErrorView, connectionErrorBox);
+        connectionError.getChildren().addAll(connectionErrorView, connectionErrorBox);
         connectionErrorBox.setAlignment(Pos.CENTER);
-
-        return connectionPane;
     }
 
     public void showConnectionError(){
@@ -1212,7 +1229,7 @@ public class Gui extends Application implements View {
     @Override
     public int askPosition(List<int[]> positions) throws TimeOutException {
         Platform.runLater(() -> matchScene.chooseDestination(positions));
-        Platform.runLater(() -> matchScene.playerView().playTimer());
+        Platform.runLater(() -> matchScene.playerView().playTimer(false, false));
         return matchScene.chosenDestination();
     }
 
@@ -1224,7 +1241,7 @@ public class Gui extends Application implements View {
     @Override
     public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
         Platform.runLater(() -> matchScene.chooseCards(cards));
-        Platform.runLater(() -> matchScene.playerView().playTimer());
+        Platform.runLater(() -> matchScene.playerView().playTimer(true, false));
         return matchScene.chosenCards();
     }
 
@@ -1236,7 +1253,7 @@ public class Gui extends Application implements View {
     @Override
     public int askCards(List<GodCardProxy> cards) throws TimeOutException {
         Platform.runLater(() -> matchScene.chooseCard(cards));
-        Platform.runLater(() -> matchScene.playerView().playTimer());
+        Platform.runLater(() -> matchScene.playerView().playTimer(false, true));
         return matchScene.chosenCard();
     }
 
@@ -1265,7 +1282,7 @@ public class Gui extends Application implements View {
      */
     @Override
     public int askWorker(List<int[]> workers) throws TimeOutException {
-        Platform.runLater(() -> matchScene.playerView().playTimer());
+        Platform.runLater(() -> matchScene.playerView().playTimer(false, false));
         return askPosition(workers);
     }
 
@@ -1492,8 +1509,8 @@ public class Gui extends Application implements View {
     }
 
     @Override
-    public void serverDisconnected() {
-        if(!inMenuPage) {
+    public synchronized void serverDisconnected() {
+        if(!inMenuPage && !secondWindow) {
             connectedText.setVisible(false);
             connectedText.setManaged(false);
             disconnectionButton.setVisible(false);
@@ -1507,6 +1524,13 @@ public class Gui extends Application implements View {
             restartConnection();
             setErrorMessage("Connection lost");
         } else {
+            while (!inMenuPage) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             screenWidth = Screen.getPrimary().getBounds().getWidth();
             screenHeight = Screen.getPrimary().getBounds().getHeight();
             ipForm = new Text ("Ip Address");

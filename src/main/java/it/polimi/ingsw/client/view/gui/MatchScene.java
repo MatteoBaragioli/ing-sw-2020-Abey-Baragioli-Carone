@@ -14,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.BoxBlur;
@@ -176,6 +177,11 @@ public class MatchScene {
     //variable that is true when timer finished
     private AtomicBoolean  endTimer = new AtomicBoolean(false);
 
+    //timer that is shown in challenger pane
+    private Label chooseCardsTimer = new Label();
+
+    //timer that is shown in chooseMyCard pane
+    private Label chooseCardTimer = new Label();
 
     public MatchScene(Gui gui, double screenWidth, double screenHeight, StackPane matchPage) {
         lillybelleFont = Font.loadFont(MatchScene.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/70);
@@ -245,7 +251,6 @@ public class MatchScene {
 
     //_________________________________________________GETTER____________________________________________________________
 
-
     public List<int[]> chosableBoxes() {
         return chosableBoxes;
     }
@@ -312,6 +317,14 @@ public class MatchScene {
 
     public StackPane chooseCardPane(){
         return chooseCard;
+    }
+
+    public Label chooseCardsTimer(){
+        return chooseCardsTimer;
+    }
+
+    public Label chooseCardTimer(){
+        return chooseCardTimer;
     }
 
     //_______________________________________________END GETTER__________________________________________________________
@@ -595,9 +608,12 @@ public class MatchScene {
         confirmChoices.setVisible(false);
 
         chooseCards.getChildren().addAll(allCards,  buttons, choices);
-        chooseCardsBox.getChildren().addAll(chooseCardsView, chooseCards);
-        chooseCardsBox.setAlignment(Pos.CENTER);
 
+        chooseCardsTimer.setPadding(new Insets(0, 0, screenHeight/11, 0));
+        StackPane.setAlignment(chooseCardsTimer, Pos.BOTTOM_CENTER);
+
+        chooseCardsBox.getChildren().addAll(chooseCardsView, chooseCards, chooseCardsTimer);
+        chooseCardsBox.setAlignment(Pos.CENTER);
 
 
         FadeTransition chooseCardsBoxFadeIn = new FadeTransition(Duration.millis(1000), chooseCardsBox);
@@ -844,7 +860,11 @@ public class MatchScene {
         chooseCardBox.setPrefWidth(screenWidth/3);
         chooseCardBox.setAlignment(Pos.CENTER);
         chooseCardBox.setSpacing(screenHeight/50);
-        chooseCard.getChildren().addAll(chooseCardBackground, chooseCardBox);
+
+        chooseCardTimer.setPadding(new Insets(0, 0, screenHeight/11, 0));
+        StackPane.setAlignment(chooseCardTimer, Pos.BOTTOM_CENTER);
+
+        chooseCard.getChildren().addAll(chooseCardBackground, chooseCardBox, chooseCardTimer);
 
         FadeTransition chooseCardBoxFadeIn = new FadeTransition(Duration.millis(1000), chooseCard);
         chooseCardBoxFadeIn.setFromValue(0);

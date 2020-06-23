@@ -269,7 +269,7 @@ public class PlayerView extends StackPane {
         Image messagesImg = new Image(PlayerView.class.getResource("/img/matchPage/messagesBox.png").toString(),screenWidth/4, screenHeight/4-screenHeight/100,false,false);
         ImageView messagesView = new ImageView(messagesImg);
 
-        messagesBox = new Label("Good Luck!");
+        messagesBox = new Label("Challenger is choosing all the cards for this match");
         messagesBox.setFont(lillybelle);
         messagesBox.setTextFill(WHITE);
         messagesBox.setPrefWidth(screenWidth/5);
@@ -1156,16 +1156,23 @@ public class PlayerView extends StackPane {
     /**
      * This method starts the timer
      */
-    public void playTimer(){
+    public void playTimer(boolean isChallenger, boolean isChoosingCard){
+        Label timerToSet;
+        if(isChallenger)
+            timerToSet = gui.matchScene().chooseCardsTimer();
+        else if(isChoosingCard)
+            timerToSet = gui.matchScene().chooseCardTimer();
+        else
+            timerToSet = timerCounter;
         if(timerTimeLine!=null)
             timerTimeLine.stop();
         AtomicReference<String> min = new AtomicReference<>("00");
-        AtomicReference<String> sec = new AtomicReference<>("30");
-        timerCounter.setFont(standardFont);
-        timerCounter.setText(min.toString() + " : " + sec.toString());
-        timerCounter.setTextFill(BLACK);
-        AtomicInteger seconds = new AtomicInteger(30);
+        AtomicReference<String> sec = new AtomicReference<>("05");
+        AtomicInteger seconds = new AtomicInteger(5);
         AtomicInteger minutes = new AtomicInteger(0);
+        timerToSet.setFont(standardFont);
+        timerToSet.setText(min.toString() + " : " + sec.toString());
+        timerToSet.setTextFill(BLACK);
         timerTimeLine = new Timeline(
                 new KeyFrame(
                         Duration.millis( 1000 ),
@@ -1187,12 +1194,12 @@ public class PlayerView extends StackPane {
                                 sec.set(seconds.toString());
                             }
                             min.set("0" + minutes.toString());
-                            timerCounter.setText(min.toString() + " : " + sec.toString());
+                            timerToSet.setText(min.toString() + " : " + sec.toString());
                             if(minutes.get() == 0 && seconds.get() <= 20){
-                                if(timerCounter.getTextFill().equals(DARKRED)){
-                                    timerCounter.setTextFill(BLACK);
+                                if(timerToSet.getTextFill().equals(DARKRED)){
+                                    timerToSet.setTextFill(BLACK);
                                 } else {
-                                    timerCounter.setTextFill(DARKRED);
+                                    timerToSet.setTextFill(DARKRED);
                                 }
                             }
                         }

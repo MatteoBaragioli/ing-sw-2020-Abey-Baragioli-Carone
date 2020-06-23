@@ -686,6 +686,7 @@ public class MenuScene {
         StackPane quitPane = new StackPane();
         quitPane.setAlignment(Pos.TOP_LEFT);
         quitPane.getChildren().add(quitLoading);
+        loadingPage.getChildren().clear();
         loadingPage.getChildren().addAll(loadingImageGif, loadingImageView, quitPane);
         gui.playTransitionClouds();
         FadeTransition menuFadeOut = new FadeTransition(Duration.millis(1500), menuPage);
