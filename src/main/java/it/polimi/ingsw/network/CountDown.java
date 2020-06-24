@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CountDown extends Thread {
     public final List<String> buffer;
-    public final int MINUTE = 15;
+    public final int MINUTE = 60;
     public final int SECOND = 1000;
     private boolean runnedOut = false;
     private int availableTime=2*MINUTE;
@@ -40,12 +40,9 @@ public class CountDown extends Thread {
             try {
                 sleep(SECOND);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 System.err.println("WAIT NON FUNZIONA");
                 return;
-            }
-            if (availableTime <= 5) {
-                System.out.println(availableTime);
             }
             availableTime--;
         }

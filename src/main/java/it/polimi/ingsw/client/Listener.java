@@ -27,7 +27,7 @@ public class Listener extends Thread {
                         try {
                             communicationChannel.writeKeyWord(PONG);
                         } catch (ChannelClosedException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                             System.err.println("PING Error");
                         }
                         break;
@@ -43,13 +43,13 @@ public class Listener extends Thread {
                         try {
                             communicationChannel.writeKeyWord(RECEIVED);
                         } catch (ChannelClosedException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                             System.err.println("RECEIVED Error");
                         }
                         break;
                 }
             } catch (IOException | ChannelClosedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 view.connectionLost();
                 communicationChannel.close();
             }

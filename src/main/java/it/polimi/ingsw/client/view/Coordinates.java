@@ -15,10 +15,6 @@ public class Coordinates{
         //int y = Integer.parseInt(String.valueOf(coordinates.charAt(1))) -1;
        // int x = ((int) coordinates.charAt(0)) - 65;
         //int y = ((int) coordinates.charAt(1)) -49;
-
-
-        System.out.println(x);
-        System.out.println(y);
         return new int[]{x,y};
     }
 }

@@ -15,6 +15,8 @@ import it.polimi.ingsw.network.objects.MatchStory;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import static it.polimi.ingsw.client.view.Coordinates.*;
 import static it.polimi.ingsw.client.view.cli.Colors.*;
+import static it.polimi.ingsw.network.CommunicationProtocol.UNIQUE_USERNAME;
+
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class Cli extends Thread implements View {
     private PlayerProxy myPlayer;
     private PlayerProxy currentPlayer;
     private List<PlayerProxy> opponents=new ArrayList<>();
-    private boolean ended=false;
+    private boolean ended= false;
     private boolean opponentsAnnounced=false;
     private List<String> buffer=new ArrayList<>();
     private boolean started=false;
@@ -56,19 +58,16 @@ public class Cli extends Thread implements View {
                         countDown.finish();
                     eraseBuffer();
                 } else {
-                    System.out.println("starting wait");
                     try {
                         if(needCountDown)
                             wait(countDown.getAvailableTime());
                         else
                             wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
-                    System.out.println("ending wait");
                     if(needCountDown) {
                         if (countDown.isRunnedOut()) {
-                            System.out.println("throwing exception");
                             throw new TimeOutException();
                         }
                     }
@@ -139,13 +138,15 @@ public class Cli extends Thread implements View {
             }
         if (answer == -1 || answer == 1 || answer == 2) {
                 valid = true;
-                printStream.println("you pressed "+ answer);
+
             } else
                 printStream.println("Not valid answer. Try again");
         }
         if (answer == -1 || answer == 1) {
             userIsQuitting = true;
             printStream.println("you are quitting");
+            if (started)
+                printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
         }
         return userIsQuitting;
     }
@@ -180,7 +181,6 @@ public class Cli extends Thread implements View {
         boolean sure = false;
         int answerToInt = 0;
         Pattern pattern = Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
-        view.clearScreen();
         view.turn();
         while (!sure ) {
 
@@ -248,7 +248,7 @@ public class Cli extends Thread implements View {
 
                 if (confirm == -1)
                    if(manageQuit()) {
-                       ended=true;
+                       ended = true;
                        return -1;
                    }
                    else validConfirmation=false;
@@ -354,7 +354,7 @@ public class Cli extends Thread implements View {
 
             while (!validCard) {
                 view.clearScreen();
-                printStream.println("\n choose your game card!");
+                printStream.println("\nchoose your game card!");
                 for (int i = 0; i < cards.size(); i++) {
                     printStream.println((i + 1) + " " + cards.get(i).name + ":    ");
                     if (cards.get(i).setUpDescription != null)
@@ -477,16 +477,20 @@ public class Cli extends Thread implements View {
                 printStream.println("\nDo you want end your turn?");
                 printStream.println("1  GO AHEAD;  2 UNDO");
                 break;
-            case BUILD:
+            case BUILD://mettere cosa l'utente deve fare nella info box da togliere da qui in poi
                 view.clearScreen();
                 view.turn();
                 printStream.println("\nwhere do you want to build? ");
                 break;
-            case DESTINATION:
+            case DESTINATION: //mettere cosa l'utente deve fare nella info box
                 view.clearScreen();
                 view.turn();
-                printStream.println("\nwhere do you want to build? ");
+                printStream.println("\nwhere do you want to move your worker? ");
                 break;
+            case START_POSITION:
+                view.clearScreen();
+                view.turn();
+                printStream.println("\nwhere do you want to set up your workers? ");
         }
     }
 
@@ -664,7 +668,7 @@ public class Cli extends Thread implements View {
     public void setWinner(PlayerProxy player) {
         view.clearScreen();
         view.turn();
-        ended=true;
+        ended = true;
         printStream.println("The match is over!");
         if (player.name.equals(myPlayer.name)) {
             printStream.println("You won the match, congratulations! you are on the right path to become a god!");
@@ -682,7 +686,7 @@ public class Cli extends Thread implements View {
     public void setLoser(PlayerProxy player) {
         if (player.name.equals(myPlayer.name)) { //mettere di fianco al mio nome che ho perso
             printStream.println("You lost, better luck next time!");
-            ended=true;
+            ended = true;
         }//aggiornare non riscrivere
         if(!opponents.isEmpty()) {
             List<String> info = new ArrayList<>();
@@ -724,23 +728,25 @@ public class Cli extends Thread implements View {
         boolean valid=false;
         String answer=null;
         while(!valid && !ended) {
-            System.out.println("Write ip address to connect to:");
+            printStream.println("Write ip address to connect to:");
             eraseBuffer();
 
             try {
                 answer = askAnswer(false);
                 if (findQuitInString(answer)) {
-                    if(manageQuit())
-                        ended=true;
+                    if(manageQuit()) {
+                        ended = true;
+                        valid=true;
+                    }
                 }
                 else valid=true;
             } catch (TimeOutException ignored) {
                 }
 
         }
-        if(valid)
-            return answer;
-        System.exit(0);
+        if(ended)
+            System.exit(0);
+
         return answer;
     }
 
@@ -757,22 +763,25 @@ public class Cli extends Thread implements View {
             printStream.println("Choose match type:\n" + "1   for 1 vs 1\n" + "2   Three For All");
             try {
                 answer = askNumber(false);
-                if (answer == -1 ) {//|| answer == 1 || answer == 2) {
-                    if (manageQuit()) {
-                        valid = true;
-                        ended=true;
-                    }
-                }
-                else if(answer == 1 || answer == 2)
-                    valid=true;
-                else
-                    System.out.println("Not valid answer. Try again");
-
             } catch (NumberFormatException e) {
                 answer = 0;
             } catch (TimeOutException ignored){
 
             }
+            if (answer == -1 ) {
+                if (manageQuit()) {
+                    valid = true;
+                    ended = true;
+                    printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
+
+                }
+            }
+            else if(answer == 1 || answer == 2)
+                valid=true;
+            else
+                System.out.println("Not valid answer. Try again");
+
+
         }
         if (answer != -1)
             answer++;
@@ -789,7 +798,7 @@ public class Cli extends Thread implements View {
     public int askPort() {
         boolean valid = false;
         int answer = 0;
-        while (!valid) {
+        while (!valid && !ended) {
             System.out.println("Write port:");
             try {
                 answer = askNumber(false);
@@ -798,8 +807,8 @@ public class Cli extends Thread implements View {
                 }
                 else if(answer==-1) {
                     if (manageQuit()) {
-                        valid = true;
-                        ended=true;
+                        valid=true;
+                        ended = true;
                     }
                 }
                 else
@@ -811,6 +820,8 @@ public class Cli extends Thread implements View {
             }
 
         }
+        if(ended)
+            System.exit(0);
         return answer;
     }
 
@@ -824,6 +835,8 @@ public class Cli extends Thread implements View {
         boolean valid=false;
         String answer=null;
         while(!valid && !ended) {
+            if(key==UNIQUE_USERNAME)
+                printStream.println("username not valid, choose another one");
             printStream.println("Write username:");
             eraseBuffer();
             try {
@@ -831,7 +844,7 @@ public class Cli extends Thread implements View {
                 if(findQuitInString(answer)) {
                     if (manageQuit()) {
                         valid = true;
-                        ended=true;
+                        ended = true;
                     }
                 }
                 else if(!answer.equals("")) {
@@ -900,9 +913,9 @@ public class Cli extends Thread implements View {
                     } else if(answer[i] == -1) {
                         if (manageQuit()) {
                             answer[0] = -1;
-                            ended=true;
+                            ended = true;
                             return answer;
-                        }else{//answer i rimane a -1; no buono
+                        }else{
                             i--;
                         }
                     } else {
@@ -961,22 +974,49 @@ public class Cli extends Thread implements View {
             try {
                 input = read();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 input = "";
                 ended = true;
             }
-            if (started &&(!myTurn()||myPlayer.godCardProxy==null)) {
+            if (input.equals("restart") && ended) {
+                try {
+                    client.restartClient();
+                } catch (ChannelClosedException e) {
+                    //e.printStackTrace();
+                }
+                ended=false;
+                started=false;
+                input="";
+            }
+
+            if (started && (!myTurn() || myPlayer.godCardProxy == null)) {
                 if (checkIfUserIsQuitting(input)) {
-                    ended = true;
                     try {
-                        client.end();
-                    } catch (ChannelClosedException e) {
-                        e.printStackTrace();
+                        input = read();
+                        if (input.equals("restart")){
+                            try {
+                                client.restartClient();
+                            } catch (ChannelClosedException e) {
+                                //e.printStackTrace();
+                            }
+                            started=false;
+                            input="";
+                        }else{
+                            ended=true;
+                            try {
+                                client.end();
+                            } catch (ChannelClosedException e) {
+                                //e.printStackTrace();
+                            }
+                        }
+                    } catch (IOException e) {
+                         //e.printStackTrace();
                     }
-                }else if (!input.equals("") && !findQuitInString(input))
-                updateBuffer(input);
+                } else if (!input.equals("") && !findQuitInString(input))
+                    updateBuffer(input);
             } else if (!input.equals(""))
                 updateBuffer(input);
+
 
         }
         //System.exit(0);
@@ -1002,6 +1042,8 @@ public class Cli extends Thread implements View {
 
     @Override
     public void connectionLost() {
-
+        ended=true;
+        printStream.println("connection to the server lost");
+        printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
     }
 }
