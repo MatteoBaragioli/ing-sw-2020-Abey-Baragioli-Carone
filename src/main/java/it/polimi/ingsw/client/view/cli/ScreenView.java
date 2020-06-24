@@ -13,7 +13,8 @@ public class ScreenView {
     private PrintStream ps;
     private List<String> infoMessageBox=new ArrayList<>();
     private List<String> turnMessageBox=new ArrayList<>();
-
+    private List<String> infoMessage=new ArrayList<>();
+    private List<String> turnMessage=new ArrayList<>();
     public ScreenView(PrintStream ps, List<String> infoMessage){
         this.ps=ps;
         this.setInfoMessageBox(infoMessage);
@@ -30,10 +31,23 @@ public class ScreenView {
         this.infoMessageBox=boxMessage(lines);
     }
 
+    public  List<String> getInfoMessage(){
+        return this.infoMessage;
+    }
+
+    public void setInfoMessage(List<String> lines){
+            this.infoMessage = lines;
+            setInfoMessageBox(lines);
+
+    }
+
     public List<String> infoMessageBox(){
         return this.infoMessageBox;
     }
 
+    public List<String> infoMessage(){
+        return this.infoMessage;
+    }
 
     private List<String> getTurnMessageBox(){
         return this.turnMessageBox;
@@ -43,8 +57,22 @@ public class ScreenView {
         this.turnMessageBox=boxMessage(lines);
     }
 
+    public  List<String> getTurnMessage(){
+        return this.turnMessage;
+    }
+
+    public void setTurnMessage(List<String> lines){
+            this.turnMessage = lines;
+            setTurnMessageBox(lines);
+
+    }
+
     public List<String> TurnMessageBox(){
         return this.turnMessageBox;
+    }
+
+    public List<String> turnMessage(){
+        return this.infoMessage;
     }
 
     public PrintedMap map(){
@@ -109,66 +137,67 @@ public class ScreenView {
         int i;
         int j=2;
         String buffer;
-        messageBox.add(0,RESET+RED+"+----");
-        messageBox.add(1,RESET+RED+"|    ");
-        for(i=0 ; i<message.size(); i++, j++){
-            messageBox.add(j, RESET+RED+"|  "+RESET+message.get(i)+RED);
-            if (message.get(i).contains("[") ){
-                buffer=messageBox.get(j);
-                buffer=buffer.concat("           ");
+        if(!message.isEmpty()) {
+            messageBox.add(0, RESET + RED + "+----");
+            messageBox.add(1, RESET + RED + "|    ");
+            for (i = 0; i < message.size(); i++, j++) {
+                messageBox.add(j, RESET + RED + "|  " + RESET + message.get(i) + RED);
+                if (message.get(i).contains("[")) {
+                    buffer = messageBox.get(j);
+                    buffer = buffer.concat("           ");
+                    messageBox.set(j, buffer);
+                }
+
+                if (message.get(i).length() > maxLength) {
+                    maxLength = message.get(i).length();
+                }
+            }
+
+            for (j = 2, i = 0; i < message.size(); i++, j++) {
+                int difference = (maxLength - message.get(i).length());
+                for (int repeat = 0; repeat < difference + 2; repeat++) {
+                    buffer = messageBox.get(j);
+                    buffer = buffer.concat(" ");
+                    messageBox.set(j, buffer);
+                }
+
+            }
+            messageBox.add(RESET + RED + "|    ");
+            messageBox.add(RESET + RED + "+----");
+
+            for (i = 0; i < maxLength; i++) {
+                buffer = messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "-";
+                buffer = buffer.concat("-");
+                messageBox.set(0, buffer);
+
+                buffer = messageBox.get(1); //adding to the second string in the list, which is an empty line, the char " ";
+                buffer = buffer.concat(" ");
+                messageBox.set(1, buffer);
+
+                buffer = messageBox.get(j); //adding to the second last string in the list, which is an empty line, the char " ";
+                buffer = buffer.concat(" ");
                 messageBox.set(j, buffer);
+
+                buffer = messageBox.get(j + 1); //adding to the last string in the list, which is the down frame, the char "-";
+                buffer = buffer.concat("-");
+                messageBox.set(j + 1, buffer);
+
             }
 
-            if( message.get(i).length()>maxLength){
-                maxLength=message.get(i).length();
-            }
-        }
-
-        for (j=2, i=0; i<message.size(); i++, j++){
-            int difference=(maxLength-message.get(i).length());
-            for(int repeat=0; repeat<difference+2; repeat++){
-                buffer=messageBox.get(j);
-                buffer=buffer.concat(" ");
-                messageBox.set(j, buffer);
-            }
-
-        }
-        messageBox.add(RESET+RED+"|    ");
-        messageBox.add(RESET+RED+"+----");
-
-        for(i=0; i<maxLength; i++) {
-            buffer=messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "-";
-            buffer=buffer.concat("-");
+            buffer = messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "┐";
+            buffer = buffer.concat("+" + RESET);
             messageBox.set(0, buffer);
 
-            buffer=messageBox.get(1); //adding to the second string in the list, which is an empty line, the char " ";
-            buffer=buffer.concat(" ");
-            messageBox.set(1, buffer);
+            buffer = messageBox.get(j + 1); //adding to the last string in the list, which is the down frame, the char "┘";
+            buffer = buffer.concat("+" + RESET);
+            messageBox.set(j + 1, buffer);
 
-            buffer=messageBox.get(j); //adding to the second last string in the list, which is an empty line, the char " ";
-            buffer=buffer.concat(" ");
-            messageBox.set(j, buffer);
-
-            buffer=messageBox.get(j+1); //adding to the last string in the list, which is the down frame, the char "-";
-            buffer=buffer.concat("-");
-            messageBox.set(j+1, buffer);
-
+            for (i = 1; i < messageBox.size() - 1; i++) {
+                buffer = messageBox.get(i);
+                buffer = buffer.concat("|" + RESET);
+                messageBox.set(i, buffer);
+            }
         }
-
-        buffer=messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "┐";
-        buffer=buffer.concat("+"+RESET);
-        messageBox.set(0, buffer);
-
-        buffer=messageBox.get(j+1); //adding to the last string in the list, which is the down frame, the char "┘";
-        buffer=buffer.concat("+"+RESET);
-        messageBox.set(j+1, buffer);
-
-        for (i=1; i<messageBox.size()-1; i++){
-            buffer=messageBox.get(i);
-            buffer=buffer.concat("|"+RESET);
-            messageBox.set(i, buffer);
-        }
-
         return messageBox;
     }
 

@@ -68,6 +68,7 @@ public class Cli extends Thread implements View {
                     }
                     if(needCountDown) {
                         if (countDown.isRunnedOut()) {
+                            printStream.println("More than 2 minutes passed and you ran out of time! you have been disconnected from the server ");
                             throw new TimeOutException();
                         }
                     }
@@ -181,6 +182,7 @@ public class Cli extends Thread implements View {
         boolean sure = false;
         int answerToInt = 0;
         Pattern pattern = Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
+        view.clearScreen();
         view.turn();
         while (!sure ) {
 
@@ -256,6 +258,15 @@ public class Cli extends Thread implements View {
             if (confirm == 1)
                 sure = true;
         }
+        List<String> turnInfo = view.getTurnMessage();
+        boolean foundLine=false;
+        for(int i=0; i<turnInfo.size() && !foundLine; i++ )
+            if(turnInfo.get(i).contains("where do you want")) {
+                foundLine = true;
+                turnInfo.remove(i);
+            }
+        if(foundLine)
+            view.setTurnMessage(turnInfo);
         view.clearScreen();
         return answerToInt;
     }
@@ -302,7 +313,8 @@ public class Cli extends Thread implements View {
     public int askWorker(List<int[]> workers) throws TimeOutException {
         boolean valid = false;
         int answer = 0;
-
+        view.clearScreen();
+        view.turn();
         while (!valid) {
             for (int i = 0; i < workers.size(); i++) {
                 printStream.print((i + 1) + "   for worker in " + getChessCoordinates(workers.get(i)) + "    ");
@@ -324,8 +336,19 @@ public class Cli extends Thread implements View {
         }
         if (answer != -1)
             answer--;
+
+
         view.clearScreen();
         //view.turn();
+        List<String> turnInfo = view.getTurnMessage();
+        boolean foundLine=false;
+        for(int i=0; i<turnInfo.size() && !foundLine; i++ )
+            if(turnInfo.get(i).contains("choose your worker")) {
+                foundLine = true;
+                turnInfo.remove(i);
+            }
+        if(foundLine)
+            view.setTurnMessage(turnInfo);
         return answer;
 
     }
@@ -463,6 +486,7 @@ public class Cli extends Thread implements View {
      */
     @Override
     public void prepareAdditionalCommunication(CommunicationProtocol key) {
+        List<String> whatToDo=new ArrayList<>();
         switch (key) {
             case GOD_POWER:
                 view.clearScreen();
@@ -478,19 +502,35 @@ public class Cli extends Thread implements View {
                 printStream.println("1  GO AHEAD;  2 UNDO");
                 break;
             case BUILD://mettere cosa l'utente deve fare nella info box da togliere da qui in poi
-                view.clearScreen();
-                view.turn();
-                printStream.println("\nwhere do you want to build? ");
+                //view.clearScreen();
+                //view.turn();
+                //printStream.println("\nwhere do you want to build? ");
+                whatToDo=view.getTurnMessage();
+                whatToDo.add("where do you want to build? ");
+                view.setTurnMessage(whatToDo);
                 break;
             case DESTINATION: //mettere cosa l'utente deve fare nella info box
-                view.clearScreen();
-                view.turn();
-                printStream.println("\nwhere do you want to move your worker? ");
+                //view.clearScreen();
+               // view.turn();
+               // printStream.println("\nwhere do you want to move your worker? ");
+                whatToDo=view.getTurnMessage();
+                whatToDo.add("where do you want to move? ");
+                view.setTurnMessage(whatToDo);
                 break;
             case START_POSITION:
-                view.clearScreen();
-                view.turn();
-                printStream.println("\nwhere do you want to set up your workers? ");
+                //view.clearScreen();
+                //view.turn();
+                whatToDo=view.getTurnMessage();
+                whatToDo.add("where do you want to set up your workers? ");
+                view.setTurnMessage(whatToDo);
+                break;
+            case WORKER:
+                //view.clearScreen();
+                //view.turn();
+                whatToDo=view.getTurnMessage();
+                whatToDo.add("choose your worker!");
+                view.setTurnMessage(whatToDo);
+                break;
         }
     }
 
@@ -563,7 +603,7 @@ public class Cli extends Thread implements View {
                 info.add(getActualWrittenColor(opponent.colour) + opponent.name + ":" + RESET);
                 info.add(getActualWrittenColor(opponent.colour) + opponent.name + "'s card is " + opponent.godCardProxy.name + RESET);
             }
-            view.setInfoMessageBox(info);
+            view.setInfoMessage(info);
 
         } else {
             for (PlayerProxy opponent : players) {
@@ -627,7 +667,7 @@ public class Cli extends Thread implements View {
             int[] destination = new Gson().fromJson(content[3], destinationType);
             turnMessage.addAll(writeStory(player, chosenWorker, action, destination));
         }
-        view.setTurnMessageBox(turnMessage);
+        view.setTurnMessage(turnMessage);
     }
 
     /**
@@ -666,6 +706,10 @@ public class Cli extends Thread implements View {
      */
     @Override
     public void setWinner(PlayerProxy player) {
+        List<String>info;
+        info=view.getTurnMessage();
+        info.clear();
+        view.setTurnMessage(info);
         view.clearScreen();
         view.turn();
         ended = true;
@@ -684,33 +728,25 @@ public class Cli extends Thread implements View {
      */
     @Override
     public void setLoser(PlayerProxy player) {
-        if (player.name.equals(myPlayer.name)) { //mettere di fianco al mio nome che ho perso
-            printStream.println("You lost, better luck next time!");
-            ended = true;
-        }//aggiornare non riscrivere
         if(!opponents.isEmpty()) {
-            List<String> info = new ArrayList<>();
-            if (player.name.equals(myPlayer.name))
-                info.add(getActualWrittenColor(myPlayer.colour)+myPlayer.name+" (eliminated):"+RESET);
-            else info.add(getActualWrittenColor(myPlayer.colour)+myPlayer.name+RESET);
-            if(opponents.get(0).godCardProxy!=null)
-                info.add(getActualWrittenColor(myPlayer.colour) + "your card is " + myPlayer.godCardProxy.name + RESET);
-            info.add("your opponents are:");
-            for (PlayerProxy opponent : opponents) {
-                if (opponent.name.equals(player.name))
-                    info.add(getActualWrittenColor(opponent.colour) + opponent.name + " (eliminated):" + RESET);
-                else
-                    info.add(getActualWrittenColor(opponent.colour) + opponent.name + ":" + RESET);
-                if(opponents.get(0).godCardProxy!=null)
-                    info.add(getActualWrittenColor(opponent.colour) + opponent.name + "'s card is " + opponent.godCardProxy.name + RESET);
+            List<String> info ;
+            info = view.infoMessage();
+            for (int i=0; i<info.size(); i++) {
+                if (info.get(i).contains(player.name) && !info.get(i).contains("card"))
+                    if(!info.get(i).contains("(eliminated)")) {
+                        info.set(i, info.get(i).concat("(eliminated)"));
+                    }
+
             }
-            view.setInfoMessageBox(info);
-            opponents.remove(player);
-            printStream.println(player.name + " lost!");
-        }
-        else printStream.println("a player lost connection or quit at the beginning of match");
-
-
+            view.setInfoMessage(info);
+            if (player.name.equals(myPlayer.name)) { //mettere di fianco al mio nome che ho perso
+                printStream.println("You lost, better luck next time!");
+                ended = true;
+            }else{
+                opponents.remove(player);
+                printStream.println(player.name + " lost!");
+            }
+        }else printStream.println("a player lost connection or quit at the beginning of match");
     }
 
     @Override
@@ -878,6 +914,8 @@ public class Cli extends Thread implements View {
             printStream.println("You are the challenger, choose the game cards! One for each player");
             printStream.println("GAME CARDS:");
             for (int i = 0; i < (opponents.size() + 1); i++) {
+                if(i>0)
+                    view.clearScreen();
                 for (int j = 0; j < cards.size(); j++) {
                     printStream.println((j + 1) + " " + cards.get(j).name + ":    ");
                     if (cards.get(j).setUpDescription != null)
