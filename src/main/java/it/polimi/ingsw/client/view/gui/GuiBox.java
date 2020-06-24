@@ -20,14 +20,34 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 public class GuiBox extends Button {
+
+    //x coordinate
     private final int x;
+
+    //y coordinate
     private final int y;
+
+    //width of the single box
     private final double boxWidth;
+
+    //height of the single box
     private final double boxHeight;
+
+    //building image in the box
     private final ImageView building = new ImageView();
+
+    //worker image in the box
     private final ImageView worker = new ImageView();
+
+    //dome image in the box
     private final ImageView dome = new ImageView();
+
+    //variable that saves opacity before change it
     private double previousOpacity;
+
+    //index of the box
+    //it is the index of the box when it is part of a list (possible destinations or possible buildings)
+    //every time the box is part of a list this variable changes and saves the index of that list
     private int index = -1;
 
     public GuiBox(int x, int y, double boxWidth, double boxHeight) {
@@ -51,10 +71,13 @@ public class GuiBox extends Button {
         setGraphic(graphics);
     }
 
+    //------------------------------------------------------GETTER---------------------------------------------------
+
     public int index() {
         return index;
     }
 
+    //------------------------------------------------------GETTER--------------------------------------------------
     /**
      * This method assigns an index when the box is in a chosable boxes list
      * @param index Index in the list
@@ -149,7 +172,7 @@ public class GuiBox extends Button {
 
     /**
      * This method sets box as chosable
-     * @param match
+     * @param match MatchScene -> I need it to access to box list saved in matchScene
      */
     public void setAsChosable(MatchScene match){
         setBlue();

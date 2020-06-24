@@ -7,13 +7,19 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 public class GuiMap extends GridPane {
+
+    //list of all boxes of the map
     private GuiBox[][] boxesList;
+
+    //number of columns
     private final int columns;
+
+    //number of rows
     private final int rows;
 
 
-    public GuiMap(int rowsNumber, int columnsNumber, double mapDim, double screenWidth, double screenHeight){
-        createMap(mapDim, screenWidth, screenHeight, rowsNumber, columnsNumber);
+    public GuiMap(int rowsNumber, int columnsNumber, double mapDim){
+        createMap(mapDim, rowsNumber, columnsNumber);
         rows = rowsNumber;
         columns = columnsNumber;
     }
@@ -21,12 +27,10 @@ public class GuiMap extends GridPane {
     /**
      * This method creates the map of the match
      * @param mapDim Dimension of the map
-     * @param screenWidth Window width
-     * @param screenHeight Window height
      * @param rowsNumber Number of rows
      * @param columnsNumber Number of columns
      */
-    public void createMap(double mapDim, double screenWidth, double screenHeight, int rowsNumber, int columnsNumber) {
+    public void createMap(double mapDim, int rowsNumber, int columnsNumber) {
         int i, j, k;
         boxesList = new GuiBox[rowsNumber][columnsNumber];
         for (i = 0; i < columnsNumber; i++) {

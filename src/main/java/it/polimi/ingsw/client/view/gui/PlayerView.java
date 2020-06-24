@@ -30,6 +30,7 @@ import static javafx.geometry.Pos.*;
 import static javafx.scene.paint.Color.*;
 
 public class PlayerView extends StackPane {
+
     //big font
     private final Font standardFont;
 
@@ -163,7 +164,7 @@ public class PlayerView extends StackPane {
         create();
     }
 
-    //-------------------------------------GETTER----------------------------------------------
+    //-----------------------------------------------------GETTER-------------------------------------------------------
 
     public StackPane getPlayerViewStackPane(){
         return playerView;
@@ -177,7 +178,7 @@ public class PlayerView extends StackPane {
         return pauseView;
     }
 
-    //-------------------------------------END GETTER----------------------------------------------
+    //---------------------------------------------------END GETTER-----------------------------------------------------
 
     /**
      * This method creates all border player view
@@ -190,7 +191,7 @@ public class PlayerView extends StackPane {
         matchView.setPrefWidth(screenWidth);
         matchView.setPrefHeight(screenHeight);
 
-        //--------------------------------------LEFT--------------------------------------
+        //***************************LEFT***************************
         VBox leftView = new VBox();
         leftView.setPrefWidth(screenWidth/4);
         leftView.setPrefHeight(screenHeight);
@@ -287,10 +288,10 @@ public class PlayerView extends StackPane {
 
         leftView.getChildren().addAll(pause, timer, card, messages);
 
-        //--------------------------------------------END LEFT-----------------------------
+        //***************************END LEFT***************************
 
 
-        //--------------------------------------CENTER--------------------------------------
+        //***************************CENTER***************************
         VBox centerView = new VBox();
         centerView.setPrefWidth(screenWidth/2);
         centerView.setPrefHeight(screenHeight);
@@ -337,10 +338,10 @@ public class PlayerView extends StackPane {
         centerView.getChildren().addAll(turn, playerName);
 
 
-        //--------------------------------------END CENTER--------------------------------------
+        //***************************END CENTER***************************
 
 
-        //--------------------------------------RIGHT--------------------------------------
+        //***************************RIGHT***************************
         VBox rightView = new VBox();
         rightView.setPrefWidth(screenWidth/4);
         rightView.setPrefHeight(screenHeight);
@@ -422,10 +423,10 @@ public class PlayerView extends StackPane {
 
         rightView.getChildren().add(buttons);
 
-        //--------------------------------------END RIGHT--------------------------------------
+        //***************************END RIGHT***************************
 
 
-        //--------------------------------------ACTIVE POWERS----------------------------------
+        //***************************ACTIVE POWERS***************************
 
         Image activePowersImg = new Image(PlayerView.class.getResource("/img/matchPage/activePowers.png").toString(),screenWidth/1.5, screenHeight/1.5,false,false);
         ImageView activePowersView = new ImageView(activePowersImg);
@@ -460,10 +461,10 @@ public class PlayerView extends StackPane {
         activePowers.setPrefWidth(1.5);
         activePowers.setPrefHeight(1.5);
 
-        //--------------------------------------END ACTIVE POWERS----------------------------------
+        //***************************END ACTIVE POWERS***************************
 
 
-        //--------------------------------------PAUSE----------------------------------------------
+        //***************************PAUSE***************************
         Image pausePaneImg = new Image(PlayerView.class.getResource("/img/matchPage/pauseMenu.png").toString(),screenWidth/2.5, screenHeight-screenHeight/20,false,false);
         ImageView pausePaneView = new ImageView(pausePaneImg);
         VBox pauseOptions = new VBox();
@@ -531,10 +532,10 @@ public class PlayerView extends StackPane {
 
         pausePane.getChildren().addAll(pausePaneView, pauseOptions);
 
-        //---------------------------------------END PAUSE-----------------------------------------
+        //***************************END PAUSE***************************
 
 
-        //---------------------------------------STORY------------------------------
+        //***************************STORY***************************
 
         Image storyImage = new Image(PlayerView.class.getResource("/img/matchPage/activePowers.png").toString(), screenWidth/2, screenHeight/2, false, false);
         ImageView storyBackground = new ImageView(storyImage);
@@ -579,7 +580,7 @@ public class PlayerView extends StackPane {
 
 
 
-        //---------------------------------------END STORY------------------------------
+        //***************************END STORY***************************
 
         matchView.getChildren().addAll(leftView, centerView, rightView);
         playerView.getChildren().addAll(matchView);
@@ -706,6 +707,14 @@ public class PlayerView extends StackPane {
      * @param nickname Player's nickname
      * @param color Player's color
      * @param opponents Player's opponents
+     */
+
+    /**
+     * This method sets all player attributes (nickname, color, opponents) in the player view
+     * @param nickname Player's nickname
+     * @param color Player's color
+     * @param opponents Player's opponents
+     * @param numberOfOpponents Number of opponents
      */
     public void setPage(String nickname, String color, List<PlayerProxy> opponents, int numberOfOpponents){
         Color fontColor = fontColor(color);
@@ -1155,6 +1164,8 @@ public class PlayerView extends StackPane {
 
     /**
      * This method starts the timer
+     * @param isChallenger This variable tells if it is the challenger timer
+     * @param isChoosingCard This variable tells if it is the chosing card timer
      */
     public void playTimer(boolean isChallenger, boolean isChoosingCard){
         Label timerToSet;
@@ -1166,10 +1177,10 @@ public class PlayerView extends StackPane {
             timerToSet = timerCounter;
         if(timerTimeLine!=null)
             timerTimeLine.stop();
-        AtomicReference<String> min = new AtomicReference<>("00");
-        AtomicReference<String> sec = new AtomicReference<>("05");
-        AtomicInteger seconds = new AtomicInteger(5);
-        AtomicInteger minutes = new AtomicInteger(0);
+        AtomicReference<String> min = new AtomicReference<>("02");
+        AtomicReference<String> sec = new AtomicReference<>("00");
+        AtomicInteger seconds = new AtomicInteger(0);
+        AtomicInteger minutes = new AtomicInteger(2);
         timerToSet.setFont(standardFont);
         timerToSet.setText(min.toString() + " : " + sec.toString());
         timerToSet.setTextFill(BLACK);

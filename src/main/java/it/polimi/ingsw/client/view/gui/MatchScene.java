@@ -196,7 +196,7 @@ public class MatchScene {
         totalMargin = dimension / 6.504189944;
         double mapDim = dimension - (2 * marginDim);
 
-        guiMap = new GuiMap(gui.mapRowsNumber(),gui.mapColumnsNumber(), mapDim, screenWidth, screenHeight);
+        guiMap = new GuiMap(gui.mapRowsNumber(),gui.mapColumnsNumber(), mapDim);
 
         Image mapImg = new Image(MatchScene.class.getResource("/img/matchPage/board.png").toString(),dimension,dimension,false,false);
         mapView = new ImageView(mapImg);
@@ -227,7 +227,7 @@ public class MatchScene {
         winner.setVisible(false);
     }
 
-    //_________________________________________________SETTER____________________________________________________________
+    //------------------------------------------------SETTER------------------------------------------------------------
 
 
     public void setChosableBoxes(List<int[]> chosableBoxes) {
@@ -246,10 +246,10 @@ public class MatchScene {
         timeoutLoser = isTimeoutLoser;
     }
 
-    //_______________________________________________END SETTER__________________________________________________________
+    //-----------------------------------------------END SETTER---------------------------------------------------------
 
 
-    //_________________________________________________GETTER____________________________________________________________
+    //-------------------------------------------------GETTER-----------------------------------------------------------
 
     public List<int[]> chosableBoxes() {
         return chosableBoxes;
@@ -327,10 +327,10 @@ public class MatchScene {
         return chooseCardTimer;
     }
 
-    //_______________________________________________END GETTER__________________________________________________________
+    //-----------------------------------------------END GETTER---------------------------------------------------------
 
 
-    //-----------------------------------------SYNCHRONIZATION METHODS---------------------------------
+    //-----------------------------------------SYNCHRONIZATION METHODS--------------------------------------------------
 
     /**
      * This method notifies destinationReady when player has chosen a destination
@@ -379,16 +379,21 @@ public class MatchScene {
         notifyAll();
     }
 
+    /**
+     * This method notifies closeMatch when user wants to go back to main menu, when user closes the stage or when connection is lost and user clicks on "ok" button in the connection error pane
+     */
     public synchronized void setCloseMatch(){
         closeMatch.set(true);
         notifyAll();
     }
 
+    /**
+     * This method notifies when time to do actions runs out
+     */
     public synchronized void setEndTimer(){
         endTimer.set(true);
         notifyAll();
     }
-
 
     //-----------------------------------------END SYNCHRONIZATION METHODS---------------------------------
 
@@ -662,6 +667,18 @@ public class MatchScene {
      * @param removeGodInactiveImg Remove button inactive image
      * @param removeGod Remove button
      */
+
+    /**
+     * This method activates add button in the Choose cards box when chosen cards are less than number of players
+     * @param addGodImg Add button image
+     * @param addGodInactiveImg Add button Inactive image
+     * @param addGod Add button
+     * @param removeGodImg Remove button image
+     * @param removeGodInactiveImg Remove button inactive image
+     * @param removeGod Remove button
+     * @param cardsIndexes Indexes of all cards -> it saves index in order to show or hide the right card in the list of all cards (left side of chooseCardsPane
+     * @param godCards All god cards (list of godCardProxy)
+     */
     private void activateAddCardsButton(Image addGodImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod, int[] cardsIndexes, List<GodCardProxy> godCards){
         addGod.setImage(addGodImg);
         addGod.setOnMouseEntered(e ->{
@@ -755,6 +772,7 @@ public class MatchScene {
 
     /**
      * This method asks player to choose their card
+     * @param cards List of chosable cards
      */
     public void chooseCard(List<GodCardProxy> cards){
         Image chooseCardImg = new Image(MatchScene.class.getResource("/img/matchPage/chooseCard.png").toString(), screenWidth/1.2, screenHeight/1.2, false, false);
@@ -898,7 +916,8 @@ public class MatchScene {
     }
 
     /**
-     * This method hides choose cards box
+     * This method hides a pane
+     * @param pane Pane to hide
      */
     private void hideChooseCards(StackPane pane){
         FadeTransition chooseCardsFadeOut = new FadeTransition(Duration.millis(700), pane);
@@ -935,6 +954,7 @@ public class MatchScene {
     /**
      * This method waits for player (if he is the challenger) to choose all the cards of the match and returns them
      * @return Chosen cards indexes (it refers to list of cards)
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     public synchronized int[] chosenCards() throws TimeOutException{
         while(!confirmChallengerCards.get() && !closeMatch.get() && !endTimer.get()){
@@ -954,6 +974,7 @@ public class MatchScene {
     /**
      * This method waits for player to choose his card for the match and returns it
      * @return Chosen card index (it refers to list of cards)
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     public synchronized int chosenCard() throws TimeOutException{
         while(!confirmMyCards.get() && !closeMatch.get() && !endTimer.get()){
@@ -973,6 +994,7 @@ public class MatchScene {
     /**
      * This method wait for player to chose a destination and returns it
      * @return Chosen destination
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     public synchronized int chosenDestination() throws TimeOutException {
         while(!destinationReady.get() && !closeMatch.get() && !endTimer.get()){
@@ -1133,6 +1155,7 @@ public class MatchScene {
 
     /**
      * This method creates and shows winner pane to winner player and loser pane to other players
+     * @param isWinner This variable tells if player is a winner or a loser
      */
     public void winner(boolean isWinner){
         winner.setPrefWidth(screenWidth);
@@ -1251,7 +1274,8 @@ public class MatchScene {
     }
 
     /**
-     * This method hides winner pane
+     * This method hides winner or surrender pane
+     * @param pane Pane to hide
      */
     private void closeWinnerOrSurrender(StackPane pane){
         FadeTransition paneFadeOut = new FadeTransition(Duration.millis(500), pane);
@@ -1318,6 +1342,9 @@ public class MatchScene {
         showingTimer.play();
     }
 
+    /**
+     * This method creates surrender popup
+     */
     public void createSurrenderPopup(){
         surrender.setPrefWidth(screenWidth/3);
         surrender.setPrefHeight(screenHeight/3);
