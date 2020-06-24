@@ -32,6 +32,7 @@ import static javafx.scene.paint.Color.WHITE;
 
 public class MenuScene {
 
+    //fonts
     private final Font lillybelleFont;
     private final Font pageNumberFont;
     private final Font errorFont;
@@ -119,7 +120,7 @@ public class MenuScene {
     }
 
 
-    //_________________________________________________SETTER____________________________________________________________
+    //-------------------------------------------------SETTER-----------------------------------------------------------
 
     private void setNickname(String nickname) {
         this.nickname = nickname;
@@ -135,10 +136,10 @@ public class MenuScene {
         errorMessage.setManaged(true);
     }
 
-    //_______________________________________________END SETTER__________________________________________________________
+    //-----------------------------------------------END SETTER---------------------------------------------------------
 
 
-    //_________________________________________________GETTER____________________________________________________________
+    //-------------------------------------------------GETTER-----------------------------------------------------------
 
     public String nickname() {
         return nickname;
@@ -148,7 +149,27 @@ public class MenuScene {
         return numberOfPlayers;
     }
 
-    //_______________________________________________END GETTER__________________________________________________________
+    //------------------------------------------------END GETTER--------------------------------------------------------
+
+    //-------------------------------------------SYNCHRONIZATION METHODS------------------------------------------------
+
+    /**
+     * This method notifies clicked when user clicks on confirm button or play button
+     */
+    private synchronized void setClicked(){
+        clicked.set(true);
+        notifyAll();
+    }
+
+    /**
+     * This method notifies close when user clicks on quit button or connection is lost and user clicks on "ok" in the connection error pane
+     */
+    public synchronized void setClose(){
+        close.set(true);
+        notifyAll();
+    }
+
+    //-----------------------------------------END SYNCHRONIZATION METHODS----------------------------------------------
 
     /**
      * This method creates the menu page
@@ -295,9 +316,10 @@ public class MenuScene {
         return playButton;
     }
 
-    //-----------------------------------------------END Play Button------------------------------------------------------------
+    //-----------------------------------------------END Play Button----------------------------------------------------
 
-    //-----------------------------------------------Quit and How to play Buttons------------------------------------------------------------
+    //-----------------------------------------------Quit and How to play Buttons---------------------------------------
+
     /**
      * This method creates quit button
      * @return ImageView (Quit button)
@@ -563,9 +585,9 @@ public class MenuScene {
     }
 
 
-    //-----------------------------------------------END Quit and How to play Buttons------------------------------------------------------------
+    //-----------------------------------------------END Quit and How to play Buttons-----------------------------------
 
-    //-----------------------------------------------Form and Communication------------------------------------------------------------
+    //-----------------------------------------------Form and Communication---------------------------------------------
 
 
     /**
@@ -640,21 +662,10 @@ public class MenuScene {
         return numberOfPlayers();
     }
 
-    private synchronized void setClicked(){
-        clicked.set(true);
-        notifyAll();
-    }
-
-    public synchronized void setClose(){
-        close.set(true);
-        notifyAll();
-    }
-
-    //-----------------------------------------------End Form and Communication------------------------------------------------------------
+    //-----------------------------------------------End Form and Communication-----------------------------------------
 
 
-
-    //-----------------------------------------------Loading Page------------------------------------------------------------
+    //-----------------------------------------------Loading Page-------------------------------------------------------
 
     /**
      * This method creates and shows the loading page
@@ -707,5 +718,5 @@ public class MenuScene {
         loadingTimer.play();
     }
 
-    //-----------------------------------------------End Loading Page------------------------------------------------------------
+    //-----------------------------------------------End Loading Page---------------------------------------------------
 }

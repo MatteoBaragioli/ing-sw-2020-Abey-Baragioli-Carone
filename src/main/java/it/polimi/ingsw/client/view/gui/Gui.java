@@ -151,9 +151,6 @@ public class Gui extends Application implements View {
     private Button disconnectionButton;
     private Button enterGameButton;
 
-    //connection error message
-    private Text connectionErrorMessage;
-
     //variable that is true when menu page is ready
     private  AtomicBoolean gameIsReady = new AtomicBoolean(false);
 
@@ -244,10 +241,6 @@ public class Gui extends Application implements View {
         errorMessage.setText(message);
     }
 
-    private void setConnectionErrorMessage(String message){
-        connectionErrorMessage.setText(message);
-    }
-
     public void setNewMatch(){
         secondMatch = true;
     }
@@ -318,6 +311,10 @@ public class Gui extends Application implements View {
         notifyAll();
     }
 
+    /**
+     * This method notifies inMenuPage when menu page is opened or not
+     * @param inMenuPage Boolean that is true if menu page is opened
+     */
     private synchronized void setInMenuPage(boolean inMenuPage){
         this.inMenuPage = inMenuPage;
         notifyAll();
@@ -325,6 +322,10 @@ public class Gui extends Application implements View {
 
     //-----------------------------------------END SYNCHRONIZATION METHODS-----------------------------
 
+    /**
+     * This method creates setting stage, that is the first stage shown in gui
+     * @param settingsStage Stage to show
+     */
     private void createSettingStage(Stage settingsStage){
         //initialization --> I need it if we restart the setting page after a connection lost
         screenWidth = Screen.getPrimary().getBounds().getWidth();
@@ -938,6 +939,9 @@ public class Gui extends Application implements View {
         cloudsTimer.play();
     }
 
+    /**
+     * This method creates connection error pane
+     */
     private void createConnectionErrorPane(){
         connectionError = new StackPane();
 
@@ -946,7 +950,8 @@ public class Gui extends Application implements View {
 
         VBox connectionErrorBox = new VBox();
         connectionErrorBox.setSpacing(screenHeight/30);
-        connectionErrorMessage = new Text("Connection lost");
+        //connection error message
+        Text connectionErrorMessage = new Text("Connection lost");
         connectionErrorMessage.setFont(lillybelleFont);
         connectionErrorMessage.setFill(DARKRED);
 
@@ -974,6 +979,9 @@ public class Gui extends Application implements View {
         connectionErrorBox.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * This method shows connection error pane
+     */
     public void showConnectionError(){
         FadeTransition paneFadeIn = new FadeTransition(Duration.millis(500), connectionError);
         paneFadeIn.setFromValue(0);
@@ -1189,9 +1197,10 @@ public class Gui extends Application implements View {
 
     /**
      * This method asks username to user
-     * If the user had already connected to server and wants to play a new match, this method returns saved username without asking it to user again
-     * If the user is in the setting window the method calles prepareToStart
+     * If the user had already connected to server and wants to play a new match, this method returns saved username without asking it to user again, if key is USERNAME
+     * If the user is in the setting window the method calls prepareToStart
      * If the user clicks on disconnect, this method doesn't ask username and returns null
+     * @param key Key that could be USERNAME or UNIQUE_USERNAME
      * @return Username
      */
     @Override
@@ -1225,6 +1234,7 @@ public class Gui extends Application implements View {
      * This method asks a box from a given list. It is called for choosing workers starting position, worker for the current turn, destination of a move, a build or a remove
      * @param positions List of possible boxes
      * @return Chosen box
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int askPosition(List<int[]> positions) throws TimeOutException {
@@ -1237,6 +1247,7 @@ public class Gui extends Application implements View {
      * This method asks cards of the match to challenger
      * @param cards List of all cards of the game
      * @return Chosen cards indexes
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
@@ -1245,10 +1256,10 @@ public class Gui extends Application implements View {
         return matchScene.chosenCards();
     }
 
-    /**
-     * This method asks to user to chose a card to use in this match
+    /** This method asks to user to chose a card to use in this match
      * @param cards List of all cards chosen by the challenger
      * @return Chosen card
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int askCards(List<GodCardProxy> cards) throws TimeOutException {
@@ -1279,6 +1290,7 @@ public class Gui extends Application implements View {
      * This method asks worker to move in current turn
      * @param workers List of movable workers
      * @return Chosen worker position
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int askWorker(List<int[]> workers) throws TimeOutException {
@@ -1495,6 +1507,9 @@ public class Gui extends Application implements View {
         }
     }
 
+    /**
+     * This method tells if player's time to do his action runs out
+     */
     @Override
     public void timeOut() {
         matchScene.setTimeoutLoser(true);
