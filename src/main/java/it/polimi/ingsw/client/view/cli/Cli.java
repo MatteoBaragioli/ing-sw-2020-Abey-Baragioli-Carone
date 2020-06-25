@@ -36,6 +36,7 @@ public class Cli implements View {
     private boolean opponentsAnnounced=false;
     private List<String> buffer=new ArrayList<>();
     private boolean started=false;
+    private boolean restart = false;
 //salvare ip e porta per nuova partita
 
 
@@ -50,30 +51,31 @@ public class Cli implements View {
         if (needCountDown) {
             countDown.start();
         }
-            while (!received ) {
-                if (!buffer.isEmpty()) {
-                    received = true;
-                    answer = buffer.get(0);
-                    if (needCountDown)
-                        countDown.finish();
-                    eraseBuffer();
-                } else {
-                    try {
-                        if(needCountDown)
-                            wait(countDown.getAvailableTime());
-                        else
-                            wait();
-                    } catch (InterruptedException e) {
-                        //e.printStackTrace();
-                    }
-                    if(needCountDown) {
-                        if (countDown.isRunnedOut()) {
-                            printStream.println("More than 2 minutes passed and you ran out of time! you have been disconnected from the server ");
-                            throw new TimeOutException();
-                        }
+
+        while (!received && !ended && !restart) {
+            if (!buffer.isEmpty()) {
+                received = true;
+                answer = buffer.get(0);
+                if (needCountDown)
+                    countDown.finish();
+                eraseBuffer();
+            } else {
+                try {
+                    if(needCountDown)
+                        wait(countDown.getAvailableTime());
+                    else
+                        wait();
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                }
+                if(needCountDown) {
+                    if (countDown.isRunnedOut()) {
+                        printStream.println("More than 2 minutes passed and you ran out of time! you have been disconnected from the server ");
+                        throw new TimeOutException();
                     }
                 }
             }
+        }
 
         return answer;
     }
@@ -118,8 +120,7 @@ public class Cli implements View {
         boolean userIsQuitting = false;
         String input;
         int answer = 0;
-        while (!valid) {
-            if (started &&(!myTurn()||myPlayer.godCardProxy==null)) { //dopo aver letto quit nella fase iniziale del match
+        while (!valid) {//dopo aver letto quit nella fase iniziale del match
                 try {                                                 //non ho ho caricato l'input nel buffer
                     input = read();                                   //quindi leggo la conferma del quit  tramite read
                     answer = Integer.parseInt(input);
@@ -128,15 +129,7 @@ public class Cli implements View {
                 } catch (NumberFormatException e) {
                     answer = 0;
                 }
-            }else {  // se non sono nella fase iniziale della partita, ossia se sono già state scelte le carte di ciascun giocatore
-                try{ // il quit è stato caricato nel buffer e allora può essere gestito da askNumber()
-                    answer=askNumber(true);
-                }catch (NumberFormatException e) { //verificare catch: in teoria non fa il catch del number format perchè ask answer non lo fa
-                    answer = 0;
-                }catch (TimeOutException ignored){
 
-                }
-            }
         if (answer == -1 || answer == 1 || answer == 2) {
                 valid = true;
 
@@ -249,11 +242,7 @@ public class Cli implements View {
                 }
 
                 if (confirm == -1)
-                   if(manageQuit()) {
-                       ended = true;
-                       return -1;
-                   }
-                   else validConfirmation=false;
+                    return confirm;
             }
             if (confirm == 1)
                 sure = true;
@@ -324,20 +313,13 @@ public class Cli implements View {
             } catch (NumberFormatException e) {
                 answer = 0;
             }
-            if (answer <= workers.size() && answer > 0) {
+            if (answer <= workers.size() && answer > 0 || answer == -1) {
                 valid = true;
-            }else if(answer==-1) {
-                if (manageQuit()) {
-                    ended = true;
-                    valid = true;
-                }
-            }else
+            } else
                 System.out.println("Not valid answer. Try again");
         }
         if (answer != -1)
             answer--;
-
-
         view.clearScreen();
         //view.turn();
         List<String> turnInfo = view.getTurnMessage();
@@ -398,10 +380,7 @@ public class Cli implements View {
                 if ((answer <= cards.size() && answer > 0) ) {
                     validCard = true;
                 } else if(answer == -1) {
-                    if (manageQuit()) {
-                        ended = true;
-                        return answer;
-                    }
+                    return answer;
                 }else {
                     printStream.println("Not valid answer. Try again");
                     printStream.println("press the number displayed next to the god's name to choose it");
@@ -427,10 +406,7 @@ public class Cli implements View {
                     validConfirmation = true;
                 else
                     if (confirm == -1) {
-                        if (manageQuit()) {
-                            ended = true;
-                            return -1;
-                        }
+                        return -1;
                     }
                 else {
                     printStream.println("Not valid answer. Try again");
@@ -466,10 +442,7 @@ public class Cli implements View {
             if ( answer == 1 || answer == 2) {
                 valid = true;
             } else if(answer==-1) {
-                if (manageQuit()) {
-                    ended = true;
-                    return -1;
-                }
+                return -1;
             }else
                 printStream.println("Not valid answer. Try again");
         }
@@ -770,17 +743,14 @@ public class Cli implements View {
             try {
                 answer = askAnswer(false);
                 if (findQuitInString(answer)) {
-                    if(manageQuit()) {
-                        ended = true;
-                        valid=true;
-                    }
+                    valid=true;
                 }
                 else valid=true;
             } catch (TimeOutException ignored) {
                 }
 
         }
-        if(ended)
+        if(findQuitInString(answer))
             System.exit(0);
 
         return answer;
@@ -804,13 +774,9 @@ public class Cli implements View {
             } catch (TimeOutException ignored){
 
             }
-            if (answer == -1 ) {
-                if (manageQuit()) {
-                    valid = true;
-                    ended = true;
-                    printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
-
-                }
+            if (answer == -1) {
+                valid = true;
+                System.exit(0);
             }
             else if(answer == 1 || answer == 2)
                 valid=true;
@@ -819,10 +785,11 @@ public class Cli implements View {
 
 
         }
-        if (answer != -1)
+        if (answer != -1) {
             answer++;
+            printStream.println("waiting for the match to start...");
+        }
         view.clearScreen();
-        printStream.println("waiting for the match to start...");
         return answer;
     }
 
@@ -834,20 +801,15 @@ public class Cli implements View {
     public int askPort() {
         boolean valid = false;
         int answer = 0;
-        while (!valid && !ended) {
+        while (!valid) {
             System.out.println("Write port:");
             try {
                 answer = askNumber(false);
                 if (answer >= 1024) {
                     valid = true;
-                }
-                else if(answer==-1) {
-                    if (manageQuit()) {
-                        valid=true;
-                        ended = true;
-                    }
-                }
-                else
+                } else if(answer==-1) {
+                    System.exit(0);
+                } else
                     System.out.println("Not valid answer. Try again");
             } catch (NumberFormatException e) {
                 answer = 0;
@@ -856,8 +818,6 @@ public class Cli implements View {
             }
 
         }
-        if(ended)
-            System.exit(0);
         return answer;
     }
 
@@ -870,7 +830,7 @@ public class Cli implements View {
     public String askUserName(CommunicationProtocol key) {
         boolean valid=false;
         String answer=null;
-        while(!valid && !ended) {
+        while(!valid) {
             if(key==UNIQUE_USERNAME)
                 printStream.println("username not valid, choose another one");
             printStream.println("Write username:");
@@ -878,10 +838,7 @@ public class Cli implements View {
             try {
                 answer = askAnswer(false);
                 if(findQuitInString(answer)) {
-                    if (manageQuit()) {
-                        valid = true;
-                        ended = true;
-                    }
+                    System.exit(0);
                 }
                 else if(!answer.equals("")) {
                     valid = true;
@@ -890,8 +847,6 @@ public class Cli implements View {
             }
 
         }
-        if(ended)
-            System.exit(0);
         return answer;
     }
 
@@ -949,13 +904,8 @@ public class Cli implements View {
                         if (!sameCard)
                             validCard = true;
                     } else if(answer[i] == -1) {
-                        if (manageQuit()) {
-                            answer[0] = -1;
-                            ended = true;
-                            return answer;
-                        }else{
-                            i--;
-                        }
+                        answer[0] = -1;
+                        return answer;
                     } else {
                         printStream.println("Not valid answer. Try again");
                         printStream.println("press the number displayed next to the god's name to choose it");
@@ -1009,6 +959,7 @@ public class Cli implements View {
         client.start();
         String input;
         while (!ended) {
+            restart = false;
             try {
                 input = read();
             } catch (IOException e) {
@@ -1016,6 +967,44 @@ public class Cli implements View {
                 input = "";
                 ended = true;
             }
+
+            if (findQuitInString(input)) {//user wrote "quit"
+                if (manageQuit()) {//Wrote quit and confirms quitting
+                    if (started && (!myTurn() || myPlayer.godCardProxy == null)) {//the match hasn't started/ it's not the user's turn
+                        try {
+                            input = read();
+                            if (input.equals("restart")) {
+                                restart = true;
+                                started = false;
+                                try {
+                                    client.restartClient();
+                                } catch (ChannelClosedException e) {
+                                    //e.printStackTrace();
+                                }
+                                input = "";
+                            } else {
+                                ended = true;
+                                //updateBuffer("quit");
+                                try {
+                                    client.end();
+                                } catch (ChannelClosedException e) {
+                                    //e.printStackTrace();
+                                }
+                            }
+                        } catch (IOException e) {
+                            //e.printStackTrace();
+                        }
+                    } else {//it's the user's turn
+                        updateBuffer("quit");
+                    }
+                } else { //Wrote quit but stays in game
+                    printStream.println("Please, complete the previous action");
+                }
+            } else {
+                if (!input.equals(""))
+                    updateBuffer(input);
+            }
+            /*
             if (input.equals("restart") && ended) {
                 try {
                     client.restartClient();
@@ -1027,34 +1016,7 @@ public class Cli implements View {
                 input="";
             }
 
-            if (started && (!myTurn() || myPlayer.godCardProxy == null)) {
-                if (checkIfUserIsQuitting(input)) {
-                    try {
-                        input = read();
-                        if (input.equals("restart")){
-                            try {
-                                client.restartClient();
-                            } catch (ChannelClosedException e) {
-                                //e.printStackTrace();
-                            }
-                            started=false;
-                            input="";
-                        }else{
-                            ended=true;
-                            try {
-                                client.end();
-                            } catch (ChannelClosedException e) {
-                                //e.printStackTrace();
-                            }
-                        }
-                    } catch (IOException e) {
-                         //e.printStackTrace();
-                    }
-                } else if (!input.equals("") && !findQuitInString(input))
-                    updateBuffer(input);
-            } else if (!input.equals(""))
-                updateBuffer(input);
-
+             */
 
         }
         //System.exit(0);

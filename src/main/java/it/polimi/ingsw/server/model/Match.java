@@ -391,9 +391,10 @@ public class Match extends Thread{
         Box position;
 
         List<Player> setUpOrder = new ArrayList<>(gamePlayers);
-        for (Player player : gamePlayers) {
-            player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
-        }
+        for (Player player : gamePlayers)
+            if (player.godCard() != null)
+                player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);
+
         List<Player> readyPlayers = new ArrayList<>();
         for (int j = 0; j < gamePlayers.size() && gamePlayers.size() > 1; j++) {
             Player player = gamePlayers.get(j);
