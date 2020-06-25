@@ -38,7 +38,7 @@ public class Listener extends Thread {
                     case MY_PLAYER:
                     case OPPONENTS:
                     case TIMEOUT:
-                    case WINNER:           //todo c'è??
+                    case WINNER:
 
                         try {
                             communicationChannel.writeKeyWord(RECEIVED);

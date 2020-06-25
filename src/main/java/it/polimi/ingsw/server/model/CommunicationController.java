@@ -364,7 +364,7 @@ public class CommunicationController {
     }
 
     public boolean chooseToUsePower(Player chooser)throws TimeOutException, ChannelClosedException {
-        boolean result=new Random().nextBoolean();
+        boolean result=true;
         boolean answer;
         if (playerIsUser(chooser))
             result= askConfirmation(findUser(chooser), GOD_POWER);

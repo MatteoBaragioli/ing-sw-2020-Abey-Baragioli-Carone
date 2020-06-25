@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Cli extends Thread implements View {
+public class Cli implements View {
     private static BufferedReader commandline = new BufferedReader(new InputStreamReader(System.in));
     private PrintStream printStream = new PrintStream(System.out, true);
     private ScreenView view = new ScreenView(printStream);
