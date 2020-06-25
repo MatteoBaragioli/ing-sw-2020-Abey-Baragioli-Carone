@@ -10,7 +10,7 @@
 |:-----------------------|:------------------------------------:|
 | Basic rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Complete rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Socket | [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#) |
+| Socket | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | CLI | [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#) |
 | GUI | [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#) |
 | Undo | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |

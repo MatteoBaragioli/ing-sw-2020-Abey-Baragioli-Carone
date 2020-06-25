@@ -132,8 +132,10 @@ public class Match extends Thread{
             catch (TimeOutException e) {
                 e.printStackTrace();
                 currentPlayer.turnSequence().undo();
-                removePlayer(currentPlayer);
-                announceRemovedPlayer(currentPlayer);
+                if (gamePlayers.size()>1) {
+                    removePlayer(currentPlayer);
+                    announceRemovedPlayer(currentPlayer);
+                }
             }
             catch (ChannelClosedException e) {
                 e.printStackTrace();
@@ -175,7 +177,7 @@ public class Match extends Thread{
     private void takeTurn(Player player) throws ChannelClosedException, TimeOutException {
         int undoCounter = 0;
         MatchStory matchStory = new MatchStory(player);
-        for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && player.isInGame();){
+        for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && player.isInGame() && gamePlayers.size()>1;){
             boolean confirm = true;
             phasesSequence.get(phaseIndex).executePhase(player, communicationController, actionController, gameMap, getOpponents(player), winConditions, matchStory);
             if(undoCounter<3 && phaseIndex==2)
@@ -193,7 +195,8 @@ public class Match extends Thread{
                 else
                     phaseIndex++;
         }
-        tellMatchStory(matchStory);
+        if (gamePlayers.size()>1)
+            tellMatchStory(matchStory);
     }
 
     private void tellMatchStory(MatchStory matchStory) {
@@ -328,8 +331,10 @@ public class Match extends Thread{
                     valid = true;
                 } catch (TimeOutException e) {
                     e.printStackTrace();
-                    removePlayer(challenger);
-                    announceRemovedPlayer(challenger);
+                    if (gamePlayers.size()>1) {
+                        removePlayer(challenger);
+                        announceRemovedPlayer(challenger);
+                    }
                     valid = false;
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
@@ -365,8 +370,10 @@ public class Match extends Thread{
                         i--;
                 } catch (TimeOutException e) {
                     e.printStackTrace();
-                    removePlayer(player);
-                    announceRemovedPlayer(player);
+                    if (gamePlayers.size()>1) {
+                        removePlayer(player);
+                        announceRemovedPlayer(player);
+                    }
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     removeUser(findUser(e.name()));
@@ -407,9 +414,11 @@ public class Match extends Thread{
                         readyPlayers.add(player);
                     } catch (TimeOutException e) {
                         e.printStackTrace();
-                        removePlayer(player);
-                        announceRemovedPlayer(player);
-                        j = -1;
+                        if (gamePlayers.size()>1) {
+                            removePlayer(player);
+                            announceRemovedPlayer(player);
+                            j = -1;
+                        }
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
                         player.setInGame(false);
