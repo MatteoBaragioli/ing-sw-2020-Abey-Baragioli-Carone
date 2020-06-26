@@ -37,6 +37,7 @@ public class Cli implements View {
     private List<String> buffer=new ArrayList<>();
     private boolean started=false;
     private boolean restart = false;
+    private boolean myTurn=false;
 //salvare ip e porta per nuova partita
 
 
@@ -168,6 +169,7 @@ public class Cli implements View {
      */
     @Override
     public int askPosition(List<int[]> positions) throws TimeOutException { //nuovo ask position che legge stringa
+        myTurn=true;
         String answer = null;
         boolean validAnswer;
         boolean validConfirmation;
@@ -191,7 +193,7 @@ public class Cli implements View {
 
                 if (matcher.find()) {
                     answer = cleanPosition(answer, matcher);
-                    printStream.println(answer);
+                    //printStream.println(answer);
                     int[] paragon = getCartesianCoordinates(answer);
                     for (int i = 0; i < positions.size() && !found; i++) {
 
@@ -211,10 +213,9 @@ public class Cli implements View {
 
                 } else { //possibilità di quittare
                     if(findQuitInString(answer)) {
-                        if (checkIfUserIsQuitting(answer)) {
-                            ended = true;
-                            return -1;
-                        }
+                        myTurn=false;
+                        //ended = true;
+                        return -1;
                     } else {
                         printStream.println("Not valid answer. Try again");
                         printStream.println("You must enter a letter and a number that refer to a box on the board");
@@ -257,6 +258,7 @@ public class Cli implements View {
         if(foundLine)
             view.setTurnMessage(turnInfo);
         view.clearScreen();
+        myTurn=false;
         return answerToInt;
     }
 
@@ -300,6 +302,7 @@ public class Cli implements View {
      */
     @Override
     public int askWorker(List<int[]> workers) throws TimeOutException {
+        myTurn=true;
         boolean valid = false;
         int answer = 0;
         view.clearScreen();
@@ -331,6 +334,7 @@ public class Cli implements View {
             }
         if(foundLine)
             view.setTurnMessage(turnInfo);
+        myTurn=false;
         return answer;
 
     }
@@ -343,6 +347,7 @@ public class Cli implements View {
      */
     @Override
     public int askCards(List<GodCardProxy> cards) throws TimeOutException {
+        myTurn=true;
         boolean sure = false;
         boolean validCard = false;
         boolean validConfirmation = false;
@@ -380,6 +385,7 @@ public class Cli implements View {
                 if ((answer <= cards.size() && answer > 0) ) {
                     validCard = true;
                 } else if(answer == -1) {
+                    myTurn=false;
                     return answer;
                 }else {
                     printStream.println("Not valid answer. Try again");
@@ -406,6 +412,7 @@ public class Cli implements View {
                     validConfirmation = true;
                 else
                     if (confirm == -1) {
+                        myTurn=false;
                         return -1;
                     }
                 else {
@@ -418,6 +425,7 @@ public class Cli implements View {
                 sure = true;
         }
         view.clearScreen();
+        myTurn=false;
         return answer;
     }
 
@@ -429,7 +437,7 @@ public class Cli implements View {
      */
     @Override
     public int askConfirmation(CommunicationProtocol key) throws TimeOutException {
-
+        myTurn=true;
         boolean valid = false;
         int answer = 0;
         while (!valid) {
@@ -442,6 +450,7 @@ public class Cli implements View {
             if ( answer == 1 || answer == 2) {
                 valid = true;
             } else if(answer==-1) {
+                myTurn=false;
                 return -1;
             }else
                 printStream.println("Not valid answer. Try again");
@@ -449,6 +458,7 @@ public class Cli implements View {
 
         answer--;
         view.clearScreen();
+        myTurn=false;
         return answer;
     }
 
@@ -552,7 +562,9 @@ public class Cli implements View {
      */
     @Override
     public void setMyPlayer(PlayerProxy player) {
-        started=true;
+        if(myPlayer==null) {
+            started = true;
+        }
         this.myPlayer = player;
     }
 
@@ -674,7 +686,6 @@ public class Cli implements View {
 
     /**
      * this method displays the winner
-     *
      * @param player
      */
     @Override
@@ -734,6 +745,7 @@ public class Cli implements View {
      */
     @Override
     public String askIp() {
+        myTurn=true;
         boolean valid=false;
         String answer=null;
         while(!valid && !ended) {
@@ -752,7 +764,7 @@ public class Cli implements View {
         }
         if(findQuitInString(answer))
             System.exit(0);
-
+        myTurn=false;
         return answer;
     }
 
@@ -763,6 +775,7 @@ public class Cli implements View {
      */
     @Override
     public int askMatchType() {
+        myTurn=true;
         boolean valid = false;
         int answer = 0;
         while (!valid) {
@@ -790,6 +803,7 @@ public class Cli implements View {
             printStream.println("waiting for the match to start...");
         }
         view.clearScreen();
+        myTurn=false;
         return answer;
     }
 
@@ -799,6 +813,7 @@ public class Cli implements View {
      */
     @Override
     public int askPort() {
+        myTurn=true;
         boolean valid = false;
         int answer = 0;
         while (!valid) {
@@ -818,6 +833,7 @@ public class Cli implements View {
             }
 
         }
+        myTurn=false;
         return answer;
     }
 
@@ -828,6 +844,7 @@ public class Cli implements View {
      */
     @Override
     public String askUserName(CommunicationProtocol key) {
+        myTurn=true;
         boolean valid=false;
         String answer=null;
         while(!valid) {
@@ -847,6 +864,7 @@ public class Cli implements View {
             }
 
         }
+        myTurn=false;
         return answer;
     }
 
@@ -858,6 +876,7 @@ public class Cli implements View {
      */
     @Override
     public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
+        myTurn=true;
         boolean sure = false;
         boolean sameCard;
         boolean validCard;
@@ -948,12 +967,12 @@ public class Cli implements View {
             }
         }
         view.clearScreen();
+        myTurn=false;
         return answer;
     }
 
 
     public void run(){
-
         Client client = new Client(this);
         view.title();
         client.start();
@@ -970,7 +989,7 @@ public class Cli implements View {
 
             if (findQuitInString(input)) {//user wrote "quit"
                 if (manageQuit()) {//Wrote quit and confirms quitting
-                    if (started && (!myTurn() || myPlayer.godCardProxy == null)) {//the match hasn't started/ it's not the user's turn
+                    if (!myTurn()) {//the match hasn't started/ it's not the user's turn
                         try {
                             input = read();
                             if (input.equals("restart")) {
@@ -990,12 +1009,37 @@ public class Cli implements View {
                                 } catch (ChannelClosedException e) {
                                     //e.printStackTrace();
                                 }
+                                System.exit(0);
                             }
                         } catch (IOException e) {
                             //e.printStackTrace();
                         }
-                    } else {//it's the user's turn
-                        updateBuffer("quit");
+                    } else {//it's the user's turn and confirms quitting
+                        //updateBuffer("quit");
+                        try {
+                            input = read();
+                            if (input.equals("restart")) { //user's turn, confirming quit, entering 'restart'
+                                restart = true;
+                                started = false;
+                                try {
+                                    client.restartClient();
+                                } catch (ChannelClosedException e) {
+                                    //e.printStackTrace();
+                                }
+                                updateBuffer("quit");
+                            } else {//user's turn, confirming quit, entering 'enter' instead of 'restart'
+                                ended = true;
+                                updateBuffer("quit");
+                                try {
+                                    client.end();
+                                } catch (ChannelClosedException e) {
+                                    //e.printStackTrace();
+                                }
+                                System.exit(0);
+                            }
+                        } catch (IOException e) {
+                            //e.printStackTrace();
+                        }
                     }
                 } else { //Wrote quit but stays in game
                     printStream.println("Please, complete the previous action");
@@ -1035,9 +1079,7 @@ public class Cli implements View {
     }
 
     public boolean myTurn() {
-        if(currentPlayer!=null)
-            return myPlayer.name.equals(currentPlayer.name);
-        return false;
+        return myTurn;
     }
 
     @Override
