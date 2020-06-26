@@ -271,7 +271,7 @@ public class CommunicationChannel {
     public CommunicationProtocol nextKey() throws IOException, ChannelClosedException {
         if(!closed) {
             String message = read();
-            System.out.println("\nReceiving:\n" + message + "\n");
+            //System.out.println("\nReceiving:\n" + message + "\n");
             CommunicationProtocol key = getKey(message);
 
             if (key != PING && key != PONG)
@@ -314,7 +314,7 @@ public class CommunicationChannel {
     public void write(String message) throws ChannelClosedException {
         synchronized (out) {
             if (!isClosed()) {
-                System.out.println("\nSending:\n" + message + "\n");
+                //System.out.println("\nSending:\n" + message + "\n");
                 out.println(message);
                 out.flush();
             } else

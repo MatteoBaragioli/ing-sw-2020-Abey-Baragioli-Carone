@@ -28,10 +28,10 @@ public class Client extends Thread {
     }
 
     public static void main(String[] args){
-        if (args.length > 3 && args[3].equals("-cli"))
+        //if (args.length > 3 && args[3].equals("-cli"))
             new Cli().run();
-        else
-            Application.launch(Gui.class, args);
+        //else
+           // Application.launch(Gui.class, args);
     }
 
     public void setRestart(boolean restart){
@@ -60,7 +60,7 @@ public class Client extends Thread {
                     valid = false;
                 } catch (IOException e) {
                     //e.printStackTrace();
-                    System.err.println("Couldn't get I/O for the connection to " + hostName);
+                   // System.err.println("Couldn't get I/O for the connection to " + hostName);
                     System.exit(1);
                 }
             }
@@ -71,7 +71,7 @@ public class Client extends Thread {
                 out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 //e.printStackTrace();
-                System.err.println("Couldn't get I/O for the printer");
+               // System.err.println("Couldn't get I/O for the printer");
                 System.exit(1);
             }
 
@@ -80,7 +80,7 @@ public class Client extends Thread {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             } catch (IOException e) {
                 //e.printStackTrace();
-                System.err.println("Couldn't get I/O for the buffer");
+               // System.err.println("Couldn't get I/O for the buffer");
                 System.exit(1);
             }
 
@@ -89,7 +89,7 @@ public class Client extends Thread {
                 communicationChannel.writeKeyWord(HI);
             } catch (ChannelClosedException e) {
                 //e.printStackTrace();
-                System.err.println("Connection lost");
+               // System.err.println("Connection lost");
             }
             ClientController clientController = new ClientController();
             Listener listener = new Listener(communicationChannel, view);
@@ -101,7 +101,7 @@ public class Client extends Thread {
                     key = communicationChannel.popKey();
                 } catch (ChannelClosedException e) {
                     ////e.printStackTrace();
-                    System.err.println("Connection lost");
+                   // System.err.println("Connection lost");
                     key = INVALID;
                 }
                 if(key != INVALID) {
@@ -116,7 +116,7 @@ public class Client extends Thread {
                                 clientController.manageListOfPositions(key, communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Manage boxes error");
+                               // System.err.println("Manage boxes error");
                                 restart = true;
                             }
                             break;
@@ -125,7 +125,7 @@ public class Client extends Thread {
                                 clientController.manageListOfCards(communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed Manage CARDS");
+                               // System.err.println("Connection closed Manage CARDS");
                                 restart = true;
                             }
                             break;
@@ -134,7 +134,7 @@ public class Client extends Thread {
                                 communicationChannel.popMessage();
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed COUNTDOWN");
+                               // System.err.println("Connection closed COUNTDOWN");
                                 restart = true;
                             }
                             break;
@@ -146,7 +146,7 @@ public class Client extends Thread {
                                 clientController.managePlayer(key, communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed Manage Player");
+                               // System.err.println("Connection closed Manage Player");
                                 restart = true;
                             }
                             break;
@@ -155,7 +155,7 @@ public class Client extends Thread {
                                 clientController.manageDeck(communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed Manage DECK");
+                               // System.err.println("Connection closed Manage DECK");
                                 restart = true;
                             }
                             break;
@@ -166,7 +166,7 @@ public class Client extends Thread {
                                 clientController.manageConfirmation(key, communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed Manage CONFIRMATION");
+                               // System.err.println("Connection closed Manage CONFIRMATION");
                                 restart = true;
                             }
                             break;
@@ -175,7 +175,7 @@ public class Client extends Thread {
                                 clientController.manageMapAsListOfBoxes(communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed Manage MAP");
+                               // System.err.println("Connection closed Manage MAP");
                                 restart = true;
                             }
                             break;
@@ -184,7 +184,7 @@ public class Client extends Thread {
                                 clientController.manageMatchStory(communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed Manage MATCH_STORY");
+                               // System.err.println("Connection closed Manage MATCH_STORY");
                                 restart = true;
                             }
                             break;
@@ -194,7 +194,7 @@ public class Client extends Thread {
                                 communicationChannel.writeMatchType(view.askMatchType());
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed MATCH_TYPE");
+                               // System.err.println("Connection closed MATCH_TYPE");
                                 restart = true;
                             }
                             break;
@@ -203,7 +203,7 @@ public class Client extends Thread {
                                 clientController.manageListOfOpponents(communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection closed OPPONENTS");
+                               // System.err.println("Connection closed OPPONENTS");
                                 restart = true;
                             }
                             break;
@@ -222,10 +222,10 @@ public class Client extends Thread {
                                 communicationChannel.writeUsername(view.askUserName(key));
                             } catch (IOException e) {
                                 //e.printStackTrace();
-                                System.err.println("View Error");
+                               // System.err.println("View Error");
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                                System.err.println("Connection Lost");
+                               // System.err.println("Connection Lost");
                                 restart = true;
                             }
                             break;
@@ -244,7 +244,7 @@ public class Client extends Thread {
                 in.close();
             } catch (IOException e) {
                 //e.printStackTrace();
-                System.err.println("Can't get close BufferReader Clientside");
+               // System.err.println("Can't get close BufferReader Clientside");
                 System.exit(1);
             }
 
@@ -254,7 +254,7 @@ public class Client extends Thread {
                 socket.close();
             } catch (IOException e) {
                 //e.printStackTrace();
-                System.err.println("Can't get close socket Clientside");
+               // System.err.println("Can't get close socket Clientside");
                 System.exit(1);
             }
         }

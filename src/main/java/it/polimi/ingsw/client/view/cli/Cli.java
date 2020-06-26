@@ -311,6 +311,7 @@ public class Cli implements View {
             for (int i = 0; i < workers.size(); i++) {
                 printStream.print((i + 1) + "   for worker in " + getChessCoordinates(workers.get(i)) + "    ");
             }
+            printStream.print("\n");
             try {
                 answer = askNumber(true);
             } catch (NumberFormatException e) {
@@ -359,12 +360,9 @@ public class Cli implements View {
             answer = 0;
             validCard = false;
             validConfirmation = false;
-
-
-
             while (!validCard) {
                 view.clearScreen();
-                printStream.println("\nchoose your game card!");
+                printStream.println("choose your game card!");
                 for (int i = 0; i < cards.size(); i++) {
                     printStream.println((i + 1) + " " + cards.get(i).name + ":    ");
                     if (cards.get(i).setUpDescription != null)
@@ -1029,7 +1027,7 @@ public class Cli implements View {
                                 updateBuffer("quit");
                             } else {//user's turn, confirming quit, entering 'enter' instead of 'restart'
                                 ended = true;
-                                updateBuffer("quit");
+                                //updateBuffer("quit");
                                 try {
                                     client.end();
                                 } catch (ChannelClosedException e) {

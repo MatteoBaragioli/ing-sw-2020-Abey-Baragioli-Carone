@@ -64,7 +64,6 @@ public class ScreenView {
     public void setTurnMessage(List<String> lines){
             this.turnMessage = lines;
             setTurnMessageBox(lines);
-
     }
 
     public List<String> TurnMessageBox(){
@@ -207,13 +206,13 @@ public class ScreenView {
     public void title()   {
         ps.println("\n");
         ps.println("\n");
-        ps.println(BLUE_BRIGHT+"                                                   Welcome to...");
-        ps.println(BLUE_BRIGHT+"                            _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____        ");
-        ps.println(BLUE_BRIGHT+"                          /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |   ");
-        ps.println(BLUE_BRIGHT+"                         |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |   ");
-        ps.println(BLUE_BRIGHT+"                          \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |  ");
-        ps.println(BLUE_BRIGHT+"                           _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |   ");
-        ps.println(BLUE_BRIGHT+"                          |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|    ");
+        ps.println(BLUE_BRIGHT+"                                               Welcome to...");
+        ps.println(BLUE_BRIGHT+"                        _______     _____     ___      ___ ____________  _________   _________   ____  ___      ____ ____        ");
+        ps.println(BLUE_BRIGHT+"                      /    ____|   /      \\  |   \\    |  | |___    ___| /  _____  \\ |   ___   \\  |  |  |   \\    |  | |  |   ");
+        ps.println(BLUE_BRIGHT+"                     |    |___    /   /\\   \\ |     \\  |  |     |  |    |  /     \\  ||  |___|   | |  |  |     \\  |  | |  |   ");
+        ps.println(BLUE_BRIGHT+"                      \\_____   \\ |   ____   ||  |\\   \\|  |     |  |    | |       | ||  _____  /  |  |  |  |\\   \\|  | |  |  ");
+        ps.println(BLUE_BRIGHT+"                       _____|   ||  |    |  ||  |  \\     |     |  |    |  \\_____/  ||  |    \\  \\ |  |  |  |  \\     | |  |   ");
+        ps.println(BLUE_BRIGHT+"                      |________/ |__|    |__||__|    \\___|     | _|     \\_________/ |__|     \\__||__|  |__|    \\___| |__|    ");
         ps.println(RESET+"\n");
         ps.println("\n");
 
