@@ -653,6 +653,8 @@ public class Gui extends Application implements View {
     private void windowSize(int sizeChoice){
         switch (sizeChoice){
             case 0:
+                this.screenWidth = Screen.getPrimary().getBounds().getWidth();
+                this.screenHeight = Screen.getPrimary().getBounds().getHeight();
                 break;
             case 1:
                 if(Screen.getPrimary().getBounds().getWidth()<1920 || Screen.getPrimary().getBounds().getHeight()<1080){
