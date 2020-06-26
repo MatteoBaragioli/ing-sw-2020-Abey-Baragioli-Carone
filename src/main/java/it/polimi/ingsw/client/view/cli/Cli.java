@@ -45,6 +45,12 @@ public class Cli implements View {
         return this.view;
     }
 
+    /**
+     * this method is used to check on the buffer's updates for any user's input and establishes a countDown for the user when needed
+     * @param needCountDown
+     * @return String, the user's answer
+     * @throws TimeOutException
+     */
     public synchronized String askAnswer(boolean needCountDown) throws TimeOutException{
         boolean received=false;
         String answer=null;
@@ -81,10 +87,18 @@ public class Cli implements View {
         return answer;
     }
 
+    /**
+     * this method clears the buffer content
+     */
     public synchronized void eraseBuffer() {
         buffer.clear();
     }
 
+    /**
+     * this method verifies if the user is quitting (by writing "quit" or "Quit" or "QUIT")  by using class regex
+     * @param answer String to check
+     * @return boolean , tells if the user actually wrote "quit" or "Quit" or "QUIT"
+     */
     public boolean findQuitInString(String answer) {
         Pattern pattern1 = Pattern.compile("QUIT");
         Pattern pattern2 = Pattern.compile("Quit");
@@ -96,9 +110,25 @@ public class Cli implements View {
             return true;
         return false;
     }
+
+    /**
+     * this method verifies if the user wants to restart (by writing "RESTART" or "Restart" or "restart") by using class regex
+     * @param answer String to check
+     * @return boolean , tells if the user actually wrote "RESTART" or "Restart" or "restart"
+     */
+    public boolean findRestartInString(String answer) {
+        Pattern pattern1 = Pattern.compile("RESTART");
+        Pattern pattern2 = Pattern.compile("Restart");
+        Pattern pattern3 = Pattern.compile("restart");
+        Matcher matcher1 = pattern1.matcher(answer);
+        Matcher matcher2 = pattern2.matcher(answer);
+        Matcher matcher3 = pattern3.matcher(answer);
+        if (matcher1.find() || matcher2.find() || matcher3.find())
+            return true;
+        return false;
+    }
     /**
      * this method checks if a user is trying to quit using regex
-     *
      * @param answer String inserted by user
      * @return boolean
      */
@@ -110,7 +140,6 @@ public class Cli implements View {
 
     /**
      * when the user tries to quit this method asks if the user in sure to quit
-     *
      * @return boolean the answer given by the user
      */
     public boolean manageQuit() {
@@ -125,13 +154,11 @@ public class Cli implements View {
                 try {                                                 //non ho ho caricato l'input nel buffer
                     input = read();                                   //quindi leggo la conferma del quit  tramite read
                     answer = Integer.parseInt(input);
-                } catch (IOException e) {
-                    answer = 0;
-                } catch (NumberFormatException e) {
+                } catch (IOException | NumberFormatException e) {
                     answer = 0;
                 }
 
-        if (answer == -1 || answer == 1 || answer == 2) {
+            if (answer == -1 || answer == 1 || answer == 2) {
                 valid = true;
 
             } else
@@ -150,9 +177,9 @@ public class Cli implements View {
      * this method handles the answer inserted by the player when expected a number
      *
      * @return int, the answer expected
-     * @throws IOException
+     * @throws TimeOutException
      * @throws NumberFormatException
-     * @param needCountDown
+     * @param needCountDown boolean, represents the need for the ask to have a count down
      */
     public int askNumber(boolean needCountDown) throws NumberFormatException, TimeOutException {
         String answer = askAnswer(needCountDown);
@@ -163,9 +190,9 @@ public class Cli implements View {
 
     /**
      * this method manages with regex the coordinates inserted in cli by the player, like A5 or B2
-     *
      * @param positions list of coordinates available sent by the server
      * @return int, index of the correspondent coordinate inserted by the user
+     * @throws TimeOutException
      */
     @Override
     public int askPosition(List<int[]> positions) throws TimeOutException { //nuovo ask position che legge stringa
@@ -264,10 +291,9 @@ public class Cli implements View {
 
     /**
      * this method "cleans" String answer of useless characters inserted by the player when inserting coordinates
-     *
      * @param answer  the coordinates inserted by the player that may contain wrong characters such as spaces or "ù" ecc
      * @param matcher of regex pattern found in answer
-     * @return
+     * @return String,  the position interpreted by cli
      */
 
     public String cleanPosition(String answer, Matcher matcher) {
@@ -296,9 +322,9 @@ public class Cli implements View {
 
     /**
      * this method handles the choice of the worker for the player's turn
-     *
      * @param workers is a list of coordinates that represent the workers' positions
      * @return int is the index in 'workers' list that represent the worker chosen by the player
+     * @throws TimeOutException
      */
     @Override
     public int askWorker(List<int[]> workers) throws TimeOutException {
@@ -342,9 +368,9 @@ public class Cli implements View {
 
     /**
      * this method handles the choice of the player's Godcard
-     *
      * @param cards list of cards to choose from
      * @return int is the index in 'cards' list that represent the card chosen by the player
+     * @throws TimeOutException
      */
     @Override
     public int askCards(List<GodCardProxy> cards) throws TimeOutException {
@@ -429,9 +455,9 @@ public class Cli implements View {
 
     /**
      * this method manages the confirmation of the user when they can undo or use their GodCard power
-     *
      * @param key indicates what the user is chosing for, undo or use power
      * @return int that corresponds to the user's answer
+     * @throws TimeOutException
      */
     @Override
     public int askConfirmation(CommunicationProtocol key) throws TimeOutException {
@@ -462,7 +488,6 @@ public class Cli implements View {
 
     /**
      * this method views additional communications depending on the key
-     *
      * @param key is a communication protocol key that indicates what the server is about to send
      */
     @Override
@@ -517,7 +542,6 @@ public class Cli implements View {
 
     /**
      * this method updates the user's view, showing the changes made during the previous turn
-     *
      * @param boxes, is the game map sent by the server as a list boxes (more precisely box proxys)
      */
     @Override
@@ -555,7 +579,6 @@ public class Cli implements View {
 
     /**
      * this method stores the data of the UI's player
-     *
      * @param player
      */
     @Override
@@ -568,7 +591,6 @@ public class Cli implements View {
 
     /**
      * this method stores the data of the opponents (just their color, name and card)
-     *
      * @param players
      */
     @Override
@@ -601,7 +623,6 @@ public class Cli implements View {
 
     /**
      * this method communicates to the user that the connection was refused
-     *
      * @param host
      */
     @Override
@@ -609,14 +630,15 @@ public class Cli implements View {
         System.err.println("Refused connection to" + host + "\nRetry.");
     }
 
+
     @Override
     public void startMatch() {
 
     }
 
+
     /**
      * this method stores the player that is currently playing
-     *
      * @param player current player
      */
     @Override
@@ -626,7 +648,6 @@ public class Cli implements View {
 
     /**
      * this method manages the string 'events' that represents the events that happened during the last turn and that is sent by the server
-     *
      * @param events is a String that contains all the details necessary to recall what happened in the last turn
      */
     @Override
@@ -655,7 +676,6 @@ public class Cli implements View {
 
     /**
      * this method writes the events occurred in the last turn in a readable way for the user
-     *
      * @param player       name of the player that made the action
      * @param chosenWorker worker used
      * @param action       action made
@@ -731,6 +751,9 @@ public class Cli implements View {
         }else printStream.println("a player lost connection or quit at the beginning of match");
     }
 
+    /**
+     * this method tells the user the count down in up
+     */
     @Override
     public void timeOut() {
     printStream.println("More than 2 minutes passed and you ran out of time! you have been disconnected from the server ");
@@ -738,7 +761,6 @@ public class Cli implements View {
 
     /**
      * this method asks to user the ip address
-     *
      * @return String
      */
     @Override
@@ -768,7 +790,6 @@ public class Cli implements View {
 
     /**
      * this method asks to the user the match type they want to play
-     *
      * @return int represents the number of the players
      */
     @Override
@@ -838,8 +859,7 @@ public class Cli implements View {
     /**
      * this method asks the user name to the user
      * @return String
-     * @throws IOException
-     */
+     * */
     @Override
     public String askUserName(CommunicationProtocol key) {
         myTurn=true;
@@ -868,9 +888,9 @@ public class Cli implements View {
 
     /**
      * this method asks the challenger the game cards from which the other players will have to choose from
-     *
      * @param cards these are all the game cards available
      * @return int[] , a list of numbers that represent the indexes of the chosen cards
+     * @throws TimeOutException
      */
     @Override
     public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
@@ -969,7 +989,9 @@ public class Cli implements View {
         return answer;
     }
 
-
+    /**
+     * run method in cli, it allows the UI to detect and elaborate the user's input constantly, even if it's not the user's turn
+     */
     public void run(){
         Client client = new Client(this);
         view.title();
@@ -990,7 +1012,7 @@ public class Cli implements View {
                     if (!myTurn()) {//the match hasn't started/ it's not the user's turn
                         try {
                             input = read();
-                            if (input.equals("restart")) {
+                            if (findRestartInString(input)) {
                                 restart = true;
                                 started = false;
                                 try {
@@ -1064,22 +1086,38 @@ public class Cli implements View {
         //System.exit(0);
     }
 
+    /**
+     * this method reads the user's input in command line
+     * @return
+     * @throws IOException
+     */
     public String read() throws IOException {
         String answer;
         answer = commandline.readLine();
         return answer;
     }
 
+    /**
+     * this method updates the buffer with an element and notifies the countDown
+     * @param string the element stored in the buffer
+     */
     public synchronized void updateBuffer(String string) {
         buffer.add(string);
         notifyAll();
 
     }
 
+    /**
+     * this method tell's if it is the user's turn to interact with the UI
+     * @return
+     */
     public boolean myTurn() {
         return myTurn;
     }
 
+    /**
+     * this method announces to the user it has lost connection to the server
+     */
     @Override
     public void connectionLost() {
         ended=true;
