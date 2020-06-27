@@ -14,7 +14,34 @@ public class Server {
 
     final private int port;
 
-    public Server(int port) {
+    public Server() {
+        boolean valid = false;
+        int port = 0;
+        BufferedReader in   = new BufferedReader(new InputStreamReader(System.in));
+        while (!valid) {
+            System.out.println("Write port:");
+            try {
+                port = Integer.parseInt(in.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                port = 0;
+            }
+            if (port > 1023)
+                valid = true;
+            else
+                System.out.println("Not valid port. Try again");
+        }
+        this.port = port;
+    }
+
+    public Server(String parameter) {
+        int port;
+        try {
+            port = Integer.parseInt(parameter);
+        } catch (NumberFormatException e) {
+            port = 0;
+        }
         this.port = port;
     }
 
@@ -51,26 +78,12 @@ public class Server {
         executor.shutdown();
     }
 
-    public static void main(String[] args) {
-        boolean valid = false;
-        int port = 0;
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        while (!valid) {
-            System.out.println("Write port:");
-            try {
-                port = Integer.parseInt(in.readLine());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NumberFormatException e) {
-                port = 0;
-            }
-            if (port > 1023)
-                valid = true;
-            else
-                System.out.println("Not valid port. Try again");
-        }
-
-        Server server = new Server(port);
+    public void run(String[] args) {
+        Server server;
+        if (args.length>4 && args[4].equals("-port"))
+            server = new Server(args[5]);
+        else
+            server = new Server();
         server.startServer();
     }
 }

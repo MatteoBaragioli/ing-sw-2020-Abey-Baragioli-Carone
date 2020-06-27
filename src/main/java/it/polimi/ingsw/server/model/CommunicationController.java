@@ -162,7 +162,9 @@ public class CommunicationController {
      * @return Chosen Worker
      */
     public Worker chooseWorker(Player chooser, List<Worker> workers) throws TimeOutException, ChannelClosedException {
-        int index = new Random().nextInt(workers.size());
+        int index = 0;
+        if (workers.size()>1)
+            index = new Random().nextInt(workers.size()-1);
         if (playerIsUser(chooser))
             index = askWorker(findUser(chooser), workers);
         return workers.get(index);
@@ -202,7 +204,9 @@ public class CommunicationController {
      * @throws ChannelClosedException
      */
     public Box chooseStartPosition(Player player, List<Box> boxes) throws ChannelClosedException, TimeOutException {
-        int index = new Random().nextInt(boxes.size());
+        int index = 0;
+        if (boxes.size()>1)
+            index = new Random().nextInt(boxes.size()-1);
         if (playerIsUser(player))
             index = askStartPosition(findUser(player), boxes);
         return boxes.get(index);
@@ -230,7 +234,9 @@ public class CommunicationController {
      * @throws ChannelClosedException if connection is lost
      */
     public Box chooseDestination(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
-        int index = new Random().nextInt(boxes.size());
+        int index = 0;
+        if (boxes.size()>1)
+            index = new Random().nextInt(boxes.size()-1);
         if (playerIsUser(chooser))
             index = askDestination(findUser(chooser), boxes);
         return boxes.get(index);
@@ -257,7 +263,9 @@ public class CommunicationController {
      * @throws ChannelClosedException if connection is lost
      */
     public Box chooseBuild(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
-        int index = new Random().nextInt(boxes.size());
+        int index = 0;
+        if (boxes.size()>1)
+            index = new Random().nextInt(boxes.size()-1);
         if (playerIsUser(chooser))
             index = askBuild(findUser(chooser), boxes);
         return boxes.get(index);
@@ -306,7 +314,9 @@ public class CommunicationController {
     }
 
     public GodCard chooseCard(Player chooser, List<GodCard> cards) throws TimeOutException, ChannelClosedException{
-        int index = new Random().nextInt(cards.size());
+        int index = 0;
+        if (cards.size()>1)
+            index = new Random().nextInt(cards.size()-1);
         if (playerIsUser(chooser))
             index = askCard(findUser(chooser), cards);
         return cards.get(index);
@@ -353,7 +363,9 @@ public class CommunicationController {
      * @throws ChannelClosedException if connection is lost
      */
     public Box chooseRemoval(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
-        int index = new Random().nextInt(boxes.size());
+        int index = 0;
+        if (boxes.size()>1)
+            index = new Random().nextInt(boxes.size()-1);
         if (playerIsUser(chooser))
             index = askRemoval(findUser(chooser), boxes);
         return boxes.get(index);

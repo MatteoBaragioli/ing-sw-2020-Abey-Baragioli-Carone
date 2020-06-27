@@ -27,13 +27,6 @@ public class Client extends Thread {
         this.view = view;
     }
 
-    public static void main(String[] args){
-        //if (args.length > 3 && args[3].equals("-cli"))
-            new Cli().run();
-        //else
-           // Application.launch(Gui.class, args);
-    }
-
     public void setRestart(boolean restart){
         this.restart = restart;
     }
