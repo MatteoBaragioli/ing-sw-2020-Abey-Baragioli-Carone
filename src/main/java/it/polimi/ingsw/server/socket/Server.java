@@ -80,8 +80,8 @@ public class Server {
 
     public void run(String[] args) {
         Server server;
-        if (args.length>4 && args[4].equals("-port"))
-            server = new Server(args[5]);
+        if (args.length > 1 && args[1].equals("-port"))
+            server = new Server(args[2]);
         else
             server = new Server();
         server.startServer();
