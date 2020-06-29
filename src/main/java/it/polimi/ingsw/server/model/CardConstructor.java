@@ -37,11 +37,13 @@ public class CardConstructor {
     public List<ProtoCard> loadProtoCardsFromFile(){
         String filename = "src" + File.separator + "main" + File.separator + "resources"+ File.separator + "GodCards.json";
         List<ProtoCard> protoCards = null;
+        //String jsos = String.class.getResource(File.separator + "GodCards.json").toString();
+        //System.out.println(jsos);
         try {
             Type listType = new TypeToken<List<ProtoCard>>() {}.getType();
             protoCards = new Gson().fromJson(new FileReader(filename), listType);
-            String jsonObject = new Gson().toJson(protoCards);
-            protoCards = new Gson().fromJson(jsonObject, listType);
+            //String jsonObject = new Gson().toJson(protoCards);
+            //protoCards = new Gson().fromJson(jsonObject, listType);
         } catch (Exception FileNotFoundException) {
             System.out.println("File not found");
         }
