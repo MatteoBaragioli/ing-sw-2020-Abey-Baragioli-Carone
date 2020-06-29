@@ -136,8 +136,24 @@ public class DataBase {
      * @param user quitting user
      */
     public void userQuitLobby(User user) {
-        if (userHasLobby(user))
-            findLobby(user).removeUser(user);
+        if (userHasLobby(user)) {
+            Lobby lobby = findLobby(user);
+            lobby.removeUser(user);
+            if (lobby.users().isEmpty())
+                removeLobby(lobby);
+            lobbies.remove(user);
+        }
+    }
+
+    /**
+     * This method removes a lobby from the lobby lists
+     * @param lobby
+     */
+    private synchronized void removeLobby(Lobby lobby) {
+        if (lobby.hasMatch())
+            completeLobbies.remove(lobby);
+        else
+            openLobbies.remove(lobby);
     }
 
     /**

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.server.model.godPowers.fx.*;
 import it.polimi.ingsw.server.model.godPowers.setUpConditions.GodSetup;
@@ -9,8 +11,8 @@ import it.polimi.ingsw.server.model.godPowers.winConditions.GodWin;
 import it.polimi.ingsw.server.model.godPowers.winConditions.MoveTwoLevelsDownWin;
 import it.polimi.ingsw.server.model.godPowers.winConditions.TowerCountWin;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,18 +37,21 @@ public class CardConstructor {
      * @return List of ProtoCards
      */
     public List<ProtoCard> loadProtoCardsFromFile(){
-        String filename = "src" + File.separator + "main" + File.separator + "resources"+ File.separator + "GodCards.json";
-        List<ProtoCard> protoCards = null;
-        //String jsos = String.class.getResource(File.separator + "GodCards.json").toString();
-        //System.out.println(jsos);
-        try {
-            Type listType = new TypeToken<List<ProtoCard>>() {}.getType();
-            protoCards = new Gson().fromJson(new FileReader(filename), listType);
-            //String jsonObject = new Gson().toJson(protoCards);
-            //protoCards = new Gson().fromJson(jsonObject, listType);
-        } catch (Exception FileNotFoundException) {
-            System.out.println("File not found");
-        }
+        String filename = "/GodCards.json";
+
+        List<ProtoCard> protoCards;
+
+        JsonElement element = new JsonParser().parse(
+                new BufferedReader(
+                        new InputStreamReader(
+                                getClass().getResourceAsStream(filename)
+                        )
+                )
+        );
+
+        Type listType = new TypeToken<List<ProtoCard>>() {}.getType();
+        protoCards = new Gson().fromJson(element, listType);
+
         return protoCards;
     }
 
