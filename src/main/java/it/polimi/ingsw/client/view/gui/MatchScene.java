@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.view.gui;
 
+import it.polimi.ingsw.network.exceptions.ChannelClosedException;
 import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
@@ -1005,8 +1006,9 @@ public class MatchScene {
             }
         }
         destinationReady.set(false);
-        if(closeMatch.get())
+        if(closeMatch.get()) {
             return -1;
+        }
         else if(endTimer.get())
             throw new TimeOutException();
         return chosenBoxIndex();
@@ -1267,8 +1269,7 @@ public class MatchScene {
                     FadeTransition menuFadeIn = new FadeTransition(Duration.millis(2000), gui.menuPage());
                     menuFadeIn.setFromValue(0.0);
                     menuFadeIn.setToValue(1.0);
-                    menuFadeIn.play();
-                    Platform.runLater(gui::primaryScene);
+                    menuFadeIn.play();Platform.runLater(gui::primaryScene);
                 }));
         menuTimer.play();
     }
@@ -1354,7 +1355,7 @@ public class MatchScene {
 
         VBox confirmBox = new VBox();
 
-        Text questionPopup = new Text("Are you sure to lose and quit the match?");
+        Text questionPopup = new Text("Are you sure to lose and quit the game?");
         questionPopup.setFont(lillybelleFont);
         HBox answers = new HBox();
 
@@ -1373,7 +1374,13 @@ public class MatchScene {
         answers.setAlignment(Pos.CENTER);
 
         yesPopupButton.setOnAction(e -> {
-            backToMenu();
+            gui.window().close();
+            try {
+                gui.client().end();
+                setCloseMatch();
+            } catch (ChannelClosedException channelClosedException) {
+                channelClosedException.printStackTrace();
+            }
         });
         noPopupButton.setOnAction(e -> {
             closeWinnerOrSurrender(surrender);

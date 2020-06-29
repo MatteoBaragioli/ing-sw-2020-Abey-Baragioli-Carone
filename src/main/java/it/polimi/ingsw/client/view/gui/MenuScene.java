@@ -103,6 +103,9 @@ public class MenuScene {
     //variable that is true if user quits
     private AtomicBoolean close = new AtomicBoolean(false);
 
+    //variable that is true if user restarts the game
+    private AtomicBoolean restart = new AtomicBoolean(false);
+
 
 
     public MenuScene(Gui gui, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage, StackPane howToPlayBox) {
@@ -166,6 +169,14 @@ public class MenuScene {
      */
     public synchronized void setClose(){
         close.set(true);
+        notifyAll();
+    }
+
+    /**
+     * This method notifies restart when user restarts a match
+     */
+    public synchronized void setRestart(){
+        restart.set(true);
         notifyAll();
     }
 
@@ -637,6 +648,10 @@ public class MenuScene {
     public synchronized int askNumberOfPlayers() {
         clicked.set(false);
         formView.setVisible(false);
+        loadingIcon.setVisible(false);
+        loadingIcon.setManaged(false);
+        confirmButton.setVisible(false);
+        confirmButton.setManaged(false);
         matchTypeNumber.setVisible(true);
         playGroup.setVisible(true);
         playView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -652,12 +667,16 @@ public class MenuScene {
             readyTimer.play();
             event.consume();
         });
-        while (!clicked.get() && !close.get()){
+        while (!clicked.get() && !close.get() && !restart.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+
+        if(close.get() || restart.get()){
+            return -1;
         }
         return numberOfPlayers();
     }

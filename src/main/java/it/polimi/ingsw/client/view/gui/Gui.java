@@ -195,6 +195,10 @@ public class Gui extends Application implements View {
 
     //-----------------------------------------GETTER--------------------------------------------------
 
+    public Stage window() {
+        return window;
+    }
+
     public HBox menuPage(){
         return menuPage;
     }
@@ -217,6 +221,10 @@ public class Gui extends Application implements View {
 
     public int port(){
         return port;
+    }
+
+    public Client client(){
+        return client;
     }
 
     //-----------------------------------------END GETTER----------------------------------------------
@@ -369,6 +377,9 @@ public class Gui extends Application implements View {
     public void primaryScene(){
         if(window==null) {
             mainScene = new StackPane();
+            createTransitionClouds();
+            closePopup();
+            createConnectionErrorPane();
             window = new Stage();
             if (screenWidth == Screen.getPrimary().getBounds().getWidth() && screenHeight == Screen.getPrimary().getBounds().getHeight()) {
                 window.setMaximized(true);
@@ -387,18 +398,16 @@ public class Gui extends Application implements View {
             });
             window.setResizable(false);
             window.getIcons().add(new Image(Gui.class.getResourceAsStream("/img/icon.png")));
+            menuPage = new HBox();
+            matchPage = new StackPane();
+            mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, closePopup, connectionError);
+        } else {
+            mainScene.getChildren().removeAll(menuPage, matchPage);
+            menuPage = new HBox();
+            matchPage = new StackPane();
+            mainScene.getChildren().add(1, menuPage);
+            mainScene.getChildren().add(3, matchPage);
         }
-
-        createTransitionClouds();
-        closePopup();
-        createConnectionErrorPane();
-
-        menuPage = new HBox();
-
-        matchPage = new StackPane();
-
-        mainScene.getChildren().clear();
-        mainScene.getChildren().addAll(openingPage, menuPage, loadingPage, matchPage, transitionClouds, howToPlayBox, closePopup, connectionError);
 
         if(screenWidth != Screen.getPrimary().getBounds().getWidth() && screenHeight != Screen.getPrimary().getBounds().getHeight()) {
             mainScene.setOnMousePressed(e -> {
@@ -421,14 +430,8 @@ public class Gui extends Application implements View {
             menuScene = null;
             menuScene = new MenuScene(this, menuPage, screenWidth, screenHeight, loadingPage, howToPlayBox);
             menuScene.setMenuScene();
-            setInMenuPage(true);
-            Timeline waitTransitionTimer = new Timeline(new KeyFrame(
-                    Duration.millis(1500),
-                    ae -> {
-                        transitionClouds.setVisible(false);
-                    }));
-            waitTransitionTimer.play();
             restartClient();
+            setInMenuPage(true);
 
         }
         loadingPage.setVisible(false);

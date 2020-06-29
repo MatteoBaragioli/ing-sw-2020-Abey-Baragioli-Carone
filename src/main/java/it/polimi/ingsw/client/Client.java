@@ -109,7 +109,7 @@ public class Client extends Thread {
                                 clientController.manageListOfPositions(key, communicationChannel, view);
                             } catch (ChannelClosedException e) {
                                 //e.printStackTrace();
-                               // System.err.println("Manage boxes error");
+                                //System.err.println("Manage boxes error");
                                 restart = true;
                             }
                             break;
