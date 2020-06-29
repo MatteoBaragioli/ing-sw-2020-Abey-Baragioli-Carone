@@ -94,6 +94,7 @@ public class Cli implements View {
         buffer.clear();
     }
 
+
     /**
      * this method verifies if the user is quitting (by writing "quit" or "Quit" or "QUIT")  by using class regex
      * @param answer String to check
@@ -110,6 +111,7 @@ public class Cli implements View {
             return true;
         return false;
     }
+
 
     /**
      * this method verifies if the user wants to restart (by writing "RESTART" or "Restart" or "restart") by using class regex
@@ -714,14 +716,13 @@ public class Cli implements View {
         view.setTurnMessage(info);
         view.clearScreen();
         view.turn();
-        ended = true;
         printStream.println("The match is over!");
         if (player.name.equals(myPlayer.name)) {
             printStream.println("You won the match, congratulations! you are on the right path to become a god!");
         } else {
             printStream.println(player.name + " won the match, better luck next time!");
         }
-        printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
+        printStream.println("press \"quit\" to exit ");
     }
 
     /**
@@ -784,9 +785,10 @@ public class Cli implements View {
                 }
 
         }
-        if(findQuitInString(answer))
-            System.exit(0);
+        //if(findQuitInString(answer))
+            //System.exit(0);
         myTurn=false;
+        printStream.println(answer);
         return answer;
     }
 
@@ -1023,10 +1025,9 @@ public class Cli implements View {
                                 } catch (ChannelClosedException e) {
                                     //e.printStackTrace();
                                 }
-                                input = "";
+
                             } else {
                                 ended = true;
-                                //updateBuffer("quit");
                                 try {
                                     client.end();
                                 } catch (ChannelClosedException e) {
@@ -1052,7 +1053,6 @@ public class Cli implements View {
                                 updateBuffer("quit");
                             } else {//user's turn, confirming quit, entering 'enter' instead of 'restart'
                                 ended = true;
-                                //updateBuffer("quit");
                                 try {
                                     client.end();
                                 } catch (ChannelClosedException e) {
@@ -1110,7 +1110,6 @@ public class Cli implements View {
      */
     @Override
     public void connectionLost() {
-        ended=true;
         printStream.println("connection to the server lost");
         printStream.println("enter \"quit\" to exit game");
     }
