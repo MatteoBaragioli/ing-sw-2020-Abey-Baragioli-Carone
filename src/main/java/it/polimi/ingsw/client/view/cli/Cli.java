@@ -721,7 +721,7 @@ public class Cli implements View {
         } else {
             printStream.println(player.name + " won the match, better luck next time!");
         }
-
+        printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
     }
 
     /**
@@ -743,7 +743,9 @@ public class Cli implements View {
             view.setInfoMessage(info);
             if (player.name.equals(myPlayer.name)) { //mettere di fianco al mio nome che ho perso
                 printStream.println("You lost, better luck next time!");
+                printStream.println("enter \"quit\" to exit the game, or stay to see who wins!");
                 ended = true;
+
             }else{
                 opponents.remove(player);
                 printStream.println(player.name + " lost!");
@@ -819,9 +821,10 @@ public class Cli implements View {
         }
         if (answer != -1) {
             answer++;
+            view.clearScreen();
             printStream.println("waiting for the match to start...");
         }
-        view.clearScreen();
+
         myTurn=false;
         return answer;
     }
@@ -1068,22 +1071,9 @@ public class Cli implements View {
                 if (!input.equals(""))
                     updateBuffer(input);
             }
-            /*
-            if (input.equals("restart") && ended) {
-                try {
-                    client.restartClient();
-                } catch (ChannelClosedException e) {
-                    //e.printStackTrace();
-                }
-                ended=false;
-                started=false;
-                input="";
-            }
-
-             */
 
         }
-        //System.exit(0);
+
     }
 
     /**
@@ -1122,6 +1112,37 @@ public class Cli implements View {
     public void connectionLost() {
         ended=true;
         printStream.println("connection to the server lost");
-        printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
+        printStream.println("enter \"quit\" to exit game");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                                                      //grazie mamma, ti voglio bene, francesca.
