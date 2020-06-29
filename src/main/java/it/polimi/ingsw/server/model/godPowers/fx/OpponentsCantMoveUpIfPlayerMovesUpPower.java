@@ -24,6 +24,9 @@ public class OpponentsCantMoveUpIfPlayerMovesUpPower extends MoveModifier {
                 counter1--;
         }
 
+        if (previousPosition.hasDome())
+            counter1--;
+
         int previousLevel = previousPosition.level() - counter1;
         int currentLevel = currentPosition.level();
 

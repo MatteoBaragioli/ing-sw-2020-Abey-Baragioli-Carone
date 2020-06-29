@@ -15,8 +15,8 @@ public class Server {
     final private int port;
 
     public Server() {
-        boolean valid = false;
         int port = 0;
+        boolean valid = false;
         BufferedReader in   = new BufferedReader(new InputStreamReader(System.in));
         while (!valid) {
             System.out.println("Write port:");
@@ -45,7 +45,43 @@ public class Server {
         this.port = port;
     }
 
-    public void startServer() {
+    public Server(String[] args) {
+        int port = 0;
+        boolean valid = false;
+
+        if (args.length > 2 && args[1].equals("-port")) {
+            try {
+                port = Integer.parseInt(args[2]);
+            } catch (NumberFormatException e) {
+                port = 0;
+            }
+            if (port > 1023)
+                valid = true;
+            else
+                System.out.println("Not valid port.");
+        }
+
+        BufferedReader in   = new BufferedReader(new InputStreamReader(System.in));
+        while (!valid) {
+            System.out.println("Write port:");
+            try {
+                port = Integer.parseInt(in.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+                port = 0;
+            } catch (NumberFormatException e) {
+                port = 0;
+            }
+            if (port > 1023)
+                valid = true;
+            else
+                System.out.println("Not valid port. Try again");
+        }
+
+        this.port = port;
+    }
+
+    public void run() {
         ExecutorService executor = Executors.newCachedThreadPool();
         ServerSocket serverSocket;
         try {
@@ -76,14 +112,5 @@ public class Server {
             }
         }
         executor.shutdown();
-    }
-
-    public void run(String[] args) {
-        Server server;
-        if (args.length > 1 && args[1].equals("-port"))
-            server = new Server(args[2]);
-        else
-            server = new Server();
-        server.startServer();
     }
 }
