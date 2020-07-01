@@ -47,9 +47,9 @@ public class Cli implements View {
 
     /**
      * this method is used to check on the buffer's updates for any user's input and establishes a countDown for the user when needed
-     * @param needCountDown
+     * @param needCountDown boolean, indicates if the asks need countdown of 2 minutes of user's inactivity
      * @return String, the user's answer
-     * @throws TimeOutException
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     public synchronized String askAnswer(boolean needCountDown) throws TimeOutException{
         boolean received=false;
@@ -77,7 +77,7 @@ public class Cli implements View {
                 }
                 if(needCountDown) {
                     if (countDown.isRunnedOut()) {
-                        printStream.println("More than 2 minutes passed and you ran out of time! you have been disconnected from the server ");
+                        printStream.println("More than 2 minutes passed and you ran out of time! you have been disconnected from the game");
                         throw new TimeOutException();
                     }
                 }
@@ -177,11 +177,10 @@ public class Cli implements View {
 
     /**
      * this method handles the answer inserted by the player when expected a number
-     *
+     *@param needCountDown boolean, represents the need for the ask to have a count down
      * @return int, the answer expected
-     * @throws TimeOutException
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      * @throws NumberFormatException
-     * @param needCountDown boolean, represents the need for the ask to have a count down
      */
     public int askNumber(boolean needCountDown) throws NumberFormatException, TimeOutException {
         String answer = askAnswer(needCountDown);
@@ -194,7 +193,7 @@ public class Cli implements View {
      * this method manages with regex the coordinates inserted in cli by the player, like A5 or B2
      * @param positions list of coordinates available sent by the server
      * @return int, index of the correspondent coordinate inserted by the user
-     * @throws TimeOutException
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int askPosition(List<int[]> positions) throws TimeOutException { //nuovo ask position che legge stringa
@@ -206,8 +205,8 @@ public class Cli implements View {
         boolean sure = false;
         int answerToInt = 0;
         Pattern pattern = Pattern.compile("[A-Ea-e].*[1-5]"); //regex for chess board coordinates input;
-        view.clearScreen();
-        view.turn();
+        //view.clearScreen();
+        //view.turn();
         while (!sure ) {
 
             eraseBuffer();
@@ -326,7 +325,7 @@ public class Cli implements View {
      * this method handles the choice of the worker for the player's turn
      * @param workers is a list of coordinates that represent the workers' positions
      * @return int is the index in 'workers' list that represent the worker chosen by the player
-     * @throws TimeOutException
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int askWorker(List<int[]> workers) throws TimeOutException {
@@ -334,8 +333,8 @@ public class Cli implements View {
         boolean valid = false;
         int answer = 0;
         eraseBuffer();
-        view.clearScreen();
-        view.turn();
+        //view.clearScreen();
+        // view.turn();
         while (!valid) {
             for (int i = 0; i < workers.size(); i++) {
                 printStream.print((i + 1) + "   for worker in " + getChessCoordinates(workers.get(i)) + "    ");
@@ -373,7 +372,7 @@ public class Cli implements View {
      * this method handles the choice of the player's Godcard
      * @param cards list of cards to choose from
      * @return int is the index in 'cards' list that represent the card chosen by the player
-     * @throws TimeOutException
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int askCards(List<GodCardProxy> cards) throws TimeOutException {
@@ -422,7 +421,6 @@ public class Cli implements View {
 
             int confirm = 0;
             while (!validConfirmation) {
-                view.clearScreen();
                 printStream.print("you chose:");
                 printStream.print("   " + cards.get(answer).name);
                 printStream.println(" ");
@@ -457,9 +455,9 @@ public class Cli implements View {
 
     /**
      * this method manages the confirmation of the user when they can undo or use their GodCard power
-     * @param key indicates what the user is chosing for, undo or use power
+     * @param key indicates what the user is choosing for, undo or use power
      * @return int that corresponds to the user's answer
-     * @throws TimeOutException
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int askConfirmation(CommunicationProtocol key) throws TimeOutException {
@@ -510,31 +508,33 @@ public class Cli implements View {
                 printStream.println("1  GO AHEAD;  2 UNDO");
                 break;
             case BUILD://mettere cosa l'utente deve fare nella info box da togliere da qui in poi
-                //view.clearScreen();
-                //view.turn();
-                //printStream.println("\nwhere do you want to build? ");
+                view.clearScreen();
+                view.turn();
+                printStream.println("\nwhere do you want to build? ");
                 whatToDo=view.getTurnMessage();
                 whatToDo.add("where do you want to build? ");
                 view.setTurnMessage(whatToDo);
                 break;
             case DESTINATION: //mettere cosa l'utente deve fare nella info box
-                //view.clearScreen();
-               // view.turn();
-               // printStream.println("\nwhere do you want to move your worker? ");
+                view.clearScreen();
+                view.turn();
+                printStream.println("\nwhere do you want to move your worker? ");
                 whatToDo=view.getTurnMessage();
                 whatToDo.add("where do you want to move? ");
                 view.setTurnMessage(whatToDo);
                 break;
             case START_POSITION:
-                //view.clearScreen();
-                //view.turn();
+                view.clearScreen();
+                view.turn();
+                printStream.println("where do you want to set up your workers? ");
                 whatToDo=view.getTurnMessage();
                 whatToDo.add("where do you want to set up your workers? ");
                 view.setTurnMessage(whatToDo);
                 break;
             case WORKER:
-                //view.clearScreen();
-                //view.turn();
+                view.clearScreen();
+                view.turn();
+                printStream.println("choose your worker!");
                 whatToDo=view.getTurnMessage();
                 whatToDo.add("choose your worker!");
                 view.setTurnMessage(whatToDo);
@@ -604,10 +604,40 @@ public class Cli implements View {
             List<String> info = new ArrayList<>();
             info.add(getActualWrittenColor(myPlayer.colour) + myPlayer.name + RESET);
             info.add(getActualWrittenColor(myPlayer.colour) + "your card is " + myPlayer.godCardProxy.name + RESET);
+
+            //godCard power of my player
+
+            if (myPlayer.godCardProxy.setUpDescription != null)
+                for(String line: splitString(myPlayer.godCardProxy.setUpDescription))
+                    info.add(getActualWrittenColor(myPlayer.colour)+ line+ RESET);
+            if (myPlayer.godCardProxy.description != null)
+                for(String line: splitString(myPlayer.godCardProxy.description))
+                    info.add(getActualWrittenColor(myPlayer.colour)+ line+ RESET);
+            if (myPlayer.godCardProxy.winDescription != null)
+                for(String line: splitString(myPlayer.godCardProxy.winDescription))
+                info.add(getActualWrittenColor(myPlayer.colour)+ line+ RESET);
+            if (myPlayer.godCardProxy.opponentsFxDescription!=null)
+                for(String line: splitString(myPlayer.godCardProxy.opponentsFxDescription))
+                info.add(getActualWrittenColor(myPlayer.colour)+ line+ RESET);
+
+            //opponent's godCard power
             info.add("your opponents are:");
             for (PlayerProxy opponent : players) {
                 info.add(getActualWrittenColor(opponent.colour) + opponent.name + ":" + RESET);
                 info.add(getActualWrittenColor(opponent.colour) + opponent.name + "'s card is " + opponent.godCardProxy.name + RESET);
+                if (opponent.godCardProxy.setUpDescription != null)
+                    for(String line: splitString(opponent.godCardProxy.setUpDescription))
+                        info.add(getActualWrittenColor(opponent.colour)+ line+ RESET);
+                if (opponent.godCardProxy.description != null)
+                    for(String line: splitString(opponent.godCardProxy.description))
+                        info.add(getActualWrittenColor(opponent.colour)+ line+ RESET);
+                if (opponent.godCardProxy.winDescription != null)
+                    for(String line: splitString(opponent.godCardProxy.winDescription))
+                        info.add(getActualWrittenColor(opponent.colour)+ line+ RESET);
+                if (opponent.godCardProxy.opponentsFxDescription!=null)
+                    for(String line: splitString(opponent.godCardProxy.opponentsFxDescription))
+                        info.add(getActualWrittenColor(opponent.colour)+ line+ RESET);
+
             }
             view.setInfoMessage(info);
 
@@ -624,7 +654,7 @@ public class Cli implements View {
 
     /**
      * this method communicates to the user that the connection was refused
-     * @param host
+     * @param host string that represents the host
      */
     @Override
     public void connectionFailed(String host) {
@@ -691,7 +721,7 @@ public class Cli implements View {
      * @param chosenWorker worker used
      * @param action       action made
      * @param destination  destination of the action
-     * @return
+     * @return list of string, is the match story
      */
     public List<String> writeStory(String player, int[] chosenWorker, CommunicationProtocol action, int[] destination) {
         List<String> turnEvent = new ArrayList<>();
@@ -715,7 +745,7 @@ public class Cli implements View {
 
     /**
      * this method displays the winner
-     * @param player
+     * @param player the player who won
      */
     @Override
     public void setWinner(PlayerProxy player) {
@@ -764,7 +794,7 @@ public class Cli implements View {
     }
 
     /**
-     * this method tells the user the count down in up
+     * this method tells the user the count down is up
      */
     @Override
     public void timeOut() {
@@ -829,11 +859,10 @@ public class Cli implements View {
 
 
         }
-        if (answer != -1) {
-            answer++;
-            view.clearScreen();
-            printStream.println("waiting for the match to start...");
-        }
+
+        answer++;
+        view.clearScreen();
+        printStream.println("waiting for the match to start...");
 
         myTurn=false;
         return answer;
@@ -841,7 +870,7 @@ public class Cli implements View {
 
     /**
      * this method asks to the user the port to connect to
-     * @return int
+     * @return int, the port number
      */
     @Override
     public int askPort() {
@@ -903,7 +932,7 @@ public class Cli implements View {
      * this method asks the challenger the game cards from which the other players will have to choose from
      * @param cards these are all the game cards available
      * @return int[] , a list of numbers that represent the indexes of the chosen cards
-     * @throws TimeOutException
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     @Override
     public int[] askDeck(List<GodCardProxy> cards) throws TimeOutException {
@@ -966,7 +995,7 @@ public class Cli implements View {
             for (int i = 0; i < (opponents.size() + 1); i++) {
                 answer[i]--;
             }
-
+            view.clearScreen();
             printStream.print("you chose:");
             for (int i = 0; i < (opponents.size() + 1); i++) {
                 printStream.print("   " + cards.get(answer[i]).name);
@@ -1007,6 +1036,7 @@ public class Cli implements View {
      */
     public void run(){
         Client client = new Client(this);
+        view.clearScreen();
         view.title();
         client.start();
         String input;
@@ -1090,8 +1120,8 @@ public class Cli implements View {
 
     /**
      * this method reads the user's input in command line
-     * @return
-     * @throws IOException
+     * @return string read in command line
+     * @throws IOException exception of input output
      */
     public String read() throws IOException {
         String answer;
@@ -1111,7 +1141,7 @@ public class Cli implements View {
 
     /**
      * this method tell's if it is the user's turn to interact with the UI
-     * @return
+     * @return boolean, is true if it's my player's turn
      */
     public boolean myTurn() {
         return myTurn;
@@ -1124,6 +1154,25 @@ public class Cli implements View {
     public void connectionLost() {
         printStream.println("connection to the server lost");
         printStream.println("enter \"quit\" to exit game");
+    }
+
+
+    /**
+     * this method splits a string that has to be viewed on screen that is too long into smaller strings
+     * @param msg message that has to be split
+     * @return list of strings, the original string that has been split
+     */
+    public static List<String> splitString(String msg) {
+        List res = new ArrayList<>();
+        int lineSize=96;
+        Pattern p = Pattern.compile("\\b.{1," + (lineSize-1) + "}\\b\\W?");
+        Matcher m = p.matcher(msg);
+
+        while(m.find()) {
+            //System.out.println(m.group().trim());   // Debug
+            res.add(m.group());
+        }
+        return res;
     }
 }
 

@@ -49,7 +49,7 @@ public class PrintedBlock {
     public void firstFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
-        this.lines.add("| "+BLACK_BOLD_BRIGHT+LIGHTGRAY_BACKGROUND+"    1°level    "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"    1°level    "+CYAN_BRIGHT+" ");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+"               "+CYAN_BRIGHT+" ");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+"               "+CYAN_BRIGHT+" ");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+"               "+CYAN_BRIGHT+" ");
@@ -77,8 +77,8 @@ public class PrintedBlock {
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  3°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+BLACK_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+BLACK_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+WHITE_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+WHITE_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
 
     }
@@ -173,8 +173,8 @@ public class PrintedBlock {
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("|                 ");
-        this.lines.add("|     "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   W   "+RESET_BACKGROUND+"    "+CYAN_BRIGHT+" ");
-        this.lines.add("|     "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   "+genderChar+"   "+RESET_BACKGROUND+"    "+CYAN_BRIGHT+" ");
+        this.lines.add("|     "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   W   "+RESET_BACKGROUND+"    "+CYAN_BRIGHT+" ");
+        this.lines.add("|     "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   "+genderChar+"   "+RESET_BACKGROUND+"    "+CYAN_BRIGHT+" ");
         this.lines.add("|                "+CYAN_BRIGHT+" ");
 
     }
@@ -194,8 +194,8 @@ public class PrintedBlock {
             genderChar='♂';
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"    1°level    "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+LIGHTGRAY_BACKGROUND+"    "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   W   "+LIGHTGRAY_BACKGROUND+"    "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+LIGHTGRAY_BACKGROUND+"    "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   "+genderChar+"   "+LIGHTGRAY_BACKGROUND+"    "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+LIGHTGRAY_BACKGROUND+"    "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   W   "+LIGHTGRAY_BACKGROUND+"    "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+LIGHTGRAY_BACKGROUND+"    "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   "+genderChar+"   "+LIGHTGRAY_BACKGROUND+"    "+CYAN_BRIGHT+" ");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+"               "+CYAN_BRIGHT+" ");
 
     }
@@ -215,8 +215,8 @@ public class PrintedBlock {
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  2°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"  "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   W   "+LIGHTGRAY_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"  "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   "+genderChar+"   "+LIGHTGRAY_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"  "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   W   "+LIGHTGRAY_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"  "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   "+genderChar+"   "+LIGHTGRAY_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
 
 
@@ -237,8 +237,8 @@ public class PrintedBlock {
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  3°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+BLACK_BACKGROUND+"  "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   W   "+BLACK_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
-        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+BLACK_BACKGROUND+"  "+getActualColor(color)+BLACK_BOLD_BRIGHT+"   "+genderChar+"   "+BLACK_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+WHITE_BACKGROUND+"  "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   W   "+WHITE_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
+        this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+WHITE_BACKGROUND+"  "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   "+genderChar+"   "+WHITE_BACKGROUND+"  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+"           "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
 
     }

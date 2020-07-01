@@ -81,25 +81,33 @@ public class Colors {
     public static final String WHITE_TRY_BACKGROUND="\033[7m";
 
 
+    /**
+     * hashmap used to 'translate' santorini's pawns colors into colors available in cli
+     */
     private static final HashMap<Colour, String> actualColors ;
     static {
         actualColors= new HashMap<>();
         actualColors.put(Colour.BLUE, Colors.CYAN_BACKGROUND);
         actualColors.put(Colour.GREY, Colors.GREEN_BACKGROUND_BRIGHT);
-        actualColors.put(Colour.WHITE, Colors.RED_BACKGROUND);
+        actualColors.put(Colour.WHITE, Colors.RED_BACKGROUND_BRIGHT);
     }
 
 
     public static String getActualColor(Colour colour) {
         return actualColors.get(colour);
     }
+
+    /**
+     * hasmap used for written character's that match to the pawns' color
+     */
     private static final HashMap<Colour, String> actualWrittenColors ;
     static {
         actualWrittenColors= new HashMap<>();
         actualWrittenColors.put(Colour.BLUE, Colors.CYAN_BRIGHT);
         actualWrittenColors.put(Colour.GREY, Colors.GREEN_BRIGHT);
-        actualWrittenColors.put(Colour.WHITE, Colors.RED);
+        actualWrittenColors.put(Colour.WHITE, Colors.RED_BRIGHT);
     }
+
     public static String getActualWrittenColor(Colour colour) {
         return actualWrittenColors.get(colour);
     }

@@ -141,7 +141,7 @@ public class ScreenView {
             messageBox.add(1, RESET + RED + "|    ");
             for (i = 0; i < message.size(); i++, j++) {
                 messageBox.add(j, RESET + RED + "|  " + RESET + message.get(i) + RED);
-                if (message.get(i).contains("[")) {
+                if (message.get(i).contains("\033[")) {
                     buffer = messageBox.get(j);
                     buffer = buffer.concat("           ");
                     messageBox.set(j, buffer);
