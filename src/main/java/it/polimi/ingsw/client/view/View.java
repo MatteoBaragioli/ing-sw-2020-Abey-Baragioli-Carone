@@ -24,7 +24,6 @@ public interface View {
     void setMyPlayer(PlayerProxy player);
     void setOpponentsInfo(List<PlayerProxy> players);
     void connectionFailed(String host);
-    void startMatch();
     void setCurrentPlayer(PlayerProxy player);
     void tellStory(List<String> events);
     void setWinner(PlayerProxy player);

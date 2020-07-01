@@ -1167,6 +1167,42 @@ public class Gui extends Application implements View {
     }
 
     /**
+     * This method starts the match and shows match scene
+     * It waits for the match scene to be ready and then returns
+     */
+    public synchronized void startMatch() {
+        readyForTheMatch.set(false);
+        playTransitionClouds();
+
+        Platform.runLater(() -> matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents));
+        FadeTransition loadingFadeOut = new FadeTransition(Duration.millis(2000), loadingPage);
+        loadingFadeOut.setFromValue(1);
+        loadingFadeOut.setToValue(0);
+        loadingFadeOut.play();
+
+        Timeline matchTimer = new Timeline(new KeyFrame(
+                Duration.millis(1500),
+                ae -> {
+                    loadingPage.setVisible(false);
+                    FadeTransition matchFade = new FadeTransition(Duration.millis(2000), matchPage);
+                    matchFade.setFromValue(0.0);
+                    matchFade.setToValue(1.0);
+                    matchFade.play();
+                    matchPage.setVisible(true);
+                    setReadyForTheMatch();
+                }));
+        matchTimer.play();
+
+        while (!readyForTheMatch.get()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * This method restarts client
      */
     public void restartClient(){
@@ -1406,43 +1442,6 @@ public class Gui extends Application implements View {
     @Override
     public void connectionFailed(String host) {
         setErrorMessage("Connection refused");
-    }
-
-    /**
-     * This method starts the match and shows match scene
-     * It waits for the match scene to be ready and then returns
-     */
-    @Override
-    public synchronized void startMatch() {
-        readyForTheMatch.set(false);
-        playTransitionClouds();
-
-        Platform.runLater(() -> matchScene.setMatchScene(nickname, numberOfPlayers, color, opponents));
-        FadeTransition loadingFadeOut = new FadeTransition(Duration.millis(2000), loadingPage);
-        loadingFadeOut.setFromValue(1);
-        loadingFadeOut.setToValue(0);
-        loadingFadeOut.play();
-
-        Timeline matchTimer = new Timeline(new KeyFrame(
-                Duration.millis(1500),
-                ae -> {
-                    loadingPage.setVisible(false);
-                    FadeTransition matchFade = new FadeTransition(Duration.millis(2000), matchPage);
-                    matchFade.setFromValue(0.0);
-                    matchFade.setToValue(1.0);
-                    matchFade.play();
-                    matchPage.setVisible(true);
-                    setReadyForTheMatch();
-                }));
-        matchTimer.play();
-
-        while (!readyForTheMatch.get()) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
