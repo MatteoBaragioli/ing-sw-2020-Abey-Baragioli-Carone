@@ -6,20 +6,26 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.network.CommunicationChannel;
 import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.BoxProxy;
 import it.polimi.ingsw.network.objects.GodCardProxy;
 import it.polimi.ingsw.network.objects.PlayerProxy;
-import it.polimi.ingsw.network.exceptions.TimeOutException;
-import it.polimi.ingsw.network.objects.*;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 import static it.polimi.ingsw.network.CommunicationProtocol.*;
 
-public class ClientController {
+class ClientController {
 
-    public void manageDeck(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method asks the user through the view which cards
+     * should be used in the upcoming match.
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void manageDeck(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<GodCardProxy> cards;
         int[] index;
         String content = communicationChannel.popMessage();
@@ -37,7 +43,13 @@ public class ClientController {
         }
     }
 
-    public void manageListOfCards(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method asks the user to choose one card.
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void manageListOfCards(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<GodCardProxy> cards;
         int index;
         String content = communicationChannel.popMessage();
@@ -56,7 +68,13 @@ public class ClientController {
         }
     }
 
-    public void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method notifies the view of the map update
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<BoxProxy> boxes;
         String message = communicationChannel.popMessage();
 
@@ -65,7 +83,15 @@ public class ClientController {
         view.updateMap(boxes);
     }
 
-    public void manageListOfPositions(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method asks the user through the view
+     * to choose one position from a list.
+     * @param key Position request type
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void manageListOfPositions(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<int[]> positions;
         String message = communicationChannel.popMessage();
 
@@ -89,7 +115,14 @@ public class ClientController {
         }
     }
 
-    public void managePlayer(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method notifies the view of an update regarding one player
+     * @param key Player update type
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void managePlayer(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         PlayerProxy player;
         String message = communicationChannel.popMessage();
         Type listType = new TypeToken<PlayerProxy>() {}.getType();
@@ -107,10 +140,17 @@ public class ClientController {
             case LOSER:
                 view.setLoser(player);
                 break;
+            default:
         }
     }
 
-    public void manageListOfOpponents(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method notifies the view of an update regarding the opponent players
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void manageListOfOpponents(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         List<PlayerProxy> players;
         String message = communicationChannel.popMessage();
         Type listType = new TypeToken<List<PlayerProxy>>() {}.getType();
@@ -118,7 +158,15 @@ public class ClientController {
         view.setOpponentsInfo(players);
     }
 
-    public void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method asks the user through the view
+     * to answer a binary question.
+     * @param key Position request type
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         try {
             communicationChannel.writeConfirmation(key, view.askConfirmation(key));
         } catch (TimeOutException e) {
@@ -127,13 +175,19 @@ public class ClientController {
         }
     }
 
-    public void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    /**
+     * This method updates the latest in-game events.
+     * @param communicationChannel Communication Channel
+     * @param view User Interface
+     * @throws ChannelClosedException If the connection is lost
+     */
+    void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         String message = communicationChannel.popMessage();
         Type type = new TypeToken<List<String>>() {}.getType();
         view.tellStory(new Gson().fromJson(communicationChannel.getContent(message), type));
     }
 
-    public void manageTimeOut(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+    void manageTimeOut(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
         communicationChannel.popMessage();
         view.timeOut();
     }

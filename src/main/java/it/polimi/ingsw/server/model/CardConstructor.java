@@ -5,24 +5,20 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.server.model.godPowers.fx.*;
-import it.polimi.ingsw.server.model.godPowers.setUpConditions.GodSetup;
-import it.polimi.ingsw.server.model.godPowers.setUpConditions.NoSetUpCondition;
-import it.polimi.ingsw.server.model.godPowers.winConditions.GodWin;
-import it.polimi.ingsw.server.model.godPowers.winConditions.MoveTwoLevelsDownWin;
-import it.polimi.ingsw.server.model.godPowers.winConditions.TowerCountWin;
+import it.polimi.ingsw.server.model.godPowers.setUpConditions.*;
+import it.polimi.ingsw.server.model.godPowers.winConditions.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import static it.polimi.ingsw.server.model.godPowers.fx.GodFX.*;
 import static it.polimi.ingsw.server.model.godPowers.setUpConditions.GodSetup.*;
 import static it.polimi.ingsw.server.model.godPowers.winConditions.GodWin.*;
-
 import static it.polimi.ingsw.server.model.godPowers.fx.GodFX.DO_NOTHING;
 
 public class CardConstructor {
@@ -36,15 +32,13 @@ public class CardConstructor {
      * This method loads the ProtoCard List from a file
      * @return List of ProtoCards
      */
-    public List<ProtoCard> loadProtoCardsFromFile(){
-        String filename = "/GodCards.json";
-
+    List<ProtoCard> loadProtoCardsFromFile(){
         List<ProtoCard> protoCards;
 
         JsonElement element = new JsonParser().parse(
                 new BufferedReader(
                         new InputStreamReader(
-                                getClass().getResourceAsStream(filename)
+                                getClass().getResourceAsStream("/GodCards.json")
                         )
                 )
         );
@@ -59,8 +53,8 @@ public class CardConstructor {
      * This method loads the fx used by the protocards identifying them by their name
      * @return HashMap
      */
-    public Map<GodFX, TurnSequenceModifier> loadFX() {
-        Map<GodFX, TurnSequenceModifier> fx = new HashMap<>();
+    Map<GodFX, TurnSequenceModifier> loadFX() {
+        Map<GodFX, TurnSequenceModifier> fx = new EnumMap<>(GodFX.class);
         fx.put(DO_NOTHING, new DoNothing());
         fx.put(SWAP, new SwapPower());
         fx.put(ADD_MOVE_NOT_STARTING_BOX, new AddMoveNotStartingBoxPower());
@@ -83,12 +77,14 @@ public class CardConstructor {
      * @param protoCard The card I need to create
      * @return List of TurnSequenceModifiers
      */
-    public List<TurnSequenceModifier> loadActions(ProtoCard protoCard) {
+    private List<TurnSequenceModifier> loadActions(ProtoCard protoCard) {
         List<TurnSequenceModifier> actions = new ArrayList<>();
-        Map<GodFX, TurnSequenceModifier> powers = loadFX();
 
-        for (GodFX power: protoCard.actions())
-            actions.add(powers.get(power));
+        if (protoCard != null) {
+            Map<GodFX, TurnSequenceModifier> powers = loadFX();
+            for (GodFX power : protoCard.actions())
+                actions.add(powers.get(power));
+        }
 
         return actions;
     }
@@ -96,25 +92,31 @@ public class CardConstructor {
     /**
      * This method returns the WinCondition needed to create the card
      * @param protoCard The card I need to create
-     * @return WinCondition
+     * @return WinCondition (null if the input is null)
      */
-    public WinCondition loadWinCondition(ProtoCard protoCard) {
-        Map<GodWin, WinCondition> winConditions = new HashMap<>();
-        winConditions.put(STANDARD, null);
-        winConditions.put(MOVE_TWO_LEVELS_DOWN, new MoveTwoLevelsDownWin());
-        winConditions.put(TOWER_COUNT, new TowerCountWin(protoCard.winParameter()));
-        return winConditions.get(protoCard.winCondition());
+    private WinCondition loadWinCondition(ProtoCard protoCard) {
+        if (protoCard != null) {
+            Map<GodWin, WinCondition> winConditions = new EnumMap<>(GodWin.class);
+            winConditions.put(STANDARD, null);
+            winConditions.put(MOVE_TWO_LEVELS_DOWN, new MoveTwoLevelsDownWin());
+            winConditions.put(TOWER_COUNT, new TowerCountWin(protoCard.winParameter()));
+            return winConditions.get(protoCard.winCondition());
+        }
+        return null;
     }
 
     /**
      * This method returns the SetUpCondition needed to create the card
      * @param protoCard The card I need to create
-     * @return SetUpCondition
+     * @return SetUpCondition (null if the input is null)
      */
-    public SetUpCondition loadSetUpCondition(ProtoCard protoCard) {
-        Map<GodSetup, SetUpCondition> setUpConditions = new HashMap<>();
-        setUpConditions.put(NO_SETUP, new NoSetUpCondition());
-        return setUpConditions.get(protoCard.setUpCondition());
+    private SetUpCondition loadSetUpCondition(ProtoCard protoCard) {
+        if (protoCard != null) {
+            Map<GodSetup, SetUpCondition> setUpConditions = new EnumMap<>(GodSetup.class);
+            setUpConditions.put(NO_SETUP, new NoSetUpCondition());
+            return setUpConditions.get(protoCard.setUpCondition());
+        }
+        return null;
     }
 
     /**
@@ -122,12 +124,14 @@ public class CardConstructor {
      * @param protoCard The card I need to create
      * @return List of TurnSequenceModifiers
      */
-    public List<TurnSequenceModifier> loadFXOnOpponents(ProtoCard protoCard) {
+    private List<TurnSequenceModifier> loadFXOnOpponents(ProtoCard protoCard) {
         List<TurnSequenceModifier> fx = new ArrayList<>();
-        Map<GodFX, TurnSequenceModifier> effects = loadFX();
 
-        for (GodFX power: protoCard.fxOnOpponent())
-            fx.add(effects.get(power));
+        if (protoCard != null) {
+            Map<GodFX, TurnSequenceModifier> effects = loadFX();
+            for (GodFX power : protoCard.fxOnOpponent())
+                fx.add(effects.get(power));
+        }
 
         return fx;
     }
@@ -135,21 +139,24 @@ public class CardConstructor {
     /**
      * This method generates a GodCard from a Protocard
      * @param protoCard The Protocard I want to create
-     * @return GodCard
+     * @return GodCard (null if the input is null)
      */
-    public GodCard createCard(ProtoCard protoCard) {
-        return new GodCard(protoCard.name(), protoCard.id(), loadActions(protoCard), loadWinCondition(protoCard), loadSetUpCondition(protoCard), loadFXOnOpponents(protoCard), protoCard.description(), protoCard.winDescription(), protoCard.setUpDescription(), protoCard.opponentsFxDescription());
+    private GodCard createCard(ProtoCard protoCard) {
+        if (protoCard != null) {
+            return new GodCard(protoCard.name(), protoCard.id(), loadActions(protoCard), loadWinCondition(protoCard), loadSetUpCondition(protoCard), loadFXOnOpponents(protoCard), protoCard.description(), protoCard.winDescription(), protoCard.setUpDescription(), protoCard.opponentsFxDescription());
+        }
+        return null;
     }
 
     /**
      * This method loads the GodCard deck from a file
      * @return List of GodCards
      */
-    public List<GodCard> loadCards() {
-        List<GodCard> cards = new ArrayList<>();
+    private List<GodCard> loadCards() {
+        List<GodCard> deck = new ArrayList<>();
         List<ProtoCard> protoCards = loadProtoCardsFromFile();
         for (ProtoCard protoCard: protoCards)
-            cards.add(createCard(protoCard));
-        return cards;
+            deck.add(createCard(protoCard));
+        return deck;
     }
 }

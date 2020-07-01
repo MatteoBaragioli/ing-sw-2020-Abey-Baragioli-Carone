@@ -3,11 +3,12 @@ package it.polimi.ingsw.server.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TurnSequence {
     private Box chosenBox = null;
     private Box previousBox = null;
-    private HashMap<Worker,Box> newPositions = new HashMap<>();
+    private Map<Worker, Box> newPositions = new HashMap<>();
     private List<Box> builtOnBoxes = new ArrayList<>();
     private List<Box> removedBlocks = new ArrayList<>();
     private int allowedLevelDifference = 1;
@@ -34,7 +35,7 @@ public class TurnSequence {
         previousBox = box;
     }
 
-    public HashMap<Worker,Box> newPositions(){
+    public Map<Worker, Box> newPositions(){
         return newPositions;
     }
 
@@ -84,11 +85,11 @@ public class TurnSequence {
         return possibleWinner;
     }
 
-    public void setPossibleWinner(Player player) {
+    void setPossibleWinner(Player player) {
         possibleWinner = player;
     }
 
-    public void resetChosenBox() {
+    private void resetChosenBox() {
         setChosenBox(null);
     }
 
@@ -96,11 +97,11 @@ public class TurnSequence {
         setPreviousBox(null);
     }
 
-    public void resetChosenWorker() {
+    void resetChosenWorker() {
         setChosenWorker(null);
     }
 
-    public void resetPossibleWinner() {
+    private void resetPossibleWinner() {
         setPossibleWinner(null);
     }
 
@@ -151,7 +152,7 @@ public class TurnSequence {
     /**
      * This method undoes the movements and the occupations taken in the turn sequence
      */
-    public void undoNewPositions() {
+    void undoNewPositions() {
         for (Worker worker: movedWorkers)
             newPositions.get(worker).removeOccupier();
         for (Worker worker: movedWorkers)
@@ -161,7 +162,7 @@ public class TurnSequence {
     /**
      * This method executes the workers' moves
      */
-    public void getTheMovesDone() {
+    void getTheMovesDone() {
         for (Worker worker: movedWorkers)
             worker.move(newPositions.get(worker));
     }
@@ -189,7 +190,7 @@ public class TurnSequence {
     /**
      * This method undoes the builds that took place in this turn
      */
-    public void undoBuilds() {
+    void undoBuilds() {
         for (Box box : builtOnBoxes) {
             if (box.hasDome())
                 box.removeDome();
@@ -200,21 +201,20 @@ public class TurnSequence {
 
     /**
      * This method records one block removal
-     * @param box Box to analise
+     * @param box Position to analise
      */
     public void recordRemovedBlock(Box box) {
-        if (box.level() < 3 && !box.hasDome()) {
+        if (box != null && box.level() < 3 && !box.hasDome())
             if (builtOnBoxes.contains(box))
                 builtOnBoxes.remove(box);
             else
                 removedBlocks.add(box);
-        }
     }
 
     /**
      * Reset removed blocks' list
      */
-    public void clearRemovedBlocks() {
+    private void clearRemovedBlocks() {
         if (!removedBlocks().isEmpty())
             removedBlocks.clear();
     }
@@ -222,7 +222,7 @@ public class TurnSequence {
     /**
      * This method rebuilds the removed blocks
      */
-    public void undoRemovals() {
+    void undoRemovals() {
         for (Box box : removedBlocks)
             box.buildBlock();
     }
@@ -247,7 +247,7 @@ public class TurnSequence {
      * This method makes a box unavailable for moving
      * @param destination Box
      */
-    public void removePossibleDestination(Box destination) {
+    void removePossibleDestination(Box destination) {
         possibleDestinations.remove(destination);
     }
 
@@ -272,7 +272,7 @@ public class TurnSequence {
      * This method makes a box unavailable for building
      * @param box Unavailable building location
      */
-    public void removePossibleBuild(Box box) {
+    void removePossibleBuild(Box box) {
         possibleBuilds.remove(box);
     }
 
@@ -297,14 +297,14 @@ public class TurnSequence {
      * This method makes a worker unavailable for moving
      * @param worker Unmovable worker
      */
-    public void removeMovableWorker(Worker worker) {
+    void removeMovableWorker(Worker worker) {
         movableWorkers.remove(worker);
     }
 
     /**
      * Reset movable workers' list
      */
-    public void clearMovableWorkers() {
+    private void clearMovableWorkers() {
         if (!movableWorkers().isEmpty())
             movableWorkers.clear();
     }
@@ -313,7 +313,7 @@ public class TurnSequence {
      * This method records a worker that has been moved
      * @param worker Moved worker
      */
-    public void recordMovedWorker(Worker worker) {
+    void recordMovedWorker(Worker worker) {
         if (!movedWorkers.contains(worker))
             movedWorkers.add(worker);
     }
@@ -331,7 +331,7 @@ public class TurnSequence {
      * This method records a possible possibleWinner if nobody was already winning
      * @param player Possible winner
      */
-    public void registerPossibleWinner(Player player) {
+    void registerPossibleWinner(Player player) {
         if (possibleWinner() == null)
             setPossibleWinner(player);
     }
@@ -339,7 +339,7 @@ public class TurnSequence {
     /**
      * This method restarts the parameters
      */
-    public void reset() {
+    void reset() {
         resetChosenBox();
         resetPreviousBox();
         resetChosenWorker();
@@ -366,7 +366,7 @@ public class TurnSequence {
     /**
      * This method resets the variables when a player has finished its turn
      */
-    public void clearTurnSequence() {
+    void clearTurnSequence() {
         resetAllowedLevelDifference();
         reset();
     }

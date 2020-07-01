@@ -20,10 +20,6 @@ public class User {
         return name;
     }
 
-    public boolean hasChannel() {
-        return communicationChannel() != null;
-    }
-
     /**
      * This method tells what match type was chosen by the user
      * @return 1 or 2 (-1 if an error occurred)
@@ -44,7 +40,7 @@ public class User {
      * @return Boolean that is true if user received his player
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean sendMyPlayer(String player) throws ChannelClosedException {
+    boolean sendMyPlayer(String player) throws ChannelClosedException {
         try {
             return communicationChannel().sendMyPlayer(player);
         } catch (ChannelClosedException e) {
@@ -59,7 +55,7 @@ public class User {
      * @return Boolean that is true if user received his opponents
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean sendOpponents(String opponents) throws ChannelClosedException {
+    boolean sendOpponents(String opponents) throws ChannelClosedException {
         try {
             return communicationChannel().sendOpponents(opponents);
         } catch (ChannelClosedException e) {
@@ -74,7 +70,7 @@ public class User {
      * @return Boolean that is true if user received the current player
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean sendCurrentPlayer(String currentPlayer) throws ChannelClosedException {
+    boolean sendCurrentPlayer(String currentPlayer) throws ChannelClosedException {
         try {
             return communicationChannel().sendCurrentPlayer(currentPlayer);
         } catch (ChannelClosedException e) {
@@ -89,7 +85,7 @@ public class User {
      * @return Boolean that is true if user received the winner
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean sendWinner(String winner) throws ChannelClosedException {
+    boolean sendWinner(String winner) throws ChannelClosedException {
         try {
             return communicationChannel().sendWinner(winner);
         } catch (ChannelClosedException e) {
@@ -104,7 +100,7 @@ public class User {
      * @return Boolean that is true if user received the loser
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean sendLoser(String loser) throws ChannelClosedException {
+    boolean sendLoser(String loser) throws ChannelClosedException {
         try {
             return communicationChannel().sendLoser(loser);
         } catch (ChannelClosedException e) {
@@ -119,7 +115,7 @@ public class User {
      * @return Boolean that is true if user received the map
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean sendMap(String map) throws ChannelClosedException {
+    boolean sendMap(String map) throws ChannelClosedException {
         try {
             return communicationChannel().sendMap(map);
         } catch (ChannelClosedException e) {
@@ -134,7 +130,7 @@ public class User {
      * @return Boolean that is true if user received the turn story
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean tellStory(String story) throws ChannelClosedException {
+    boolean tellStory(String story) throws ChannelClosedException {
         try {
             return communicationChannel().sendStory(story);
         } catch (ChannelClosedException e) {
@@ -150,7 +146,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public int askStartPosition(String positions) throws TimeOutException, ChannelClosedException {
+    int askStartPosition(String positions) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askStartPosition(positions);
         } catch (TimeOutException e) {
@@ -169,7 +165,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public int askWorker(String workers) throws TimeOutException, ChannelClosedException {
+    int askWorker(String workers) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askWorker(workers);
         } catch (TimeOutException e) {
@@ -188,7 +184,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public int askDestination(String destinations) throws TimeOutException, ChannelClosedException {
+    int askDestination(String destinations) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askDestination(destinations);
         } catch (TimeOutException e) {
@@ -207,7 +203,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public int askBuild(String builds) throws TimeOutException, ChannelClosedException {
+    int askBuild(String builds) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askBuild(builds);
         } catch (TimeOutException e) {
@@ -226,7 +222,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public int askRemoval(String removals) throws TimeOutException, ChannelClosedException {
+    int askRemoval(String removals) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askRemoval(removals);
         } catch (TimeOutException e) {
@@ -245,7 +241,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public int askCard (String cards) throws TimeOutException, ChannelClosedException {
+    int askCard(String cards) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askCard(cards);
         } catch (TimeOutException e) {
@@ -264,7 +260,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public int[] askDeck (String deck) throws TimeOutException, ChannelClosedException {
+    int[] askDeck(String deck) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askDeck(deck);
         } catch (TimeOutException e) {
@@ -283,7 +279,7 @@ public class User {
      * @throws TimeOutException If user doesn't answer
      * @throws ChannelClosedException If connection is lost
      */
-    public boolean askConfirmation(CommunicationProtocol key) throws TimeOutException, ChannelClosedException {
+    boolean askConfirmation(CommunicationProtocol key) throws TimeOutException, ChannelClosedException {
         try {
             return communicationChannel().askConfirmation(key);
         } catch (TimeOutException e) {

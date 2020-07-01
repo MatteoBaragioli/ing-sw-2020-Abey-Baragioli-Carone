@@ -13,20 +13,20 @@ public class Lobby {
     private boolean readyToGo=false;
     private Match match = null;
 
-    public Lobby(User firstPlayer, int nPlayers) {
+    Lobby(User firstPlayer, int nPlayers) {
         users.add(firstPlayer);
         this.nPlayers = nPlayers;
     }
 
-    public int nPlayers() {
+    int nPlayers() {
         return nPlayers;
     }
 
-    public List<User> users() {
+    List<User> users() {
         return users;
     }
 
-    public boolean isOpen() {
+    boolean isOpen() {
         return !readyToGo;
     }
 
@@ -34,7 +34,7 @@ public class Lobby {
         return match;
     }
 
-    public synchronized void setReadyToGo(boolean readyToGo) {
+    private synchronized void setReadyToGo(boolean readyToGo) {
         this.readyToGo = readyToGo;
     }
 
@@ -42,7 +42,7 @@ public class Lobby {
         this.match = match;
     }
 
-    public boolean isReady() {
+    boolean isReady() {
         return users().size() == nPlayers();
     }
 
@@ -50,7 +50,7 @@ public class Lobby {
         setReadyToGo(true);
     }
 
-    public boolean hasMatch() {
+    boolean hasMatch() {
         return match() != null;
     }
 
@@ -58,7 +58,7 @@ public class Lobby {
      * This method adds a user to the lobby
      * @param user new user
      */
-    public synchronized void addUser(User user) {
+    synchronized void addUser(User user) {
         if (!users().contains(user) && !isReady()) {
             users().add(user);
             int missing = nPlayers() - users().size();
@@ -74,7 +74,7 @@ public class Lobby {
      * This method removes a user from the lobby
      * @param user quitting user
      */
-    public void removeUser(User user) {
+    void removeUser(User user) {
         if (users().contains(user)) {
             if (hasMatch())
                 match().removeUser(user);
@@ -82,11 +82,17 @@ public class Lobby {
         }
     }
 
-    public void beginMatch() {
+    /**
+     * This method starts the match as a thread
+     */
+    private void beginMatch() {
         match.start();
     }
 
-    public void createMatch() {
+    /**
+     * This method create a match using the users
+     */
+    void createMatch() {
         setMatch(new Match(users));
         System.out.println("Match " + match() + " can start");
         beginMatch();
