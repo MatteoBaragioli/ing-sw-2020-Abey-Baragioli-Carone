@@ -631,12 +631,6 @@ public class Cli implements View {
         System.err.println("Refused connection to" + host + "\nRetry.");
     }
 
-
-    @Override
-    public void startMatch() {
-
-    }
-
     /**
      * this method stores the player that is currently playing
      * @param player current player

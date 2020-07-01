@@ -403,10 +403,8 @@ public class CommunicationController {
         return true;
     }
 
-    public int chooseFirstPlayer(Player chooser, List<Player> players){
-        //todo chiedere a players.get(0) chi inizia
-        int index = 1; //todo index = what the Challenger chooses
-        return index;
+    public int chooseFirstPlayer(List<Player> players){
+        return new Random().nextInt(players.size()-1);
     }
 
     public boolean confirmPhase(Player player)throws TimeOutException, ChannelClosedException{

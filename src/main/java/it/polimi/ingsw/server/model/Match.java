@@ -120,7 +120,7 @@ public class Match extends Thread{
         announceParticipants();
         setUpWorkers();
         setUpWinConditions();
-        int firstPlayerIndex = communicationController.chooseFirstPlayer(winner, gamePlayers);
+        int firstPlayerIndex = communicationController.chooseFirstPlayer(gamePlayers);
 
         //MATCH
         for(currentPlayerIndex = firstPlayerIndex; gamePlayers.size()>1 && currentPlayerIndex<gamePlayers.size() && winner==null;){
