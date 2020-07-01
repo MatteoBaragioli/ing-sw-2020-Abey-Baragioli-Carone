@@ -333,6 +333,7 @@ public class Cli implements View {
         myTurn=true;
         boolean valid = false;
         int answer = 0;
+        eraseBuffer();
         view.clearScreen();
         view.turn();
         while (!valid) {
@@ -404,7 +405,6 @@ public class Cli implements View {
                 printStream.println("press the number displayed next to the god's name to choose it");
                 try {
                     answer = askNumber(true);
-                    printStream.println(answer);
                 } catch (NumberFormatException e) {
                     answer = 0;
                 }
@@ -422,9 +422,9 @@ public class Cli implements View {
 
             int confirm = 0;
             while (!validConfirmation) {
+                view.clearScreen();
                 printStream.print("you chose:");
                 printStream.print("   " + cards.get(answer).name);
-
                 printStream.println(" ");
                 printStream.println("these will be your game card, are you sure? ");
                 printStream.println("Press");
@@ -539,6 +539,7 @@ public class Cli implements View {
                 whatToDo.add("choose your worker!");
                 view.setTurnMessage(whatToDo);
                 break;
+
         }
     }
 
@@ -575,8 +576,6 @@ public class Cli implements View {
             }
 
         }
-        view.clearScreen();
-        view.turn();
     }
 
     /**
@@ -638,7 +637,6 @@ public class Cli implements View {
 
     }
 
-
     /**
      * this method stores the player that is currently playing
      * @param player current player
@@ -646,6 +644,23 @@ public class Cli implements View {
     @Override
     public void setCurrentPlayer(PlayerProxy player) {
         this.currentPlayer = player;
+
+        boolean foundLine=false;
+        List<String> turnInfo=new ArrayList<>();
+        turnInfo=view.getTurnMessage();
+        for(int i=0; i<turnInfo.size() && !foundLine; i++ )
+            if(turnInfo.get(i).contains("it's") && turnInfo.get(i).contains("'s turn!") || turnInfo.get(i).contains("it's your turn!")) {
+                foundLine = true;
+                turnInfo.remove(i);
+            }
+        if(player.name.equals(myPlayer.name))
+            turnInfo.add("it's your turn!");
+        else turnInfo.add("it's "+player.name+"'s turn!");
+        view.setTurnMessage(turnInfo);
+        if(myPlayer.godCardProxy!=null) {
+            view.clearScreen();
+            view.turn();
+        }
     }
 
     /**
@@ -788,7 +803,6 @@ public class Cli implements View {
         //if(findQuitInString(answer))
             //System.exit(0);
         myTurn=false;
-        printStream.println(answer);
         return answer;
     }
 
@@ -1021,6 +1035,8 @@ public class Cli implements View {
                                 restart = true;
                                 started = false;
                                 try {
+                                    view.clearScreen();
+                                    view.title();
                                     client.restartClient();
                                 } catch (ChannelClosedException e) {
                                     //e.printStackTrace();
@@ -1046,6 +1062,8 @@ public class Cli implements View {
                                 restart = true;
                                 started = false;
                                 try {
+                                    view.clearScreen();
+                                    view.title();
                                     client.restartClient();
                                 } catch (ChannelClosedException e) {
                                     //e.printStackTrace();
