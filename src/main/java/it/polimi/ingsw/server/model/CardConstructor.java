@@ -80,7 +80,7 @@ public class CardConstructor {
 
     /**
      * This method returns the actions needed to create the card
-     * @param protoCard the card I need to create
+     * @param protoCard The card I need to create
      * @return List of TurnSequenceModifiers
      */
     public List<TurnSequenceModifier> loadActions(ProtoCard protoCard) {
@@ -95,7 +95,7 @@ public class CardConstructor {
 
     /**
      * This method returns the WinCondition needed to create the card
-     * @param protoCard the card I need to create
+     * @param protoCard The card I need to create
      * @return WinCondition
      */
     public WinCondition loadWinCondition(ProtoCard protoCard) {
@@ -108,7 +108,7 @@ public class CardConstructor {
 
     /**
      * This method returns the SetUpCondition needed to create the card
-     * @param protoCard the card I need to create
+     * @param protoCard The card I need to create
      * @return SetUpCondition
      */
     public SetUpCondition loadSetUpCondition(ProtoCard protoCard) {
@@ -119,7 +119,7 @@ public class CardConstructor {
 
     /**
      * This method returns the opponent actions needed to create the card
-     * @param protoCard the card I need to create
+     * @param protoCard The card I need to create
      * @return List of TurnSequenceModifiers
      */
     public List<TurnSequenceModifier> loadFXOnOpponents(ProtoCard protoCard) {
@@ -134,7 +134,7 @@ public class CardConstructor {
 
     /**
      * This method generates a GodCard from a Protocard
-     * @param protoCard the Protocard I want to create
+     * @param protoCard The Protocard I want to create
      * @return GodCard
      */
     public GodCard createCard(ProtoCard protoCard) {

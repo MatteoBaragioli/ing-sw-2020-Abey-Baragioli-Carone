@@ -66,8 +66,8 @@ public class Box {
     public void removeOccupier() {occupy(null);}
 
     /**
-     * this method tells if a box is occupied by any of the workers of the players
-     * @return boolean (true if occupied)
+     * This method tells if a box is occupied by any of the workers of the players
+     * @return Boolean (true if occupied)
      */
     public boolean isOccupiedByWorkers() {
         return occupier != null;
@@ -82,15 +82,15 @@ public class Box {
     }
 
     /**
-     * this method tells if a box is occupied by any worker in the game or a dome
-     * @return boolean (true if occupied, false otherwise)
+     * This method tells if a box is occupied by any worker in the game or a dome
+     * @return Boolean (true if occupied, false otherwise)
      */
     public boolean isOccupied(){
         return !isFree();
     }
 
     /**
-     * this method increases the level of the box or sets the dome attribute of box to true
+     * This method increases the level of the box or sets the dome attribute of box to true
      */
     public void build() {
         if (!hasDome())
@@ -101,7 +101,7 @@ public class Box {
     }
 
     /**
-     * this method increases the level by one
+     * This method increases the level by one
      */
     public void buildBlock() {
         if(level() < 3)
@@ -109,19 +109,19 @@ public class Box {
     }
 
     /**
-     * this method sets the dome attribute of the box to true
+     * This method sets the dome attribute of the box to true
      */
     public void buildDome() {
         setDome(true);
     }
 
     /**
-     * this method sets the dome attribute of the box to false
+     * This method sets the dome attribute of the box to false
      */
     public void removeDome() {setDome(false); }
 
     /**
-     * this method decreases the level attribute by 1
+     * This method decreases the level attribute by 1
      */
     public void removeBlock() {
         if (level()>0)
@@ -130,8 +130,8 @@ public class Box {
 
 
     /**
-     * this method tells if the box is on the edge of the board
-     * @return boolean (true if on edge)
+     * This method tells if the box is on the edge of the board
+     * @return Boolean (true if on edge)
      */
     public boolean isOnEdge(){
         return positionX() == 0 || positionY() == 0 || positionX() == 4 || positionY() == 4;
@@ -139,7 +139,7 @@ public class Box {
 
     /**
      * This method tells if the box has a complete tower
-     * @return boolean
+     * @return Boolean that is true if the box has a complete tower
      */
     public boolean isCompleteTower() {
         return hasDome() && level==3;

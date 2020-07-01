@@ -106,7 +106,7 @@ public class TurnSequence {
 
     /**
      * This method tells the location of a worker during the turn sequence
-     * @param worker requested worker
+     * @param worker Requested worker
      * @return Box
      */
     public Box workersCurrentPosition(Worker worker) {
@@ -200,7 +200,7 @@ public class TurnSequence {
 
     /**
      * This method records one block removal
-     * @param box
+     * @param box Box to analise
      */
     public void recordRemovedBlock(Box box) {
         if (box.level() < 3 && !box.hasDome()) {
@@ -236,7 +236,7 @@ public class TurnSequence {
 
     /**
      * This method makes a box available for moving
-     * @param destination box
+     * @param destination Box
      */
     public void addPossibleDestination(Box destination) {
         if (!possibleDestinations.contains(destination))
@@ -245,7 +245,7 @@ public class TurnSequence {
 
     /**
      * This method makes a box unavailable for moving
-     * @param destination box
+     * @param destination Box
      */
     public void removePossibleDestination(Box destination) {
         possibleDestinations.remove(destination);
@@ -261,7 +261,7 @@ public class TurnSequence {
 
     /**
      * This method makes a box available for building
-     * @param box new building location
+     * @param box New building location
      */
     public void addPossibleBuild(Box box) {
         if (!possibleBuilds.contains(box) && !box.isCompleteTower())
@@ -270,7 +270,7 @@ public class TurnSequence {
 
     /**
      * This method makes a box unavailable for building
-     * @param box unavailable building location
+     * @param box Unavailable building location
      */
     public void removePossibleBuild(Box box) {
         possibleBuilds.remove(box);
@@ -286,7 +286,7 @@ public class TurnSequence {
 
     /**
      * This method makes a worker available for moving
-     * @param worker movable worker
+     * @param worker Movable worker
      */
     public void addMovableWorker(Worker worker) {
         if (!movableWorkers.contains(worker))
@@ -295,7 +295,7 @@ public class TurnSequence {
 
     /**
      * This method makes a worker unavailable for moving
-     * @param worker unmovable worker
+     * @param worker Unmovable worker
      */
     public void removeMovableWorker(Worker worker) {
         movableWorkers.remove(worker);
@@ -311,7 +311,7 @@ public class TurnSequence {
 
     /**
      * This method records a worker that has been moved
-     * @param worker moved worker
+     * @param worker Moved worker
      */
     public void recordMovedWorker(Worker worker) {
         if (!movedWorkers.contains(worker))
@@ -329,7 +329,7 @@ public class TurnSequence {
 
     /**
      * This method records a possible possibleWinner if nobody was already winning
-     * @param player possible winner
+     * @param player Possible winner
      */
     public void registerPossibleWinner(Player player) {
         if (possibleWinner() == null)

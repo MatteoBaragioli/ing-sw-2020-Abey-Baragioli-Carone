@@ -29,8 +29,8 @@ public class CommunicationController {
 
     /**
      * This method tells if a player represents a user
-     * @param player
-     * @return boolean
+     * @param player Player
+     * @return Boolean that is true if player represent a user
      */
     public boolean playerIsUser(Player player) {
         return playerToUser.containsKey(player);
@@ -38,21 +38,17 @@ public class CommunicationController {
 
     /**
      * This method removes the connections with a quitting player
-     * @param player quitting player
+     * @param player Quitting player
      */
     public synchronized void removeUser(Player player) {
         if (playerIsUser(player))
             playerToUser.remove(player);
     }
 
-    public synchronized void removeConnection(Player player) {
-        player.setInGame(false);
-        removeUser(player);
-    }
     /**
      * This method finds the user represented by a player
      * @param player The player I'm looking for
-     * @return user
+     * @return User
      */
     public User findUser(Player player) {
         if (playerIsUser(player))
@@ -62,8 +58,9 @@ public class CommunicationController {
 
     /**
      * This method communicates to a user what player is representing him/her
-     * @param player player avatar
-     * @return boolean if everything went well
+     * @param player Player avatar
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If communicationChannel is closed
      */
     public boolean announceMyPlayer(Player player) throws ChannelClosedException {
         User user = findUser(player);
@@ -74,9 +71,10 @@ public class CommunicationController {
 
     /**
      * This method communicates to a user who are the opponents
-     * @param player player avatar
-     * @param players all players
-     * @return boolean if everything went well
+     * @param player Player avatar
+     * @param players All players
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If communicationChannel is closed
      */
     public boolean announceOpponents(Player player, List<Player> players) throws ChannelClosedException {
         User user = findUser(player);
@@ -91,10 +89,10 @@ public class CommunicationController {
 
     /**
      * This method communicates to a user who are the participants
-     * @param player player avatar
-     * @param players all players
-     * @return boolean if everything went well
-     * @throws ChannelClosedException if there are network errors
+     * @param player Player avatar
+     * @param players All players
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If there are network errors
      */
     public boolean announceParticipants(Player player, List<Player> players) throws ChannelClosedException {
         if (playerIsUser(player))
@@ -104,9 +102,10 @@ public class CommunicationController {
 
     /**
      * This method communicates to a user who is playing now
-     * @param player listener
-     * @param currentPlayer current player
-     * @return boolean if everything went well
+     * @param player Listener
+     * @param currentPlayer Current player
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If communicationChannel is closed
      */
     public boolean announceCurrentPlayer(Player player, Player currentPlayer) throws ChannelClosedException {
         if(playerIsUser(player)) {
@@ -119,6 +118,13 @@ public class CommunicationController {
         return true;
     }
 
+    /**
+     * This method communicates to a user who is the winner
+     * @param player Listener
+     * @param winner Winner
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If communicationChannel is closed
+     */
     public boolean announceWinner(Player player, Player winner) throws ChannelClosedException {
         if(playerIsUser(player)) {
             User user = findUser(player);
@@ -130,6 +136,13 @@ public class CommunicationController {
         return true;
     }
 
+    /**
+     * This method communicates to a user who is the loser, if someone loses the match
+     * @param player Listener
+     * @param loser Loser
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If communicationChannel is closed
+     */
     public boolean announceLoser(Player player, Player loser) throws ChannelClosedException {
         if(playerIsUser(player)) {
             User user = findUser(player);
@@ -145,7 +158,9 @@ public class CommunicationController {
      * This method asks the user to choose one worker from a list
      * @param user User
      * @param workers List of movable workers
-     * @return list index
+     * @return List index
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
+     * @throws ChannelClosedException If communicationChannel is closed
      */
     public int askWorker(User user, List<Worker> workers) throws TimeOutException, ChannelClosedException {
         List<int[]> positions = new ArrayList<>();
@@ -160,6 +175,8 @@ public class CommunicationController {
      * @param chooser Player
      * @param workers Workers
      * @return Chosen Worker
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
+     * @throws ChannelClosedException If communicationChannel is closed
      */
     public Worker chooseWorker(Player chooser, List<Worker> workers) throws TimeOutException, ChannelClosedException {
         int index = 0;
@@ -185,11 +202,11 @@ public class CommunicationController {
 
     /**
      * This method asks a user to choose one location from a list
-     * @param user asked user
-     * @param boxes available start positions
-     * @return list index
-     * @throws TimeOutException if user doesn't answer
-     * @throws ChannelClosedException if connection is lost
+     * @param user Asked user
+     * @param boxes Available start positions
+     * @return List index
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public int askStartPosition(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askStartPosition(convertBoxList(boxes));
@@ -197,11 +214,11 @@ public class CommunicationController {
 
     /**
      * This method asks a player to choose one location from a list
-     * @param player player
+     * @param player Player
      * @param boxes List of choices
      * @return Chosen Position
-     * @throws TimeOutException
-     * @throws ChannelClosedException
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public Box chooseStartPosition(Player player, List<Box> boxes) throws ChannelClosedException, TimeOutException {
         int index = 0;
@@ -215,11 +232,11 @@ public class CommunicationController {
 
     /**
      * This method asks a user to choose one move destination from a list
-     * @param user asked user
-     * @param boxes available destinations
-     * @return list index
-     * @throws TimeOutException if user doesn't answer
-     * @throws ChannelClosedException if connection is lost
+     * @param user Asked user
+     * @param boxes Available destinations
+     * @return List index
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public int askDestination(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askDestination(convertBoxList(boxes));
@@ -227,11 +244,11 @@ public class CommunicationController {
 
     /**
      * This method asks a player to choose one move destination from a list
-     * @param chooser player
+     * @param chooser Player
      * @param boxes List of choices
      * @return Chosen Destination
-     * @throws TimeOutException if user doesn't answer
-     * @throws ChannelClosedException if connection is lost
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public Box chooseDestination(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         int index = 0;
@@ -244,11 +261,11 @@ public class CommunicationController {
 
     /**
      * This method asks a user to choose one build location from a list
-     * @param user asked user
-     * @param boxes available locations
-     * @return list index
-     * @throws TimeOutException if user doesn't answer
-     * @throws ChannelClosedException if connection is lost
+     * @param user Asked user
+     * @param boxes Available locations
+     * @return List index
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public int askBuild(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askBuild(convertBoxList(boxes));
@@ -256,11 +273,11 @@ public class CommunicationController {
 
     /**
      * This method asks a player to choose one build location from a list
-     * @param chooser player
+     * @param chooser Player
      * @param boxes List of choices
      * @return Chosen Location
-     * @throws TimeOutException if user doesn't answer
-     * @throws ChannelClosedException if connection is lost
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public Box chooseBuild(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         int index = 0;
@@ -273,35 +290,35 @@ public class CommunicationController {
 
     /**
      * This method asks a user to choose one block to remove from a list
-     * @param user asked user
-     * @param boxes available locations
-     * @return list index
-     * @throws TimeOutException if user doesn't answer
-     * @throws ChannelClosedException if connection is lost
+     * @param user Asked user
+     * @param boxes Available locations
+     * @return List index
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public int askRemoval(User user, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         return user.askRemoval(convertBoxList(boxes));
     }
 
     /**
-     * this method asks to the user for a confirmation to the user
-     * @param user asked user
-     * @param key key of communication protocol
-     * @return boolean value
-     * @throws TimeOutException
-     * @throws ChannelClosedException
+     * This method asks to the user for a confirmation to the user
+     * @param user Asked user
+     * @param key Key of communication protocol
+     * @return Boolean value
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public boolean askConfirmation(User user, CommunicationProtocol key) throws TimeOutException, ChannelClosedException {
         return user.askConfirmation(key);
     }
 
     /**
-     * this method asks to the user for a God Card
-     * @param user
-     * @param cards
-     * @return
-     * @throws TimeOutException
-     * @throws ChannelClosedException
+     * This method asks to the user for a God Card
+     * @param user Asked user
+     * @param cards List of choosable cards
+     * @return Index of chosen card
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public int askCard(User user, List<GodCard> cards)throws TimeOutException, ChannelClosedException {
         List<GodCardProxy> proxyCards = new ArrayList<>();
@@ -313,6 +330,14 @@ public class CommunicationController {
         return user.askCard(new Gson().toJson(proxyCards, listType));
     }
 
+    /**
+     * This method calls askCard, saves chosen card index and returns corresponding card
+     * @param chooser Asked user
+     * @param cards List pf choosable cards
+     * @return Chosen card
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
+     */
     public GodCard chooseCard(Player chooser, List<GodCard> cards) throws TimeOutException, ChannelClosedException{
         int index = 0;
         if (cards.size()>1)
@@ -323,12 +348,12 @@ public class CommunicationController {
     }
 
     /**
-     * this method asks to the user for a God Card
-     * @param user
-     * @param deck
-     * @return
-     * @throws TimeOutException
-     * @throws ChannelClosedException
+     * This method asks to the user (the challenger) for a list of cards (the cards for the current match)
+     * @param user Challenger
+     * @param deck List of all the cards of the game
+     * @return Array of chosen cards indexes
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public int[] askDeck(User user, List<GodCard> deck)throws TimeOutException, ChannelClosedException {
         List<GodCardProxy> proxyDeck = new ArrayList<>();
@@ -340,27 +365,33 @@ public class CommunicationController {
         return user.askDeck(new Gson().toJson(proxyDeck, listType));
     }
 
+    /**
+     * This method calls askDeck, saves chosen cards indexes and returns corresponding cards
+     * @param chooser Challenger
+     * @param cards List of all the cards od the game
+     * @return List of chosen cards
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
+     */
     public List<GodCard> chooseDeck(Player chooser, List<GodCard> cards) throws TimeOutException, ChannelClosedException {
         List<GodCard> chosenCards = new ArrayList<>();
         int[] indexes;
         if (playerIsUser(chooser)) {
             indexes = askDeck(findUser(chooser), cards);
-            for (int i = 0; i<indexes.length ;i++){
-                chosenCards.add(cards.get(indexes[i]));
+            for (int index : indexes) {
+                chosenCards.add(cards.get(index));
             }
-        } else {
-
         }
         return chosenCards;
     }
 
     /**
      * This method asks a player to choose one build location from a list
-     * @param chooser player
+     * @param chooser Player
      * @param boxes List of choices
      * @return Chosen Location
-     * @throws TimeOutException if user doesn't answer
-     * @throws ChannelClosedException if connection is lost
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
      */
     public Box chooseRemoval(Player chooser, List<Box> boxes) throws TimeOutException, ChannelClosedException {
         int index = 0;
@@ -371,18 +402,27 @@ public class CommunicationController {
         return boxes.get(index);
     }
 
-    public void youLost(Player loser){
-        System.out.println("Hai perso");
-    }
-
+    /**
+     * This method asks a player if he wants to use his power
+     * @param chooser Asked player
+     * @return Boolean that is true if player chose to use his power
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
+     */
     public boolean chooseToUsePower(Player chooser)throws TimeOutException, ChannelClosedException {
         boolean result=true;
-        boolean answer;
         if (playerIsUser(chooser))
             result= askConfirmation(findUser(chooser), GOD_POWER);
         return result;
     }
 
+    /**
+     * This method calls updateView for each player in order to update the view map
+     * @param players Players
+     * @param boxes Boxes of the map
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If connection is lost
+     */
     public boolean updateView(List<Player> players , List<BoxProxy> boxes) throws ChannelClosedException {
         for (Player player:players) {
             if (!updateView(player, boxes)) {
@@ -393,6 +433,13 @@ public class CommunicationController {
         return true;
     }
 
+    /**
+     * This method send the updated map to the player
+     * @param player Player that receives the updated map
+     * @param boxes All boxes of the map
+     * @return Boolean if everything went well
+     * @throws ChannelClosedException If connection is lost
+     */
     public boolean updateView(Player player , List<BoxProxy> boxes) throws ChannelClosedException {
         if(playerIsUser(player)) {
             User user = findUser(player);
@@ -403,6 +450,13 @@ public class CommunicationController {
         return true;
     }
 
+    /**
+     * This method asks a player if he wants to confirm his turn
+     * @param player Asked player
+     * @return Boolean that is true if player wants to undo his turn
+     * @throws TimeOutException If user doesn't answer
+     * @throws ChannelClosedException If connection is lost
+     */
     public boolean confirmPhase(Player player)throws TimeOutException, ChannelClosedException{
         boolean result=new Random().nextBoolean();
         if (playerIsUser(player))
@@ -412,9 +466,10 @@ public class CommunicationController {
 
     /**
      * This method sends the highlights of the turn to a player
-     * @param player receiver
-     * @param matchStory object
-     * @return
+     * @param player Receiver
+     * @param matchStory Last turn story
+     * @return  Boolean if everything went well
+     * @throws ChannelClosedException If connection is lost
      */
     public boolean tellMatchStory(Player player, MatchStory matchStory) throws ChannelClosedException {
         if(playerIsUser(player)) {

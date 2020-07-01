@@ -59,7 +59,7 @@ public class Match extends Thread{
 
     /**
      * This method is used in the Match constructor and adds one user to the match
-     * @param user new player
+     * @param user New player
      */
     private void addNewPlayer(User user) {
         Player player = new Player(user);
@@ -70,9 +70,9 @@ public class Match extends Thread{
 
 
     /**
-     * this method returns the opponents of the player given as a parameter
-     * @param player subject
-     * @return list of players
+     * This method returns the opponents of the player given as a parameter
+     * @param player Subject
+     * @return List of players
      */
     public List<Player> getOpponents(Player player){
         Iterator<Player> iterator= gamePlayers.iterator();
@@ -143,8 +143,8 @@ public class Match extends Thread{
 
     /**
      * This method gets the next player index in the gamePlayers list
-     * @param currentPlayerIndex current index
-     * @return int
+     * @param currentPlayerIndex Current index
+     * @return Next player index
      */
     private int nextPlayerIndex(int currentPlayerIndex) {
         if(currentPlayerIndex < gamePlayers.size()-1)
@@ -153,8 +153,8 @@ public class Match extends Thread{
     }
 
     /**
-     * This method extracts a random index to draw the first plater
-     * @return int
+     * This method extracts a random index to draw the first player
+     * @return Index of the first player
      */
     private int drawFirstPlayer() {
         if (gamePlayers.size()>1)
@@ -165,8 +165,8 @@ public class Match extends Thread{
     /**
      * This method handles the execution of one whole game turn
      * @param player The current player
-     * @throws ChannelClosedException when a connection error occurs
-     * @throws TimeOutException when the player isn't responsive
+     * @throws ChannelClosedException Exception thrown when communication channel is closed
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     private void takeTurn(Player player) throws ChannelClosedException, TimeOutException {
         int undoCounter = 0;
@@ -443,7 +443,7 @@ public class Match extends Thread{
 
     /**
      * This method removes a player from the list of gamePlayers
-     * @param loser
+     * @param loser Loser player
      */
     protected void removePlayer(Player loser){
         for(Worker worker : loser.workers()){
@@ -461,8 +461,8 @@ public class Match extends Thread{
 
     /**
      * This method tells if a user is in this match
-     * @param user user
-     * @return boolean
+     * @param user User
+     * @return Boolean that is true id user is in this match
      */
     public boolean userIsPlayer(User user) {
         return users.contains(user);
@@ -470,8 +470,8 @@ public class Match extends Thread{
 
     /**
      * This method finds the player related to a user (null if the user isn't part of the match)
-     * @param user user
-     * @return player
+     * @param user User
+     * @return Player related to user
      */
     public Player findPlayer(User user) {
         if (userIsPlayer(user))
@@ -481,8 +481,8 @@ public class Match extends Thread{
 
     /**
      * This method finds the user with the matching username if he's in this match
-     * @param name username
-     * @return User
+     * @param name Username
+     * @return User with the matching username
      */
     private User findUser(String name) {
         for (User user: users)
@@ -493,7 +493,7 @@ public class Match extends Thread{
 
     /**
      * This method removes a user from the match
-     * @param user quitting user
+     * @param user Quitting user
      */
     public synchronized void removeUser(User user) {
         if (userIsPlayer(user)) {
