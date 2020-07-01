@@ -1,11 +1,9 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.client.view.cli.Cli;
-import it.polimi.ingsw.client.view.gui.*;
-import it.polimi.ingsw.network.*;
+import it.polimi.ingsw.network.CommunicationChannel;
+import it.polimi.ingsw.network.CommunicationProtocol;
 import it.polimi.ingsw.network.exceptions.ChannelClosedException;
-import javafx.application.Application;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,34 +29,19 @@ public class Client extends Thread {
         this.restart = restart;
     }
 
+    /**
+     * This method creates a socket after getting the ip & port from the user
+     */
     @Override
     public void run(){
         while(restart && !close) {
             restart = false;
-            communicationChannel = null;
-            boolean valid = false;
-            String hostName = null;
-            int portNumber = 0;
-            Socket socket = null;
-            while (!valid && !close) {
-                hostName = view.askIp();
-                portNumber = view.askPort();
-                try {
-                    socket = new Socket(hostName, portNumber);
-                    valid = true;
-                } catch (IllegalArgumentException e) {
-                    valid = false;
-                } catch (UnknownHostException | SocketException e) {
-                    view.connectionFailed(hostName);
-                    valid = false;
-                } catch (IOException e) {
-                    //e.printStackTrace();
-                   // System.err.println("Couldn't get I/O for the connection to " + hostName);
-                    System.exit(1);
-                }
-            }
+
+            Socket socket = setupSocket();
+
             if(socket==null)
-                return;
+                System.exit(1);
+
             PrintWriter out = null;
             try {
                 out = new PrintWriter(socket.getOutputStream(), true);
@@ -77,14 +60,15 @@ public class Client extends Thread {
                 System.exit(1);
             }
 
+            ClientController clientController = new ClientController();
+
             communicationChannel = new CommunicationChannel(in, out);
             try {
                 communicationChannel.writeKeyWord(HI);
             } catch (ChannelClosedException e) {
                 //e.printStackTrace();
-               // System.err.println("Connection lost");
+                // System.err.println("Connection lost");
             }
-            ClientController clientController = new ClientController();
             Listener listener = new Listener(communicationChannel, view);
             listener.start();
 
@@ -251,6 +235,30 @@ public class Client extends Thread {
                 System.exit(1);
             }
         }
+    }
+
+    private Socket setupSocket() {
+        Socket socket = null;
+        boolean valid = false;
+        String hostName = null;
+        int portNumber = 0;
+        while (!valid && !close) {
+            hostName = view.askIp();
+            portNumber = view.askPort();
+            try {
+                socket = new Socket(hostName, portNumber);
+                valid = true;
+            } catch (IllegalArgumentException e) {
+                valid = false;
+            } catch (UnknownHostException | SocketException e) {
+                view.connectionFailed(hostName);
+                valid = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        }
+        return socket;
     }
 
     /**

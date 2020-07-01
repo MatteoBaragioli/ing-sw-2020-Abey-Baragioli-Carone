@@ -403,10 +403,6 @@ public class CommunicationController {
         return true;
     }
 
-    public int chooseFirstPlayer(List<Player> players){
-        return new Random().nextInt(players.size()-1);
-    }
-
     public boolean confirmPhase(Player player)throws TimeOutException, ChannelClosedException{
         boolean result=new Random().nextBoolean();
         if (playerIsUser(player))
