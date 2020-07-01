@@ -79,8 +79,8 @@ public class ActionController {
      * @param phase Current phase
      * @param winConditions List of all active win conditions
      * @param currentPlayer Current player
-     * @param map
-     * @param opponents
+     * @param map Map of the match
+     * @param opponents List of opponents
      */
 
     public void verifyWinCondition(Phase phase, List<WinCondition> winConditions, Player currentPlayer, Map map, List<Player> opponents) {
@@ -124,10 +124,10 @@ public class ActionController {
     }
 
     /**
-     * this method verifies if the standard win condition occurs given the current player and the map
-     * @param currentPlayer
-     * @param map
-     * @return
+     * This method verifies if the standard win condition occurs given the current player and the map
+     * @param currentPlayer Current player
+     * @param map Map of the match
+     * @return This method returns the current player if he's the winner or null if not
      */
 
     public Player verifyStandardWin(Player currentPlayer, Map map){
@@ -138,21 +138,19 @@ public class ActionController {
     }
 
     /**
-     * this method tells if the current player has won
-     * @param currentPlayer
-     * @return boolean returns true if the current player has won
+     * This method tells if the current player has won
+     * @param currentPlayer Current player
+     * @return Boolean returns true if the current player has won
      */
     public boolean currentPlayerHasWon(Player currentPlayer){
-        if (currentPlayer.equals(currentPlayer.turnSequence().possibleWinner()))
-            return true;
-        return false;
+        return currentPlayer.equals(currentPlayer.turnSequence().possibleWinner());
 
     }
 
     /**
-     * given a player this method establishes which one of their workers can be moved during their turn
-     * @param currentPlayer
-     * @param map
+     * Given a player this method establishes which one of their workers can be moved during their turn
+     * @param currentPlayer Current player
+     * @param map Map of the match
      */
     public void initialiseMovableWorker(Player currentPlayer, Map map){
         for(Worker worker : currentPlayer.workers()){
@@ -166,10 +164,10 @@ public class ActionController {
 
     /**
      * This method tells if the player is able play a normal turn
-     * @param player examined player
-     * @param opponents examined player's opponents
-     * @param map map
-     * @return boolean
+     * @param player Examined player
+     * @param opponents Examined player's opponents
+     * @param map Map of the match
+     * @return Boolean that is true if player is able to play a normal turn
      */
     public boolean canPlayerPlay(Player player, List<Player> opponents, Map map) {
         initialiseMovableWorker(player, map);

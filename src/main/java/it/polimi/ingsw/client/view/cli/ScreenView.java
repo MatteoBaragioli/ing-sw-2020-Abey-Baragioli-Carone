@@ -79,7 +79,7 @@ public class ScreenView {
     }
 
     /**
-     * this method prints the game screen, including the map, the opponents info and the last turn events
+     * This method prints the game screen, including the map, the opponents info and the last turn events
      */
     public void turn() {
         int i;
@@ -126,9 +126,9 @@ public class ScreenView {
     }
 
     /**
-     * this method given a list of strings puts a frame around it for it to be printed in cli
+     * This method given a list of strings puts a frame around it for it to be printed in cli
      * @param message
-     * @return the same message framed
+     * @return The same message framed
      */
     public List<String> boxMessage (List<String> message) {
         List<String> messageBox=new ArrayList<>();
@@ -201,7 +201,7 @@ public class ScreenView {
     }
 
     /**
-     * this method prints the title of the game
+     * This method prints the title of the game
      */
     public void title()   {
         ps.println("\n");
@@ -219,7 +219,7 @@ public class ScreenView {
     }
 
     /**
-     * this method clears the screen in cli
+     * This method clears the screen in cli
      */
     public void clearScreen()
     {

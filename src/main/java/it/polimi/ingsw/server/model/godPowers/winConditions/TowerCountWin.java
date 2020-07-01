@@ -17,6 +17,13 @@ public class TowerCountWin extends WinCondition {
     }
 
     //Chronus Power
+
+    /**
+     * This method verifies if win condition is satisfied (if there is a specific number of complete towers in the map)
+     * @param currentPlayer Current player
+     * @param map Map of the match
+     * @return Boolean that is true if win condition is satisfied
+     */
     @Override
     public boolean establishWinCondition(Player currentPlayer, Map map) {
         int completedInTurn = 0;

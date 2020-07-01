@@ -7,7 +7,6 @@ import it.polimi.ingsw.server.model.phases.*;
 import java.util.*;
 
 public class Match extends Thread{
-    private int currentPlayerIndex;
     private List<User> users;
     private HashMap<User, Player> userToPlayer = new HashMap<>();
     private List<Player> players = new ArrayList<>();
@@ -27,47 +26,14 @@ public class Match extends Thread{
         this.users = users;
     }
 
-    /**
-     * This method is used in the Match constructor and adds one user to the match
-     * @param user new player
-     */
-    private void addNewPlayer(User user) {
-        Player player = new Player(user);
-        userToPlayer.put(user, player);
-        players.add(player);
-        gamePlayers.add(player);
-    }
-
-    public Match(List<Player> gamePlayers, CommunicationController communicationController) {
+    Match(List<Player> gamePlayers, CommunicationController communicationController) {
         this.gamePlayers = gamePlayers;
         this.players.addAll(gamePlayers);
         this.communicationController = communicationController;
     }
 
-    public int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
-    }
-
-    public void setCurrentPlayerIndex(int currentPlayerIndex) {
-        this.currentPlayerIndex = currentPlayerIndex;
-    }
-
-    public List<User> users() {
-        return users;
-    }
-
-    public Map getGameMap() {
-        return gameMap;
-    }
-
-    public void setGameMap(Map gameMap) { this.gameMap = gameMap; }
-
-    public List<Player> gamePlayers() {
+    List<Player> gamePlayers() {
         return gamePlayers;
-    }
-
-    public void setGamePlayers(List<Player> gamePlayers) {
-        this.gamePlayers = gamePlayers;
     }
 
     public List<GodCard> getCards() { return cards; }
@@ -86,13 +52,27 @@ public class Match extends Thread{
 
     public Player winner(){return winner;}
 
-    private void setWinner(Player winner){this.winner=winner;}
+    private void setWinner(Player winner){
+        if (this.winner == null)
+            this.winner=winner;
+    }
+
+    /**
+     * This method is used in the Match constructor and adds one user to the match
+     * @param user New player
+     */
+    private void addNewPlayer(User user) {
+        Player player = new Player(user);
+        userToPlayer.put(user, player);
+        players.add(player);
+        gamePlayers.add(player);
+    }
 
 
     /**
-     * this method returns the opponents of the player given as a parameter
-     * @param player
-     * @return list of players
+     * This method returns the opponents of the player given as a parameter
+     * @param player Subject
+     * @return List of players
      */
     public List<Player> getOpponents(Player player){
         Iterator<Player> iterator= gamePlayers.iterator();
@@ -120,10 +100,11 @@ public class Match extends Thread{
         announceParticipants();
         setUpWorkers();
         setUpWinConditions();
-        int firstPlayerIndex = communicationController.chooseFirstPlayer(gamePlayers);
 
         //MATCH
-        for(currentPlayerIndex = firstPlayerIndex; gamePlayers.size()>1 && currentPlayerIndex<gamePlayers.size() && winner==null;){
+
+        int currentPlayerIndex = drawFirstPlayer();
+        while (gamePlayers.size()>1 && winner==null){
             Player currentPlayer = gamePlayers.get(currentPlayerIndex);
             announceCurrentPlayer(currentPlayer);
             try {
@@ -132,10 +113,7 @@ public class Match extends Thread{
             catch (TimeOutException e) {
                 e.printStackTrace();
                 currentPlayer.turnSequence().undo();
-                if (gamePlayers.size()>1) {
-                    removePlayer(currentPlayer);
-                    announceRemovedPlayer(currentPlayer);
-                }
+                removePlayer(currentPlayer);
             }
             catch (ChannelClosedException e) {
                 e.printStackTrace();
@@ -153,31 +131,48 @@ public class Match extends Thread{
             if(!currentPlayer.isInGame()){
                 removePlayer(currentPlayer);
                 currentPlayerIndex--;
-                if(gamePlayers.size()==1)
-                    winner=gamePlayers.get(0);
-                else
-                    //todo vediamo se va
-                    announceLoser(currentPlayer);
             }
-            if(currentPlayerIndex >= gamePlayers.size()-1){
-                currentPlayerIndex=0;
-            } else {
-                currentPlayerIndex++;
-            }
+            currentPlayerIndex = nextPlayerIndex(currentPlayerIndex);
         }
-        if (gamePlayers.size()==1)
-            winner = gamePlayers.get(0);
-        if(winner!=null)
-            announceWinner();
 
-        //END MATCH
-        //todo endGame()
+        if(winner==null && gamePlayers.size()==1)
+            setWinner(gamePlayers.get(0));
+
+        announceWinner();
     }
 
+    /**
+     * This method gets the next player index in the gamePlayers list
+     * @param currentPlayerIndex Current index
+     * @return Next player index
+     */
+    private int nextPlayerIndex(int currentPlayerIndex) {
+        if(currentPlayerIndex < gamePlayers.size()-1)
+            return currentPlayerIndex + 1;
+        return 0;
+    }
+
+    /**
+     * This method extracts a random index to draw the first player
+     * @return Index of the first player
+     */
+    private int drawFirstPlayer() {
+        if (gamePlayers.size()>1)
+            return new Random().nextInt(gamePlayers.size()-1);
+        return 0;
+    }
+
+    /**
+     * This method handles the execution of one whole game turn
+     * @param player The current player
+     * @throws ChannelClosedException Exception thrown when communication channel is closed
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
+     */
     private void takeTurn(Player player) throws ChannelClosedException, TimeOutException {
         int undoCounter = 0;
         MatchStory matchStory = new MatchStory(player);
-        for(int phaseIndex = 0; phaseIndex < phasesSequence.size() && player.isInGame() && gamePlayers.size()>1;){
+        int phaseIndex = 0;
+        while (phaseIndex < phasesSequence.size() && player.isInGame() && gamePlayers.size()>1){
             boolean confirm = true;
             phasesSequence.get(phaseIndex).executePhase(player, communicationController, actionController, gameMap, getOpponents(player), winConditions, matchStory);
             if(undoCounter<3 && phaseIndex==2)
@@ -199,6 +194,10 @@ public class Match extends Thread{
             tellMatchStory(matchStory);
     }
 
+    /**
+     * This method handles the sending of the latest in-game events
+     * @param matchStory Latest turn events
+     */
     private void tellMatchStory(MatchStory matchStory) {
         List<Player> receivers = new ArrayList<>();
         for (int i = 0; i<players.size() && gamePlayers.size()>1; i++) {
@@ -215,6 +214,9 @@ public class Match extends Thread{
         }
     }
 
+    /**
+     * This method constructs the turn sequence
+     */
     private List<TurnPhase> createPhaseSequence() {
         List<TurnPhase> turnPhases = new ArrayList<>();
         turnPhases.add(new Start());
@@ -224,6 +226,9 @@ public class Match extends Thread{
         return turnPhases;
     }
 
+    /**
+     * This method handles the announcement of the currently in-game players
+     */
     public void announceParticipants() {
         List<Player> receivers = new ArrayList<>();
         for (int i = 0; i<players.size() && gamePlayers.size()>1; i++) {
@@ -239,6 +244,10 @@ public class Match extends Thread{
         }
     }
 
+    /**
+     * This method manages the communication of the current player
+     * @param currentPlayer Player
+     */
     private void announceCurrentPlayer(Player currentPlayer) {
         List<Player> receivers = new ArrayList<>();
         for (int i = 0; i<players.size() && gamePlayers.size()>1; i++) {
@@ -254,9 +263,12 @@ public class Match extends Thread{
         }
     }
 
+    /**
+     * This method handles the announcement of the winner
+     */
     private void announceWinner() {
         List<Player> receivers = new ArrayList<>();
-        for (int i = 0; i<players.size() && !players.isEmpty(); i++) {
+        for (int i = 0; i<players.size() && !players.isEmpty() && winner != null; i++) {
             Player player = players.get(i);
             if(!receivers.contains(player))
                 try {
@@ -268,6 +280,9 @@ public class Match extends Thread{
         }
     }
 
+    /**
+     * This method handles the announcement of the loser
+     */
     private void announceLoser(Player loser) {
         List<Player> receivers = new ArrayList<>();
         for (int i = 0; i<players.size() && !players.isEmpty(); i++) {
@@ -283,6 +298,9 @@ public class Match extends Thread{
         }
     }
 
+    /**
+     * This method handles the announcement of a player removed due to external causes
+     */
     public void announceRemovedPlayer(Player player) {
         try {
             communicationController.updateView(players, gameMap.createProxy());
@@ -294,10 +312,6 @@ public class Match extends Thread{
             announceLoser(player);
     }
 
-    private void endGame() {
-        //todo
-    }
-
     /**
      * This method assigns a colour to every player
      */
@@ -307,9 +321,8 @@ public class Match extends Thread{
         colours.add(Colour.WHITE);
         colours.add(Colour.GREY);
 
-        Random rand = new Random();
         for (Player gamePlayer : gamePlayers) {
-            int randomIndex = rand.nextInt(colours.size());
+            int randomIndex = new Random().nextInt(colours.size());
             Colour randomElement = colours.get(randomIndex);
             colours.remove(randomIndex);
             gamePlayer.setColour(randomElement);
@@ -331,17 +344,16 @@ public class Match extends Thread{
                     valid = true;
                 } catch (TimeOutException e) {
                     e.printStackTrace();
-                    if (gamePlayers.size()>1) {
+                    if (gamePlayers.size()>1)
                         removePlayer(challenger);
-                        announceRemovedPlayer(challenger);
-                    }
                     valid = false;
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     removeUser(findUser(e.name()));
                     valid = false;
                 }
-            } else {
+            }
+            else {
                 for (int i = 0; i < gamePlayers.size(); i++) {
                     int index = new Random().nextInt(deck.size());
                     cards.add(deck.get(index));
@@ -366,14 +378,10 @@ public class Match extends Thread{
                     GodCard chosenCard = communicationController.chooseCard(player, availableCards);
                     player.assignCard(chosenCard);
                     availableCards.remove(chosenCard);
-                    while (i>gamePlayers.size())
-                        i--;
                 } catch (TimeOutException e) {
                     e.printStackTrace();
-                    if (gamePlayers.size()>1) {
+                    if (gamePlayers.size()>1)
                         removePlayer(player);
-                        announceRemovedPlayer(player);
-                    }
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
                     removeUser(findUser(e.name()));
@@ -406,10 +414,7 @@ public class Match extends Thread{
                     try {
                         Worker worker;
                         position = communicationController.chooseStartPosition(player, possibleSetUpPosition);
-                        if (i == 0)
-                            worker = new Worker(position, player.colour(), true);
-                        else
-                            worker = new Worker(position, player.colour(), false);
+                        worker = new Worker(position, player.colour(), new Random().nextBoolean());
                         freeMap.remove(position);
                         player.assignWorker(worker);
                         readyPlayers.add(player);
@@ -417,12 +422,10 @@ public class Match extends Thread{
                         e.printStackTrace();
                         if (gamePlayers.size()>1) {
                             removePlayer(player);
-                            announceRemovedPlayer(player);
                             j = -1;
                         }
                     } catch (ChannelClosedException e) {
                         e.printStackTrace();
-                        player.setInGame(false);
                         removeUser(findUser(e.name()));
                         j = -1;
                     }
@@ -440,7 +443,7 @@ public class Match extends Thread{
 
     /**
      * This method removes a player from the list of gamePlayers
-     * @param loser
+     * @param loser Loser player
      */
     protected void removePlayer(Player loser){
         for(Worker worker : loser.workers()){
@@ -449,21 +452,26 @@ public class Match extends Thread{
         loser.workers().clear();
         loser.setInGame(false);
         gamePlayers.remove(loser);
+        if (gamePlayers.size()>1)
+            announceRemovedPlayer(loser);
+        else
+            setWinner(gamePlayers.get(0));
+
     }
 
     /**
      * This method tells if a user is in this match
-     * @param user user
-     * @return boolean
+     * @param user User
+     * @return Boolean that is true id user is in this match
      */
     public boolean userIsPlayer(User user) {
-        return users().contains(user);
+        return users.contains(user);
     }
 
     /**
      * This method finds the player related to a user (null if the user isn't part of the match)
-     * @param user user
-     * @return player
+     * @param user User
+     * @return Player related to user
      */
     public Player findPlayer(User user) {
         if (userIsPlayer(user))
@@ -471,8 +479,13 @@ public class Match extends Thread{
         return null;
     }
 
+    /**
+     * This method finds the user with the matching username if he's in this match
+     * @param name Username
+     * @return User with the matching username
+     */
     private User findUser(String name) {
-        for (User user: users())
+        for (User user: users)
             if (user.name().equals(name))
                 return user;
         return null;
@@ -480,25 +493,23 @@ public class Match extends Thread{
 
     /**
      * This method removes a user from the match
-     * @param user quitting user
+     * @param user Quitting user
      */
     public synchronized void removeUser(User user) {
         if (userIsPlayer(user)) {
             Player player = findPlayer(user);
 
-            if (player.godCard()!=null) //if the player is lost before choosing a card
+            if (player.godCard()!=null) //if the player lost after choosing a card
                 cards.add(player.godCard());
 
-            if (player.isInGame()) { //if the user was in game and is quitting
-                removePlayer(player);
+            if (player.isInGame()) { //if the user was in game and is quitting or has lost connection
                 players.remove(player);
+                removePlayer(player);
             }
 
             communicationController.removeUser(player);
             userToPlayer.remove(user);
-            users().remove(user);
-
-            announceRemovedPlayer(player);
+            users.remove(user);
         }
     }
 

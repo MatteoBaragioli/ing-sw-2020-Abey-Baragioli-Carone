@@ -5,7 +5,7 @@ public class PrintedMap {
         private PrintedBlock printedMap[][]=new PrintedBlock[mapDim][mapDim];
 
     /**
-     * this contructor method initialises a map with all ground floor blocks
+     * This constructor method initialises a map with all ground floor blocks
      */
         public PrintedMap() {
             for (int i = 0; i < mapDim; i++)
@@ -17,9 +17,9 @@ public class PrintedMap {
 
         /**
          * This method returns a printedblock depending on the given coordinates
-         * @param x longitude
-         * @param y latitude
-         * @return printedBlock
+         * @param x Longitude
+         * @param y Latitude
+         * @return PrintedBlock
          */
         public PrintedBlock position(int x, int y) {
             if (x>=0 && x<mapDim && y>=0 && y<mapDim)

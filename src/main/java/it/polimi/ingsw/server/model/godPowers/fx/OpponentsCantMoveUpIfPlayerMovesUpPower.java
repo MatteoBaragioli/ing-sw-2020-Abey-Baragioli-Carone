@@ -6,6 +6,17 @@ import it.polimi.ingsw.server.model.*;
 import java.util.List;
 
 public class OpponentsCantMoveUpIfPlayerMovesUpPower extends MoveModifier {
+
+    /**
+     * This method sets opponent's allowedLevelDifferent to 0 for next turn if current player moves up
+     * @param player Player that has the card
+     * @param communicationController Communication controller
+     * @param actionController Action controller
+     * @param map Map of the match
+     * @param opponents Player's opponents
+     * @param winConditions List of win conditions
+     * @param matchStory Last turn story
+     */
     @Override
     public void executeAction(Player player, CommunicationController communicationController, ActionController actionController, Map map, List<Player> opponents, List<WinCondition> winConditions, MatchStory matchStory) {
         //endPower - Athena

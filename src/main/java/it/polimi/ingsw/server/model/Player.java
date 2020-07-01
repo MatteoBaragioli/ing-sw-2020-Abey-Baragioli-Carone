@@ -88,7 +88,7 @@ public class Player {
 
     /**
      * This method adds a worker to the player's list if he isn't owning it
-     * @param worker assigned worker
+     * @param worker Assigned worker
      */
     public void assignWorker(Worker worker){
         if(worker!=null && workers().size()<2 && !workers().contains(worker))

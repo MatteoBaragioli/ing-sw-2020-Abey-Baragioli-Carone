@@ -29,9 +29,9 @@ public class Map {
 
     /**
      * This method returns a box depending on the given coordinates
-     * @param x longitude
-     * @param y latitude
-     * @return box
+     * @param x Longitude
+     * @param y Latitude
+     * @return Box
      */
     public Box position(int x, int y) {
         if (x>=0 && x<=4 && y>=0 && y<=4)
@@ -53,6 +53,10 @@ public class Map {
         return out;
     }
 
+    /**
+     * This method return all free boxes of the map
+     * @return List of free boxes
+     */
     public List<Box> freePositions() {
         List<Box> ground = new ArrayList<>();
         for (Box box: groundToList())
@@ -117,6 +121,10 @@ public class Map {
         }
     }
 
+    /**
+     * This method creates map proxy
+     * @return List of all boxes proxies
+     */
     public List<BoxProxy> createProxy() {
         List<BoxProxy> map = new ArrayList<>();
         for (Box box: groundToList())
