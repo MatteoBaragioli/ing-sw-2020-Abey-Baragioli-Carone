@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.view.gui;
 
 import it.polimi.ingsw.network.CommunicationProtocol;
+import it.polimi.ingsw.network.exceptions.TimeOutException;
 import it.polimi.ingsw.network.objects.PlayerProxy;
 import it.polimi.ingsw.server.model.Colour;
 import static it.polimi.ingsw.client.view.Coordinates.*;
@@ -23,6 +24,7 @@ import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -148,6 +150,9 @@ public class PlayerView extends StackPane {
     //pause menu button
     private ImageView pauseView;
 
+    //this variable is true when time to do actions runs out
+    private final AtomicBoolean endTimer = new AtomicBoolean(false);
+
 
     public PlayerView(double screenWidth, double screenHeight, Gui gui, MatchScene match, StackPane pausePane, StackPane activePowers, StackPane helper, StackPane turnStory) {
         standardFont = Font.loadFont(PlayerView.class.getResourceAsStream("/fonts/LillyBelle.ttf"), screenWidth/50);
@@ -179,6 +184,16 @@ public class PlayerView extends StackPane {
     }
 
     //---------------------------------------------------END GETTER-----------------------------------------------------
+
+
+
+    public synchronized void setEndTimer(){
+        endTimer.set(true);
+        notifyAll();
+    }
+
+
+
 
     /**
      * This method creates all border player view
@@ -1107,15 +1122,17 @@ public class PlayerView extends StackPane {
      * This method waits for player to chose to use power or not and sends the answer to server
      * @return Answer chosen by the player and sent to server
      */
-    public synchronized int askUsePower(){
+    public synchronized int askUsePower() throws TimeOutException {
         activateUsePower();
-        while (usePowerAnswer.get()==2){
+        while (usePowerAnswer.get()==2 && !endTimer.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        if(endTimer.get())
+            throw new TimeOutException();
         return usePowerAnswer.get();
     }
 
@@ -1190,6 +1207,7 @@ public class PlayerView extends StackPane {
                                     seconds.set(0);
                                     minutes.set(0);
                                     gui.matchScene().setEndTimer();
+                                    setEndTimer();
                                 }
                             }
                             if(seconds.get()<10){

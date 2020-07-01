@@ -343,7 +343,6 @@ public class MenuScene {
         });
 
         quitView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            setClose();
             gui.closeProgram();
             event.consume();
         });

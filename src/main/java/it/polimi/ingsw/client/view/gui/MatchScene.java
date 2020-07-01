@@ -1057,7 +1057,7 @@ public class MatchScene {
      * It shows confirmTurn popup
      * @return Undo or Confirm turn answer
      */
-    public synchronized int showConfirmTurnPopup(){
+    public synchronized int showConfirmTurnPopup() throws TimeOutException {
         clickedConfirmation.set(false);
         FadeTransition confirmTurnFadeIn = new FadeTransition(Duration.millis(1000), askConfirmTurn);
         confirmTurnFadeIn.setFromValue(0);
@@ -1066,13 +1066,18 @@ public class MatchScene {
         confirmTurnFadeIn.play();
         askConfirmTurn.setVisible(true);
 
-        while (!clickedConfirmation.get() && !closeMatch.get()){
+        while (!clickedConfirmation.get() && !closeMatch.get() && !endTimer.get()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        if(closeMatch.get()) {
+            return -1;
+        }
+        else if(endTimer.get())
+            throw new TimeOutException();
         return answer.get();
     }
 

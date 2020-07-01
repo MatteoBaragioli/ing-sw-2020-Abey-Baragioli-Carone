@@ -41,6 +41,7 @@ import javafx.util.Duration;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javafx.scene.paint.Color.*;
@@ -769,6 +770,7 @@ public class Gui extends Application implements View {
             window.close();
             try {
                 client.end();
+                menuScene.setClose();
                 matchScene.setCloseMatch();
             } catch (ChannelClosedException ex) {
                 ex.printStackTrace();
@@ -1229,7 +1231,7 @@ public class Gui extends Application implements View {
     /**
      * This method asks port to user
      * If the user had already connected to server and wants to play a new match, this method returns saved port without asking it to user again
-     * @return Port
+     * @return Port number
      */
     @Override
     public int askPort() {
@@ -1317,7 +1319,7 @@ public class Gui extends Application implements View {
      * @return Answer by the player
      */
     @Override
-    public int askConfirmation(CommunicationProtocol key) {
+    public int askConfirmation(CommunicationProtocol key) throws TimeOutException {
         switch (key){
             case UNDO:
                 return matchScene.showConfirmTurnPopup();
@@ -1499,7 +1501,7 @@ public class Gui extends Application implements View {
     }
 
     /**
-     * This method tells if one opponent has lost the match (because of surrender or connection lost)
+     * This method tells if an opponent has lost the match (because of surrender or connection lost)
      * @param player Loser
      */
     @Override
