@@ -658,17 +658,6 @@ public class MatchScene {
         showingTimer.play();
 
     }
-
-    /**
-     * This method activates add button in the Choose cards box when chosen cards are less than number of players
-     * @param addGodImg Add button image
-     * @param addGodInactiveImg Add button Inactive image
-     * @param addGod Add button
-     * @param removeGodImg Remove button image
-     * @param removeGodInactiveImg Remove button inactive image
-     * @param removeGod Remove button
-     */
-
     /**
      * This method activates add button in the Choose cards box when chosen cards are less than number of players
      * @param addGodImg Add button image

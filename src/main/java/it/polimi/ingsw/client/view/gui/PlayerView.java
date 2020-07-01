@@ -707,13 +707,6 @@ public class PlayerView extends StackPane {
      * @param nickname Player's nickname
      * @param color Player's color
      * @param opponents Player's opponents
-     */
-
-    /**
-     * This method sets all player attributes (nickname, color, opponents) in the player view
-     * @param nickname Player's nickname
-     * @param color Player's color
-     * @param opponents Player's opponents
      * @param numberOfOpponents Number of opponents
      */
     public void setPage(String nickname, String color, List<PlayerProxy> opponents, int numberOfOpponents){

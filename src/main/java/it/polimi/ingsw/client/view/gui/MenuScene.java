@@ -172,14 +172,6 @@ public class MenuScene {
         notifyAll();
     }
 
-    /**
-     * This method notifies restart when user restarts a match
-     */
-    public synchronized void setRestart(){
-        restart.set(true);
-        notifyAll();
-    }
-
     //-----------------------------------------END SYNCHRONIZATION METHODS----------------------------------------------
 
     /**
