@@ -255,7 +255,7 @@ public class Client extends Thread {
 
     /**
      * This method closes the client
-     * @throws ChannelClosedException
+     * @throws ChannelClosedException If communicationChannel is already closed
      */
     public void end() throws ChannelClosedException {
         close = true;
@@ -265,7 +265,7 @@ public class Client extends Thread {
 
     /**
      * This method restarts the client
-     * @throws ChannelClosedException
+     * @throws ChannelClosedException If communicationChannel is already closed
      */
     public void restartClient() throws ChannelClosedException {
         restart = true;
@@ -274,7 +274,7 @@ public class Client extends Thread {
 
     /**
      * This method closes the connection between client and server
-     * @throws ChannelClosedException
+     * @throws ChannelClosedException If communicationChannel is already closed
      */
     public void closeConnection()  throws ChannelClosedException {
         if(communicationChannel!=null && !communicationChannel.isClosed()) {
