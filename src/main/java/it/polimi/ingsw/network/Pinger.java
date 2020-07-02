@@ -22,6 +22,9 @@ public class Pinger extends Thread {
         notifyAll();
     }
 
+    /**
+     * this thread pings the client every 5 seconds, if the client is no longer connected it closes the communication channel
+     */
     public void run() {
         while (!communicationChannel.isClosed()) {
             int countdown = 5;
