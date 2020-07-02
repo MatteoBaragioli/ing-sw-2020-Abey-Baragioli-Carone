@@ -14,6 +14,9 @@ public class Server {
 
     final private int port;
 
+    /**
+     * constructor for server class, asks port to the user
+     */
     public Server() {
         int port = 0;
         boolean valid = false;
@@ -35,6 +38,10 @@ public class Server {
         this.port = port;
     }
 
+    /**
+     * constructor for server class, takes the port number in the string parameter
+     * @param parameter, contains port number in String format
+     */
     public Server(String parameter) {
         int port;
         try {
@@ -45,6 +52,10 @@ public class Server {
         this.port = port;
     }
 
+    /**
+     * constructor for server class, takes port number from parameter args, if there is not a port number in the arguments, asks the user for a port number
+     * @param args arguments entered by the user launching the jar
+     */
     public Server(String[] args) {
         int port = 0;
         boolean valid = false;
@@ -81,6 +92,9 @@ public class Server {
         this.port = port;
     }
 
+    /**
+     * establishes the socket connection to the users and creates a database for lobbies and matches
+     */
     public void run() {
         ExecutorService executor = Executors.newCachedThreadPool();
         ServerSocket serverSocket;

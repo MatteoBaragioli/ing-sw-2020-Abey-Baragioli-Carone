@@ -79,7 +79,7 @@ public class ScreenView {
     }
 
     /**
-     * This method prints the game screen, including the map, the opponents info and the last turn events
+     * This method prints the match scene, including the map, the opponents info and the last turn events
      */
     public void turn() {
         int i;

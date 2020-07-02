@@ -35,6 +35,9 @@ public class CountDown extends Thread {
         runnedOut = true;
     }
 
+    /**
+     * 2 minutes countdown
+     */
     public void run() {
         while (availableTime > 0 && !userAnswered() && !isFinished()) {
             try {

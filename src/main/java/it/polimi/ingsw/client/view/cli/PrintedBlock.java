@@ -142,22 +142,6 @@ public class PrintedBlock {
 
     }
 
-    public int getX(){
-        return this.x;
-
-    }
-    public int getY(){
-        return this.y;
-
-    }
-
-    public void customConcat(int indexOfLine , String lineToAdd){
-        String buffer=new String();
-        buffer=this.getLines().get(indexOfLine);
-        buffer=buffer.concat(lineToAdd);
-        this.setLine(buffer, indexOfLine);
-    }
-
     /**
      * this method displays a worker on a ground level block
      * @param gender gender of the worker
