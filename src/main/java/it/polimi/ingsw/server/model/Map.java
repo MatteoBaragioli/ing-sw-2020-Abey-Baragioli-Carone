@@ -120,10 +120,14 @@ public class Map {
      * @param turnSequence Last turn record
      */
     public void updateCompleteTowers(TurnSequence turnSequence){
-        for(Box builtOnBox: turnSequence.builtOnBoxes()){
-            if(builtOnBox.isCompleteTower())
-                setCompleteTowers(completeTowers + 1);
+        List<Box> countedTowers = new ArrayList<>();
+
+        for (Box builtOnBox:turnSequence.builtOnBoxes()) {
+            if (!countedTowers.contains(builtOnBox) && builtOnBox.isCompleteTower())
+                countedTowers.add(builtOnBox); //number of towers completed in turn ++
         }
+        setCompleteTowers(completeTowers + countedTowers.size());
+
     }
 
     /**
