@@ -5,6 +5,9 @@ import it.polimi.ingsw.server.model.Map;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.WinCondition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static it.polimi.ingsw.server.model.Phase.*;
 import static it.polimi.ingsw.server.model.Target.*;
 
@@ -26,13 +29,15 @@ public class TowerCountWin extends WinCondition {
      */
     @Override
     public boolean establishWinCondition(Player currentPlayer, Map map) {
-        int completedInTurn = 0;
-        int totalCompleteTowers = map.completeTowers();
+        List<Box> countedTowers = new ArrayList<>();
+
         for (Box builtOnBox:currentPlayer.turnSequence().builtOnBoxes()) {
-            if (builtOnBox.isCompleteTower())
-                completedInTurn++; //number of towers completed in turn ++
+            if (!countedTowers.contains(builtOnBox) && builtOnBox.isCompleteTower())
+                countedTowers.add(builtOnBox); //number of towers completed in turn ++
         }
-        totalCompleteTowers = totalCompleteTowers + completedInTurn;
+
+        int totalCompleteTowers = map.completeTowers() + countedTowers.size();
+
         return totalCompleteTowers >= numOfTowers;
     }
 }

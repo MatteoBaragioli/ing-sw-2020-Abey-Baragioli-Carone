@@ -15,7 +15,7 @@ public class Map {
                 this.ground[i][j] = new Box(i, j);
     }
 
-    public Box[][] ground() {
+    Box[][] ground() {
         return ground;
     }
 
@@ -57,12 +57,12 @@ public class Map {
      * This method return all free boxes of the map
      * @return List of free boxes
      */
-    public List<Box> freePositions() {
-        List<Box> ground = new ArrayList<>();
+    List<Box> freePositions() {
+        List<Box> freeBoxes = new ArrayList<>();
         for (Box box: groundToList())
             if (box.isFree())
-                ground.add(box);
-        return ground;
+                freeBoxes.add(box);
+        return freeBoxes;
     }
 
     /**
@@ -93,13 +93,14 @@ public class Map {
      * @return List of Boxes
      */
     public List<Box> boxesSameDirection(Box start, Box direction){
-        int x_difference = direction.positionX() - start.positionX();
-        int y_difference = direction.positionY() - start.positionY();
-        int i, j;
+        int xDifference = direction.positionX() - start.positionX();
+        int yDifference = direction.positionY() - start.positionY();
+        int i;
+        int j;
         List<Box> directionBoxes = new ArrayList<>();
 
-        if (x_difference != 0 || y_difference != 0)
-            for(i = direction.positionX() + x_difference, j = direction.positionY() + y_difference; i >= 0 && i <= 4 && j >= 0 && j <= 4; i += x_difference, j += y_difference)
+        if (xDifference != 0 || yDifference != 0)
+            for(i = direction.positionX() + xDifference, j = direction.positionY() + yDifference; i >= 0 && i <= 4 && j >= 0 && j <= 4; i += xDifference, j += yDifference)
                 directionBoxes.add(position(i,j));
         return directionBoxes;
     }
@@ -114,6 +115,10 @@ public class Map {
         return targetBox.level() - startBox.level();
     }
 
+    /**
+     * This method updates the tower counter by using the turnsequence
+     * @param turnSequence Last turn record
+     */
     public void updateCompleteTowers(TurnSequence turnSequence){
         for(Box builtOnBox: turnSequence.builtOnBoxes()){
             if(builtOnBox.isCompleteTower())
