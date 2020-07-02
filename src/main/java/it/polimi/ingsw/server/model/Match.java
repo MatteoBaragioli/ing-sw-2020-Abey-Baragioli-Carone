@@ -267,16 +267,21 @@ public class Match extends Thread{
      * This method handles the announcement of the winner
      */
     private void announceWinner() {
-        List<Player> receivers = new ArrayList<>();
-        for (int i = 0; i<players.size() && !players.isEmpty() && winner != null; i++) {
-            Player player = players.get(i);
-            if(!receivers.contains(player))
+        while (!players.isEmpty() && winner != null) {
+            Player player = players.get(0);
+            if (communicationController.playerIsUser(player)) {
                 try {
-                    communicationController.announceWinner(player, winner);
-                    receivers.add(player);
+                    if (communicationController.announceWinner(player, winner)) {
+                        removeUser(findUser(player.name()));
+                    }
                 } catch (ChannelClosedException e) {
                     removeUser(findUser(e.name()));
                 }
+            }
+            else {
+                removePlayer(player);
+                players.remove(0);
+            }
         }
     }
 
@@ -445,16 +450,17 @@ public class Match extends Thread{
      * This method removes a player from the list of gamePlayers
      * @param loser Loser player
      */
-    protected void removePlayer(Player loser){
+    private void removePlayer(Player loser){
         for(Worker worker : loser.workers()){
             worker.position().removeOccupier();
         }
         loser.workers().clear();
         loser.setInGame(false);
-        gamePlayers.remove(loser);
-        if (gamePlayers.size()>1)
-            announceRemovedPlayer(loser);
-        else
+        if (gamePlayers.size()>1) {
+            gamePlayers.remove(loser);
+            if (winner == null)
+                announceRemovedPlayer(loser);
+        } else
             setWinner(gamePlayers.get(0));
 
     }

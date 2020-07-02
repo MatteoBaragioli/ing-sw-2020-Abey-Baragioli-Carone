@@ -166,6 +166,7 @@ public class DataBase {
             removeUser(user.name());
             deleteUserName(user.name());
             connectionToUser.remove(user.communicationChannel());
+            System.out.println("Removed " + user.name());
         }
     }
 
