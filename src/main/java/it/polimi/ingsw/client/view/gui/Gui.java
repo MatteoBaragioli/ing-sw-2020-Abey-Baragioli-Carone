@@ -440,7 +440,7 @@ public class Gui extends Application implements View {
         closePopup.setAlignment(Pos.CENTER);
         matchPage.setVisible(false);
         howToPlayBox.setVisible(false);
-        connectionError.setVisible(false);
+        connectionError.setVisible(isConnectionError);
 
         matchScene = new MatchScene(this, screenWidth, screenHeight, matchPage);
 

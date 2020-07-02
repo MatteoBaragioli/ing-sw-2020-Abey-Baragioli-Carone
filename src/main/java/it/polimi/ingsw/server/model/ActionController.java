@@ -87,13 +87,13 @@ public class ActionController {
         if (phase.equals(MOVE)) {
             currentPlayer.turnSequence().registerPossibleWinner(verifyStandardWin(currentPlayer, map));
         }
-        if (currentPlayer.godCard().winCondition()!=null && currentPlayer.turnSequence().possibleWinner()== null) {
+        if (currentPlayer.turnSequence().possibleWinner()== null) {
             for (WinCondition currentWinCondition : winConditions) {
                 if (phase.equals(currentWinCondition.phase()) && currentPlayer.turnSequence().possibleWinner() == null) {
                     switch (currentWinCondition.target()) {
                         case ALL: //if this win condition applies to all the player's phases (such as chronus' win condition)
                             if (currentWinCondition.establishWinCondition(currentPlayer, map)) {
-                                if (currentWinCondition.equals(currentPlayer.godCard().winCondition()))
+                                if (currentPlayer.godCard().winCondition()!=null && currentWinCondition.equals(currentPlayer.godCard().winCondition()))
                                     currentPlayer.turnSequence().registerPossibleWinner(currentPlayer);
                                 else {
                                     for (Player opponent : opponents) {
@@ -104,13 +104,13 @@ public class ActionController {
                             }
                             break;
                         case SELF:
-                            if (currentWinCondition.equals(currentPlayer.godCard().winCondition())) {
+                            if (currentPlayer.godCard().winCondition()!=null && currentWinCondition.equals(currentPlayer.godCard().winCondition())) {
                                 if (currentWinCondition.establishWinCondition(currentPlayer, map))
                                     currentPlayer.turnSequence().registerPossibleWinner(currentPlayer);
                             }
                             break;
                         case OPPONENT:
-                            if (!currentWinCondition.equals(currentPlayer.godCard().winCondition())) {
+                            if (currentPlayer.godCard().winCondition()!=null && !currentWinCondition.equals(currentPlayer.godCard().winCondition())) {
                                 if (currentWinCondition.establishWinCondition(currentPlayer, map))
                                     for (Player opponent : opponents) {
                                         if (currentWinCondition.equals(opponent.godCard().winCondition()))
