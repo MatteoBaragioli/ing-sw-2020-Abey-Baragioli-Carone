@@ -58,10 +58,10 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    88%
+    100%
   </span>
   <span class="absValue">
-    (22/ 25)
+    (25/ 25)
   </span>
 </td>
 </tr>
@@ -103,12 +103,12 @@
 <b class="fc"><i>29</i>&nbsp;                player.turnSequence().clearPossibleBuilds();</b>
 <b class="fc"><i>30</i>&nbsp;                for(Box box : map.adjacent(player.turnSequence().chosenWorker().position())){</b>
 <b class="fc"><i>31</i>&nbsp;                    if(box.level() &gt; 0 &amp;&amp; box.isFree()){</b>
-<b class="nc"><i>32</i>&nbsp;                        player.turnSequence().addPossibleBuild(box);</b>
+<b class="fc"><i>32</i>&nbsp;                        player.turnSequence().addPossibleBuild(box);</b>
 <i>33</i>&nbsp;                    }
 <b class="fc"><i>34</i>&nbsp;                }</b>
 <b class="fc"><i>35</i>&nbsp;                if(!player.turnSequence().possibleBuilds().isEmpty()) {</b>
-<b class="nc"><i>36</i>&nbsp;                    boolean usePower = communicationController.chooseToUsePower(player);</b>
-<b class="nc"><i>37</i>&nbsp;                    usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);</b>
+<b class="fc"><i>36</i>&nbsp;                    boolean usePower = communicationController.chooseToUsePower(player);</b>
+<b class="fc"><i>37</i>&nbsp;                    usePower(player, communicationController, actionController, map, opponents, winConditions, usePower, matchStory);</b>
 <i>38</i>&nbsp;                }
 <i>39</i>&nbsp;            }
 <b class="fc"><i>40</i>&nbsp;        }</b>
@@ -158,7 +158,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 19:52</div>
+    <div style="float:right;">generated on 2020-07-03 20:19</div>
 </div>
 </body>
 </html>

@@ -457,6 +457,8 @@ public class Match extends Thread{
         for(Worker worker : loser.workers()){
             worker.position().removeOccupier();
         }
+        if (loser.godCard() != null && loser.godCard().winCondition() != null)
+            winConditions.remove(loser.godCard().winCondition());
         loser.workers().clear();
         loser.setInGame(false);
         if (gamePlayers.size()>1) {

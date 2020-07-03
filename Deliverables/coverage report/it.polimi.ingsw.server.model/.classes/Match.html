@@ -58,10 +58,10 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    61.5%
+    61.4%
   </span>
   <span class="absValue">
-    (185/ 301)
+    (186/ 303)
   </span>
 </td>
 </tr>
@@ -531,93 +531,95 @@
 <b class="fc"><i>457</i>&nbsp;        for(Worker worker : loser.workers()){</b>
 <b class="fc"><i>458</i>&nbsp;            worker.position().removeOccupier();</b>
 <b class="fc"><i>459</i>&nbsp;        }</b>
-<b class="fc"><i>460</i>&nbsp;        loser.workers().clear();</b>
-<b class="fc"><i>461</i>&nbsp;        loser.setInGame(false);</b>
-<b class="fc"><i>462</i>&nbsp;        if (gamePlayers.size()&gt;1) {</b>
-<b class="fc"><i>463</i>&nbsp;            gamePlayers.remove(loser);</b>
-<b class="fc"><i>464</i>&nbsp;            if (winner == null)</b>
-<b class="nc"><i>465</i>&nbsp;                announceRemovedPlayer(loser);</b>
-<i>466</i>&nbsp;        } else
-<b class="fc"><i>467</i>&nbsp;            setWinner(gamePlayers.get(0));</b>
-<i>468</i>&nbsp;
-<b class="fc"><i>469</i>&nbsp;    }</b>
+<b class="fc"><i>460</i>&nbsp;        if (loser.godCard() != null &amp;&amp; loser.godCard().winCondition() != null)</b>
+<b class="nc"><i>461</i>&nbsp;            winConditions.remove(loser.godCard().winCondition());</b>
+<b class="fc"><i>462</i>&nbsp;        loser.workers().clear();</b>
+<b class="fc"><i>463</i>&nbsp;        loser.setInGame(false);</b>
+<b class="fc"><i>464</i>&nbsp;        if (gamePlayers.size()&gt;1) {</b>
+<b class="fc"><i>465</i>&nbsp;            gamePlayers.remove(loser);</b>
+<b class="fc"><i>466</i>&nbsp;            if (winner == null)</b>
+<b class="nc"><i>467</i>&nbsp;                announceRemovedPlayer(loser);</b>
+<i>468</i>&nbsp;        } else
+<b class="fc"><i>469</i>&nbsp;            setWinner(gamePlayers.get(0));</b>
 <i>470</i>&nbsp;
-<i>471</i>&nbsp;    /**
-<i>472</i>&nbsp;     * This method tells if a user is in this match
-<i>473</i>&nbsp;     * @param user User
-<i>474</i>&nbsp;     * @return Boolean that is true id user is in this match
-<i>475</i>&nbsp;     */
-<i>476</i>&nbsp;    public boolean userIsPlayer(User user) {
-<b class="nc"><i>477</i>&nbsp;        return users.contains(user);</b>
-<i>478</i>&nbsp;    }
-<i>479</i>&nbsp;
-<i>480</i>&nbsp;    /**
-<i>481</i>&nbsp;     * This method finds the player related to a user (null if the user isn&#39;t part of the match)
-<i>482</i>&nbsp;     * @param user User
-<i>483</i>&nbsp;     * @return Player related to user
-<i>484</i>&nbsp;     */
-<i>485</i>&nbsp;    public Player findPlayer(User user) {
-<b class="nc"><i>486</i>&nbsp;        if (userIsPlayer(user))</b>
-<b class="nc"><i>487</i>&nbsp;            return userToPlayer.get(user);</b>
-<b class="nc"><i>488</i>&nbsp;        return null;</b>
-<i>489</i>&nbsp;    }
-<i>490</i>&nbsp;
-<i>491</i>&nbsp;    /**
-<i>492</i>&nbsp;     * This method finds the user with the matching username if he&#39;s in this match
-<i>493</i>&nbsp;     * @param name Username
-<i>494</i>&nbsp;     * @return User with the matching username
-<i>495</i>&nbsp;     */
-<i>496</i>&nbsp;    private User findUser(String name) {
-<b class="nc"><i>497</i>&nbsp;        for (User user: users)</b>
-<b class="nc"><i>498</i>&nbsp;            if (user.name().equals(name))</b>
-<b class="nc"><i>499</i>&nbsp;                return user;</b>
-<b class="nc"><i>500</i>&nbsp;        return null;</b>
-<i>501</i>&nbsp;    }
-<i>502</i>&nbsp;
-<i>503</i>&nbsp;    /**
-<i>504</i>&nbsp;     * This method removes a user from the match
-<i>505</i>&nbsp;     * @param user Quitting user
-<i>506</i>&nbsp;     */
-<i>507</i>&nbsp;    public synchronized void removeUser(User user) {
-<b class="nc"><i>508</i>&nbsp;        if (userIsPlayer(user)) {</b>
-<b class="nc"><i>509</i>&nbsp;            Player player = findPlayer(user);</b>
-<i>510</i>&nbsp;
-<b class="nc"><i>511</i>&nbsp;            if (player.godCard()!=null) //if the player lost after choosing a card</b>
-<b class="nc"><i>512</i>&nbsp;                cards.add(player.godCard());</b>
-<i>513</i>&nbsp;
-<b class="nc"><i>514</i>&nbsp;            if (player.isInGame()) { //if the user was in game and is quitting or has lost connection</b>
-<b class="nc"><i>515</i>&nbsp;                players.remove(player);</b>
-<b class="nc"><i>516</i>&nbsp;                removePlayer(player);</b>
-<i>517</i>&nbsp;            }
-<i>518</i>&nbsp;
-<b class="nc"><i>519</i>&nbsp;            communicationController.removeUser(player);</b>
-<b class="nc"><i>520</i>&nbsp;            userToPlayer.remove(user);</b>
-<b class="nc"><i>521</i>&nbsp;            users.remove(user);</b>
-<i>522</i>&nbsp;        }
-<b class="nc"><i>523</i>&nbsp;    }</b>
-<i>524</i>&nbsp;
-<i>525</i>&nbsp;    /**
-<i>526</i>&nbsp;     * This method adds every Non-Standard win condition to the list of WinConditions
-<i>527</i>&nbsp;     */
-<i>528</i>&nbsp;    protected void setUpWinConditions(){
-<b class="fc"><i>529</i>&nbsp;        for(GodCard godCard : cards){</b>
-<b class="fc"><i>530</i>&nbsp;            if(godCard.winCondition()!=null){</b>
-<b class="fc"><i>531</i>&nbsp;                winConditions.add(godCard.winCondition());</b>
-<i>532</i>&nbsp;            }
-<b class="fc"><i>533</i>&nbsp;        }</b>
-<b class="fc"><i>534</i>&nbsp;    }</b>
-<i>535</i>&nbsp;
-<i>536</i>&nbsp;    @Override
-<i>537</i>&nbsp;    public void run() {
-<b class="nc"><i>538</i>&nbsp;        match();</b>
-<b class="nc"><i>539</i>&nbsp;    }</b>
-<i>540</i>&nbsp;}
+<b class="fc"><i>471</i>&nbsp;    }</b>
+<i>472</i>&nbsp;
+<i>473</i>&nbsp;    /**
+<i>474</i>&nbsp;     * This method tells if a user is in this match
+<i>475</i>&nbsp;     * @param user User
+<i>476</i>&nbsp;     * @return Boolean that is true id user is in this match
+<i>477</i>&nbsp;     */
+<i>478</i>&nbsp;    public boolean userIsPlayer(User user) {
+<b class="nc"><i>479</i>&nbsp;        return users.contains(user);</b>
+<i>480</i>&nbsp;    }
+<i>481</i>&nbsp;
+<i>482</i>&nbsp;    /**
+<i>483</i>&nbsp;     * This method finds the player related to a user (null if the user isn&#39;t part of the match)
+<i>484</i>&nbsp;     * @param user User
+<i>485</i>&nbsp;     * @return Player related to user
+<i>486</i>&nbsp;     */
+<i>487</i>&nbsp;    public Player findPlayer(User user) {
+<b class="nc"><i>488</i>&nbsp;        if (userIsPlayer(user))</b>
+<b class="nc"><i>489</i>&nbsp;            return userToPlayer.get(user);</b>
+<b class="nc"><i>490</i>&nbsp;        return null;</b>
+<i>491</i>&nbsp;    }
+<i>492</i>&nbsp;
+<i>493</i>&nbsp;    /**
+<i>494</i>&nbsp;     * This method finds the user with the matching username if he&#39;s in this match
+<i>495</i>&nbsp;     * @param name Username
+<i>496</i>&nbsp;     * @return User with the matching username
+<i>497</i>&nbsp;     */
+<i>498</i>&nbsp;    private User findUser(String name) {
+<b class="nc"><i>499</i>&nbsp;        for (User user: users)</b>
+<b class="nc"><i>500</i>&nbsp;            if (user.name().equals(name))</b>
+<b class="nc"><i>501</i>&nbsp;                return user;</b>
+<b class="nc"><i>502</i>&nbsp;        return null;</b>
+<i>503</i>&nbsp;    }
+<i>504</i>&nbsp;
+<i>505</i>&nbsp;    /**
+<i>506</i>&nbsp;     * This method removes a user from the match
+<i>507</i>&nbsp;     * @param user Quitting user
+<i>508</i>&nbsp;     */
+<i>509</i>&nbsp;    public synchronized void removeUser(User user) {
+<b class="nc"><i>510</i>&nbsp;        if (userIsPlayer(user)) {</b>
+<b class="nc"><i>511</i>&nbsp;            Player player = findPlayer(user);</b>
+<i>512</i>&nbsp;
+<b class="nc"><i>513</i>&nbsp;            if (player.godCard()!=null) //if the player lost after choosing a card</b>
+<b class="nc"><i>514</i>&nbsp;                cards.add(player.godCard());</b>
+<i>515</i>&nbsp;
+<b class="nc"><i>516</i>&nbsp;            if (player.isInGame()) { //if the user was in game and is quitting or has lost connection</b>
+<b class="nc"><i>517</i>&nbsp;                players.remove(player);</b>
+<b class="nc"><i>518</i>&nbsp;                removePlayer(player);</b>
+<i>519</i>&nbsp;            }
+<i>520</i>&nbsp;
+<b class="nc"><i>521</i>&nbsp;            communicationController.removeUser(player);</b>
+<b class="nc"><i>522</i>&nbsp;            userToPlayer.remove(user);</b>
+<b class="nc"><i>523</i>&nbsp;            users.remove(user);</b>
+<i>524</i>&nbsp;        }
+<b class="nc"><i>525</i>&nbsp;    }</b>
+<i>526</i>&nbsp;
+<i>527</i>&nbsp;    /**
+<i>528</i>&nbsp;     * This method adds every Non-Standard win condition to the list of WinConditions
+<i>529</i>&nbsp;     */
+<i>530</i>&nbsp;    protected void setUpWinConditions(){
+<b class="fc"><i>531</i>&nbsp;        for(GodCard godCard : cards){</b>
+<b class="fc"><i>532</i>&nbsp;            if(godCard.winCondition()!=null){</b>
+<b class="fc"><i>533</i>&nbsp;                winConditions.add(godCard.winCondition());</b>
+<i>534</i>&nbsp;            }
+<b class="fc"><i>535</i>&nbsp;        }</b>
+<b class="fc"><i>536</i>&nbsp;    }</b>
+<i>537</i>&nbsp;
+<i>538</i>&nbsp;    @Override
+<i>539</i>&nbsp;    public void run() {
+<b class="nc"><i>540</i>&nbsp;        match();</b>
+<b class="nc"><i>541</i>&nbsp;    }</b>
+<i>542</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 19:52</div>
+    <div style="float:right;">generated on 2020-07-03 20:19</div>
 </div>
 </body>
 </html>
