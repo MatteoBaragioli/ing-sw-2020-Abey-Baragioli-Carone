@@ -18,6 +18,17 @@
 | Multiple games | [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#) |
 | Persistence | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
 
+
+##How to start the jar:
+- ###Server
+    Write "-server" as the first command line arg. <br>
+    You can set a port by adding "-port" and the port number as the second and third args.
+
+- ###Cli
+    Write "-cli" as the first command line arg.
+
+- ###Gui
+    Just execute the jar without adding args.
 <!--
 [![RED](https://placehold.it/15/f03c15/f03c15)](#)
 [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#)

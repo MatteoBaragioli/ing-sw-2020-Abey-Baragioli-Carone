@@ -3,7 +3,6 @@ package it.polimi.ingsw.network;
 public enum CommunicationProtocol {
     BUILD,
     CARD,
-    COUNTDOWN,
     CURRENT_PLAYER,
     DECK,
     DESTINATION,
@@ -13,7 +12,6 @@ public enum CommunicationProtocol {
     INVALID,
     LOSER,
     MAP,
-    MATCH_START,
     MATCH_STORY,
     MATCH_TYPE,
     MY_PLAYER,
@@ -28,7 +26,6 @@ public enum CommunicationProtocol {
     UNDO,
     USERNAME,
     UNIQUE_USERNAME,
-    WAIT_FOR_PLAYERS,
     WINNER,
     WORKER
 }

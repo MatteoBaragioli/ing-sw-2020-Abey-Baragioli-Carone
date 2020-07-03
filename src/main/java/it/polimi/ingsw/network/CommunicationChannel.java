@@ -174,10 +174,6 @@ public class CommunicationChannel {
         throw new ChannelClosedException();
     }
 
-    public void countdown(int i) throws ChannelClosedException {
-        write(keyToString(COUNTDOWN) + SEPARATOR + i);
-    }
-
     /**
      * This method pops the first message in the buffer if it arrives in time
      * @param key, key of communication
