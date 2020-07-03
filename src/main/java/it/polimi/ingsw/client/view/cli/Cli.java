@@ -171,6 +171,7 @@ public class Cli implements View {
             printStream.println("you are quitting");
             if (started)
                 printStream.println("press \"enter\" key to exit or write \"restart\" to begin another match");
+            else printStream.println("press \"enter\" key to exit");
         }
         return userIsQuitting;
     }
