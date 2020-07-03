@@ -106,15 +106,6 @@ public class Client extends Thread {
                                 restart = true;
                             }
                             break;
-                        case COUNTDOWN:
-                            try {
-                                communicationChannel.popMessage();
-                            } catch (ChannelClosedException e) {
-                                //e.printStackTrace();
-                               // System.err.println("Connection closed COUNTDOWN");
-                                restart = true;
-                            }
-                            break;
                         case CURRENT_PLAYER:
                         case LOSER:
                         case MY_PLAYER:
