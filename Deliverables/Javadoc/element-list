@@ -1,0 +1,16 @@
+module:it.polimi.ingsw.client.view.gui
+it.polimi.ingsw
+it.polimi.ingsw.client
+it.polimi.ingsw.client.view
+it.polimi.ingsw.client.view.cli
+it.polimi.ingsw.client.view.gui
+it.polimi.ingsw.network
+it.polimi.ingsw.network.exceptions
+it.polimi.ingsw.network.objects
+it.polimi.ingsw.server.controller
+it.polimi.ingsw.server.model
+it.polimi.ingsw.server.model.godPowers.fx
+it.polimi.ingsw.server.model.godPowers.setUpConditions
+it.polimi.ingsw.server.model.godPowers.winConditions
+it.polimi.ingsw.server.model.phases
+it.polimi.ingsw.server.socket

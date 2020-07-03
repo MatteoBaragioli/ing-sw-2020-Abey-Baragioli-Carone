@@ -12,7 +12,7 @@ public class App {
             if (parameter.equals("-cli"))
                 new Cli().run();
             else if (parameter.equals("-server"))
-                new Server(args).run();
+               new Server(args).run();
         }
         else {
                 Application.launch(Gui.class, args);
