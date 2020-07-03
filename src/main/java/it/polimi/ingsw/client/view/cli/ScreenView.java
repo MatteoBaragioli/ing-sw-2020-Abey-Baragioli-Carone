@@ -27,7 +27,7 @@ public class ScreenView {
         return this.infoMessageBox;
     }
 
-    public void setInfoMessageBox(List<String> lines){
+    private void setInfoMessageBox(List<String> lines){
         this.infoMessageBox=boxMessage(lines);
     }
 
@@ -35,7 +35,7 @@ public class ScreenView {
         return this.infoMessage;
     }
 
-    public void setInfoMessage(List<String> lines){
+    void setInfoMessage(List<String> lines){
             this.infoMessage = lines;
             setInfoMessageBox(lines);
 
@@ -45,7 +45,7 @@ public class ScreenView {
         return this.infoMessageBox;
     }
 
-    public List<String> infoMessage(){
+    List<String> infoMessage(){
         return this.infoMessage;
     }
 
@@ -53,15 +53,15 @@ public class ScreenView {
         return this.turnMessageBox;
     }
 
-    public void setTurnMessageBox(List<String> lines){
+    private void setTurnMessageBox(List<String> lines){
         this.turnMessageBox=boxMessage(lines);
     }
 
-    public  List<String> getTurnMessage(){
+    List<String> getTurnMessage(){
         return this.turnMessage;
     }
 
-    public void setTurnMessage(List<String> lines){
+    void setTurnMessage(List<String> lines){
             this.turnMessage = lines;
             setTurnMessageBox(lines);
     }
@@ -130,7 +130,7 @@ public class ScreenView {
      * @param message the message that has to be boxed
      * @return The same message framed
      */
-    public List<String> boxMessage (List<String> message) {
+    private List<String> boxMessage(List<String> message) {
         List<String> messageBox=new ArrayList<>();
         int maxLength=0;
         int i;
@@ -221,7 +221,7 @@ public class ScreenView {
     /**
      * This method clears the screen in cli
      */
-    public void clearScreen()
+    void clearScreen()
     {
         //Clears Screen in java
         try {

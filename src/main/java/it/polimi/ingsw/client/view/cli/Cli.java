@@ -51,7 +51,7 @@ public class Cli implements View {
      * @return String, the user's answer
      * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
-    public synchronized String askAnswer(boolean needCountDown) throws TimeOutException{
+    private synchronized String askAnswer(boolean needCountDown) throws TimeOutException{
         boolean received=false;
         String answer=null;
         CountDown countDown = new CountDown(buffer);
@@ -90,7 +90,7 @@ public class Cli implements View {
     /**
      * this method clears the buffer content
      */
-    public synchronized void eraseBuffer() {
+    private synchronized void eraseBuffer() {
         buffer.clear();
     }
 
@@ -100,7 +100,7 @@ public class Cli implements View {
      * @param answer String to check
      * @return boolean , tells if the user actually wrote "quit" or "Quit" or "QUIT"
      */
-    public boolean findQuitInString(String answer) {
+    private boolean findQuitInString(String answer) {
         Pattern pattern1 = Pattern.compile("QUIT");
         Pattern pattern2 = Pattern.compile("Quit");
         Pattern pattern3 = Pattern.compile("quit");
@@ -118,7 +118,7 @@ public class Cli implements View {
      * @param answer String to check
      * @return boolean , tells if the user actually wrote "RESTART" or "Restart" or "restart"
      */
-    public boolean findRestartInString(String answer) {
+    private boolean findRestartInString(String answer) {
         Pattern pattern1 = Pattern.compile("RESTART");
         Pattern pattern2 = Pattern.compile("Restart");
         Pattern pattern3 = Pattern.compile("restart");
@@ -144,7 +144,7 @@ public class Cli implements View {
      * when the user tries to quit this method asks if the user in sure to quit
      * @return boolean the answer given by the user
      */
-    public boolean manageQuit() {
+    private boolean manageQuit() {
         printStream.println("\nare you sure you want to quit the match?");
         printStream.println("Press");
         printStream.println("1  for Yes | 2  for No");
@@ -182,7 +182,7 @@ public class Cli implements View {
      * @throws TimeOutException Exception thrown when the time to do an action runs out
      * @throws NumberFormatException exception thrown when the string does not contain a number that can be parsed
      */
-    public int askNumber(boolean needCountDown) throws NumberFormatException, TimeOutException {
+    private int askNumber(boolean needCountDown) throws NumberFormatException, TimeOutException {
         String answer = askAnswer(needCountDown);
         if(findQuitInString(answer))
             return -1;
@@ -297,7 +297,7 @@ public class Cli implements View {
      * @return String,  the position interpreted by cli
      */
 
-    public String cleanPosition(String answer, Matcher matcher) {
+    private String cleanPosition(String answer, Matcher matcher) {
         char letter;
         switch (answer.charAt(matcher.start())) {
             case ('a'):
@@ -920,7 +920,7 @@ public class Cli implements View {
                 else if(!answer.equals("")) {
                     valid = true;
                 }
-            } catch (TimeOutException ingnored) {
+            } catch (TimeOutException ignored) {
             }
 
         }
@@ -1133,7 +1133,7 @@ public class Cli implements View {
      * this method updates the buffer with an element and notifies the countDown
      * @param string the element stored in the buffer
      */
-    public synchronized void updateBuffer(String string) {
+    private synchronized void updateBuffer(String string) {
         buffer.add(string);
         notifyAll();
 
@@ -1162,7 +1162,7 @@ public class Cli implements View {
      * @param msg message that has to be split
      * @return list of strings, the original string that has been split
      */
-    public static List<String> splitString(String msg) {
+    private static List<String> splitString(String msg) {
         List res = new ArrayList<>();
         int lineSize=96;
         Pattern p = Pattern.compile("\\b.{1," + (lineSize-1) + "}\\b\\W?");

@@ -34,7 +34,7 @@ public class PrintedBlock {
     /**
      * this method changes the block to a ground floor block in cli
      */
-    public void groundFloorBlock(){
+    void groundFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BRIGHT+"+-----------------");
         this.lines.add(CYAN_BRIGHT+"|                 ");
@@ -46,7 +46,7 @@ public class PrintedBlock {
     /**
      * this method changes the block to a first floor block in cli
      */
-    public void firstFloorBlock(){
+    void firstFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"    1°level    "+CYAN_BRIGHT+" ");
@@ -60,7 +60,7 @@ public class PrintedBlock {
     /**
      * this method changes the block to a second floor block in cli
      */
-    public void secondFloorBlock(){
+    void secondFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  2°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -73,7 +73,7 @@ public class PrintedBlock {
     /**
      * this method changes the block to a third floor block in cli
      */
-    public void thirdFloorBlock(){
+    void thirdFloorBlock(){
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  3°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -86,7 +86,7 @@ public class PrintedBlock {
     /**
      * this method displays a dome on block and depending on the block's level writes on what level the dome is
      */
-    public void domeBlock(){
+    void domeBlock(){
         if (getLines().get(1).contains("3°level")) {
             this.lines.clear();
             this.lines.add(CYAN_BOLD_BRIGHT + "+-----------------");
@@ -136,24 +136,19 @@ public class PrintedBlock {
         this.lines=newLines;
 
     }
-    public void setLine(String line, int index){
-        this.lines.remove(index);
-        this.lines.add(index, line);
-
-    }
 
     /**
      * this method displays a worker on a ground level block
      * @param gender gender of the worker
      * @param color worker's colour
      */
-    public void groundFloorWithWorker(boolean gender, Colour color){
+    private void groundFloorWithWorker(boolean gender, Colour color){
         String genderChar;
-        if (gender==true){
-            genderChar="♀";
+        if (gender){
+            genderChar="F";
         }
         else
-            genderChar="♂";
+            genderChar="M";
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("|                 ");
@@ -168,14 +163,14 @@ public class PrintedBlock {
      * @param gender gender of the worker
      * @param color worker's colour
      */
-    public void firstFloorWithWorker(boolean gender, Colour color){
+    private void firstFloorWithWorker(boolean gender, Colour color){
         this.lines.clear();
         String genderChar;
-        if (gender==true){
-            genderChar="♀";
+        if (gender){
+            genderChar="F";
         }
         else
-            genderChar="♂";
+            genderChar="M";
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"    1°level    "+CYAN_BRIGHT+" ");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+"    "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   W   "+LIGHTGRAY_BACKGROUND+"    "+CYAN_BRIGHT+" ");
@@ -189,13 +184,13 @@ public class PrintedBlock {
      * @param gender gender of the worker
      * @param color worker's colour
      */
-    public void secondFloorWithWorker(boolean gender, Colour color){
+    private void secondFloorWithWorker(boolean gender, Colour color){
         String genderChar;
-        if (gender==true){
-            genderChar="♀";
+        if (gender){
+            genderChar="F";
         }
         else
-            genderChar="♂";
+            genderChar="M";
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  2°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -211,13 +206,13 @@ public class PrintedBlock {
      * @param gender gender of the worker
      * @param color worker's colour
      */
-    public void thirdFloorWithWorker(boolean gender, Colour color){
+    private void thirdFloorWithWorker(boolean gender, Colour color){
         String genderChar;
-        if (gender==true){
-            genderChar="♀";
+        if (gender){
+            genderChar="F";
         }
         else
-            genderChar="♂";
+            genderChar="M";
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  3°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -232,7 +227,7 @@ public class PrintedBlock {
      * @param gender the gender of the worker
      * @param color the color of the worker
      */
-    public void withWorker(boolean gender, Colour color) {
+    void withWorker(boolean gender, Colour color) {
         if (getLines().get(1).contains("2°level")) {
             secondFloorWithWorker(gender, color);
         }
