@@ -225,9 +225,7 @@ public class PlayerView extends StackPane {
             pauseView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             pauseView.setCursor(Cursor.DEFAULT);
         });
-        pauseView.setOnMouseClicked(e -> {
-            showPane(pausePane);
-        });
+        pauseView.setOnMouseClicked(e -> showPane(pausePane));
         StackPane pause = new StackPane();
         pause.getChildren().add(pauseView);
         pause.setPrefWidth(screenWidth/4);
@@ -383,9 +381,7 @@ public class PlayerView extends StackPane {
             storyView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             storyView.setCursor(Cursor.DEFAULT);
         });
-        storyView.setOnMouseClicked(e -> {
-            showPane(turnStory);
-        });
+        storyView.setOnMouseClicked(e -> showPane(turnStory));
 
         //show powers
         Image powersImg = new Image(PlayerView.class.getResource("/img/buttons/showPowers.png").toString(),screenWidth/8, screenHeight/6,false,false);
@@ -399,9 +395,7 @@ public class PlayerView extends StackPane {
             powersView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             powersView.setCursor(Cursor.DEFAULT);
         });
-        powersView.setOnMouseClicked(e -> {
-            showPane(activePowers);
-        });
+        powersView.setOnMouseClicked(e -> showPane(activePowers));
 
         VBox powersAndStory = new VBox();
         powersAndStory.setAlignment(CENTER);
@@ -462,9 +456,7 @@ public class PlayerView extends StackPane {
             closeActivePowersButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             closeActivePowersButton.setCursor(Cursor.DEFAULT);
         });
-        closeActivePowersButton.setOnMouseClicked(e -> {
-            hidePane(activePowers);
-        });
+        closeActivePowersButton.setOnMouseClicked(e -> hidePane(activePowers));
 
         VBox activePowersBox = new VBox();
         activePowersBox.setSpacing(screenHeight/30);
@@ -494,9 +486,7 @@ public class PlayerView extends StackPane {
             howToPlayView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             howToPlayView.setCursor(Cursor.DEFAULT);
         });
-        howToPlayView.setOnMouseClicked(e -> {
-            gui.menuScene().showHowToPlay();
-        });
+        howToPlayView.setOnMouseClicked(e -> gui.menuScene().showHowToPlay());
 
         Image helperImg = new Image(PlayerView.class.getResource("/img/buttons/helper.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView helperView = new ImageView(helperImg);
@@ -523,9 +513,7 @@ public class PlayerView extends StackPane {
             surrenderView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             surrenderView.setCursor(Cursor.DEFAULT);
         });
-        surrenderView.setOnMouseClicked(e -> {
-            gui.matchScene().showWinnerOrSurrender("surrender");
-        });
+        surrenderView.setOnMouseClicked(e -> gui.matchScene().showWinnerOrSurrender("surrender"));
 
         Image backToMatchImg = new Image(PlayerView.class.getResource("/img/buttons/backToMatch.png").toString(),screenWidth/10, screenHeight/6,false,false);
         ImageView backToMatchView = new ImageView(backToMatchImg);
@@ -537,9 +525,7 @@ public class PlayerView extends StackPane {
             backToMatchView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             backToMatchView.setCursor(Cursor.DEFAULT);
         });
-        backToMatchView.setOnMouseClicked((e -> {
-            hidePane(pausePane);
-        }));
+        backToMatchView.setOnMouseClicked((e -> hidePane(pausePane)));
 
         pauseOptions.getChildren().addAll(backToMatchView, howToPlayView, helperView, surrenderView);
         pauseOptions.setAlignment(CENTER);
@@ -583,9 +569,7 @@ public class PlayerView extends StackPane {
             closeStoryButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             closeStoryButton.setCursor(Cursor.DEFAULT);
         });
-        closeStoryButton.setOnMouseClicked(e -> {
-            hidePane(turnStory);
-        });
+        closeStoryButton.setOnMouseClicked(e -> hidePane(turnStory));
 
         VBox story = new VBox();
         story.getChildren().addAll(storyContent, closeStoryButton);
@@ -630,9 +614,7 @@ public class PlayerView extends StackPane {
             exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             exitButton.setCursor(Cursor.DEFAULT);
         });
-        exitButton.setOnMouseClicked(e -> {
-            hidePane(helper);
-        });
+        exitButton.setOnMouseClicked(e -> hidePane(helper));
 
         helperPage = 1;
 
@@ -641,9 +623,7 @@ public class PlayerView extends StackPane {
                 //deactivate back button
                 backView.setImage(backInactiveImg);
                 backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
-                backView.setOnMouseEntered(f -> {
-                    backView.setCursor(Cursor.DEFAULT);
-                });
+                backView.setOnMouseEntered(f -> backView.setCursor(Cursor.DEFAULT));
                 backView.setOnMouseExited(Event::consume);
             } else if(helperPage==3){
                 //activate next button
@@ -686,9 +666,7 @@ public class PlayerView extends StackPane {
                 //deactivate next button
                 nextView.setImage(nextInactiveImg);
                 nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
-                nextView.setOnMouseEntered(f -> {
-                    nextView.setCursor(Cursor.DEFAULT);
-                });
+                nextView.setOnMouseEntered(f -> nextView.setCursor(Cursor.DEFAULT));
                 nextView.setOnMouseExited(Event::consume);
             }
             if(helperPage!=3){
@@ -906,9 +884,7 @@ public class PlayerView extends StackPane {
 
         Timeline showingTimer = new Timeline(new KeyFrame(
                 Duration.millis(700),
-                ae -> {
-                    paneZoomIn2.play();
-                }));
+                ae -> paneZoomIn2.play()));
         showingTimer.play();
     }
 
@@ -942,9 +918,7 @@ public class PlayerView extends StackPane {
         hidingTimer1.play();
         Timeline hidingTimer2 = new Timeline(new KeyFrame(
                 Duration.millis(1400),
-                ae -> {
-                    pane.setVisible(false);
-                }));
+                ae -> pane.setVisible(false)));
         hidingTimer2.play();
     }
 
@@ -1245,14 +1219,19 @@ public class PlayerView extends StackPane {
                 new KeyFrame(
                         Duration.millis(800),
                         event -> {
-                            if(timerCounter.getText().equals("Wait")){
-                                timerCounter.setText("Wait.");
-                            } else if(timerCounter.getText().equals("Wait.")){
-                                timerCounter.setText("Wait..");
-                            } else if(timerCounter.getText().equals("Wait..")){
-                                timerCounter.setText("Wait...");
-                            } else {
-                                timerCounter.setText("Wait");
+                            switch (timerCounter.getText()) {
+                                case "Wait":
+                                    timerCounter.setText("Wait.");
+                                    break;
+                                case "Wait.":
+                                    timerCounter.setText("Wait..");
+                                    break;
+                                case "Wait..":
+                                    timerCounter.setText("Wait...");
+                                    break;
+                                default:
+                                    timerCounter.setText("Wait");
+                                    break;
                             }
                         }
                 )

@@ -7,15 +7,15 @@ import java.util.List;
 
 public class GodCard {
     private String name;
-    final public int id;
+    public final int id;
     private List<TurnSequenceModifier> actions = new ArrayList<>();
-    private WinCondition winCondition;
-    private SetUpCondition setUpCondition;
-    private List<TurnSequenceModifier> effectsOnOpponents;
-    final public String description;
-    final public String winDescription;
-    final public String setUpDescription;
-    final public String opponentsFxDescription;
+    public final WinCondition winCondition;
+    public final SetUpCondition setUpCondition;
+    public final List<TurnSequenceModifier> effectsOnOpponents;
+    public final String description;
+    public final String winDescription;
+    public final String setUpDescription;
+    public final String opponentsFxDescription;
 
     public GodCard(String name, int id, List<TurnSequenceModifier> actions, WinCondition winCondition, SetUpCondition setUpCondition, List<TurnSequenceModifier> effectsOnOpponents, String description, String winDescription, String setUpDescription, String opponentsFxDescription) {
         this.name = name;

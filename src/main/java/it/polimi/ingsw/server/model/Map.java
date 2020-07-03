@@ -137,7 +137,7 @@ public class Map {
     public List<BoxProxy> createProxy() {
         List<BoxProxy> map = new ArrayList<>();
         for (Box box: groundToList())
-            map.add(box.crateProxy());
+            map.add(box.createProxy());
         return map;
     }
 }

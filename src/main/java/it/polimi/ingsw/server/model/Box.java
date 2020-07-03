@@ -53,7 +53,7 @@ public class Box {
 
     public void occupy(Worker occupier){this.occupier=occupier;}
 
-    public BoxProxy crateProxy() {
+    public BoxProxy createProxy() {
         WorkerProxy workerProxy = null;
         if (isOccupiedByWorkers())
             workerProxy = occupier().createProxy();

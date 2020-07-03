@@ -252,9 +252,7 @@ public class MenuScene {
 
         Timeline pageTimer = new Timeline(new KeyFrame(
                 Duration.millis(100),
-                ae -> {
-                    menuPage.setVisible(true);
-                }));
+                ae -> menuPage.setVisible(true)));
         pageTimer.play();
     }
 
@@ -421,9 +419,7 @@ public class MenuScene {
             exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             exitButton.setCursor(Cursor.DEFAULT);
         });
-        exitButton.setOnMouseClicked(e -> {
-            hideHowToPlay();
-        });
+        exitButton.setOnMouseClicked(e -> hideHowToPlay());
 
         howToPlayPage = 1;
         Text pageNumber = new Text(String.valueOf(howToPlayPage));
@@ -435,9 +431,7 @@ public class MenuScene {
                 //deactivate back button
                 backView.setImage(backInactiveImg);
                 backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
-                backView.setOnMouseEntered(f -> {
-                    backView.setCursor(Cursor.DEFAULT);
-                });
+                backView.setOnMouseEntered(f -> backView.setCursor(Cursor.DEFAULT));
                 backView.setOnMouseExited(Event::consume);
             } else if(howToPlayPage==4){
                 //activate next button
@@ -481,9 +475,7 @@ public class MenuScene {
                 //deactivate next button
                 nextView.setImage(nextInactiveImg);
                 nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
-                nextView.setOnMouseEntered(f -> {
-                    nextView.setCursor(Cursor.DEFAULT);
-                });
+                nextView.setOnMouseEntered(f -> nextView.setCursor(Cursor.DEFAULT));
                 nextView.setOnMouseExited(Event::consume);
             }
             if(howToPlayPage!=4){
@@ -544,9 +536,7 @@ public class MenuScene {
 
         Timeline showingTimer = new Timeline(new KeyFrame(
                 Duration.millis(700),
-                ae -> {
-                    howToPlayZoomIn2.play();
-                }));
+                ae -> howToPlayZoomIn2.play()));
         showingTimer.play();
 
     }
@@ -580,9 +570,7 @@ public class MenuScene {
         hidingTimer1.play();
         Timeline hidingTimer2 = new Timeline(new KeyFrame(
                 Duration.millis(1400),
-                ae -> {
-                    howToPlayBox.setVisible(false);
-                }));
+                ae -> howToPlayBox.setVisible(false)));
         hidingTimer2.play();
     }
 
@@ -652,9 +640,7 @@ public class MenuScene {
             setNumberOfPlayers(Integer.parseInt(number));
             Timeline readyTimer = new Timeline(new KeyFrame(
                     Duration.millis(6000),
-                    ae -> {
-                        setClicked();
-                    }));
+                    ae -> setClicked()));
             readyTimer.play();
             event.consume();
         });

@@ -372,9 +372,7 @@ public class MatchScene {
         confirmTurnFadeOut.play();
         Timeline hidingTimer = new Timeline(new KeyFrame(
                 Duration.millis(500),
-                ae -> {
-                    askConfirmTurn.setVisible(false);
-                }));
+                ae -> askConfirmTurn.setVisible(false)));
         hidingTimer.play();
 
         notifyAll();
@@ -646,15 +644,11 @@ public class MatchScene {
 
         Timeline showingTimer1 = new Timeline(new KeyFrame(
                 Duration.millis(1700),
-                ae -> {
-                    chooseCardsBox.setVisible(true);
-                }));
+                ae -> chooseCardsBox.setVisible(true)));
         showingTimer1.play();
         Timeline showingTimer = new Timeline(new KeyFrame(
                 Duration.millis(1700),
-                ae -> {
-                    chooseCardsBoxZoomIn2.play();
-                }));
+                ae -> chooseCardsBoxZoomIn2.play()));
         showingTimer.play();
 
     }
@@ -708,9 +702,7 @@ public class MatchScene {
     private void deactivateAddCardsButton(Image addGodInactiveImg, ImageView addGod){
         addGod.setImage(addGodInactiveImg);
         addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
-        addGod.setOnMouseEntered(e -> {
-            addGod.setCursor(Cursor.DEFAULT);
-        });
+        addGod.setOnMouseEntered(e -> addGod.setCursor(Cursor.DEFAULT));
         addGod.setOnMouseExited(Event::consume);
         addGod.setOnMouseClicked(Event::consume);
     }
@@ -727,9 +719,7 @@ public class MatchScene {
             removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));
             removeGod.setCursor(Cursor.HAND);
         });
-        removeGod.setOnMouseExited(e ->{
-            removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
-        });
+        removeGod.setOnMouseExited(e -> removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0)));
         removeGod.setOnMouseClicked(e ->{
             chosenCards.get(choicesCounter-1).setVisible(true);
             chosenCards.get(choicesCounter-1).setManaged(true);
@@ -753,9 +743,7 @@ public class MatchScene {
     private void deactivateRemoveCardsButton(Image removeGodInactiveImg, ImageView removeGod){
         removeGod.setImage(removeGodInactiveImg);
         removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
-        removeGod.setOnMouseEntered(e -> {
-            removeGod.setCursor(Cursor.DEFAULT);
-        });
+        removeGod.setOnMouseEntered(e -> removeGod.setCursor(Cursor.DEFAULT));
         removeGod.setOnMouseExited(Event::consume);
         removeGod.setOnMouseClicked(Event::consume);
     }
@@ -893,15 +881,11 @@ public class MatchScene {
 
         Timeline showingTimer1 = new Timeline(new KeyFrame(
                 Duration.millis(100),
-                ae -> {
-                    chooseCard.setVisible(true);
-                }));
+                ae -> chooseCard.setVisible(true)));
         showingTimer1.play();
         Timeline showingTimer = new Timeline(new KeyFrame(
                 Duration.millis(700),
-                ae -> {
-                    chooseCardBoxZoomIn2.play();
-                }));
+                ae -> chooseCardBoxZoomIn2.play()));
         showingTimer.play();
     }
 
@@ -935,9 +919,7 @@ public class MatchScene {
         hidingTimer1.play();
         Timeline hidingTimer2 = new Timeline(new KeyFrame(
                 Duration.millis(1400),
-                ae -> {
-                    pane.setVisible(false);
-                }));
+                ae -> pane.setVisible(false)));
         hidingTimer2.play();
     }
 
@@ -1128,15 +1110,11 @@ public class MatchScene {
 
         Timeline showingTimer = new Timeline(new KeyFrame(
                 Duration.millis(1000),
-                ae -> {
-                    myTurnFadeOut.play();
-                }));
+                ae -> myTurnFadeOut.play()));
         showingTimer.play();
         Timeline hidingTimer = new Timeline(new KeyFrame(
                 Duration.millis(1500),
-                ae -> {
-                    myTurn.setVisible(false);
-                }));
+                ae -> myTurn.setVisible(false)));
         hidingTimer.play();
     }
 
@@ -1201,9 +1179,7 @@ public class MatchScene {
             winnerGoBackView.setCursor(Cursor.DEFAULT);
             winnerGoBackView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
         });
-        winnerGoBackView.setOnMouseClicked(e -> {
-            backToMenu();
-        });
+        winnerGoBackView.setOnMouseClicked(e -> backToMenu());
 
 
         Image exitImage = new Image(MatchScene.class.getResource("/img/buttons/close.png").toString(), screenWidth/15, screenHeight/10, false, false);
@@ -1217,9 +1193,7 @@ public class MatchScene {
             exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));
             exitButton.setCursor(Cursor.DEFAULT);
         });
-        exitButton.setOnMouseClicked(e -> {
-            closeWinnerOrSurrender(winner);
-        });
+        exitButton.setOnMouseClicked(e -> closeWinnerOrSurrender(winner));
 
 
         winner.getChildren().addAll(winnerView, winnerGoBackView, exitButton);
@@ -1377,9 +1351,7 @@ public class MatchScene {
                 channelClosedException.printStackTrace();
             }
         });
-        noPopupButton.setOnAction(e -> {
-            closeWinnerOrSurrender(surrender);
-        });
+        noPopupButton.setOnAction(e -> closeWinnerOrSurrender(surrender));
 
 
         confirmBox.setSpacing(10);

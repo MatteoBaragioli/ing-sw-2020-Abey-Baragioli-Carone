@@ -41,7 +41,6 @@ import javafx.util.Duration;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javafx.scene.paint.Color.*;
@@ -490,9 +489,7 @@ public class Gui extends Application implements View {
             exit.setTextFill(BLACK);
             exit.setCursor(Cursor.DEFAULT);
         });
-        exit.setOnMouseClicked(e -> {
-            setCloseWindow();
-        });
+        exit.setOnMouseClicked(e -> setCloseWindow());
 
         Label minimize = new Label("-");
         minimize.setFont(Font.font("Arial", screenWidth/50));
@@ -507,9 +504,7 @@ public class Gui extends Application implements View {
             minimize.setTextFill(BLACK);
             minimize.setCursor(Cursor.DEFAULT);
         });
-        minimize.setOnMouseClicked(e -> {
-            settingStage.setIconified(true);
-        });
+        minimize.setOnMouseClicked(e -> settingStage.setIconified(true));
 
         HBox titleActions = new HBox();
         titleActions.setSpacing(screenWidth/100);
@@ -544,12 +539,8 @@ public class Gui extends Application implements View {
         portFormField.setMaxWidth(screenWidth/10);
 
         connectionButton.setFont(lillybelleFont);
-        connectionButton.setOnMouseEntered(e -> {
-            connectionButton.setCursor(Cursor.HAND);
-        });
-        connectionButton.setOnMouseExited(e -> {
-            connectionButton.setCursor(Cursor.DEFAULT);
-        });
+        connectionButton.setOnMouseEntered(e -> connectionButton.setCursor(Cursor.HAND));
+        connectionButton.setOnMouseExited(e -> connectionButton.setCursor(Cursor.DEFAULT));
 
         Image loadingImg = new Image(MenuScene.class.getResource("/img/loadingAndPopups/loadingIcon.gif").toString(), screenWidth / 30, screenHeight / 25, false, false);
         loadingIcon = new ImageView(loadingImg);
@@ -585,9 +576,7 @@ public class Gui extends Application implements View {
         );
         screenSizeOptions.getEditor().setAlignment(Pos.CENTER);
         screenSizeOptions.getSelectionModel().selectFirst();
-        screenSizeOptions.setOnAction(e -> {
-            windowSize(screenSizeOptions.getSelectionModel().getSelectedIndex());
-        });
+        screenSizeOptions.setOnAction(e -> windowSize(screenSizeOptions.getSelectionModel().getSelectedIndex()));
 
         screenSizeError = new Text();
         screenSizeError.setFont(settingsFont);
@@ -873,9 +862,7 @@ public class Gui extends Application implements View {
 
         Timeline firstTimer = new Timeline(new KeyFrame(
                 Duration.millis(2000),
-                ae -> {
-                    openingFadeOut.play();
-                }));
+                ae -> openingFadeOut.play()));
         firstTimer.play();
 
         Timeline secondTimer = new Timeline(new KeyFrame(
@@ -889,9 +876,7 @@ public class Gui extends Application implements View {
 
         Timeline thirdTimer = new Timeline(new KeyFrame(
                 Duration.millis(6000),
-                ae -> {
-                    openingFadeOut.play();
-                }));
+                ae -> openingFadeOut.play()));
         thirdTimer.play();
 
         Timeline menuTimer = new Timeline(new KeyFrame(
@@ -940,9 +925,7 @@ public class Gui extends Application implements View {
         translateRightTransitionIn.play();
         Timeline cloudsTimer = new Timeline(new KeyFrame(
                 Duration.millis(3000),
-                ae -> {
-                    transitionClouds.setVisible(false);
-                }));
+                ae -> transitionClouds.setVisible(false)));
         cloudsTimer.play();
     }
 
@@ -965,12 +948,8 @@ public class Gui extends Application implements View {
         Button okConnectionButton = new Button("Ok");
         okConnectionButton.setFont(lillybelleFont);
 
-        okConnectionButton.setOnMouseEntered(e -> {
-            okConnectionButton.setCursor(Cursor.HAND);
-        });
-        okConnectionButton.setOnMouseExited(e -> {
-            okConnectionButton.setCursor(Cursor.DEFAULT);
-        });
+        okConnectionButton.setOnMouseEntered(e -> okConnectionButton.setCursor(Cursor.HAND));
+        okConnectionButton.setOnMouseExited(e -> okConnectionButton.setCursor(Cursor.DEFAULT));
         okConnectionButton.setOnAction(e -> {
             menuScene.setClose();
             matchScene.setCloseMatch();
@@ -1121,13 +1100,9 @@ public class Gui extends Application implements View {
         enterGameButton.setManaged(true);
         enterGameButton.setVisible(true);
 
-        disconnectionButton.setOnMouseEntered(e -> {
-            disconnectionButton.setCursor(Cursor.HAND);
-        });
+        disconnectionButton.setOnMouseEntered(e -> disconnectionButton.setCursor(Cursor.HAND));
 
-        disconnectionButton.setOnMouseExited(e -> {
-            disconnectionButton.setCursor(Cursor.DEFAULT);
-        });
+        disconnectionButton.setOnMouseExited(e -> disconnectionButton.setCursor(Cursor.DEFAULT));
 
         //if user clicks disconnect
         disconnectionButton.setOnAction(e -> {
@@ -1143,9 +1118,7 @@ public class Gui extends Application implements View {
         });
 
         //if user clicks on play
-        enterGameButton.setOnAction(e -> {
-            setOpenGame();
-        });
+        enterGameButton.setOnAction(e -> setOpenGame());
 
 
         while (!openGame.get() && !restartConnection.get() && !closeWindow.get()){
