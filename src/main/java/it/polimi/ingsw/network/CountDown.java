@@ -4,8 +4,7 @@ import java.util.List;
 
 public class CountDown extends Thread {
     public final List<String> buffer;
-    public final int MINUTE = 60;
-    public final int SECOND = 1000;
+    private final int MINUTE = 60;
     private boolean runnedOut = false;
     private int availableTime=2*MINUTE;
     private boolean finish=false;
@@ -25,25 +24,26 @@ public class CountDown extends Thread {
     public boolean isFinished(){
         return finish;
     }
-    public synchronized boolean userAnswered() {
+    private synchronized boolean userAnswered() {
         if(!buffer.isEmpty())
             finish();
         return !buffer.isEmpty();
     }
 
-    public void runOut() {
+    private void runOut() {
         runnedOut = true;
     }
 
     /**
      * 2 minutes countdown
      */
+    @Override
     public void run() {
         while (availableTime > 0 && !userAnswered() && !isFinished()) {
             try {
+                int SECOND = 1000;
                 sleep(SECOND);
             } catch (InterruptedException e) {
-                //e.printStackTrace();
                 System.err.println("WAIT NON FUNZIONA");
                 return;
             }
@@ -53,12 +53,6 @@ public class CountDown extends Thread {
         if (availableTime == 0) {
             runOut();
             System.out.println("time runned out");
-            //notifyEndCountDown();
         }
-    }
-
-    public synchronized void notifyEndCountDown(){
-       // notifyAll();
-        System.out.println("notifying");
     }
 }

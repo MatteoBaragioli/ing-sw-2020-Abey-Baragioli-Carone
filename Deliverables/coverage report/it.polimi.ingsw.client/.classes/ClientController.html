@@ -42,7 +42,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 10)
+    (0/ 9)
   </span>
 </td>
 <td class="coverageStat">
@@ -50,7 +50,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 62)
+    (0/ 60)
   </span>
 </td>
 </tr>
@@ -213,7 +213,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 18)
+    (0/ 17)
   </span>
 </td>
 <td class="coverageStat">
@@ -221,7 +221,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 70)
+    (0/ 68)
   </span>
 </td>
 </tr>
@@ -271,166 +271,157 @@
 <i>38</i>&nbsp;            else
 <b class="nc"><i>39</i>&nbsp;                communicationChannel.writeChoicesFromList(DECK, index);</b>
 <b class="nc"><i>40</i>&nbsp;        } catch (TimeOutException e) {</b>
-<i>41</i>&nbsp;            //view.timeOut();
-<b class="nc"><i>42</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
-<b class="nc"><i>43</i>&nbsp;        }</b>
-<i>44</i>&nbsp;    }
-<i>45</i>&nbsp;
-<i>46</i>&nbsp;    /**
-<i>47</i>&nbsp;     * This method asks the user to choose one card.
-<i>48</i>&nbsp;     * @param communicationChannel Communication Channel
-<i>49</i>&nbsp;     * @param view User Interface
-<i>50</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
-<i>51</i>&nbsp;     */
-<i>52</i>&nbsp;    void manageListOfCards(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<i>53</i>&nbsp;        List&lt;GodCardProxy&gt; cards;
-<i>54</i>&nbsp;        int index;
-<b class="nc"><i>55</i>&nbsp;        String content = communicationChannel.popMessage();</b>
-<b class="nc"><i>56</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;GodCardProxy&gt;&gt;() {}.getType();</b>
-<b class="nc"><i>57</i>&nbsp;        cards = new Gson().fromJson(communicationChannel.getContent(content), listType);</b>
-<i>58</i>&nbsp;        try {
-<b class="nc"><i>59</i>&nbsp;            index = view.askCards(cards );</b>
-<b class="nc"><i>60</i>&nbsp;            if (index == -1)</b>
-<b class="nc"><i>61</i>&nbsp;                communicationChannel.writeKeyWord(QUIT);</b>
-<i>62</i>&nbsp;            else
-<b class="nc"><i>63</i>&nbsp;                communicationChannel.writeChoiceFromList(CARD, index);</b>
-<i>64</i>&nbsp;
-<b class="nc"><i>65</i>&nbsp;        } catch (TimeOutException e) {</b>
-<i>66</i>&nbsp;            //view.timeOut();
-<b class="nc"><i>67</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
-<b class="nc"><i>68</i>&nbsp;        }</b>
-<i>69</i>&nbsp;    }
-<i>70</i>&nbsp;
-<i>71</i>&nbsp;    /**
-<i>72</i>&nbsp;     * This method notifies the view of the map update
-<i>73</i>&nbsp;     * @param communicationChannel Communication Channel
-<i>74</i>&nbsp;     * @param view User Interface
-<i>75</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
-<i>76</i>&nbsp;     */
-<i>77</i>&nbsp;    void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<i>78</i>&nbsp;        List&lt;BoxProxy&gt; boxes;
-<b class="nc"><i>79</i>&nbsp;        String message = communicationChannel.popMessage();</b>
-<i>80</i>&nbsp;
-<b class="nc"><i>81</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;BoxProxy&gt;&gt;() {}.getType();</b>
-<b class="nc"><i>82</i>&nbsp;        boxes = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
-<b class="nc"><i>83</i>&nbsp;        view.updateMap(boxes);</b>
-<i>84</i>&nbsp;    }
-<i>85</i>&nbsp;
-<i>86</i>&nbsp;    /**
-<i>87</i>&nbsp;     * This method asks the user through the view
-<i>88</i>&nbsp;     * to choose one position from a list.
-<i>89</i>&nbsp;     * @param key Position request type
-<i>90</i>&nbsp;     * @param communicationChannel Communication Channel
-<i>91</i>&nbsp;     * @param view User Interface
-<i>92</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
-<i>93</i>&nbsp;     */
-<i>94</i>&nbsp;    void manageListOfPositions(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<i>95</i>&nbsp;        List&lt;int[]&gt; positions;
-<b class="nc"><i>96</i>&nbsp;        String message = communicationChannel.popMessage();</b>
-<i>97</i>&nbsp;
-<b class="nc"><i>98</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;int[]&gt;&gt;() {}.getType();</b>
-<b class="nc"><i>99</i>&nbsp;        positions = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
+<b class="nc"><i>41</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
+<b class="nc"><i>42</i>&nbsp;        }</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    /**
+<i>46</i>&nbsp;     * This method asks the user to choose one card.
+<i>47</i>&nbsp;     * @param communicationChannel Communication Channel
+<i>48</i>&nbsp;     * @param view User Interface
+<i>49</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
+<i>50</i>&nbsp;     */
+<i>51</i>&nbsp;    void manageListOfCards(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+<i>52</i>&nbsp;        List&lt;GodCardProxy&gt; cards;
+<i>53</i>&nbsp;        int index;
+<b class="nc"><i>54</i>&nbsp;        String content = communicationChannel.popMessage();</b>
+<b class="nc"><i>55</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;GodCardProxy&gt;&gt;() {}.getType();</b>
+<b class="nc"><i>56</i>&nbsp;        cards = new Gson().fromJson(communicationChannel.getContent(content), listType);</b>
+<i>57</i>&nbsp;        try {
+<b class="nc"><i>58</i>&nbsp;            index = view.askCards(cards );</b>
+<b class="nc"><i>59</i>&nbsp;            if (index == -1)</b>
+<b class="nc"><i>60</i>&nbsp;                communicationChannel.writeKeyWord(QUIT);</b>
+<i>61</i>&nbsp;            else
+<b class="nc"><i>62</i>&nbsp;                communicationChannel.writeChoiceFromList(CARD, index);</b>
+<i>63</i>&nbsp;
+<b class="nc"><i>64</i>&nbsp;        } catch (TimeOutException e) {</b>
+<b class="nc"><i>65</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
+<b class="nc"><i>66</i>&nbsp;        }</b>
+<i>67</i>&nbsp;    }
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    /**
+<i>70</i>&nbsp;     * This method notifies the view of the map update
+<i>71</i>&nbsp;     * @param communicationChannel Communication Channel
+<i>72</i>&nbsp;     * @param view User Interface
+<i>73</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    void manageMapAsListOfBoxes(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+<i>76</i>&nbsp;        List&lt;BoxProxy&gt; boxes;
+<b class="nc"><i>77</i>&nbsp;        String message = communicationChannel.popMessage();</b>
+<i>78</i>&nbsp;
+<b class="nc"><i>79</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;BoxProxy&gt;&gt;() {}.getType();</b>
+<b class="nc"><i>80</i>&nbsp;        boxes = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
+<b class="nc"><i>81</i>&nbsp;        view.updateMap(boxes);</b>
+<i>82</i>&nbsp;    }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**
+<i>85</i>&nbsp;     * This method asks the user through the view
+<i>86</i>&nbsp;     * to choose one position from a list.
+<i>87</i>&nbsp;     * @param key Position request type
+<i>88</i>&nbsp;     * @param communicationChannel Communication Channel
+<i>89</i>&nbsp;     * @param view User Interface
+<i>90</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
+<i>91</i>&nbsp;     */
+<i>92</i>&nbsp;    void manageListOfPositions(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+<i>93</i>&nbsp;        List&lt;int[]&gt; positions;
+<b class="nc"><i>94</i>&nbsp;        String message = communicationChannel.popMessage();</b>
+<i>95</i>&nbsp;
+<b class="nc"><i>96</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;int[]&gt;&gt;() {}.getType();</b>
+<b class="nc"><i>97</i>&nbsp;        positions = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;        int index;
 <i>100</i>&nbsp;
-<i>101</i>&nbsp;        int index;
-<i>102</i>&nbsp;
-<i>103</i>&nbsp;        try {
-<b class="nc"><i>104</i>&nbsp;            if (key == WORKER)</b>
-<b class="nc"><i>105</i>&nbsp;                index = view.askWorker(positions);</b>
-<i>106</i>&nbsp;            else
-<b class="nc"><i>107</i>&nbsp;                index = view.askPosition(positions);</b>
-<b class="nc"><i>108</i>&nbsp;            if (index == -1)</b>
-<b class="nc"><i>109</i>&nbsp;                communicationChannel.writeKeyWord(QUIT);</b>
-<i>110</i>&nbsp;            else
-<b class="nc"><i>111</i>&nbsp;                communicationChannel.writeChoiceFromList(key, index);</b>
-<b class="nc"><i>112</i>&nbsp;        } catch (TimeOutException e) {</b>
-<i>113</i>&nbsp;            //view.timeOut();
-<b class="nc"><i>114</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
-<b class="nc"><i>115</i>&nbsp;        }</b>
-<i>116</i>&nbsp;    }
-<i>117</i>&nbsp;
-<i>118</i>&nbsp;    /**
-<i>119</i>&nbsp;     * This method notifies the view of an update regarding one player
-<i>120</i>&nbsp;     * @param key Player update type
-<i>121</i>&nbsp;     * @param communicationChannel Communication Channel
-<i>122</i>&nbsp;     * @param view User Interface
-<i>123</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
-<i>124</i>&nbsp;     */
-<i>125</i>&nbsp;    void managePlayer(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<i>126</i>&nbsp;        PlayerProxy player;
-<b class="nc"><i>127</i>&nbsp;        String message = communicationChannel.popMessage();</b>
-<b class="nc"><i>128</i>&nbsp;        Type listType = new TypeToken&lt;PlayerProxy&gt;() {}.getType();</b>
-<b class="nc"><i>129</i>&nbsp;        player = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
-<b class="nc"><i>130</i>&nbsp;        switch (key) {</b>
-<i>131</i>&nbsp;            case MY_PLAYER:
-<b class="nc"><i>132</i>&nbsp;                view.setMyPlayer(player);</b>
+<i>101</i>&nbsp;        try {
+<b class="nc"><i>102</i>&nbsp;            if (key == WORKER)</b>
+<b class="nc"><i>103</i>&nbsp;                index = view.askWorker(positions);</b>
+<i>104</i>&nbsp;            else
+<b class="nc"><i>105</i>&nbsp;                index = view.askPosition(positions);</b>
+<b class="nc"><i>106</i>&nbsp;            if (index == -1)</b>
+<b class="nc"><i>107</i>&nbsp;                communicationChannel.writeKeyWord(QUIT);</b>
+<i>108</i>&nbsp;            else
+<b class="nc"><i>109</i>&nbsp;                communicationChannel.writeChoiceFromList(key, index);</b>
+<b class="nc"><i>110</i>&nbsp;        } catch (TimeOutException e) {</b>
+<b class="nc"><i>111</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
+<b class="nc"><i>112</i>&nbsp;        }</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    /**
+<i>116</i>&nbsp;     * This method notifies the view of an update regarding one player
+<i>117</i>&nbsp;     * @param key Player update type
+<i>118</i>&nbsp;     * @param communicationChannel Communication Channel
+<i>119</i>&nbsp;     * @param view User Interface
+<i>120</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
+<i>121</i>&nbsp;     */
+<i>122</i>&nbsp;    void managePlayer(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+<i>123</i>&nbsp;        PlayerProxy player;
+<b class="nc"><i>124</i>&nbsp;        String message = communicationChannel.popMessage();</b>
+<b class="nc"><i>125</i>&nbsp;        Type listType = new TypeToken&lt;PlayerProxy&gt;() {}.getType();</b>
+<b class="nc"><i>126</i>&nbsp;        player = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
+<b class="nc"><i>127</i>&nbsp;        switch (key) {</b>
+<i>128</i>&nbsp;            case MY_PLAYER:
+<b class="nc"><i>129</i>&nbsp;                view.setMyPlayer(player);</b>
+<b class="nc"><i>130</i>&nbsp;                break;</b>
+<i>131</i>&nbsp;            case CURRENT_PLAYER:
+<b class="nc"><i>132</i>&nbsp;                view.setCurrentPlayer(player);</b>
 <b class="nc"><i>133</i>&nbsp;                break;</b>
-<i>134</i>&nbsp;            case CURRENT_PLAYER:
-<b class="nc"><i>135</i>&nbsp;                view.setCurrentPlayer(player);</b>
+<i>134</i>&nbsp;            case WINNER:
+<b class="nc"><i>135</i>&nbsp;                view.setWinner(player);</b>
 <b class="nc"><i>136</i>&nbsp;                break;</b>
-<i>137</i>&nbsp;            case WINNER:
-<b class="nc"><i>138</i>&nbsp;                view.setWinner(player);</b>
+<i>137</i>&nbsp;            case LOSER:
+<b class="nc"><i>138</i>&nbsp;                view.setLoser(player);</b>
 <b class="nc"><i>139</i>&nbsp;                break;</b>
-<i>140</i>&nbsp;            case LOSER:
-<b class="nc"><i>141</i>&nbsp;                view.setLoser(player);</b>
-<b class="nc"><i>142</i>&nbsp;                break;</b>
-<i>143</i>&nbsp;            default:
-<i>144</i>&nbsp;        }
-<i>145</i>&nbsp;    }
-<i>146</i>&nbsp;
-<i>147</i>&nbsp;    /**
-<i>148</i>&nbsp;     * This method notifies the view of an update regarding the opponent players
-<i>149</i>&nbsp;     * @param communicationChannel Communication Channel
-<i>150</i>&nbsp;     * @param view User Interface
-<i>151</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
-<i>152</i>&nbsp;     */
-<i>153</i>&nbsp;    void manageListOfOpponents(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<i>154</i>&nbsp;        List&lt;PlayerProxy&gt; players;
-<b class="nc"><i>155</i>&nbsp;        String message = communicationChannel.popMessage();</b>
-<b class="nc"><i>156</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;PlayerProxy&gt;&gt;() {}.getType();</b>
-<b class="nc"><i>157</i>&nbsp;        players = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
-<b class="nc"><i>158</i>&nbsp;        view.setOpponentsInfo(players);</b>
-<i>159</i>&nbsp;    }
-<i>160</i>&nbsp;
-<i>161</i>&nbsp;    /**
-<i>162</i>&nbsp;     * This method asks the user through the view
-<i>163</i>&nbsp;     * to answer a binary question.
-<i>164</i>&nbsp;     * @param key Position request type
-<i>165</i>&nbsp;     * @param communicationChannel Communication Channel
-<i>166</i>&nbsp;     * @param view User Interface
-<i>167</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
-<i>168</i>&nbsp;     */
-<i>169</i>&nbsp;    void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<i>170</i>&nbsp;        try {
-<b class="nc"><i>171</i>&nbsp;            communicationChannel.writeConfirmation(key, view.askConfirmation(key));</b>
-<b class="nc"><i>172</i>&nbsp;        } catch (TimeOutException e) {</b>
-<i>173</i>&nbsp;            //view.timeOut();
-<b class="nc"><i>174</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
-<b class="nc"><i>175</i>&nbsp;        }</b>
-<i>176</i>&nbsp;    }
-<i>177</i>&nbsp;
-<i>178</i>&nbsp;    /**
-<i>179</i>&nbsp;     * This method updates the latest in-game events.
-<i>180</i>&nbsp;     * @param communicationChannel Communication Channel
-<i>181</i>&nbsp;     * @param view User Interface
-<i>182</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
-<i>183</i>&nbsp;     */
-<i>184</i>&nbsp;    void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<b class="nc"><i>185</i>&nbsp;        String message = communicationChannel.popMessage();</b>
-<b class="nc"><i>186</i>&nbsp;        Type type = new TypeToken&lt;List&lt;String&gt;&gt;() {}.getType();</b>
-<b class="nc"><i>187</i>&nbsp;        view.tellStory(new Gson().fromJson(communicationChannel.getContent(message), type));</b>
-<i>188</i>&nbsp;    }
-<i>189</i>&nbsp;
-<i>190</i>&nbsp;    void manageTimeOut(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-<b class="nc"><i>191</i>&nbsp;        communicationChannel.popMessage();</b>
-<b class="nc"><i>192</i>&nbsp;        view.timeOut();</b>
-<i>193</i>&nbsp;    }
-<i>194</i>&nbsp;}
+<i>140</i>&nbsp;            default:
+<i>141</i>&nbsp;        }
+<i>142</i>&nbsp;    }
+<i>143</i>&nbsp;
+<i>144</i>&nbsp;    /**
+<i>145</i>&nbsp;     * This method notifies the view of an update regarding the opponent players
+<i>146</i>&nbsp;     * @param communicationChannel Communication Channel
+<i>147</i>&nbsp;     * @param view User Interface
+<i>148</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
+<i>149</i>&nbsp;     */
+<i>150</i>&nbsp;    void manageListOfOpponents(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+<i>151</i>&nbsp;        List&lt;PlayerProxy&gt; players;
+<b class="nc"><i>152</i>&nbsp;        String message = communicationChannel.popMessage();</b>
+<b class="nc"><i>153</i>&nbsp;        Type listType = new TypeToken&lt;List&lt;PlayerProxy&gt;&gt;() {}.getType();</b>
+<b class="nc"><i>154</i>&nbsp;        players = new Gson().fromJson(communicationChannel.getContent(message), listType);</b>
+<b class="nc"><i>155</i>&nbsp;        view.setOpponentsInfo(players);</b>
+<i>156</i>&nbsp;    }
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    /**
+<i>159</i>&nbsp;     * This method asks the user through the view
+<i>160</i>&nbsp;     * to answer a binary question.
+<i>161</i>&nbsp;     * @param key Position request type
+<i>162</i>&nbsp;     * @param communicationChannel Communication Channel
+<i>163</i>&nbsp;     * @param view User Interface
+<i>164</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
+<i>165</i>&nbsp;     */
+<i>166</i>&nbsp;    void manageConfirmation(CommunicationProtocol key, CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+<i>167</i>&nbsp;        try {
+<b class="nc"><i>168</i>&nbsp;            communicationChannel.writeConfirmation(key, view.askConfirmation(key));</b>
+<b class="nc"><i>169</i>&nbsp;        } catch (TimeOutException e) {</b>
+<b class="nc"><i>170</i>&nbsp;            communicationChannel.writeKeyWord(TIMEOUT);</b>
+<b class="nc"><i>171</i>&nbsp;        }</b>
+<i>172</i>&nbsp;    }
+<i>173</i>&nbsp;
+<i>174</i>&nbsp;    /**
+<i>175</i>&nbsp;     * This method updates the latest in-game events.
+<i>176</i>&nbsp;     * @param communicationChannel Communication Channel
+<i>177</i>&nbsp;     * @param view User Interface
+<i>178</i>&nbsp;     * @throws ChannelClosedException If the connection is lost
+<i>179</i>&nbsp;     */
+<i>180</i>&nbsp;    void manageMatchStory(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
+<b class="nc"><i>181</i>&nbsp;        String message = communicationChannel.popMessage();</b>
+<b class="nc"><i>182</i>&nbsp;        Type type = new TypeToken&lt;List&lt;String&gt;&gt;() {}.getType();</b>
+<b class="nc"><i>183</i>&nbsp;        view.tellStory(new Gson().fromJson(communicationChannel.getContent(message), type));</b>
+<i>184</i>&nbsp;    }
+<i>185</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 18:00</div>
+    <div style="float:right;">generated on 2020-07-03 19:52</div>
 </div>
 </body>
 </html>

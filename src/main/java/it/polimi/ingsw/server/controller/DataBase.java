@@ -24,7 +24,7 @@ public class DataBase {
      * @param communicationChannel Communication channel
      * @return Boolean that is true if the connection is registered
      */
-    public boolean hasConnection(CommunicationChannel communicationChannel) {
+    private boolean hasConnection(CommunicationChannel communicationChannel) {
         return connections.contains(communicationChannel);
     }
 
@@ -42,7 +42,7 @@ public class DataBase {
      * @param communicationChannel Communication channel
      * @return Boolean that is true if the user has registered from this connection
      */
-    public boolean connectionHasUser(CommunicationChannel communicationChannel) {
+    private boolean connectionHasUser(CommunicationChannel communicationChannel) {
         return connectionToUser.containsKey(communicationChannel);
     }
 
@@ -60,7 +60,7 @@ public class DataBase {
      * @param name Username to add
      * @return boolean that indicates the existence of that username in the databasee
      */
-    public synchronized boolean addUserName(String name) {
+    private synchronized boolean addUserName(String name) {
         boolean exists = userNameExists(name);
         if (!exists)
             userNames.add(name);
@@ -129,7 +129,7 @@ public class DataBase {
      * @param user User
      * @return Boolean that is true if user is assigned to a lobby
      */
-    public boolean userHasLobby(User user) {
+    private boolean userHasLobby(User user) {
         return lobbies.containsKey(user);
     }
 
@@ -137,7 +137,7 @@ public class DataBase {
      * This method removes a user from his lobby
      * @param user Quitting user
      */
-    public void userQuitLobby(User user) {
+    private void userQuitLobby(User user) {
         if (userHasLobby(user)) {
             Lobby lobby = findLobby(user);
             lobby.removeUser(user);
@@ -162,7 +162,7 @@ public class DataBase {
      * This method removes a user from the DB
      * @param user Leaving user
      */
-    public synchronized void deleteUser(User user) {
+    private synchronized void deleteUser(User user) {
         if (user != null) {
             userQuitLobby(user);
             removeUser(user.name());
@@ -186,7 +186,7 @@ public class DataBase {
      * @param user User
      * @return Lobby the user has joined
      */
-    public Lobby findLobby(User user) {
+    private Lobby findLobby(User user) {
         if (user != null && userNameExists(user.name()) && userHasLobby(user))
             return lobbies.get(user);
         return null;
@@ -197,7 +197,7 @@ public class DataBase {
      * @param user Joining user
      * @param lobby Joined lobby
      */
-    public synchronized void joinLobby(User user, Lobby lobby) {
+    private synchronized void joinLobby(User user, Lobby lobby) {
         if (!userHasLobby(user)) {
             lobbies.put(user, lobby);
             lobby.addUser(user);
@@ -214,7 +214,7 @@ public class DataBase {
      * @param user User that is creating the new lobby
      * @param nPlayers Number of player for this lobby
      */
-    public synchronized void createNewLobby(User user, int nPlayers) {
+    private synchronized void createNewLobby(User user, int nPlayers) {
         Lobby lobby = new Lobby(user, nPlayers);
         joinLobby(user, lobby);
         System.out.println("New lobby " + lobby + " with " + nPlayers + " players has been created for " + user.name());
@@ -225,7 +225,7 @@ public class DataBase {
      * This method moves the lobby from the incomplete openLobbies list to the complete ones
      * @param lobby The lobby created by this user manager
      */
-    public synchronized void registerCompleteLobby(Lobby lobby) {
+    private synchronized void registerCompleteLobby(Lobby lobby) {
         openLobbies.remove(lobby);
         completeLobbies.add(lobby);
     }

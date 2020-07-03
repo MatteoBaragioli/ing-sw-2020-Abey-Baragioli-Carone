@@ -18,40 +18,40 @@ public class Listener extends Thread {
         this.view = view;
     }
 
+    @Override
     public void run() {
         while (!communicationChannel.isClosed()) {
+            CommunicationProtocol key;
             try {
-                CommunicationProtocol key = communicationChannel.nextKey();
-                switch (key) {
-                    case PING:
-                        try {
-                            communicationChannel.writeKeyWord(PONG);
-                        } catch (ChannelClosedException e) {
-                            //e.printStackTrace();
-                            System.err.println("PING Error");
-                        }
-                        break;
-                    case CURRENT_PLAYER:
-                    case LOSER:
-                    case MATCH_STORY:
-                    case MAP:
-                    case MY_PLAYER:
-                    case OPPONENTS:
-                    case TIMEOUT:
-                    case WINNER:
-
-                        try {
-                            communicationChannel.writeKeyWord(RECEIVED);
-                        } catch (ChannelClosedException e) {
-                            //e.printStackTrace();
-                            System.err.println("RECEIVED Error");
-                        }
-                        break;
-                }
+                key = communicationChannel.nextKey();
             } catch (IOException | ChannelClosedException e) {
-                //e.printStackTrace();
                 view.connectionLost();
                 communicationChannel.close();
+                return;
+            }
+            switch (key) {
+                case PING:
+                    try {
+                        communicationChannel.writeKeyWord(PONG);
+                    } catch (ChannelClosedException e) {
+                        System.err.println("PING Error");
+                    }
+                    break;
+                case CURRENT_PLAYER:
+                case LOSER:
+                case MATCH_STORY:
+                case MAP:
+                case MY_PLAYER:
+                case OPPONENTS:
+                case TIMEOUT:
+                case WINNER:
+                    try {
+                        communicationChannel.writeKeyWord(RECEIVED);
+                    } catch (ChannelClosedException e) {
+                        System.err.println("RECEIVED Error");
+                    }
+                    break;
+                default:
             }
         }
     }

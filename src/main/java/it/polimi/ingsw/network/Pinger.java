@@ -56,7 +56,6 @@ public class Pinger extends Thread {
             }
             else {
                 communicationChannel.resetPing();
-                System.out.println("Client connesso");
             }
         }
     }

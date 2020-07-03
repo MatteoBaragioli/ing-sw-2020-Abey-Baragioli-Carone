@@ -61,7 +61,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 707)
+    (0/ 701)
   </span>
 </td>
 </tr>
@@ -446,1030 +446,1002 @@
 <b class="nc"><i>372</i>&nbsp;        confirmTurnFadeOut.play();</b>
 <b class="nc"><i>373</i>&nbsp;        Timeline hidingTimer = new Timeline(new KeyFrame(</b>
 <b class="nc"><i>374</i>&nbsp;                Duration.millis(500),</b>
-<i>375</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>376</i>&nbsp;                    askConfirmTurn.setVisible(false);</b>
-<i>377</i>&nbsp;                }));
-<b class="nc"><i>378</i>&nbsp;        hidingTimer.play();</b>
-<i>379</i>&nbsp;
-<b class="nc"><i>380</i>&nbsp;        notifyAll();</b>
-<i>381</i>&nbsp;    }
-<i>382</i>&nbsp;
-<i>383</i>&nbsp;    /**
-<i>384</i>&nbsp;     * This method notifies closeMatch when user wants to go back to main menu, when user closes the stage or when connection is lost and user clicks on &quot;ok&quot; button in the connection error pane
-<i>385</i>&nbsp;     */
-<i>386</i>&nbsp;    public synchronized void setCloseMatch(){
-<b class="nc"><i>387</i>&nbsp;        closeMatch.set(true);</b>
-<b class="nc"><i>388</i>&nbsp;        notifyAll();</b>
-<i>389</i>&nbsp;    }
-<i>390</i>&nbsp;
-<i>391</i>&nbsp;    /**
-<i>392</i>&nbsp;     * This method notifies when time to do actions runs out
-<i>393</i>&nbsp;     */
-<i>394</i>&nbsp;    public synchronized void setEndTimer(){
-<b class="nc"><i>395</i>&nbsp;        endTimer.set(true);</b>
-<b class="nc"><i>396</i>&nbsp;        notifyAll();</b>
-<i>397</i>&nbsp;    }
+<b class="nc"><i>375</i>&nbsp;                ae -&gt; askConfirmTurn.setVisible(false)));</b>
+<b class="nc"><i>376</i>&nbsp;        hidingTimer.play();</b>
+<i>377</i>&nbsp;
+<b class="nc"><i>378</i>&nbsp;        notifyAll();</b>
+<i>379</i>&nbsp;    }
+<i>380</i>&nbsp;
+<i>381</i>&nbsp;    /**
+<i>382</i>&nbsp;     * This method notifies closeMatch when user wants to go back to main menu, when user closes the stage or when connection is lost and user clicks on &quot;ok&quot; button in the connection error pane
+<i>383</i>&nbsp;     */
+<i>384</i>&nbsp;    public synchronized void setCloseMatch(){
+<b class="nc"><i>385</i>&nbsp;        closeMatch.set(true);</b>
+<b class="nc"><i>386</i>&nbsp;        notifyAll();</b>
+<i>387</i>&nbsp;    }
+<i>388</i>&nbsp;
+<i>389</i>&nbsp;    /**
+<i>390</i>&nbsp;     * This method notifies when time to do actions runs out
+<i>391</i>&nbsp;     */
+<i>392</i>&nbsp;    public synchronized void setEndTimer(){
+<b class="nc"><i>393</i>&nbsp;        endTimer.set(true);</b>
+<b class="nc"><i>394</i>&nbsp;        notifyAll();</b>
+<i>395</i>&nbsp;    }
+<i>396</i>&nbsp;
+<i>397</i>&nbsp;    //-----------------------------------------END SYNCHRONIZATION METHODS---------------------------------
 <i>398</i>&nbsp;
-<i>399</i>&nbsp;    //-----------------------------------------END SYNCHRONIZATION METHODS---------------------------------
-<i>400</i>&nbsp;
-<i>401</i>&nbsp;    /**
-<i>402</i>&nbsp;     * This method clears chosable boxes list (every request has different chosable boxes)
-<i>403</i>&nbsp;     */
-<i>404</i>&nbsp;    public void clearChosableBoxes(){
-<b class="nc"><i>405</i>&nbsp;        chosableBoxes = new ArrayList&lt;&gt;();</b>
-<i>406</i>&nbsp;    }
-<i>407</i>&nbsp;
-<i>408</i>&nbsp;    /**
-<i>409</i>&nbsp;     * This method sets nickname, opponents and colors in match page
-<i>410</i>&nbsp;     * @param nickname Player nickname
-<i>411</i>&nbsp;     * @param numberOfPlayers Number of players of the match
-<i>412</i>&nbsp;     * @param color Color of player
-<i>413</i>&nbsp;     * @param opponents Opponents (nickname and color)
-<i>414</i>&nbsp;     */
-<i>415</i>&nbsp;    public void setMatchScene(String nickname, int numberOfPlayers, String color, List&lt;PlayerProxy&gt; opponents) {
-<b class="nc"><i>416</i>&nbsp;        this.numberOfPlayers = numberOfPlayers;</b>
-<i>417</i>&nbsp;
-<b class="nc"><i>418</i>&nbsp;        guiMap.setMaxWidth(dimension);</b>
-<b class="nc"><i>419</i>&nbsp;        guiMap.setMaxHeight(dimension);</b>
-<b class="nc"><i>420</i>&nbsp;        guiMap.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>421</i>&nbsp;        guiMap.setPadding(new Insets(totalMargin));</b>
+<i>399</i>&nbsp;    /**
+<i>400</i>&nbsp;     * This method clears chosable boxes list (every request has different chosable boxes)
+<i>401</i>&nbsp;     */
+<i>402</i>&nbsp;    public void clearChosableBoxes(){
+<b class="nc"><i>403</i>&nbsp;        chosableBoxes = new ArrayList&lt;&gt;();</b>
+<i>404</i>&nbsp;    }
+<i>405</i>&nbsp;
+<i>406</i>&nbsp;    /**
+<i>407</i>&nbsp;     * This method sets nickname, opponents and colors in match page
+<i>408</i>&nbsp;     * @param nickname Player nickname
+<i>409</i>&nbsp;     * @param numberOfPlayers Number of players of the match
+<i>410</i>&nbsp;     * @param color Color of player
+<i>411</i>&nbsp;     * @param opponents Opponents (nickname and color)
+<i>412</i>&nbsp;     */
+<i>413</i>&nbsp;    public void setMatchScene(String nickname, int numberOfPlayers, String color, List&lt;PlayerProxy&gt; opponents) {
+<b class="nc"><i>414</i>&nbsp;        this.numberOfPlayers = numberOfPlayers;</b>
+<i>415</i>&nbsp;
+<b class="nc"><i>416</i>&nbsp;        guiMap.setMaxWidth(dimension);</b>
+<b class="nc"><i>417</i>&nbsp;        guiMap.setMaxHeight(dimension);</b>
+<b class="nc"><i>418</i>&nbsp;        guiMap.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>419</i>&nbsp;        guiMap.setPadding(new Insets(totalMargin));</b>
+<i>420</i>&nbsp;
+<b class="nc"><i>421</i>&nbsp;        Platform.runLater(() -&gt; playerView.setPage(nickname, color, opponents, numberOfPlayers-1));</b>
 <i>422</i>&nbsp;
-<b class="nc"><i>423</i>&nbsp;        Platform.runLater(() -&gt; playerView.setPage(nickname, color, opponents, numberOfPlayers-1));</b>
-<i>424</i>&nbsp;
-<b class="nc"><i>425</i>&nbsp;        chooseCardsBox.setVisible(false);</b>
-<b class="nc"><i>426</i>&nbsp;        matchPage.setPrefWidth(screenWidth);</b>
-<b class="nc"><i>427</i>&nbsp;        matchPage.setPrefHeight(screenHeight);</b>
-<i>428</i>&nbsp;
-<b class="nc"><i>429</i>&nbsp;        AnchorPane.setTopAnchor(guiMap, (screenHeight-dimension)/2);</b>
-<b class="nc"><i>430</i>&nbsp;        AnchorPane.setBottomAnchor(guiMap, (screenHeight-dimension)/2);</b>
-<b class="nc"><i>431</i>&nbsp;        AnchorPane.setLeftAnchor(guiMap, (screenWidth-dimension)/2);</b>
-<b class="nc"><i>432</i>&nbsp;        AnchorPane.setRightAnchor(guiMap, (screenWidth-dimension)/2);</b>
-<b class="nc"><i>433</i>&nbsp;        AnchorPane.setTopAnchor(mapView, (screenHeight-dimension)/2);</b>
-<b class="nc"><i>434</i>&nbsp;        AnchorPane.setBottomAnchor(mapView, (screenHeight-dimension)/2);</b>
-<b class="nc"><i>435</i>&nbsp;        AnchorPane.setLeftAnchor(mapView, (screenWidth-dimension)/2);</b>
-<b class="nc"><i>436</i>&nbsp;        AnchorPane.setRightAnchor(mapView, (screenWidth-dimension)/2);</b>
+<b class="nc"><i>423</i>&nbsp;        chooseCardsBox.setVisible(false);</b>
+<b class="nc"><i>424</i>&nbsp;        matchPage.setPrefWidth(screenWidth);</b>
+<b class="nc"><i>425</i>&nbsp;        matchPage.setPrefHeight(screenHeight);</b>
+<i>426</i>&nbsp;
+<b class="nc"><i>427</i>&nbsp;        AnchorPane.setTopAnchor(guiMap, (screenHeight-dimension)/2);</b>
+<b class="nc"><i>428</i>&nbsp;        AnchorPane.setBottomAnchor(guiMap, (screenHeight-dimension)/2);</b>
+<b class="nc"><i>429</i>&nbsp;        AnchorPane.setLeftAnchor(guiMap, (screenWidth-dimension)/2);</b>
+<b class="nc"><i>430</i>&nbsp;        AnchorPane.setRightAnchor(guiMap, (screenWidth-dimension)/2);</b>
+<b class="nc"><i>431</i>&nbsp;        AnchorPane.setTopAnchor(mapView, (screenHeight-dimension)/2);</b>
+<b class="nc"><i>432</i>&nbsp;        AnchorPane.setBottomAnchor(mapView, (screenHeight-dimension)/2);</b>
+<b class="nc"><i>433</i>&nbsp;        AnchorPane.setLeftAnchor(mapView, (screenWidth-dimension)/2);</b>
+<b class="nc"><i>434</i>&nbsp;        AnchorPane.setRightAnchor(mapView, (screenWidth-dimension)/2);</b>
+<i>435</i>&nbsp;
+<i>436</i>&nbsp;    }
 <i>437</i>&nbsp;
-<i>438</i>&nbsp;    }
-<i>439</i>&nbsp;
-<i>440</i>&nbsp;    /**
-<i>441</i>&nbsp;     * This method sets all possible destination as chosable
-<i>442</i>&nbsp;     * @param possibleDestinations Possible destinations
-<i>443</i>&nbsp;     */
-<i>444</i>&nbsp;    public void chooseDestination(List&lt;int[]&gt; possibleDestinations){
-<b class="nc"><i>445</i>&nbsp;        int index = 0;</b>
-<b class="nc"><i>446</i>&nbsp;        for(int[] i : possibleDestinations){</b>
-<b class="nc"><i>447</i>&nbsp;            map().box(i[0], i[1]).setIndex(index);</b>
-<b class="nc"><i>448</i>&nbsp;            map().box(i[0], i[1]).setAsChosable(this);</b>
-<b class="nc"><i>449</i>&nbsp;            index++;</b>
-<b class="nc"><i>450</i>&nbsp;        }</b>
-<b class="nc"><i>451</i>&nbsp;        setChosableBoxes(possibleDestinations);</b>
+<i>438</i>&nbsp;    /**
+<i>439</i>&nbsp;     * This method sets all possible destination as chosable
+<i>440</i>&nbsp;     * @param possibleDestinations Possible destinations
+<i>441</i>&nbsp;     */
+<i>442</i>&nbsp;    public void chooseDestination(List&lt;int[]&gt; possibleDestinations){
+<b class="nc"><i>443</i>&nbsp;        int index = 0;</b>
+<b class="nc"><i>444</i>&nbsp;        for(int[] i : possibleDestinations){</b>
+<b class="nc"><i>445</i>&nbsp;            map().box(i[0], i[1]).setIndex(index);</b>
+<b class="nc"><i>446</i>&nbsp;            map().box(i[0], i[1]).setAsChosable(this);</b>
+<b class="nc"><i>447</i>&nbsp;            index++;</b>
+<b class="nc"><i>448</i>&nbsp;        }</b>
+<b class="nc"><i>449</i>&nbsp;        setChosableBoxes(possibleDestinations);</b>
+<i>450</i>&nbsp;
+<i>451</i>&nbsp;    }
 <i>452</i>&nbsp;
-<i>453</i>&nbsp;    }
-<i>454</i>&nbsp;
-<i>455</i>&nbsp;    /**
-<i>456</i>&nbsp;     * This method creates and shows the box to choose the match cards (only to challenger)
-<i>457</i>&nbsp;     * @param godCards List of GodCardProxy (all game&#39;s cards)
-<i>458</i>&nbsp;     */
-<i>459</i>&nbsp;    public void chooseCards(List&lt;GodCardProxy&gt; godCards){
-<b class="nc"><i>460</i>&nbsp;        cardsIndexes = new int[numberOfPlayers];</b>
-<b class="nc"><i>461</i>&nbsp;        choicesNames = new Text[numberOfPlayers];</b>
-<b class="nc"><i>462</i>&nbsp;        choicesImages = new ImageView[numberOfPlayers];</b>
-<b class="nc"><i>463</i>&nbsp;        choicesBoxes = new HBox[numberOfPlayers];</b>
-<b class="nc"><i>464</i>&nbsp;        Image addGodImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/addGod.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
-<b class="nc"><i>465</i>&nbsp;        Image addGodInactiveImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/addGodInactive.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
-<b class="nc"><i>466</i>&nbsp;        ImageView addGod = new ImageView(addGodInactiveImg);</b>
-<i>467</i>&nbsp;
-<b class="nc"><i>468</i>&nbsp;        Image removeGodImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/removeGod.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
-<b class="nc"><i>469</i>&nbsp;        Image removeGodInactiveImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/removeGodInactive.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
-<b class="nc"><i>470</i>&nbsp;        ImageView removeGod = new ImageView(removeGodInactiveImg);</b>
-<i>471</i>&nbsp;
-<b class="nc"><i>472</i>&nbsp;        Image chooseCardsImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/chooseCardsBackground.png&quot;).toString(), screenWidth/1.2, screenHeight/1.2, false, false);</b>
-<b class="nc"><i>473</i>&nbsp;        ImageView chooseCardsView = new ImageView(chooseCardsImg);</b>
-<b class="nc"><i>474</i>&nbsp;        ScrollPane allCards = new ScrollPane();</b>
-<b class="nc"><i>475</i>&nbsp;        allCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);</b>
-<b class="nc"><i>476</i>&nbsp;        allCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);</b>
-<b class="nc"><i>477</i>&nbsp;        allCards.getStylesheets().add(this.getClass().getResource(&quot;/css/scrollStyle.css&quot;).toExternalForm());</b>
-<b class="nc"><i>478</i>&nbsp;        VBox cardsList = new VBox();</b>
-<i>479</i>&nbsp;        //content of the chooseCardBox divided in 3 columns
-<b class="nc"><i>480</i>&nbsp;        HBox chooseCards = new HBox();</b>
-<b class="nc"><i>481</i>&nbsp;        chooseCards.setPrefWidth(screenWidth/1.2);</b>
-<b class="nc"><i>482</i>&nbsp;        chooseCards.setPrefHeight(screenHeight/1.2);</b>
-<b class="nc"><i>483</i>&nbsp;        chooseCards.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>484</i>&nbsp;        cardsList.setPrefWidth(screenWidth/3.2);</b>
-<b class="nc"><i>485</i>&nbsp;        cardsList.setPrefHeight(screenHeight/1.5);</b>
-<b class="nc"><i>486</i>&nbsp;        cardsList.setSpacing(60);</b>
-<b class="nc"><i>487</i>&nbsp;        cardsList.setPadding(new Insets(0,0,0,screenWidth/14));</b>
+<i>453</i>&nbsp;    /**
+<i>454</i>&nbsp;     * This method creates and shows the box to choose the match cards (only to challenger)
+<i>455</i>&nbsp;     * @param godCards List of GodCardProxy (all game&#39;s cards)
+<i>456</i>&nbsp;     */
+<i>457</i>&nbsp;    public void chooseCards(List&lt;GodCardProxy&gt; godCards){
+<b class="nc"><i>458</i>&nbsp;        cardsIndexes = new int[numberOfPlayers];</b>
+<b class="nc"><i>459</i>&nbsp;        choicesNames = new Text[numberOfPlayers];</b>
+<b class="nc"><i>460</i>&nbsp;        choicesImages = new ImageView[numberOfPlayers];</b>
+<b class="nc"><i>461</i>&nbsp;        choicesBoxes = new HBox[numberOfPlayers];</b>
+<b class="nc"><i>462</i>&nbsp;        Image addGodImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/addGod.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
+<b class="nc"><i>463</i>&nbsp;        Image addGodInactiveImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/addGodInactive.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
+<b class="nc"><i>464</i>&nbsp;        ImageView addGod = new ImageView(addGodInactiveImg);</b>
+<i>465</i>&nbsp;
+<b class="nc"><i>466</i>&nbsp;        Image removeGodImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/removeGod.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
+<b class="nc"><i>467</i>&nbsp;        Image removeGodInactiveImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/removeGodInactive.png&quot;).toString(), screenWidth/12, screenHeight/12, false, false);</b>
+<b class="nc"><i>468</i>&nbsp;        ImageView removeGod = new ImageView(removeGodInactiveImg);</b>
+<i>469</i>&nbsp;
+<b class="nc"><i>470</i>&nbsp;        Image chooseCardsImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/chooseCardsBackground.png&quot;).toString(), screenWidth/1.2, screenHeight/1.2, false, false);</b>
+<b class="nc"><i>471</i>&nbsp;        ImageView chooseCardsView = new ImageView(chooseCardsImg);</b>
+<b class="nc"><i>472</i>&nbsp;        ScrollPane allCards = new ScrollPane();</b>
+<b class="nc"><i>473</i>&nbsp;        allCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);</b>
+<b class="nc"><i>474</i>&nbsp;        allCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);</b>
+<b class="nc"><i>475</i>&nbsp;        allCards.getStylesheets().add(this.getClass().getResource(&quot;/css/scrollStyle.css&quot;).toExternalForm());</b>
+<b class="nc"><i>476</i>&nbsp;        VBox cardsList = new VBox();</b>
+<i>477</i>&nbsp;        //content of the chooseCardBox divided in 3 columns
+<b class="nc"><i>478</i>&nbsp;        HBox chooseCards = new HBox();</b>
+<b class="nc"><i>479</i>&nbsp;        chooseCards.setPrefWidth(screenWidth/1.2);</b>
+<b class="nc"><i>480</i>&nbsp;        chooseCards.setPrefHeight(screenHeight/1.2);</b>
+<b class="nc"><i>481</i>&nbsp;        chooseCards.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>482</i>&nbsp;        cardsList.setPrefWidth(screenWidth/3.2);</b>
+<b class="nc"><i>483</i>&nbsp;        cardsList.setPrefHeight(screenHeight/1.5);</b>
+<b class="nc"><i>484</i>&nbsp;        cardsList.setSpacing(60);</b>
+<b class="nc"><i>485</i>&nbsp;        cardsList.setPadding(new Insets(0,0,0,screenWidth/14));</b>
+<i>486</i>&nbsp;
+<b class="nc"><i>487</i>&nbsp;        cardsChosable = new ArrayList&lt;&gt;();</b>
 <i>488</i>&nbsp;
-<b class="nc"><i>489</i>&nbsp;        cardsChosable = new ArrayList&lt;&gt;();</b>
-<i>490</i>&nbsp;
-<b class="nc"><i>491</i>&nbsp;        for(GodCardProxy card : godCards){</b>
-<b class="nc"><i>492</i>&nbsp;            Image cardImg = new Image(MatchScene.class.getResource(&quot;/img/godCards/&quot;+card.name+&quot;.png&quot;).toString(), screenWidth/10, screenHeight/5, false, false);</b>
-<b class="nc"><i>493</i>&nbsp;            ImageView cardView = new ImageView(cardImg);</b>
-<b class="nc"><i>494</i>&nbsp;            Text godName = new Text(card.name);</b>
-<b class="nc"><i>495</i>&nbsp;            godName.setTextAlignment(TextAlignment.CENTER);</b>
-<b class="nc"><i>496</i>&nbsp;            godName.setFont(lillybelleFont);</b>
-<b class="nc"><i>497</i>&nbsp;            Text godDescription = new Text();</b>
-<b class="nc"><i>498</i>&nbsp;            if(card.description!=null)</b>
-<b class="nc"><i>499</i>&nbsp;                godDescription.setText(card.description);</b>
-<b class="nc"><i>500</i>&nbsp;            else if(card.winDescription!=null)</b>
-<b class="nc"><i>501</i>&nbsp;                godDescription.setText(card.winDescription);</b>
-<b class="nc"><i>502</i>&nbsp;            else if(card.setUpDescription!=null)</b>
-<b class="nc"><i>503</i>&nbsp;                godDescription.setText(card.setUpDescription);</b>
-<b class="nc"><i>504</i>&nbsp;            else if(card.opponentsFxDescription!=null)</b>
-<b class="nc"><i>505</i>&nbsp;                godDescription.setText(card.opponentsFxDescription);</b>
-<b class="nc"><i>506</i>&nbsp;            godDescription.setFont(godInfoFont);</b>
-<b class="nc"><i>507</i>&nbsp;            godDescription.setWrappingWidth(screenWidth/7);</b>
-<b class="nc"><i>508</i>&nbsp;            godDescription.setTextAlignment(TextAlignment.CENTER);</b>
-<b class="nc"><i>509</i>&nbsp;            VBox cardInfo = new VBox();</b>
-<b class="nc"><i>510</i>&nbsp;            cardInfo.getChildren().addAll(godName, godDescription);</b>
-<b class="nc"><i>511</i>&nbsp;            cardInfo.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>512</i>&nbsp;            HBox cardBox = new HBox();</b>
-<b class="nc"><i>513</i>&nbsp;            cardBox.getChildren().addAll(cardView, cardInfo);</b>
-<b class="nc"><i>514</i>&nbsp;            cardBox.setSpacing(30);</b>
-<b class="nc"><i>515</i>&nbsp;            cardBox.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>516</i>&nbsp;            cardBox.setStyle(&quot;-fx-background-color: transparent&quot;);</b>
-<b class="nc"><i>517</i>&nbsp;            cardView.setOnMouseEntered(e -&gt; {</b>
-<b class="nc"><i>518</i>&nbsp;                cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>519</i>&nbsp;                cardView.setCursor(Cursor.HAND);</b>
-<i>520</i>&nbsp;            });
-<b class="nc"><i>521</i>&nbsp;            cardView.setOnMouseExited(e -&gt; {</b>
-<b class="nc"><i>522</i>&nbsp;                cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>523</i>&nbsp;                cardView.setCursor(Cursor.DEFAULT);</b>
-<i>524</i>&nbsp;            });
-<b class="nc"><i>525</i>&nbsp;            cardView.setOnMouseClicked(e -&gt; {</b>
-<b class="nc"><i>526</i>&nbsp;                if(choicesCounter&lt;numberOfPlayers)</b>
-<b class="nc"><i>527</i>&nbsp;                    activateAddCardsButton(addGodImg, addGodInactiveImg, addGod, removeGodImg, removeGodInactiveImg, removeGod, cardsIndexes, godCards);</b>
-<b class="nc"><i>528</i>&nbsp;                selectedCard = godName.getText();</b>
-<b class="nc"><i>529</i>&nbsp;                selectedCardBox = cardBox;</b>
-<b class="nc"><i>530</i>&nbsp;                cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>531</i>&nbsp;                cardView.setCursor(Cursor.DEFAULT);</b>
-<b class="nc"><i>532</i>&nbsp;                cardView.setOnMouseExited(f -&gt; {</b>
-<b class="nc"><i>533</i>&nbsp;                    cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>534</i>&nbsp;                    cardView.setCursor(Cursor.DEFAULT);</b>
-<i>535</i>&nbsp;                });
-<b class="nc"><i>536</i>&nbsp;                for(Node box : cardsChosable){</b>
-<b class="nc"><i>537</i>&nbsp;                    if(!box.equals(cardView)) {</b>
-<b class="nc"><i>538</i>&nbsp;                        box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>539</i>&nbsp;                        box.setOnMouseExited(k -&gt; {</b>
-<b class="nc"><i>540</i>&nbsp;                            box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>541</i>&nbsp;                            box.setCursor(Cursor.DEFAULT);</b>
-<i>542</i>&nbsp;                        });
-<i>543</i>&nbsp;                    }
-<b class="nc"><i>544</i>&nbsp;                }</b>
-<i>545</i>&nbsp;            });
-<b class="nc"><i>546</i>&nbsp;            cardsChosable.add(cardView);</b>
-<b class="nc"><i>547</i>&nbsp;            cardsList.getChildren().add(cardBox);</b>
-<b class="nc"><i>548</i>&nbsp;        }</b>
-<i>549</i>&nbsp;
-<b class="nc"><i>550</i>&nbsp;        allCards.setContent(cardsList);</b>
-<b class="nc"><i>551</i>&nbsp;        allCards.setPrefWidth(screenWidth/2.7);</b>
-<b class="nc"><i>552</i>&nbsp;        allCards.setMaxHeight(screenHeight/1.9);</b>
-<b class="nc"><i>553</i>&nbsp;        VBox buttons = new VBox();</b>
-<i>554</i>&nbsp;
-<b class="nc"><i>555</i>&nbsp;        buttons.getChildren().addAll(addGod, removeGod);</b>
-<b class="nc"><i>556</i>&nbsp;        buttons.setPrefWidth(screenWidth/11);</b>
-<b class="nc"><i>557</i>&nbsp;        buttons.setPrefHeight(screenHeight/1.5);</b>
-<b class="nc"><i>558</i>&nbsp;        buttons.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>559</i>&nbsp;        buttons.setSpacing(20);</b>
-<i>560</i>&nbsp;
-<i>561</i>&nbsp;        //Vertical Box that contains all chosen cards by the challenger
-<b class="nc"><i>562</i>&nbsp;        VBox choices = new VBox();</b>
-<b class="nc"><i>563</i>&nbsp;        choices.setPrefWidth(screenWidth/2.7);</b>
-<b class="nc"><i>564</i>&nbsp;        choices.setPrefHeight(screenHeight/1.5);</b>
-<b class="nc"><i>565</i>&nbsp;        choices.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>566</i>&nbsp;        choices.setSpacing(20);</b>
-<b class="nc"><i>567</i>&nbsp;        choices.setPadding(new Insets(0, screenWidth/20, 0, 0));</b>
-<i>568</i>&nbsp;
-<b class="nc"><i>569</i>&nbsp;        for(int i=0; i&lt;numberOfPlayers ; i++){</b>
-<b class="nc"><i>570</i>&nbsp;            Text name = new Text();</b>
-<i>571</i>&nbsp;
-<i>572</i>&nbsp;            //save all Text -&gt; I will be able to change Text content
-<b class="nc"><i>573</i>&nbsp;            choicesNames[i] = name;</b>
-<i>574</i>&nbsp;
-<b class="nc"><i>575</i>&nbsp;            name.setFont(lillybelleFont);</b>
-<b class="nc"><i>576</i>&nbsp;            Image choiceImg = new Image(MatchScene.class.getResource(&quot;/img/godCards/noGod.png&quot;).toString(), screenWidth/14, screenHeight/9, false, false);</b>
-<b class="nc"><i>577</i>&nbsp;            ImageView choiceView = new ImageView(choiceImg);</b>
-<i>578</i>&nbsp;
-<i>579</i>&nbsp;            //save all ImageView -&gt; I will be able to change Image
-<b class="nc"><i>580</i>&nbsp;            choicesImages[i] = choiceView;</b>
-<i>581</i>&nbsp;
+<b class="nc"><i>489</i>&nbsp;        for(GodCardProxy card : godCards){</b>
+<b class="nc"><i>490</i>&nbsp;            Image cardImg = new Image(MatchScene.class.getResource(&quot;/img/godCards/&quot;+card.name+&quot;.png&quot;).toString(), screenWidth/10, screenHeight/5, false, false);</b>
+<b class="nc"><i>491</i>&nbsp;            ImageView cardView = new ImageView(cardImg);</b>
+<b class="nc"><i>492</i>&nbsp;            Text godName = new Text(card.name);</b>
+<b class="nc"><i>493</i>&nbsp;            godName.setTextAlignment(TextAlignment.CENTER);</b>
+<b class="nc"><i>494</i>&nbsp;            godName.setFont(lillybelleFont);</b>
+<b class="nc"><i>495</i>&nbsp;            Text godDescription = new Text();</b>
+<b class="nc"><i>496</i>&nbsp;            if(card.description!=null)</b>
+<b class="nc"><i>497</i>&nbsp;                godDescription.setText(card.description);</b>
+<b class="nc"><i>498</i>&nbsp;            else if(card.winDescription!=null)</b>
+<b class="nc"><i>499</i>&nbsp;                godDescription.setText(card.winDescription);</b>
+<b class="nc"><i>500</i>&nbsp;            else if(card.setUpDescription!=null)</b>
+<b class="nc"><i>501</i>&nbsp;                godDescription.setText(card.setUpDescription);</b>
+<b class="nc"><i>502</i>&nbsp;            else if(card.opponentsFxDescription!=null)</b>
+<b class="nc"><i>503</i>&nbsp;                godDescription.setText(card.opponentsFxDescription);</b>
+<b class="nc"><i>504</i>&nbsp;            godDescription.setFont(godInfoFont);</b>
+<b class="nc"><i>505</i>&nbsp;            godDescription.setWrappingWidth(screenWidth/7);</b>
+<b class="nc"><i>506</i>&nbsp;            godDescription.setTextAlignment(TextAlignment.CENTER);</b>
+<b class="nc"><i>507</i>&nbsp;            VBox cardInfo = new VBox();</b>
+<b class="nc"><i>508</i>&nbsp;            cardInfo.getChildren().addAll(godName, godDescription);</b>
+<b class="nc"><i>509</i>&nbsp;            cardInfo.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>510</i>&nbsp;            HBox cardBox = new HBox();</b>
+<b class="nc"><i>511</i>&nbsp;            cardBox.getChildren().addAll(cardView, cardInfo);</b>
+<b class="nc"><i>512</i>&nbsp;            cardBox.setSpacing(30);</b>
+<b class="nc"><i>513</i>&nbsp;            cardBox.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>514</i>&nbsp;            cardBox.setStyle(&quot;-fx-background-color: transparent&quot;);</b>
+<b class="nc"><i>515</i>&nbsp;            cardView.setOnMouseEntered(e -&gt; {</b>
+<b class="nc"><i>516</i>&nbsp;                cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>517</i>&nbsp;                cardView.setCursor(Cursor.HAND);</b>
+<i>518</i>&nbsp;            });
+<b class="nc"><i>519</i>&nbsp;            cardView.setOnMouseExited(e -&gt; {</b>
+<b class="nc"><i>520</i>&nbsp;                cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>521</i>&nbsp;                cardView.setCursor(Cursor.DEFAULT);</b>
+<i>522</i>&nbsp;            });
+<b class="nc"><i>523</i>&nbsp;            cardView.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>524</i>&nbsp;                if(choicesCounter&lt;numberOfPlayers)</b>
+<b class="nc"><i>525</i>&nbsp;                    activateAddCardsButton(addGodImg, addGodInactiveImg, addGod, removeGodImg, removeGodInactiveImg, removeGod, cardsIndexes, godCards);</b>
+<b class="nc"><i>526</i>&nbsp;                selectedCard = godName.getText();</b>
+<b class="nc"><i>527</i>&nbsp;                selectedCardBox = cardBox;</b>
+<b class="nc"><i>528</i>&nbsp;                cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>529</i>&nbsp;                cardView.setCursor(Cursor.DEFAULT);</b>
+<b class="nc"><i>530</i>&nbsp;                cardView.setOnMouseExited(f -&gt; {</b>
+<b class="nc"><i>531</i>&nbsp;                    cardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>532</i>&nbsp;                    cardView.setCursor(Cursor.DEFAULT);</b>
+<i>533</i>&nbsp;                });
+<b class="nc"><i>534</i>&nbsp;                for(Node box : cardsChosable){</b>
+<b class="nc"><i>535</i>&nbsp;                    if(!box.equals(cardView)) {</b>
+<b class="nc"><i>536</i>&nbsp;                        box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>537</i>&nbsp;                        box.setOnMouseExited(k -&gt; {</b>
+<b class="nc"><i>538</i>&nbsp;                            box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>539</i>&nbsp;                            box.setCursor(Cursor.DEFAULT);</b>
+<i>540</i>&nbsp;                        });
+<i>541</i>&nbsp;                    }
+<b class="nc"><i>542</i>&nbsp;                }</b>
+<i>543</i>&nbsp;            });
+<b class="nc"><i>544</i>&nbsp;            cardsChosable.add(cardView);</b>
+<b class="nc"><i>545</i>&nbsp;            cardsList.getChildren().add(cardBox);</b>
+<b class="nc"><i>546</i>&nbsp;        }</b>
+<i>547</i>&nbsp;
+<b class="nc"><i>548</i>&nbsp;        allCards.setContent(cardsList);</b>
+<b class="nc"><i>549</i>&nbsp;        allCards.setPrefWidth(screenWidth/2.7);</b>
+<b class="nc"><i>550</i>&nbsp;        allCards.setMaxHeight(screenHeight/1.9);</b>
+<b class="nc"><i>551</i>&nbsp;        VBox buttons = new VBox();</b>
+<i>552</i>&nbsp;
+<b class="nc"><i>553</i>&nbsp;        buttons.getChildren().addAll(addGod, removeGod);</b>
+<b class="nc"><i>554</i>&nbsp;        buttons.setPrefWidth(screenWidth/11);</b>
+<b class="nc"><i>555</i>&nbsp;        buttons.setPrefHeight(screenHeight/1.5);</b>
+<b class="nc"><i>556</i>&nbsp;        buttons.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>557</i>&nbsp;        buttons.setSpacing(20);</b>
+<i>558</i>&nbsp;
+<i>559</i>&nbsp;        //Vertical Box that contains all chosen cards by the challenger
+<b class="nc"><i>560</i>&nbsp;        VBox choices = new VBox();</b>
+<b class="nc"><i>561</i>&nbsp;        choices.setPrefWidth(screenWidth/2.7);</b>
+<b class="nc"><i>562</i>&nbsp;        choices.setPrefHeight(screenHeight/1.5);</b>
+<b class="nc"><i>563</i>&nbsp;        choices.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>564</i>&nbsp;        choices.setSpacing(20);</b>
+<b class="nc"><i>565</i>&nbsp;        choices.setPadding(new Insets(0, screenWidth/20, 0, 0));</b>
+<i>566</i>&nbsp;
+<b class="nc"><i>567</i>&nbsp;        for(int i=0; i&lt;numberOfPlayers ; i++){</b>
+<b class="nc"><i>568</i>&nbsp;            Text name = new Text();</b>
+<i>569</i>&nbsp;
+<i>570</i>&nbsp;            //save all Text -&gt; I will be able to change Text content
+<b class="nc"><i>571</i>&nbsp;            choicesNames[i] = name;</b>
+<i>572</i>&nbsp;
+<b class="nc"><i>573</i>&nbsp;            name.setFont(lillybelleFont);</b>
+<b class="nc"><i>574</i>&nbsp;            Image choiceImg = new Image(MatchScene.class.getResource(&quot;/img/godCards/noGod.png&quot;).toString(), screenWidth/14, screenHeight/9, false, false);</b>
+<b class="nc"><i>575</i>&nbsp;            ImageView choiceView = new ImageView(choiceImg);</b>
+<i>576</i>&nbsp;
+<i>577</i>&nbsp;            //save all ImageView -&gt; I will be able to change Image
+<b class="nc"><i>578</i>&nbsp;            choicesImages[i] = choiceView;</b>
+<i>579</i>&nbsp;
+<i>580</i>&nbsp;
+<b class="nc"><i>581</i>&nbsp;            HBox choiceBox = new HBox();</b>
 <i>582</i>&nbsp;
-<b class="nc"><i>583</i>&nbsp;            HBox choiceBox = new HBox();</b>
-<i>584</i>&nbsp;
-<i>585</i>&nbsp;            //save all HBox -&gt; I will be able to set visibility
-<b class="nc"><i>586</i>&nbsp;            choicesBoxes[i] = choiceBox;</b>
-<i>587</i>&nbsp;
-<i>588</i>&nbsp;
-<b class="nc"><i>589</i>&nbsp;            choiceBox.setPrefWidth(screenWidth/3);</b>
-<b class="nc"><i>590</i>&nbsp;            choiceBox.getChildren().addAll(choiceView, name);</b>
-<b class="nc"><i>591</i>&nbsp;            choiceBox.setSpacing(30);</b>
-<b class="nc"><i>592</i>&nbsp;            choiceBox.setVisible(false);</b>
-<b class="nc"><i>593</i>&nbsp;            choiceBox.setAlignment(Pos.CENTER_LEFT);</b>
-<b class="nc"><i>594</i>&nbsp;            choiceBox.setPadding(new Insets(0,0,0,screenWidth/50));</b>
-<b class="nc"><i>595</i>&nbsp;            choices.getChildren().add(choiceBox);</b>
-<i>596</i>&nbsp;        }
-<i>597</i>&nbsp;
-<i>598</i>&nbsp;
-<b class="nc"><i>599</i>&nbsp;        Image confirmImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/confirmChoices.png&quot;).toString(), screenWidth/8, screenHeight/10, false, false);</b>
-<b class="nc"><i>600</i>&nbsp;        confirmChoices = new ImageView(confirmImg);</b>
-<b class="nc"><i>601</i>&nbsp;        confirmChoices.setOnMouseEntered(e -&gt;{</b>
-<b class="nc"><i>602</i>&nbsp;            confirmChoices.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>603</i>&nbsp;            confirmChoices.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
-<i>604</i>&nbsp;        });
-<b class="nc"><i>605</i>&nbsp;        confirmChoices.setOnMouseExited(e -&gt;{</b>
-<b class="nc"><i>606</i>&nbsp;            confirmChoices.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>607</i>&nbsp;            confirmChoices.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<i>608</i>&nbsp;        });
-<b class="nc"><i>609</i>&nbsp;        confirmChoices.setOnMouseClicked(e -&gt; {</b>
-<b class="nc"><i>610</i>&nbsp;            setConfirmChallengerCards();</b>
-<b class="nc"><i>611</i>&nbsp;            hideChooseCards(chooseCardsBox);</b>
-<i>612</i>&nbsp;        });
-<b class="nc"><i>613</i>&nbsp;        choices.getChildren().add(confirmChoices);</b>
-<b class="nc"><i>614</i>&nbsp;        confirmChoices.setVisible(false);</b>
+<i>583</i>&nbsp;            //save all HBox -&gt; I will be able to set visibility
+<b class="nc"><i>584</i>&nbsp;            choicesBoxes[i] = choiceBox;</b>
+<i>585</i>&nbsp;
+<i>586</i>&nbsp;
+<b class="nc"><i>587</i>&nbsp;            choiceBox.setPrefWidth(screenWidth/3);</b>
+<b class="nc"><i>588</i>&nbsp;            choiceBox.getChildren().addAll(choiceView, name);</b>
+<b class="nc"><i>589</i>&nbsp;            choiceBox.setSpacing(30);</b>
+<b class="nc"><i>590</i>&nbsp;            choiceBox.setVisible(false);</b>
+<b class="nc"><i>591</i>&nbsp;            choiceBox.setAlignment(Pos.CENTER_LEFT);</b>
+<b class="nc"><i>592</i>&nbsp;            choiceBox.setPadding(new Insets(0,0,0,screenWidth/50));</b>
+<b class="nc"><i>593</i>&nbsp;            choices.getChildren().add(choiceBox);</b>
+<i>594</i>&nbsp;        }
+<i>595</i>&nbsp;
+<i>596</i>&nbsp;
+<b class="nc"><i>597</i>&nbsp;        Image confirmImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/confirmChoices.png&quot;).toString(), screenWidth/8, screenHeight/10, false, false);</b>
+<b class="nc"><i>598</i>&nbsp;        confirmChoices = new ImageView(confirmImg);</b>
+<b class="nc"><i>599</i>&nbsp;        confirmChoices.setOnMouseEntered(e -&gt;{</b>
+<b class="nc"><i>600</i>&nbsp;            confirmChoices.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>601</i>&nbsp;            confirmChoices.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<i>602</i>&nbsp;        });
+<b class="nc"><i>603</i>&nbsp;        confirmChoices.setOnMouseExited(e -&gt;{</b>
+<b class="nc"><i>604</i>&nbsp;            confirmChoices.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>605</i>&nbsp;            confirmChoices.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<i>606</i>&nbsp;        });
+<b class="nc"><i>607</i>&nbsp;        confirmChoices.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>608</i>&nbsp;            setConfirmChallengerCards();</b>
+<b class="nc"><i>609</i>&nbsp;            hideChooseCards(chooseCardsBox);</b>
+<i>610</i>&nbsp;        });
+<b class="nc"><i>611</i>&nbsp;        choices.getChildren().add(confirmChoices);</b>
+<b class="nc"><i>612</i>&nbsp;        confirmChoices.setVisible(false);</b>
+<i>613</i>&nbsp;
+<b class="nc"><i>614</i>&nbsp;        chooseCards.getChildren().addAll(allCards,  buttons, choices);</b>
 <i>615</i>&nbsp;
-<b class="nc"><i>616</i>&nbsp;        chooseCards.getChildren().addAll(allCards,  buttons, choices);</b>
-<i>617</i>&nbsp;
-<b class="nc"><i>618</i>&nbsp;        chooseCardsTimer.setPadding(new Insets(0, 0, screenHeight/11, 0));</b>
-<b class="nc"><i>619</i>&nbsp;        StackPane.setAlignment(chooseCardsTimer, Pos.BOTTOM_CENTER);</b>
-<i>620</i>&nbsp;
-<b class="nc"><i>621</i>&nbsp;        chooseCardsBox.getChildren().addAll(chooseCardsView, chooseCards, chooseCardsTimer);</b>
-<b class="nc"><i>622</i>&nbsp;        chooseCardsBox.setAlignment(Pos.CENTER);</b>
-<i>623</i>&nbsp;
-<i>624</i>&nbsp;
-<b class="nc"><i>625</i>&nbsp;        FadeTransition chooseCardsBoxFadeIn = new FadeTransition(Duration.millis(1000), chooseCardsBox);</b>
-<b class="nc"><i>626</i>&nbsp;        chooseCardsBoxFadeIn.setFromValue(0);</b>
-<b class="nc"><i>627</i>&nbsp;        chooseCardsBoxFadeIn.setToValue(1);</b>
-<i>628</i>&nbsp;
-<b class="nc"><i>629</i>&nbsp;        ScaleTransition chooseCardsBoxZoomIn1 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);</b>
-<b class="nc"><i>630</i>&nbsp;        chooseCardsBoxZoomIn1.setFromX(0);</b>
-<b class="nc"><i>631</i>&nbsp;        chooseCardsBoxZoomIn1.setToX(1);</b>
-<b class="nc"><i>632</i>&nbsp;        chooseCardsBoxZoomIn1.setFromY(0.01);</b>
-<b class="nc"><i>633</i>&nbsp;        chooseCardsBoxZoomIn1.setToY(0.01);</b>
-<i>634</i>&nbsp;
-<b class="nc"><i>635</i>&nbsp;        ScaleTransition chooseCardsBoxZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);</b>
-<b class="nc"><i>636</i>&nbsp;        chooseCardsBoxZoomIn2.setFromY(0.01);</b>
-<b class="nc"><i>637</i>&nbsp;        chooseCardsBoxZoomIn2.setToY(1);</b>
-<i>638</i>&nbsp;
-<b class="nc"><i>639</i>&nbsp;        Timeline waitingReadyTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>640</i>&nbsp;                Duration.millis(1000),</b>
-<i>641</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>642</i>&nbsp;                    chooseCardsBoxFadeIn.play();</b>
-<b class="nc"><i>643</i>&nbsp;                    chooseCardsBoxZoomIn1.play();</b>
-<i>644</i>&nbsp;                }));
-<b class="nc"><i>645</i>&nbsp;        waitingReadyTimer.play();</b>
-<i>646</i>&nbsp;
-<b class="nc"><i>647</i>&nbsp;        Timeline showingTimer1 = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>648</i>&nbsp;                Duration.millis(1700),</b>
-<i>649</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>650</i>&nbsp;                    chooseCardsBox.setVisible(true);</b>
-<i>651</i>&nbsp;                }));
-<b class="nc"><i>652</i>&nbsp;        showingTimer1.play();</b>
-<b class="nc"><i>653</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>654</i>&nbsp;                Duration.millis(1700),</b>
-<i>655</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>656</i>&nbsp;                    chooseCardsBoxZoomIn2.play();</b>
-<i>657</i>&nbsp;                }));
-<b class="nc"><i>658</i>&nbsp;        showingTimer.play();</b>
-<i>659</i>&nbsp;
-<i>660</i>&nbsp;    }
-<i>661</i>&nbsp;    /**
-<i>662</i>&nbsp;     * This method activates add button in the Choose cards box when chosen cards are less than number of players
-<i>663</i>&nbsp;     * @param addGodImg Add button image
-<i>664</i>&nbsp;     * @param addGodInactiveImg Add button Inactive image
-<i>665</i>&nbsp;     * @param addGod Add button
-<i>666</i>&nbsp;     * @param removeGodImg Remove button image
-<i>667</i>&nbsp;     * @param removeGodInactiveImg Remove button inactive image
-<i>668</i>&nbsp;     * @param removeGod Remove button
-<i>669</i>&nbsp;     * @param cardsIndexes Indexes of all cards, it saves index in order to show or hide the right card in the list of all cards (left side of chooseCardsPane
-<i>670</i>&nbsp;     * @param godCards All god cards (list of godCardProxy)
-<i>671</i>&nbsp;     */
-<i>672</i>&nbsp;    private void activateAddCardsButton(Image addGodImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod, int[] cardsIndexes, List&lt;GodCardProxy&gt; godCards){
-<b class="nc"><i>673</i>&nbsp;        addGod.setImage(addGodImg);</b>
-<b class="nc"><i>674</i>&nbsp;        addGod.setOnMouseEntered(e -&gt;{</b>
-<b class="nc"><i>675</i>&nbsp;            addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
-<b class="nc"><i>676</i>&nbsp;            addGod.setCursor(Cursor.HAND);</b>
-<i>677</i>&nbsp;        });
-<b class="nc"><i>678</i>&nbsp;        addGod.setOnMouseExited(e -&gt;{</b>
-<b class="nc"><i>679</i>&nbsp;            addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<b class="nc"><i>680</i>&nbsp;            addGod.setCursor(Cursor.DEFAULT);</b>
-<i>681</i>&nbsp;        });
-<b class="nc"><i>682</i>&nbsp;        addGod.setOnMouseClicked(e -&gt;{</b>
-<b class="nc"><i>683</i>&nbsp;            choicesCounter++;</b>
-<b class="nc"><i>684</i>&nbsp;            choicesNames[choicesCounter-1].setText(selectedCard);</b>
-<b class="nc"><i>685</i>&nbsp;            choicesImages[choicesCounter-1].setImage(new Image(MatchScene.class.getResource(&quot;/img/godCards/&quot; + selectedCard + &quot;.png&quot;).toString(), screenWidth/14, screenHeight/8, false, false));</b>
-<b class="nc"><i>686</i>&nbsp;            choicesBoxes[choicesCounter-1].setVisible(true);</b>
-<b class="nc"><i>687</i>&nbsp;            for(GodCardProxy godCard : godCards){</b>
-<b class="nc"><i>688</i>&nbsp;                if(godCard.name.equals(selectedCard)){</b>
-<b class="nc"><i>689</i>&nbsp;                    cardsIndexes[choicesCounter-1] = godCards.indexOf(godCard);</b>
-<i>690</i>&nbsp;                }
-<b class="nc"><i>691</i>&nbsp;            }</b>
-<b class="nc"><i>692</i>&nbsp;            chosenCards.add(selectedCardBox);</b>
-<b class="nc"><i>693</i>&nbsp;            selectedCardBox.setVisible(false);</b>
-<b class="nc"><i>694</i>&nbsp;            selectedCardBox.setManaged(false);</b>
-<b class="nc"><i>695</i>&nbsp;            if(choicesCounter==1)</b>
-<b class="nc"><i>696</i>&nbsp;                activateRemoveCardsButton(removeGodImg, removeGodInactiveImg, removeGod);</b>
-<b class="nc"><i>697</i>&nbsp;            deactivateAddCardsButton(addGodInactiveImg, addGod);</b>
-<b class="nc"><i>698</i>&nbsp;            if(choicesCounter==numberOfPlayers)</b>
-<b class="nc"><i>699</i>&nbsp;                confirmChoices.setVisible(true);</b>
-<i>700</i>&nbsp;        });
-<i>701</i>&nbsp;    }
-<i>702</i>&nbsp;
-<i>703</i>&nbsp;    /**
-<i>704</i>&nbsp;     * This method deactivates add button in the Choose cards box when chosen cards are as many as number of players
-<i>705</i>&nbsp;     * @param addGodInactiveImg Add button inactive image
-<i>706</i>&nbsp;     * @param addGod Add button
-<i>707</i>&nbsp;     */
-<i>708</i>&nbsp;    private void deactivateAddCardsButton(Image addGodInactiveImg, ImageView addGod){
-<b class="nc"><i>709</i>&nbsp;        addGod.setImage(addGodInactiveImg);</b>
-<b class="nc"><i>710</i>&nbsp;        addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<b class="nc"><i>711</i>&nbsp;        addGod.setOnMouseEntered(e -&gt; {</b>
-<b class="nc"><i>712</i>&nbsp;            addGod.setCursor(Cursor.DEFAULT);</b>
-<i>713</i>&nbsp;        });
-<b class="nc"><i>714</i>&nbsp;        addGod.setOnMouseExited(Event::consume);</b>
-<b class="nc"><i>715</i>&nbsp;        addGod.setOnMouseClicked(Event::consume);</b>
-<i>716</i>&nbsp;    }
-<i>717</i>&nbsp;
-<i>718</i>&nbsp;    /**
-<i>719</i>&nbsp;     * This method activates remove button in the Choose cards box when chosen cards are 1 or more
-<i>720</i>&nbsp;     * @param removeGodImg Remove button image
-<i>721</i>&nbsp;     * @param removeGodInactiveImg Remove button inactive image
-<i>722</i>&nbsp;     * @param removeGod Remove button
-<i>723</i>&nbsp;     */
-<i>724</i>&nbsp;    private void activateRemoveCardsButton(Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod){
-<b class="nc"><i>725</i>&nbsp;        removeGod.setImage(removeGodImg);</b>
-<b class="nc"><i>726</i>&nbsp;        removeGod.setOnMouseEntered(e -&gt;{</b>
-<b class="nc"><i>727</i>&nbsp;            removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
-<b class="nc"><i>728</i>&nbsp;            removeGod.setCursor(Cursor.HAND);</b>
-<i>729</i>&nbsp;        });
-<b class="nc"><i>730</i>&nbsp;        removeGod.setOnMouseExited(e -&gt;{</b>
-<b class="nc"><i>731</i>&nbsp;            removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<i>732</i>&nbsp;        });
-<b class="nc"><i>733</i>&nbsp;        removeGod.setOnMouseClicked(e -&gt;{</b>
-<b class="nc"><i>734</i>&nbsp;            chosenCards.get(choicesCounter-1).setVisible(true);</b>
-<b class="nc"><i>735</i>&nbsp;            chosenCards.get(choicesCounter-1).setManaged(true);</b>
-<b class="nc"><i>736</i>&nbsp;            for(ImageView card : cardsChosable)</b>
-<b class="nc"><i>737</i>&nbsp;                card.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>738</i>&nbsp;            chosenCards.remove(choicesCounter-1);</b>
-<b class="nc"><i>739</i>&nbsp;            choicesBoxes[choicesCounter-1].setVisible(false);</b>
-<b class="nc"><i>740</i>&nbsp;            choicesCounter--;</b>
-<b class="nc"><i>741</i>&nbsp;            if(choicesCounter==0)</b>
-<b class="nc"><i>742</i>&nbsp;                deactivateRemoveCardsButton(removeGodInactiveImg, removeGod);</b>
-<b class="nc"><i>743</i>&nbsp;            if(choicesCounter&lt;numberOfPlayers)</b>
-<b class="nc"><i>744</i>&nbsp;                confirmChoices.setVisible(false);</b>
-<i>745</i>&nbsp;        });
-<i>746</i>&nbsp;    }
-<i>747</i>&nbsp;
-<i>748</i>&nbsp;    /**
-<i>749</i>&nbsp;     * This method deactivates remove button in the Choose cards box when chosen cards are 0
-<i>750</i>&nbsp;     * @param removeGodInactiveImg Remove button inactive image
-<i>751</i>&nbsp;     * @param removeGod Remove button
-<i>752</i>&nbsp;     */
-<i>753</i>&nbsp;    private void deactivateRemoveCardsButton(Image removeGodInactiveImg, ImageView removeGod){
-<b class="nc"><i>754</i>&nbsp;        removeGod.setImage(removeGodInactiveImg);</b>
-<b class="nc"><i>755</i>&nbsp;        removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<b class="nc"><i>756</i>&nbsp;        removeGod.setOnMouseEntered(e -&gt; {</b>
-<b class="nc"><i>757</i>&nbsp;            removeGod.setCursor(Cursor.DEFAULT);</b>
-<i>758</i>&nbsp;        });
-<b class="nc"><i>759</i>&nbsp;        removeGod.setOnMouseExited(Event::consume);</b>
-<b class="nc"><i>760</i>&nbsp;        removeGod.setOnMouseClicked(Event::consume);</b>
-<i>761</i>&nbsp;    }
-<i>762</i>&nbsp;
-<i>763</i>&nbsp;    /**
-<i>764</i>&nbsp;     * This method asks player to choose their card
-<i>765</i>&nbsp;     * @param cards List of chosable cards
-<i>766</i>&nbsp;     */
-<i>767</i>&nbsp;    public void chooseCard(List&lt;GodCardProxy&gt; cards){
-<b class="nc"><i>768</i>&nbsp;        Image chooseCardImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/chooseCard.png&quot;).toString(), screenWidth/1.2, screenHeight/1.2, false, false);</b>
-<b class="nc"><i>769</i>&nbsp;        ImageView chooseCardBackground = new ImageView(chooseCardImg);</b>
-<i>770</i>&nbsp;
-<b class="nc"><i>771</i>&nbsp;        List&lt;ImageView&gt; cardChoiceBoxes = new ArrayList&lt;&gt;();</b>
-<b class="nc"><i>772</i>&nbsp;        AtomicReference&lt;ImageView&gt; selected = new AtomicReference&lt;&gt;(new ImageView());</b>
-<i>773</i>&nbsp;
-<b class="nc"><i>774</i>&nbsp;        VBox chooseCardBox = new VBox();</b>
-<i>775</i>&nbsp;
-<b class="nc"><i>776</i>&nbsp;        HBox cardImages = new HBox();</b>
-<b class="nc"><i>777</i>&nbsp;        cardImages.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>778</i>&nbsp;        cardImages.setSpacing(screenWidth/20);</b>
+<b class="nc"><i>616</i>&nbsp;        chooseCardsTimer.setPadding(new Insets(0, 0, screenHeight/11, 0));</b>
+<b class="nc"><i>617</i>&nbsp;        StackPane.setAlignment(chooseCardsTimer, Pos.BOTTOM_CENTER);</b>
+<i>618</i>&nbsp;
+<b class="nc"><i>619</i>&nbsp;        chooseCardsBox.getChildren().addAll(chooseCardsView, chooseCards, chooseCardsTimer);</b>
+<b class="nc"><i>620</i>&nbsp;        chooseCardsBox.setAlignment(Pos.CENTER);</b>
+<i>621</i>&nbsp;
+<i>622</i>&nbsp;
+<b class="nc"><i>623</i>&nbsp;        FadeTransition chooseCardsBoxFadeIn = new FadeTransition(Duration.millis(1000), chooseCardsBox);</b>
+<b class="nc"><i>624</i>&nbsp;        chooseCardsBoxFadeIn.setFromValue(0);</b>
+<b class="nc"><i>625</i>&nbsp;        chooseCardsBoxFadeIn.setToValue(1);</b>
+<i>626</i>&nbsp;
+<b class="nc"><i>627</i>&nbsp;        ScaleTransition chooseCardsBoxZoomIn1 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);</b>
+<b class="nc"><i>628</i>&nbsp;        chooseCardsBoxZoomIn1.setFromX(0);</b>
+<b class="nc"><i>629</i>&nbsp;        chooseCardsBoxZoomIn1.setToX(1);</b>
+<b class="nc"><i>630</i>&nbsp;        chooseCardsBoxZoomIn1.setFromY(0.01);</b>
+<b class="nc"><i>631</i>&nbsp;        chooseCardsBoxZoomIn1.setToY(0.01);</b>
+<i>632</i>&nbsp;
+<b class="nc"><i>633</i>&nbsp;        ScaleTransition chooseCardsBoxZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCardsBox);</b>
+<b class="nc"><i>634</i>&nbsp;        chooseCardsBoxZoomIn2.setFromY(0.01);</b>
+<b class="nc"><i>635</i>&nbsp;        chooseCardsBoxZoomIn2.setToY(1);</b>
+<i>636</i>&nbsp;
+<b class="nc"><i>637</i>&nbsp;        Timeline waitingReadyTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>638</i>&nbsp;                Duration.millis(1000),</b>
+<i>639</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>640</i>&nbsp;                    chooseCardsBoxFadeIn.play();</b>
+<b class="nc"><i>641</i>&nbsp;                    chooseCardsBoxZoomIn1.play();</b>
+<i>642</i>&nbsp;                }));
+<b class="nc"><i>643</i>&nbsp;        waitingReadyTimer.play();</b>
+<i>644</i>&nbsp;
+<b class="nc"><i>645</i>&nbsp;        Timeline showingTimer1 = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>646</i>&nbsp;                Duration.millis(1700),</b>
+<b class="nc"><i>647</i>&nbsp;                ae -&gt; chooseCardsBox.setVisible(true)));</b>
+<b class="nc"><i>648</i>&nbsp;        showingTimer1.play();</b>
+<b class="nc"><i>649</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>650</i>&nbsp;                Duration.millis(1700),</b>
+<b class="nc"><i>651</i>&nbsp;                ae -&gt; chooseCardsBoxZoomIn2.play()));</b>
+<b class="nc"><i>652</i>&nbsp;        showingTimer.play();</b>
+<i>653</i>&nbsp;
+<i>654</i>&nbsp;    }
+<i>655</i>&nbsp;    /**
+<i>656</i>&nbsp;     * This method activates add button in the Choose cards box when chosen cards are less than number of players
+<i>657</i>&nbsp;     * @param addGodImg Add button image
+<i>658</i>&nbsp;     * @param addGodInactiveImg Add button Inactive image
+<i>659</i>&nbsp;     * @param addGod Add button
+<i>660</i>&nbsp;     * @param removeGodImg Remove button image
+<i>661</i>&nbsp;     * @param removeGodInactiveImg Remove button inactive image
+<i>662</i>&nbsp;     * @param removeGod Remove button
+<i>663</i>&nbsp;     * @param cardsIndexes Indexes of all cards, it saves index in order to show or hide the right card in the list of all cards (left side of chooseCardsPane
+<i>664</i>&nbsp;     * @param godCards All god cards (list of godCardProxy)
+<i>665</i>&nbsp;     */
+<i>666</i>&nbsp;    private void activateAddCardsButton(Image addGodImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod, int[] cardsIndexes, List&lt;GodCardProxy&gt; godCards){
+<b class="nc"><i>667</i>&nbsp;        addGod.setImage(addGodImg);</b>
+<b class="nc"><i>668</i>&nbsp;        addGod.setOnMouseEntered(e -&gt;{</b>
+<b class="nc"><i>669</i>&nbsp;            addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>670</i>&nbsp;            addGod.setCursor(Cursor.HAND);</b>
+<i>671</i>&nbsp;        });
+<b class="nc"><i>672</i>&nbsp;        addGod.setOnMouseExited(e -&gt;{</b>
+<b class="nc"><i>673</i>&nbsp;            addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>674</i>&nbsp;            addGod.setCursor(Cursor.DEFAULT);</b>
+<i>675</i>&nbsp;        });
+<b class="nc"><i>676</i>&nbsp;        addGod.setOnMouseClicked(e -&gt;{</b>
+<b class="nc"><i>677</i>&nbsp;            choicesCounter++;</b>
+<b class="nc"><i>678</i>&nbsp;            choicesNames[choicesCounter-1].setText(selectedCard);</b>
+<b class="nc"><i>679</i>&nbsp;            choicesImages[choicesCounter-1].setImage(new Image(MatchScene.class.getResource(&quot;/img/godCards/&quot; + selectedCard + &quot;.png&quot;).toString(), screenWidth/14, screenHeight/8, false, false));</b>
+<b class="nc"><i>680</i>&nbsp;            choicesBoxes[choicesCounter-1].setVisible(true);</b>
+<b class="nc"><i>681</i>&nbsp;            for(GodCardProxy godCard : godCards){</b>
+<b class="nc"><i>682</i>&nbsp;                if(godCard.name.equals(selectedCard)){</b>
+<b class="nc"><i>683</i>&nbsp;                    cardsIndexes[choicesCounter-1] = godCards.indexOf(godCard);</b>
+<i>684</i>&nbsp;                }
+<b class="nc"><i>685</i>&nbsp;            }</b>
+<b class="nc"><i>686</i>&nbsp;            chosenCards.add(selectedCardBox);</b>
+<b class="nc"><i>687</i>&nbsp;            selectedCardBox.setVisible(false);</b>
+<b class="nc"><i>688</i>&nbsp;            selectedCardBox.setManaged(false);</b>
+<b class="nc"><i>689</i>&nbsp;            if(choicesCounter==1)</b>
+<b class="nc"><i>690</i>&nbsp;                activateRemoveCardsButton(removeGodImg, removeGodInactiveImg, removeGod);</b>
+<b class="nc"><i>691</i>&nbsp;            deactivateAddCardsButton(addGodInactiveImg, addGod);</b>
+<b class="nc"><i>692</i>&nbsp;            if(choicesCounter==numberOfPlayers)</b>
+<b class="nc"><i>693</i>&nbsp;                confirmChoices.setVisible(true);</b>
+<i>694</i>&nbsp;        });
+<i>695</i>&nbsp;    }
+<i>696</i>&nbsp;
+<i>697</i>&nbsp;    /**
+<i>698</i>&nbsp;     * This method deactivates add button in the Choose cards box when chosen cards are as many as number of players
+<i>699</i>&nbsp;     * @param addGodInactiveImg Add button inactive image
+<i>700</i>&nbsp;     * @param addGod Add button
+<i>701</i>&nbsp;     */
+<i>702</i>&nbsp;    private void deactivateAddCardsButton(Image addGodInactiveImg, ImageView addGod){
+<b class="nc"><i>703</i>&nbsp;        addGod.setImage(addGodInactiveImg);</b>
+<b class="nc"><i>704</i>&nbsp;        addGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>705</i>&nbsp;        addGod.setOnMouseEntered(e -&gt; addGod.setCursor(Cursor.DEFAULT));</b>
+<b class="nc"><i>706</i>&nbsp;        addGod.setOnMouseExited(Event::consume);</b>
+<b class="nc"><i>707</i>&nbsp;        addGod.setOnMouseClicked(Event::consume);</b>
+<i>708</i>&nbsp;    }
+<i>709</i>&nbsp;
+<i>710</i>&nbsp;    /**
+<i>711</i>&nbsp;     * This method activates remove button in the Choose cards box when chosen cards are 1 or more
+<i>712</i>&nbsp;     * @param removeGodImg Remove button image
+<i>713</i>&nbsp;     * @param removeGodInactiveImg Remove button inactive image
+<i>714</i>&nbsp;     * @param removeGod Remove button
+<i>715</i>&nbsp;     */
+<i>716</i>&nbsp;    private void activateRemoveCardsButton(Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod){
+<b class="nc"><i>717</i>&nbsp;        removeGod.setImage(removeGodImg);</b>
+<b class="nc"><i>718</i>&nbsp;        removeGod.setOnMouseEntered(e -&gt;{</b>
+<b class="nc"><i>719</i>&nbsp;            removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>720</i>&nbsp;            removeGod.setCursor(Cursor.HAND);</b>
+<i>721</i>&nbsp;        });
+<b class="nc"><i>722</i>&nbsp;        removeGod.setOnMouseExited(e -&gt; removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0)));</b>
+<b class="nc"><i>723</i>&nbsp;        removeGod.setOnMouseClicked(e -&gt;{</b>
+<b class="nc"><i>724</i>&nbsp;            chosenCards.get(choicesCounter-1).setVisible(true);</b>
+<b class="nc"><i>725</i>&nbsp;            chosenCards.get(choicesCounter-1).setManaged(true);</b>
+<b class="nc"><i>726</i>&nbsp;            for(ImageView card : cardsChosable)</b>
+<b class="nc"><i>727</i>&nbsp;                card.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>728</i>&nbsp;            chosenCards.remove(choicesCounter-1);</b>
+<b class="nc"><i>729</i>&nbsp;            choicesBoxes[choicesCounter-1].setVisible(false);</b>
+<b class="nc"><i>730</i>&nbsp;            choicesCounter--;</b>
+<b class="nc"><i>731</i>&nbsp;            if(choicesCounter==0)</b>
+<b class="nc"><i>732</i>&nbsp;                deactivateRemoveCardsButton(removeGodInactiveImg, removeGod);</b>
+<b class="nc"><i>733</i>&nbsp;            if(choicesCounter&lt;numberOfPlayers)</b>
+<b class="nc"><i>734</i>&nbsp;                confirmChoices.setVisible(false);</b>
+<i>735</i>&nbsp;        });
+<i>736</i>&nbsp;    }
+<i>737</i>&nbsp;
+<i>738</i>&nbsp;    /**
+<i>739</i>&nbsp;     * This method deactivates remove button in the Choose cards box when chosen cards are 0
+<i>740</i>&nbsp;     * @param removeGodInactiveImg Remove button inactive image
+<i>741</i>&nbsp;     * @param removeGod Remove button
+<i>742</i>&nbsp;     */
+<i>743</i>&nbsp;    private void deactivateRemoveCardsButton(Image removeGodInactiveImg, ImageView removeGod){
+<b class="nc"><i>744</i>&nbsp;        removeGod.setImage(removeGodInactiveImg);</b>
+<b class="nc"><i>745</i>&nbsp;        removeGod.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>746</i>&nbsp;        removeGod.setOnMouseEntered(e -&gt; removeGod.setCursor(Cursor.DEFAULT));</b>
+<b class="nc"><i>747</i>&nbsp;        removeGod.setOnMouseExited(Event::consume);</b>
+<b class="nc"><i>748</i>&nbsp;        removeGod.setOnMouseClicked(Event::consume);</b>
+<i>749</i>&nbsp;    }
+<i>750</i>&nbsp;
+<i>751</i>&nbsp;    /**
+<i>752</i>&nbsp;     * This method asks player to choose their card
+<i>753</i>&nbsp;     * @param cards List of chosable cards
+<i>754</i>&nbsp;     */
+<i>755</i>&nbsp;    public void chooseCard(List&lt;GodCardProxy&gt; cards){
+<b class="nc"><i>756</i>&nbsp;        Image chooseCardImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/chooseCard.png&quot;).toString(), screenWidth/1.2, screenHeight/1.2, false, false);</b>
+<b class="nc"><i>757</i>&nbsp;        ImageView chooseCardBackground = new ImageView(chooseCardImg);</b>
+<i>758</i>&nbsp;
+<b class="nc"><i>759</i>&nbsp;        List&lt;ImageView&gt; cardChoiceBoxes = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>760</i>&nbsp;        AtomicReference&lt;ImageView&gt; selected = new AtomicReference&lt;&gt;(new ImageView());</b>
+<i>761</i>&nbsp;
+<b class="nc"><i>762</i>&nbsp;        VBox chooseCardBox = new VBox();</b>
+<i>763</i>&nbsp;
+<b class="nc"><i>764</i>&nbsp;        HBox cardImages = new HBox();</b>
+<b class="nc"><i>765</i>&nbsp;        cardImages.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>766</i>&nbsp;        cardImages.setSpacing(screenWidth/20);</b>
+<i>767</i>&nbsp;
+<i>768</i>&nbsp;
+<b class="nc"><i>769</i>&nbsp;        infoGodName.setFont(lillybelleFont);</b>
+<b class="nc"><i>770</i>&nbsp;        infoGodName.setTextAlignment(TextAlignment.CENTER);</b>
+<b class="nc"><i>771</i>&nbsp;        infoGodDescription.setFont(lillybelleFont);</b>
+<b class="nc"><i>772</i>&nbsp;        infoGodDescription.setTextAlignment(TextAlignment.CENTER);</b>
+<b class="nc"><i>773</i>&nbsp;        infoGodDescription.setWrappingWidth(screenWidth/1.6);</b>
+<i>774</i>&nbsp;
+<b class="nc"><i>775</i>&nbsp;        VBox infoBox = new VBox();</b>
+<b class="nc"><i>776</i>&nbsp;        infoBox.getChildren().addAll(infoGodName, infoGodDescription);</b>
+<b class="nc"><i>777</i>&nbsp;        infoBox.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>778</i>&nbsp;        infoBox.setPrefHeight(screenHeight/6);</b>
 <i>779</i>&nbsp;
-<i>780</i>&nbsp;
-<b class="nc"><i>781</i>&nbsp;        infoGodName.setFont(lillybelleFont);</b>
-<b class="nc"><i>782</i>&nbsp;        infoGodName.setTextAlignment(TextAlignment.CENTER);</b>
-<b class="nc"><i>783</i>&nbsp;        infoGodDescription.setFont(lillybelleFont);</b>
-<b class="nc"><i>784</i>&nbsp;        infoGodDescription.setTextAlignment(TextAlignment.CENTER);</b>
-<b class="nc"><i>785</i>&nbsp;        infoGodDescription.setWrappingWidth(screenWidth/1.6);</b>
-<i>786</i>&nbsp;
-<b class="nc"><i>787</i>&nbsp;        VBox infoBox = new VBox();</b>
-<b class="nc"><i>788</i>&nbsp;        infoBox.getChildren().addAll(infoGodName, infoGodDescription);</b>
-<b class="nc"><i>789</i>&nbsp;        infoBox.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>790</i>&nbsp;        infoBox.setPrefHeight(screenHeight/6);</b>
-<i>791</i>&nbsp;
-<b class="nc"><i>792</i>&nbsp;        Image confirmChoiceImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/confirmChoices.png&quot;).toString(), screenWidth/8, screenHeight/10, false, false);</b>
-<b class="nc"><i>793</i>&nbsp;        ImageView confirmChoice = new ImageView(confirmChoiceImg);</b>
-<b class="nc"><i>794</i>&nbsp;        confirmChoice.setOnMouseEntered(e -&gt;{</b>
-<b class="nc"><i>795</i>&nbsp;            confirmChoice.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>796</i>&nbsp;            confirmChoice.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
-<i>797</i>&nbsp;        });
-<b class="nc"><i>798</i>&nbsp;        confirmChoice.setOnMouseExited(e -&gt;{</b>
-<b class="nc"><i>799</i>&nbsp;            confirmChoice.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>800</i>&nbsp;            confirmChoice.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<i>801</i>&nbsp;        });
-<b class="nc"><i>802</i>&nbsp;        confirmChoice.setOnMouseClicked(e -&gt; {</b>
-<b class="nc"><i>803</i>&nbsp;            setConfirmMyCards();</b>
-<b class="nc"><i>804</i>&nbsp;            hideChooseCards(chooseCard);</b>
-<i>805</i>&nbsp;        });
-<i>806</i>&nbsp;
-<b class="nc"><i>807</i>&nbsp;        confirmChoice.setVisible(false);</b>
-<i>808</i>&nbsp;
+<b class="nc"><i>780</i>&nbsp;        Image confirmChoiceImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/confirmChoices.png&quot;).toString(), screenWidth/8, screenHeight/10, false, false);</b>
+<b class="nc"><i>781</i>&nbsp;        ImageView confirmChoice = new ImageView(confirmChoiceImg);</b>
+<b class="nc"><i>782</i>&nbsp;        confirmChoice.setOnMouseEntered(e -&gt;{</b>
+<b class="nc"><i>783</i>&nbsp;            confirmChoice.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>784</i>&nbsp;            confirmChoice.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<i>785</i>&nbsp;        });
+<b class="nc"><i>786</i>&nbsp;        confirmChoice.setOnMouseExited(e -&gt;{</b>
+<b class="nc"><i>787</i>&nbsp;            confirmChoice.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>788</i>&nbsp;            confirmChoice.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<i>789</i>&nbsp;        });
+<b class="nc"><i>790</i>&nbsp;        confirmChoice.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>791</i>&nbsp;            setConfirmMyCards();</b>
+<b class="nc"><i>792</i>&nbsp;            hideChooseCards(chooseCard);</b>
+<i>793</i>&nbsp;        });
+<i>794</i>&nbsp;
+<b class="nc"><i>795</i>&nbsp;        confirmChoice.setVisible(false);</b>
+<i>796</i>&nbsp;
+<i>797</i>&nbsp;
+<b class="nc"><i>798</i>&nbsp;        for(GodCardProxy card : cards){</b>
+<i>799</i>&nbsp;
+<b class="nc"><i>800</i>&nbsp;            Image chosableCardImg = new Image(MatchScene.class.getResource(&quot;/img/godCards/&quot; + card.name +&quot;.png&quot;).toString(), screenWidth/10, screenHeight/5, false, false);</b>
+<b class="nc"><i>801</i>&nbsp;            ImageView chosableCardView = new ImageView(chosableCardImg);</b>
+<i>802</i>&nbsp;
+<b class="nc"><i>803</i>&nbsp;            cardImages.getChildren().add(chosableCardView);</b>
+<i>804</i>&nbsp;
+<i>805</i>&nbsp;
+<b class="nc"><i>806</i>&nbsp;            chosableCardView.setOnMouseEntered(e -&gt; {</b>
+<b class="nc"><i>807</i>&nbsp;                chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>808</i>&nbsp;                infoGodName.setText(card.name);</b>
 <i>809</i>&nbsp;
-<b class="nc"><i>810</i>&nbsp;        for(GodCardProxy card : cards){</b>
-<i>811</i>&nbsp;
-<b class="nc"><i>812</i>&nbsp;            Image chosableCardImg = new Image(MatchScene.class.getResource(&quot;/img/godCards/&quot; + card.name +&quot;.png&quot;).toString(), screenWidth/10, screenHeight/5, false, false);</b>
-<b class="nc"><i>813</i>&nbsp;            ImageView chosableCardView = new ImageView(chosableCardImg);</b>
-<i>814</i>&nbsp;
-<b class="nc"><i>815</i>&nbsp;            cardImages.getChildren().add(chosableCardView);</b>
-<i>816</i>&nbsp;
-<i>817</i>&nbsp;
-<b class="nc"><i>818</i>&nbsp;            chosableCardView.setOnMouseEntered(e -&gt; {</b>
-<b class="nc"><i>819</i>&nbsp;                chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>820</i>&nbsp;                infoGodName.setText(card.name);</b>
-<i>821</i>&nbsp;
-<b class="nc"><i>822</i>&nbsp;                if(card.description!=null)</b>
-<b class="nc"><i>823</i>&nbsp;                    infoGodDescription.setText(card.description);</b>
-<b class="nc"><i>824</i>&nbsp;                else if(card.winDescription!=null)</b>
-<b class="nc"><i>825</i>&nbsp;                    infoGodDescription.setText(card.winDescription);</b>
-<b class="nc"><i>826</i>&nbsp;                else if(card.setUpDescription!=null)</b>
-<b class="nc"><i>827</i>&nbsp;                    infoGodDescription.setText(card.setUpDescription);</b>
-<b class="nc"><i>828</i>&nbsp;                else if(card.opponentsFxDescription!=null)</b>
-<b class="nc"><i>829</i>&nbsp;                    infoGodDescription.setText(card.opponentsFxDescription);</b>
-<i>830</i>&nbsp;
-<b class="nc"><i>831</i>&nbsp;                chosableCardView.setCursor(Cursor.HAND);</b>
-<i>832</i>&nbsp;            });
-<b class="nc"><i>833</i>&nbsp;            chosableCardView.setOnMouseExited(e -&gt; {</b>
-<b class="nc"><i>834</i>&nbsp;                chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>835</i>&nbsp;                chosableCardView.setCursor(Cursor.DEFAULT);</b>
-<b class="nc"><i>836</i>&nbsp;                infoGodName.setText(&quot;&quot;);</b>
-<b class="nc"><i>837</i>&nbsp;                infoGodDescription.setText(&quot;Go on a card to see the power&quot;);</b>
-<i>838</i>&nbsp;            });
-<b class="nc"><i>839</i>&nbsp;            chosableCardView.setOnMouseClicked(e -&gt; {</b>
-<b class="nc"><i>840</i>&nbsp;                selected.set(chosableCardView);</b>
-<b class="nc"><i>841</i>&nbsp;                confirmChoice.setVisible(true);</b>
-<b class="nc"><i>842</i>&nbsp;                cardIndex = cards.indexOf(card);</b>
-<b class="nc"><i>843</i>&nbsp;                chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>844</i>&nbsp;                chosableCardView.setCursor(Cursor.DEFAULT);</b>
-<b class="nc"><i>845</i>&nbsp;                chosableCardView.setOnMouseExited(f -&gt; {</b>
-<b class="nc"><i>846</i>&nbsp;                    chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>847</i>&nbsp;                    chosableCardView.setCursor(Cursor.DEFAULT);</b>
-<b class="nc"><i>848</i>&nbsp;                    infoGodName.setText(&quot;&quot;);</b>
-<b class="nc"><i>849</i>&nbsp;                    infoGodDescription.setText(&quot;Go on a card to see the power&quot;);</b>
-<i>850</i>&nbsp;                });
-<b class="nc"><i>851</i>&nbsp;                for(Node box : cardChoiceBoxes){</b>
-<b class="nc"><i>852</i>&nbsp;                    if(!box.toString().equals(selected.toString())) {</b>
-<b class="nc"><i>853</i>&nbsp;                        box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>854</i>&nbsp;                        box.setOnMouseExited(k -&gt; {</b>
-<b class="nc"><i>855</i>&nbsp;                            box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
-<b class="nc"><i>856</i>&nbsp;                            box.setCursor(Cursor.DEFAULT);</b>
-<b class="nc"><i>857</i>&nbsp;                            infoGodName.setText(&quot;&quot;);</b>
-<b class="nc"><i>858</i>&nbsp;                            infoGodDescription.setText(&quot;Go on a card to see the power&quot;);</b>
-<i>859</i>&nbsp;                        });
-<i>860</i>&nbsp;                    }
-<b class="nc"><i>861</i>&nbsp;                }</b>
-<i>862</i>&nbsp;            });
-<b class="nc"><i>863</i>&nbsp;            cardChoiceBoxes.add(chosableCardView);</b>
+<b class="nc"><i>810</i>&nbsp;                if(card.description!=null)</b>
+<b class="nc"><i>811</i>&nbsp;                    infoGodDescription.setText(card.description);</b>
+<b class="nc"><i>812</i>&nbsp;                else if(card.winDescription!=null)</b>
+<b class="nc"><i>813</i>&nbsp;                    infoGodDescription.setText(card.winDescription);</b>
+<b class="nc"><i>814</i>&nbsp;                else if(card.setUpDescription!=null)</b>
+<b class="nc"><i>815</i>&nbsp;                    infoGodDescription.setText(card.setUpDescription);</b>
+<b class="nc"><i>816</i>&nbsp;                else if(card.opponentsFxDescription!=null)</b>
+<b class="nc"><i>817</i>&nbsp;                    infoGodDescription.setText(card.opponentsFxDescription);</b>
+<i>818</i>&nbsp;
+<b class="nc"><i>819</i>&nbsp;                chosableCardView.setCursor(Cursor.HAND);</b>
+<i>820</i>&nbsp;            });
+<b class="nc"><i>821</i>&nbsp;            chosableCardView.setOnMouseExited(e -&gt; {</b>
+<b class="nc"><i>822</i>&nbsp;                chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>823</i>&nbsp;                chosableCardView.setCursor(Cursor.DEFAULT);</b>
+<b class="nc"><i>824</i>&nbsp;                infoGodName.setText(&quot;&quot;);</b>
+<b class="nc"><i>825</i>&nbsp;                infoGodDescription.setText(&quot;Go on a card to see the power&quot;);</b>
+<i>826</i>&nbsp;            });
+<b class="nc"><i>827</i>&nbsp;            chosableCardView.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>828</i>&nbsp;                selected.set(chosableCardView);</b>
+<b class="nc"><i>829</i>&nbsp;                confirmChoice.setVisible(true);</b>
+<b class="nc"><i>830</i>&nbsp;                cardIndex = cards.indexOf(card);</b>
+<b class="nc"><i>831</i>&nbsp;                chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>832</i>&nbsp;                chosableCardView.setCursor(Cursor.DEFAULT);</b>
+<b class="nc"><i>833</i>&nbsp;                chosableCardView.setOnMouseExited(f -&gt; {</b>
+<b class="nc"><i>834</i>&nbsp;                    chosableCardView.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>835</i>&nbsp;                    chosableCardView.setCursor(Cursor.DEFAULT);</b>
+<b class="nc"><i>836</i>&nbsp;                    infoGodName.setText(&quot;&quot;);</b>
+<b class="nc"><i>837</i>&nbsp;                    infoGodDescription.setText(&quot;Go on a card to see the power&quot;);</b>
+<i>838</i>&nbsp;                });
+<b class="nc"><i>839</i>&nbsp;                for(Node box : cardChoiceBoxes){</b>
+<b class="nc"><i>840</i>&nbsp;                    if(!box.toString().equals(selected.toString())) {</b>
+<b class="nc"><i>841</i>&nbsp;                        box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>842</i>&nbsp;                        box.setOnMouseExited(k -&gt; {</b>
+<b class="nc"><i>843</i>&nbsp;                            box.setStyle(&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0), 0, 0, 0, 0)&quot;);</b>
+<b class="nc"><i>844</i>&nbsp;                            box.setCursor(Cursor.DEFAULT);</b>
+<b class="nc"><i>845</i>&nbsp;                            infoGodName.setText(&quot;&quot;);</b>
+<b class="nc"><i>846</i>&nbsp;                            infoGodDescription.setText(&quot;Go on a card to see the power&quot;);</b>
+<i>847</i>&nbsp;                        });
+<i>848</i>&nbsp;                    }
+<b class="nc"><i>849</i>&nbsp;                }</b>
+<i>850</i>&nbsp;            });
+<b class="nc"><i>851</i>&nbsp;            cardChoiceBoxes.add(chosableCardView);</b>
+<i>852</i>&nbsp;
+<b class="nc"><i>853</i>&nbsp;        }</b>
+<i>854</i>&nbsp;
+<b class="nc"><i>855</i>&nbsp;        chooseCardBox.getChildren().addAll(cardImages, infoBox, confirmChoice);</b>
+<b class="nc"><i>856</i>&nbsp;        chooseCardBox.setPrefWidth(screenWidth/3);</b>
+<b class="nc"><i>857</i>&nbsp;        chooseCardBox.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>858</i>&nbsp;        chooseCardBox.setSpacing(screenHeight/50);</b>
+<i>859</i>&nbsp;
+<b class="nc"><i>860</i>&nbsp;        chooseCardTimer.setPadding(new Insets(0, 0, screenHeight/11, 0));</b>
+<b class="nc"><i>861</i>&nbsp;        StackPane.setAlignment(chooseCardTimer, Pos.BOTTOM_CENTER);</b>
+<i>862</i>&nbsp;
+<b class="nc"><i>863</i>&nbsp;        chooseCard.getChildren().addAll(chooseCardBackground, chooseCardBox, chooseCardTimer);</b>
 <i>864</i>&nbsp;
-<b class="nc"><i>865</i>&nbsp;        }</b>
-<i>866</i>&nbsp;
-<b class="nc"><i>867</i>&nbsp;        chooseCardBox.getChildren().addAll(cardImages, infoBox, confirmChoice);</b>
-<b class="nc"><i>868</i>&nbsp;        chooseCardBox.setPrefWidth(screenWidth/3);</b>
-<b class="nc"><i>869</i>&nbsp;        chooseCardBox.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>870</i>&nbsp;        chooseCardBox.setSpacing(screenHeight/50);</b>
-<i>871</i>&nbsp;
-<b class="nc"><i>872</i>&nbsp;        chooseCardTimer.setPadding(new Insets(0, 0, screenHeight/11, 0));</b>
-<b class="nc"><i>873</i>&nbsp;        StackPane.setAlignment(chooseCardTimer, Pos.BOTTOM_CENTER);</b>
+<b class="nc"><i>865</i>&nbsp;        FadeTransition chooseCardBoxFadeIn = new FadeTransition(Duration.millis(1000), chooseCard);</b>
+<b class="nc"><i>866</i>&nbsp;        chooseCardBoxFadeIn.setFromValue(0);</b>
+<b class="nc"><i>867</i>&nbsp;        chooseCardBoxFadeIn.setToValue(1);</b>
+<i>868</i>&nbsp;
+<b class="nc"><i>869</i>&nbsp;        ScaleTransition chooseCardBoxZoomIn1 = new ScaleTransition(Duration.millis(1000), chooseCard);</b>
+<b class="nc"><i>870</i>&nbsp;        chooseCardBoxZoomIn1.setFromX(0);</b>
+<b class="nc"><i>871</i>&nbsp;        chooseCardBoxZoomIn1.setToX(1);</b>
+<b class="nc"><i>872</i>&nbsp;        chooseCardBoxZoomIn1.setFromY(0.01);</b>
+<b class="nc"><i>873</i>&nbsp;        chooseCardBoxZoomIn1.setToY(0.01);</b>
 <i>874</i>&nbsp;
-<b class="nc"><i>875</i>&nbsp;        chooseCard.getChildren().addAll(chooseCardBackground, chooseCardBox, chooseCardTimer);</b>
-<i>876</i>&nbsp;
-<b class="nc"><i>877</i>&nbsp;        FadeTransition chooseCardBoxFadeIn = new FadeTransition(Duration.millis(1000), chooseCard);</b>
-<b class="nc"><i>878</i>&nbsp;        chooseCardBoxFadeIn.setFromValue(0);</b>
-<b class="nc"><i>879</i>&nbsp;        chooseCardBoxFadeIn.setToValue(1);</b>
-<i>880</i>&nbsp;
-<b class="nc"><i>881</i>&nbsp;        ScaleTransition chooseCardBoxZoomIn1 = new ScaleTransition(Duration.millis(1000), chooseCard);</b>
-<b class="nc"><i>882</i>&nbsp;        chooseCardBoxZoomIn1.setFromX(0);</b>
-<b class="nc"><i>883</i>&nbsp;        chooseCardBoxZoomIn1.setToX(1);</b>
-<b class="nc"><i>884</i>&nbsp;        chooseCardBoxZoomIn1.setFromY(0.01);</b>
-<b class="nc"><i>885</i>&nbsp;        chooseCardBoxZoomIn1.setToY(0.01);</b>
-<i>886</i>&nbsp;
-<b class="nc"><i>887</i>&nbsp;        ScaleTransition chooseCardBoxZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCard);</b>
-<b class="nc"><i>888</i>&nbsp;        chooseCardBoxZoomIn2.setFromY(0.01);</b>
-<b class="nc"><i>889</i>&nbsp;        chooseCardBoxZoomIn2.setToY(1);</b>
-<i>890</i>&nbsp;
-<b class="nc"><i>891</i>&nbsp;        chooseCardBoxFadeIn.play();</b>
-<b class="nc"><i>892</i>&nbsp;        chooseCardBoxZoomIn1.play();</b>
-<i>893</i>&nbsp;
-<b class="nc"><i>894</i>&nbsp;        Timeline showingTimer1 = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>895</i>&nbsp;                Duration.millis(100),</b>
-<i>896</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>897</i>&nbsp;                    chooseCard.setVisible(true);</b>
-<i>898</i>&nbsp;                }));
-<b class="nc"><i>899</i>&nbsp;        showingTimer1.play();</b>
-<b class="nc"><i>900</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>901</i>&nbsp;                Duration.millis(700),</b>
-<i>902</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>903</i>&nbsp;                    chooseCardBoxZoomIn2.play();</b>
-<i>904</i>&nbsp;                }));
-<b class="nc"><i>905</i>&nbsp;        showingTimer.play();</b>
-<i>906</i>&nbsp;    }
-<i>907</i>&nbsp;
-<i>908</i>&nbsp;    /**
-<i>909</i>&nbsp;     * This method hides a pane
-<i>910</i>&nbsp;     * @param pane Pane to hide
-<i>911</i>&nbsp;     */
-<i>912</i>&nbsp;    private void hideChooseCards(StackPane pane){
-<b class="nc"><i>913</i>&nbsp;        FadeTransition chooseCardsFadeOut = new FadeTransition(Duration.millis(700), pane);</b>
-<b class="nc"><i>914</i>&nbsp;        chooseCardsFadeOut.setFromValue(1);</b>
-<b class="nc"><i>915</i>&nbsp;        chooseCardsFadeOut.setToValue(0);</b>
-<i>916</i>&nbsp;
-<b class="nc"><i>917</i>&nbsp;        ScaleTransition chooseCardsZoomOut1 = new ScaleTransition(Duration.millis(700), pane);</b>
-<b class="nc"><i>918</i>&nbsp;        chooseCardsZoomOut1.setFromY(1);</b>
-<b class="nc"><i>919</i>&nbsp;        chooseCardsZoomOut1.setToY(0.01);</b>
-<b class="nc"><i>920</i>&nbsp;        chooseCardsZoomOut1.setFromX(1);</b>
-<b class="nc"><i>921</i>&nbsp;        chooseCardsZoomOut1.setToX(1);</b>
-<i>922</i>&nbsp;
-<b class="nc"><i>923</i>&nbsp;        ScaleTransition chooseCardsZoomIn2 = new ScaleTransition(Duration.millis(700), pane);</b>
-<b class="nc"><i>924</i>&nbsp;        chooseCardsZoomIn2.setFromX(1);</b>
-<b class="nc"><i>925</i>&nbsp;        chooseCardsZoomIn2.setToX(0);</b>
-<i>926</i>&nbsp;
-<b class="nc"><i>927</i>&nbsp;        chooseCardsZoomOut1.play();</b>
-<i>928</i>&nbsp;
-<b class="nc"><i>929</i>&nbsp;        Timeline hidingTimer1 = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>930</i>&nbsp;                Duration.millis(700),</b>
-<i>931</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>932</i>&nbsp;                    chooseCardsZoomIn2.play();</b>
-<b class="nc"><i>933</i>&nbsp;                    chooseCardsFadeOut.play();</b>
-<i>934</i>&nbsp;                }));
-<b class="nc"><i>935</i>&nbsp;        hidingTimer1.play();</b>
-<b class="nc"><i>936</i>&nbsp;        Timeline hidingTimer2 = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>937</i>&nbsp;                Duration.millis(1400),</b>
-<i>938</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>939</i>&nbsp;                    pane.setVisible(false);</b>
-<i>940</i>&nbsp;                }));
-<b class="nc"><i>941</i>&nbsp;        hidingTimer2.play();</b>
-<i>942</i>&nbsp;    }
-<i>943</i>&nbsp;
-<i>944</i>&nbsp;    /**
-<i>945</i>&nbsp;     * This method waits for player (if he is the challenger) to choose all the cards of the match and returns them
-<i>946</i>&nbsp;     * @return Chosen cards indexes (it refers to list of cards)
-<i>947</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
-<i>948</i>&nbsp;     */
-<i>949</i>&nbsp;    public synchronized int[] chosenCards() throws TimeOutException{
-<b class="nc"><i>950</i>&nbsp;        while(!confirmChallengerCards.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
-<i>951</i>&nbsp;            try {
-<b class="nc"><i>952</i>&nbsp;                wait();</b>
-<b class="nc"><i>953</i>&nbsp;            } catch (InterruptedException e) {</b>
-<b class="nc"><i>954</i>&nbsp;                e.printStackTrace();</b>
-<b class="nc"><i>955</i>&nbsp;            }</b>
-<i>956</i>&nbsp;        }
-<b class="nc"><i>957</i>&nbsp;        if(closeMatch.get())</b>
-<b class="nc"><i>958</i>&nbsp;            return new int[] {-1};</b>
-<b class="nc"><i>959</i>&nbsp;        else if(endTimer.get())</b>
-<b class="nc"><i>960</i>&nbsp;            throw new TimeOutException();</b>
-<b class="nc"><i>961</i>&nbsp;        return cardsIndexes;</b>
-<i>962</i>&nbsp;    }
-<i>963</i>&nbsp;
-<i>964</i>&nbsp;    /**
-<i>965</i>&nbsp;     * This method waits for player to choose his card for the match and returns it
-<i>966</i>&nbsp;     * @return Chosen card index (it refers to list of cards)
-<i>967</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
-<i>968</i>&nbsp;     */
-<i>969</i>&nbsp;    public synchronized int chosenCard() throws TimeOutException{
-<b class="nc"><i>970</i>&nbsp;        while(!confirmMyCards.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
-<i>971</i>&nbsp;            try {
-<b class="nc"><i>972</i>&nbsp;                wait();</b>
-<b class="nc"><i>973</i>&nbsp;            } catch (InterruptedException e) {</b>
-<b class="nc"><i>974</i>&nbsp;                e.printStackTrace();</b>
-<b class="nc"><i>975</i>&nbsp;            }</b>
-<i>976</i>&nbsp;        }
-<b class="nc"><i>977</i>&nbsp;        if(closeMatch.get())</b>
-<b class="nc"><i>978</i>&nbsp;            return -1;</b>
-<b class="nc"><i>979</i>&nbsp;        else if(endTimer.get())</b>
-<b class="nc"><i>980</i>&nbsp;            throw new TimeOutException();</b>
-<b class="nc"><i>981</i>&nbsp;        return cardIndex;</b>
-<i>982</i>&nbsp;    }
-<i>983</i>&nbsp;
-<i>984</i>&nbsp;    /**
-<i>985</i>&nbsp;     * This method wait for player to chose a destination and returns it
-<i>986</i>&nbsp;     * @return Chosen destination
-<i>987</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
-<i>988</i>&nbsp;     */
-<i>989</i>&nbsp;    public synchronized int chosenDestination() throws TimeOutException {
-<b class="nc"><i>990</i>&nbsp;        while(!destinationReady.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
-<i>991</i>&nbsp;            try {
-<b class="nc"><i>992</i>&nbsp;                wait();</b>
-<b class="nc"><i>993</i>&nbsp;            } catch (InterruptedException e) {</b>
-<b class="nc"><i>994</i>&nbsp;                e.printStackTrace();</b>
-<b class="nc"><i>995</i>&nbsp;            }</b>
-<i>996</i>&nbsp;        }
-<b class="nc"><i>997</i>&nbsp;        destinationReady.set(false);</b>
-<b class="nc"><i>998</i>&nbsp;        if(closeMatch.get()) {</b>
-<b class="nc"><i>999</i>&nbsp;            return -1;</b>
-<i>1000</i>&nbsp;        }
-<b class="nc"><i>1001</i>&nbsp;        else if(endTimer.get())</b>
-<b class="nc"><i>1002</i>&nbsp;            throw new TimeOutException();</b>
-<b class="nc"><i>1003</i>&nbsp;        return chosenBoxIndex();</b>
-<i>1004</i>&nbsp;    }
-<i>1005</i>&nbsp;
-<i>1006</i>&nbsp;    /**
-<i>1007</i>&nbsp;     * This method creates confirm turn popup
-<i>1008</i>&nbsp;     */
-<i>1009</i>&nbsp;    public void createConfirmTurnPopup(){
-<b class="nc"><i>1010</i>&nbsp;        askConfirmTurn.setPrefWidth(screenWidth/5);</b>
-<b class="nc"><i>1011</i>&nbsp;        askConfirmTurn.setPrefHeight(screenHeight/5);</b>
+<b class="nc"><i>875</i>&nbsp;        ScaleTransition chooseCardBoxZoomIn2 = new ScaleTransition(Duration.millis(1000), chooseCard);</b>
+<b class="nc"><i>876</i>&nbsp;        chooseCardBoxZoomIn2.setFromY(0.01);</b>
+<b class="nc"><i>877</i>&nbsp;        chooseCardBoxZoomIn2.setToY(1);</b>
+<i>878</i>&nbsp;
+<b class="nc"><i>879</i>&nbsp;        chooseCardBoxFadeIn.play();</b>
+<b class="nc"><i>880</i>&nbsp;        chooseCardBoxZoomIn1.play();</b>
+<i>881</i>&nbsp;
+<b class="nc"><i>882</i>&nbsp;        Timeline showingTimer1 = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>883</i>&nbsp;                Duration.millis(100),</b>
+<b class="nc"><i>884</i>&nbsp;                ae -&gt; chooseCard.setVisible(true)));</b>
+<b class="nc"><i>885</i>&nbsp;        showingTimer1.play();</b>
+<b class="nc"><i>886</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>887</i>&nbsp;                Duration.millis(700),</b>
+<b class="nc"><i>888</i>&nbsp;                ae -&gt; chooseCardBoxZoomIn2.play()));</b>
+<b class="nc"><i>889</i>&nbsp;        showingTimer.play();</b>
+<i>890</i>&nbsp;    }
+<i>891</i>&nbsp;
+<i>892</i>&nbsp;    /**
+<i>893</i>&nbsp;     * This method hides a pane
+<i>894</i>&nbsp;     * @param pane Pane to hide
+<i>895</i>&nbsp;     */
+<i>896</i>&nbsp;    private void hideChooseCards(StackPane pane){
+<b class="nc"><i>897</i>&nbsp;        FadeTransition chooseCardsFadeOut = new FadeTransition(Duration.millis(700), pane);</b>
+<b class="nc"><i>898</i>&nbsp;        chooseCardsFadeOut.setFromValue(1);</b>
+<b class="nc"><i>899</i>&nbsp;        chooseCardsFadeOut.setToValue(0);</b>
+<i>900</i>&nbsp;
+<b class="nc"><i>901</i>&nbsp;        ScaleTransition chooseCardsZoomOut1 = new ScaleTransition(Duration.millis(700), pane);</b>
+<b class="nc"><i>902</i>&nbsp;        chooseCardsZoomOut1.setFromY(1);</b>
+<b class="nc"><i>903</i>&nbsp;        chooseCardsZoomOut1.setToY(0.01);</b>
+<b class="nc"><i>904</i>&nbsp;        chooseCardsZoomOut1.setFromX(1);</b>
+<b class="nc"><i>905</i>&nbsp;        chooseCardsZoomOut1.setToX(1);</b>
+<i>906</i>&nbsp;
+<b class="nc"><i>907</i>&nbsp;        ScaleTransition chooseCardsZoomIn2 = new ScaleTransition(Duration.millis(700), pane);</b>
+<b class="nc"><i>908</i>&nbsp;        chooseCardsZoomIn2.setFromX(1);</b>
+<b class="nc"><i>909</i>&nbsp;        chooseCardsZoomIn2.setToX(0);</b>
+<i>910</i>&nbsp;
+<b class="nc"><i>911</i>&nbsp;        chooseCardsZoomOut1.play();</b>
+<i>912</i>&nbsp;
+<b class="nc"><i>913</i>&nbsp;        Timeline hidingTimer1 = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>914</i>&nbsp;                Duration.millis(700),</b>
+<i>915</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>916</i>&nbsp;                    chooseCardsZoomIn2.play();</b>
+<b class="nc"><i>917</i>&nbsp;                    chooseCardsFadeOut.play();</b>
+<i>918</i>&nbsp;                }));
+<b class="nc"><i>919</i>&nbsp;        hidingTimer1.play();</b>
+<b class="nc"><i>920</i>&nbsp;        Timeline hidingTimer2 = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>921</i>&nbsp;                Duration.millis(1400),</b>
+<b class="nc"><i>922</i>&nbsp;                ae -&gt; pane.setVisible(false)));</b>
+<b class="nc"><i>923</i>&nbsp;        hidingTimer2.play();</b>
+<i>924</i>&nbsp;    }
+<i>925</i>&nbsp;
+<i>926</i>&nbsp;    /**
+<i>927</i>&nbsp;     * This method waits for player (if he is the challenger) to choose all the cards of the match and returns them
+<i>928</i>&nbsp;     * @return Chosen cards indexes (it refers to list of cards)
+<i>929</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
+<i>930</i>&nbsp;     */
+<i>931</i>&nbsp;    public synchronized int[] chosenCards() throws TimeOutException{
+<b class="nc"><i>932</i>&nbsp;        while(!confirmChallengerCards.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
+<i>933</i>&nbsp;            try {
+<b class="nc"><i>934</i>&nbsp;                wait();</b>
+<b class="nc"><i>935</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>936</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>937</i>&nbsp;            }</b>
+<i>938</i>&nbsp;        }
+<b class="nc"><i>939</i>&nbsp;        if(closeMatch.get())</b>
+<b class="nc"><i>940</i>&nbsp;            return new int[] {-1};</b>
+<b class="nc"><i>941</i>&nbsp;        else if(endTimer.get())</b>
+<b class="nc"><i>942</i>&nbsp;            throw new TimeOutException();</b>
+<b class="nc"><i>943</i>&nbsp;        return cardsIndexes;</b>
+<i>944</i>&nbsp;    }
+<i>945</i>&nbsp;
+<i>946</i>&nbsp;    /**
+<i>947</i>&nbsp;     * This method waits for player to choose his card for the match and returns it
+<i>948</i>&nbsp;     * @return Chosen card index (it refers to list of cards)
+<i>949</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
+<i>950</i>&nbsp;     */
+<i>951</i>&nbsp;    public synchronized int chosenCard() throws TimeOutException{
+<b class="nc"><i>952</i>&nbsp;        while(!confirmMyCards.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
+<i>953</i>&nbsp;            try {
+<b class="nc"><i>954</i>&nbsp;                wait();</b>
+<b class="nc"><i>955</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>956</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>957</i>&nbsp;            }</b>
+<i>958</i>&nbsp;        }
+<b class="nc"><i>959</i>&nbsp;        if(closeMatch.get())</b>
+<b class="nc"><i>960</i>&nbsp;            return -1;</b>
+<b class="nc"><i>961</i>&nbsp;        else if(endTimer.get())</b>
+<b class="nc"><i>962</i>&nbsp;            throw new TimeOutException();</b>
+<b class="nc"><i>963</i>&nbsp;        return cardIndex;</b>
+<i>964</i>&nbsp;    }
+<i>965</i>&nbsp;
+<i>966</i>&nbsp;    /**
+<i>967</i>&nbsp;     * This method wait for player to chose a destination and returns it
+<i>968</i>&nbsp;     * @return Chosen destination
+<i>969</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
+<i>970</i>&nbsp;     */
+<i>971</i>&nbsp;    public synchronized int chosenDestination() throws TimeOutException {
+<b class="nc"><i>972</i>&nbsp;        while(!destinationReady.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
+<i>973</i>&nbsp;            try {
+<b class="nc"><i>974</i>&nbsp;                wait();</b>
+<b class="nc"><i>975</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>976</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>977</i>&nbsp;            }</b>
+<i>978</i>&nbsp;        }
+<b class="nc"><i>979</i>&nbsp;        destinationReady.set(false);</b>
+<b class="nc"><i>980</i>&nbsp;        if(closeMatch.get()) {</b>
+<b class="nc"><i>981</i>&nbsp;            return -1;</b>
+<i>982</i>&nbsp;        }
+<b class="nc"><i>983</i>&nbsp;        else if(endTimer.get())</b>
+<b class="nc"><i>984</i>&nbsp;            throw new TimeOutException();</b>
+<b class="nc"><i>985</i>&nbsp;        return chosenBoxIndex();</b>
+<i>986</i>&nbsp;    }
+<i>987</i>&nbsp;
+<i>988</i>&nbsp;    /**
+<i>989</i>&nbsp;     * This method creates confirm turn popup
+<i>990</i>&nbsp;     */
+<i>991</i>&nbsp;    public void createConfirmTurnPopup(){
+<b class="nc"><i>992</i>&nbsp;        askConfirmTurn.setPrefWidth(screenWidth/5);</b>
+<b class="nc"><i>993</i>&nbsp;        askConfirmTurn.setPrefHeight(screenHeight/5);</b>
+<i>994</i>&nbsp;
+<b class="nc"><i>995</i>&nbsp;        Image confirmFrame = new Image(MatchScene.class.getResource(&quot;/img/loadingAndPopups/frame2.png&quot;).toString(), screenWidth/5, screenHeight/5, false, false);</b>
+<b class="nc"><i>996</i>&nbsp;        ImageView confirmView = new ImageView(confirmFrame);</b>
+<i>997</i>&nbsp;
+<b class="nc"><i>998</i>&nbsp;        VBox confirmBox = new VBox();</b>
+<i>999</i>&nbsp;
+<b class="nc"><i>1000</i>&nbsp;        Text questionPopup = new Text(&quot;Do you confirm your turn?&quot;);</b>
+<b class="nc"><i>1001</i>&nbsp;        questionPopup.setFont(lillybelleFont);</b>
+<b class="nc"><i>1002</i>&nbsp;        HBox answers = new HBox();</b>
+<i>1003</i>&nbsp;
+<b class="nc"><i>1004</i>&nbsp;        Button yesPopupButton = new Button(&quot;Yes&quot;);</b>
+<b class="nc"><i>1005</i>&nbsp;        Button noPopupButton = new Button(&quot;No&quot;);</b>
+<i>1006</i>&nbsp;
+<b class="nc"><i>1007</i>&nbsp;        yesPopupButton.setFont(lillybelleFont);</b>
+<b class="nc"><i>1008</i>&nbsp;        yesPopupButton.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>1009</i>&nbsp;        noPopupButton.setFont(lillybelleFont);</b>
+<b class="nc"><i>1010</i>&nbsp;        noPopupButton.setCursor(Cursor.HAND);</b>
+<i>1011</i>&nbsp;
 <i>1012</i>&nbsp;
-<b class="nc"><i>1013</i>&nbsp;        Image confirmFrame = new Image(MatchScene.class.getResource(&quot;/img/loadingAndPopups/frame2.png&quot;).toString(), screenWidth/5, screenHeight/5, false, false);</b>
-<b class="nc"><i>1014</i>&nbsp;        ImageView confirmView = new ImageView(confirmFrame);</b>
-<i>1015</i>&nbsp;
-<b class="nc"><i>1016</i>&nbsp;        VBox confirmBox = new VBox();</b>
+<i>1013</i>&nbsp;
+<b class="nc"><i>1014</i>&nbsp;        answers.getChildren().addAll(yesPopupButton, noPopupButton);</b>
+<b class="nc"><i>1015</i>&nbsp;        answers.setSpacing(50);</b>
+<b class="nc"><i>1016</i>&nbsp;        answers.setAlignment(Pos.CENTER);</b>
 <i>1017</i>&nbsp;
-<b class="nc"><i>1018</i>&nbsp;        Text questionPopup = new Text(&quot;Do you confirm your turn?&quot;);</b>
-<b class="nc"><i>1019</i>&nbsp;        questionPopup.setFont(lillybelleFont);</b>
-<b class="nc"><i>1020</i>&nbsp;        HBox answers = new HBox();</b>
-<i>1021</i>&nbsp;
-<b class="nc"><i>1022</i>&nbsp;        Button yesPopupButton = new Button(&quot;Yes&quot;);</b>
-<b class="nc"><i>1023</i>&nbsp;        Button noPopupButton = new Button(&quot;No&quot;);</b>
-<i>1024</i>&nbsp;
-<b class="nc"><i>1025</i>&nbsp;        yesPopupButton.setFont(lillybelleFont);</b>
-<b class="nc"><i>1026</i>&nbsp;        yesPopupButton.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>1027</i>&nbsp;        noPopupButton.setFont(lillybelleFont);</b>
-<b class="nc"><i>1028</i>&nbsp;        noPopupButton.setCursor(Cursor.HAND);</b>
-<i>1029</i>&nbsp;
+<b class="nc"><i>1018</i>&nbsp;        yesPopupButton.setOnAction(e -&gt; {</b>
+<b class="nc"><i>1019</i>&nbsp;            answer.set(0);</b>
+<b class="nc"><i>1020</i>&nbsp;            setClickedConfirmation();</b>
+<i>1021</i>&nbsp;        });
+<b class="nc"><i>1022</i>&nbsp;        noPopupButton.setOnAction(e -&gt; {</b>
+<b class="nc"><i>1023</i>&nbsp;            answer.set(1);</b>
+<b class="nc"><i>1024</i>&nbsp;            setClickedConfirmation();</b>
+<i>1025</i>&nbsp;        });
+<i>1026</i>&nbsp;
+<i>1027</i>&nbsp;
+<b class="nc"><i>1028</i>&nbsp;        confirmBox.setSpacing(10);</b>
+<b class="nc"><i>1029</i>&nbsp;        confirmBox.getChildren().addAll(questionPopup, answers);</b>
 <i>1030</i>&nbsp;
-<i>1031</i>&nbsp;
-<b class="nc"><i>1032</i>&nbsp;        answers.getChildren().addAll(yesPopupButton, noPopupButton);</b>
-<b class="nc"><i>1033</i>&nbsp;        answers.setSpacing(50);</b>
-<b class="nc"><i>1034</i>&nbsp;        answers.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>1031</i>&nbsp;        askConfirmTurn.getChildren().addAll(confirmView, confirmBox);</b>
+<b class="nc"><i>1032</i>&nbsp;        askConfirmTurn.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>1033</i>&nbsp;        confirmBox.setAlignment(Pos.CENTER);</b>
+<i>1034</i>&nbsp;    }
 <i>1035</i>&nbsp;
-<b class="nc"><i>1036</i>&nbsp;        yesPopupButton.setOnAction(e -&gt; {</b>
-<b class="nc"><i>1037</i>&nbsp;            answer.set(0);</b>
-<b class="nc"><i>1038</i>&nbsp;            setClickedConfirmation();</b>
-<i>1039</i>&nbsp;        });
-<b class="nc"><i>1040</i>&nbsp;        noPopupButton.setOnAction(e -&gt; {</b>
-<b class="nc"><i>1041</i>&nbsp;            answer.set(1);</b>
-<b class="nc"><i>1042</i>&nbsp;            setClickedConfirmation();</b>
-<i>1043</i>&nbsp;        });
-<i>1044</i>&nbsp;
-<i>1045</i>&nbsp;
-<b class="nc"><i>1046</i>&nbsp;        confirmBox.setSpacing(10);</b>
-<b class="nc"><i>1047</i>&nbsp;        confirmBox.getChildren().addAll(questionPopup, answers);</b>
+<i>1036</i>&nbsp;
+<i>1037</i>&nbsp;    /**
+<i>1038</i>&nbsp;     * This method waits for player to choose to undo or confirm his turn and returns the answer
+<i>1039</i>&nbsp;     * It shows confirmTurn popup
+<i>1040</i>&nbsp;     * @return Undo or Confirm turn answer
+<i>1041</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
+<i>1042</i>&nbsp;     */
+<i>1043</i>&nbsp;    public synchronized int showConfirmTurnPopup() throws TimeOutException {
+<b class="nc"><i>1044</i>&nbsp;        clickedConfirmation.set(false);</b>
+<b class="nc"><i>1045</i>&nbsp;        FadeTransition confirmTurnFadeIn = new FadeTransition(Duration.millis(1000), askConfirmTurn);</b>
+<b class="nc"><i>1046</i>&nbsp;        confirmTurnFadeIn.setFromValue(0);</b>
+<b class="nc"><i>1047</i>&nbsp;        confirmTurnFadeIn.setToValue(1);</b>
 <i>1048</i>&nbsp;
-<b class="nc"><i>1049</i>&nbsp;        askConfirmTurn.getChildren().addAll(confirmView, confirmBox);</b>
-<b class="nc"><i>1050</i>&nbsp;        askConfirmTurn.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>1051</i>&nbsp;        confirmBox.setAlignment(Pos.CENTER);</b>
-<i>1052</i>&nbsp;    }
-<i>1053</i>&nbsp;
-<i>1054</i>&nbsp;
-<i>1055</i>&nbsp;    /**
-<i>1056</i>&nbsp;     * This method waits for player to choose to undo or confirm his turn and returns the answer
-<i>1057</i>&nbsp;     * It shows confirmTurn popup
-<i>1058</i>&nbsp;     * @return Undo or Confirm turn answer
-<i>1059</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
-<i>1060</i>&nbsp;     */
-<i>1061</i>&nbsp;    public synchronized int showConfirmTurnPopup() throws TimeOutException {
-<b class="nc"><i>1062</i>&nbsp;        clickedConfirmation.set(false);</b>
-<b class="nc"><i>1063</i>&nbsp;        FadeTransition confirmTurnFadeIn = new FadeTransition(Duration.millis(1000), askConfirmTurn);</b>
-<b class="nc"><i>1064</i>&nbsp;        confirmTurnFadeIn.setFromValue(0);</b>
-<b class="nc"><i>1065</i>&nbsp;        confirmTurnFadeIn.setToValue(1);</b>
+<b class="nc"><i>1049</i>&nbsp;        confirmTurnFadeIn.play();</b>
+<b class="nc"><i>1050</i>&nbsp;        askConfirmTurn.setVisible(true);</b>
+<i>1051</i>&nbsp;
+<b class="nc"><i>1052</i>&nbsp;        while (!clickedConfirmation.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
+<i>1053</i>&nbsp;            try {
+<b class="nc"><i>1054</i>&nbsp;                wait();</b>
+<b class="nc"><i>1055</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>1056</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>1057</i>&nbsp;            }</b>
+<i>1058</i>&nbsp;        }
+<b class="nc"><i>1059</i>&nbsp;        if(closeMatch.get()) {</b>
+<b class="nc"><i>1060</i>&nbsp;            return -1;</b>
+<i>1061</i>&nbsp;        }
+<b class="nc"><i>1062</i>&nbsp;        else if(endTimer.get())</b>
+<b class="nc"><i>1063</i>&nbsp;            throw new TimeOutException();</b>
+<b class="nc"><i>1064</i>&nbsp;        return answer.get();</b>
+<i>1065</i>&nbsp;    }
 <i>1066</i>&nbsp;
-<b class="nc"><i>1067</i>&nbsp;        confirmTurnFadeIn.play();</b>
-<b class="nc"><i>1068</i>&nbsp;        askConfirmTurn.setVisible(true);</b>
-<i>1069</i>&nbsp;
-<b class="nc"><i>1070</i>&nbsp;        while (!clickedConfirmation.get() &amp;&amp; !closeMatch.get() &amp;&amp; !endTimer.get()){</b>
-<i>1071</i>&nbsp;            try {
-<b class="nc"><i>1072</i>&nbsp;                wait();</b>
-<b class="nc"><i>1073</i>&nbsp;            } catch (InterruptedException e) {</b>
-<b class="nc"><i>1074</i>&nbsp;                e.printStackTrace();</b>
-<b class="nc"><i>1075</i>&nbsp;            }</b>
-<i>1076</i>&nbsp;        }
-<b class="nc"><i>1077</i>&nbsp;        if(closeMatch.get()) {</b>
-<b class="nc"><i>1078</i>&nbsp;            return -1;</b>
-<i>1079</i>&nbsp;        }
-<b class="nc"><i>1080</i>&nbsp;        else if(endTimer.get())</b>
-<b class="nc"><i>1081</i>&nbsp;            throw new TimeOutException();</b>
-<b class="nc"><i>1082</i>&nbsp;        return answer.get();</b>
-<i>1083</i>&nbsp;    }
-<i>1084</i>&nbsp;
-<i>1085</i>&nbsp;    /**
-<i>1086</i>&nbsp;     * This method sets my turn in CurrentTurn box
-<i>1087</i>&nbsp;     */
-<i>1088</i>&nbsp;    public void setMyTurn(){
-<b class="nc"><i>1089</i>&nbsp;        if(!playerView.currentTurn().getText().equals(&quot;Your Turn&quot;)) {</b>
-<b class="nc"><i>1090</i>&nbsp;            playerView.setCurrentTurn(&quot;Your Turn&quot;);</b>
-<b class="nc"><i>1091</i>&nbsp;            showMyTurn();</b>
-<i>1092</i>&nbsp;        }
-<i>1093</i>&nbsp;    }
-<i>1094</i>&nbsp;
-<i>1095</i>&nbsp;    /**
-<i>1096</i>&nbsp;     * This method creates my turn announce
-<i>1097</i>&nbsp;     */
-<i>1098</i>&nbsp;    private void createMyTurnImage(){
-<b class="nc"><i>1099</i>&nbsp;        Image myTurnImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/myTurn.png&quot;).toString(),screenWidth/3, screenHeight/4,false,false);</b>
-<b class="nc"><i>1100</i>&nbsp;        ImageView myTurnView = new ImageView(myTurnImg);</b>
-<b class="nc"><i>1101</i>&nbsp;        myTurn.getChildren().add(myTurnView);</b>
-<b class="nc"><i>1102</i>&nbsp;        myTurn.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>1103</i>&nbsp;        myTurn.setPrefWidth(screenWidth/3);</b>
-<b class="nc"><i>1104</i>&nbsp;        myTurn.setPrefHeight(screenHeight/4);</b>
-<i>1105</i>&nbsp;    }
+<i>1067</i>&nbsp;    /**
+<i>1068</i>&nbsp;     * This method sets my turn in CurrentTurn box
+<i>1069</i>&nbsp;     */
+<i>1070</i>&nbsp;    public void setMyTurn(){
+<b class="nc"><i>1071</i>&nbsp;        if(!playerView.currentTurn().getText().equals(&quot;Your Turn&quot;)) {</b>
+<b class="nc"><i>1072</i>&nbsp;            playerView.setCurrentTurn(&quot;Your Turn&quot;);</b>
+<b class="nc"><i>1073</i>&nbsp;            showMyTurn();</b>
+<i>1074</i>&nbsp;        }
+<i>1075</i>&nbsp;    }
+<i>1076</i>&nbsp;
+<i>1077</i>&nbsp;    /**
+<i>1078</i>&nbsp;     * This method creates my turn announce
+<i>1079</i>&nbsp;     */
+<i>1080</i>&nbsp;    private void createMyTurnImage(){
+<b class="nc"><i>1081</i>&nbsp;        Image myTurnImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/myTurn.png&quot;).toString(),screenWidth/3, screenHeight/4,false,false);</b>
+<b class="nc"><i>1082</i>&nbsp;        ImageView myTurnView = new ImageView(myTurnImg);</b>
+<b class="nc"><i>1083</i>&nbsp;        myTurn.getChildren().add(myTurnView);</b>
+<b class="nc"><i>1084</i>&nbsp;        myTurn.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>1085</i>&nbsp;        myTurn.setPrefWidth(screenWidth/3);</b>
+<b class="nc"><i>1086</i>&nbsp;        myTurn.setPrefHeight(screenHeight/4);</b>
+<i>1087</i>&nbsp;    }
+<i>1088</i>&nbsp;
+<i>1089</i>&nbsp;    /**
+<i>1090</i>&nbsp;     * This method shows my turn announce
+<i>1091</i>&nbsp;     */
+<i>1092</i>&nbsp;    private void showMyTurn(){
+<b class="nc"><i>1093</i>&nbsp;        FadeTransition myTurnFadeIn = new FadeTransition(Duration.millis(500), myTurn);</b>
+<b class="nc"><i>1094</i>&nbsp;        myTurnFadeIn.setFromValue(0);</b>
+<b class="nc"><i>1095</i>&nbsp;        myTurnFadeIn.setToValue(1);</b>
+<i>1096</i>&nbsp;
+<b class="nc"><i>1097</i>&nbsp;        FadeTransition myTurnFadeOut = new FadeTransition(Duration.millis(500), myTurn);</b>
+<b class="nc"><i>1098</i>&nbsp;        myTurnFadeOut.setFromValue(1);</b>
+<b class="nc"><i>1099</i>&nbsp;        myTurnFadeOut.setToValue(0);</b>
+<i>1100</i>&nbsp;
+<b class="nc"><i>1101</i>&nbsp;        ScaleTransition myTurnZoomIn = new ScaleTransition(Duration.millis(2000), myTurn);</b>
+<b class="nc"><i>1102</i>&nbsp;        myTurnZoomIn.setFromX(0.5);</b>
+<b class="nc"><i>1103</i>&nbsp;        myTurnZoomIn.setToX(2);</b>
+<b class="nc"><i>1104</i>&nbsp;        myTurnZoomIn.setFromY(0.5);</b>
+<b class="nc"><i>1105</i>&nbsp;        myTurnZoomIn.setToY(2);</b>
 <i>1106</i>&nbsp;
-<i>1107</i>&nbsp;    /**
-<i>1108</i>&nbsp;     * This method shows my turn announce
-<i>1109</i>&nbsp;     */
-<i>1110</i>&nbsp;    private void showMyTurn(){
-<b class="nc"><i>1111</i>&nbsp;        FadeTransition myTurnFadeIn = new FadeTransition(Duration.millis(500), myTurn);</b>
-<b class="nc"><i>1112</i>&nbsp;        myTurnFadeIn.setFromValue(0);</b>
-<b class="nc"><i>1113</i>&nbsp;        myTurnFadeIn.setToValue(1);</b>
-<i>1114</i>&nbsp;
-<b class="nc"><i>1115</i>&nbsp;        FadeTransition myTurnFadeOut = new FadeTransition(Duration.millis(500), myTurn);</b>
-<b class="nc"><i>1116</i>&nbsp;        myTurnFadeOut.setFromValue(1);</b>
-<b class="nc"><i>1117</i>&nbsp;        myTurnFadeOut.setToValue(0);</b>
-<i>1118</i>&nbsp;
-<b class="nc"><i>1119</i>&nbsp;        ScaleTransition myTurnZoomIn = new ScaleTransition(Duration.millis(2000), myTurn);</b>
-<b class="nc"><i>1120</i>&nbsp;        myTurnZoomIn.setFromX(0.5);</b>
-<b class="nc"><i>1121</i>&nbsp;        myTurnZoomIn.setToX(2);</b>
-<b class="nc"><i>1122</i>&nbsp;        myTurnZoomIn.setFromY(0.5);</b>
-<b class="nc"><i>1123</i>&nbsp;        myTurnZoomIn.setToY(2);</b>
-<i>1124</i>&nbsp;
-<b class="nc"><i>1125</i>&nbsp;        myTurnFadeIn.play();</b>
-<b class="nc"><i>1126</i>&nbsp;        myTurn.setVisible(true);</b>
-<b class="nc"><i>1127</i>&nbsp;        myTurnZoomIn.play();</b>
-<i>1128</i>&nbsp;
-<b class="nc"><i>1129</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>1130</i>&nbsp;                Duration.millis(1000),</b>
-<i>1131</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>1132</i>&nbsp;                    myTurnFadeOut.play();</b>
-<i>1133</i>&nbsp;                }));
-<b class="nc"><i>1134</i>&nbsp;        showingTimer.play();</b>
-<b class="nc"><i>1135</i>&nbsp;        Timeline hidingTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>1136</i>&nbsp;                Duration.millis(1500),</b>
-<i>1137</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>1138</i>&nbsp;                    myTurn.setVisible(false);</b>
-<i>1139</i>&nbsp;                }));
-<b class="nc"><i>1140</i>&nbsp;        hidingTimer.play();</b>
-<i>1141</i>&nbsp;    }
-<i>1142</i>&nbsp;
-<i>1143</i>&nbsp;    /**
-<i>1144</i>&nbsp;     * This method sets the name of the opponent in CurrentTurn box
-<i>1145</i>&nbsp;     * @param playerTurnName Current player
-<i>1146</i>&nbsp;     */
-<i>1147</i>&nbsp;    public void setOpponentTurn(String playerTurnName){
-<b class="nc"><i>1148</i>&nbsp;        if(!playerView.currentTurn().getText().equals(playerTurnName + &quot;&#39;s Turn&quot;)) {</b>
-<b class="nc"><i>1149</i>&nbsp;            playerView.setCurrentTurn(playerTurnName + &quot;&#39;s Turn&quot;);</b>
-<i>1150</i>&nbsp;        }
-<i>1151</i>&nbsp;    }
+<b class="nc"><i>1107</i>&nbsp;        myTurnFadeIn.play();</b>
+<b class="nc"><i>1108</i>&nbsp;        myTurn.setVisible(true);</b>
+<b class="nc"><i>1109</i>&nbsp;        myTurnZoomIn.play();</b>
+<i>1110</i>&nbsp;
+<b class="nc"><i>1111</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>1112</i>&nbsp;                Duration.millis(1000),</b>
+<b class="nc"><i>1113</i>&nbsp;                ae -&gt; myTurnFadeOut.play()));</b>
+<b class="nc"><i>1114</i>&nbsp;        showingTimer.play();</b>
+<b class="nc"><i>1115</i>&nbsp;        Timeline hidingTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>1116</i>&nbsp;                Duration.millis(1500),</b>
+<b class="nc"><i>1117</i>&nbsp;                ae -&gt; myTurn.setVisible(false)));</b>
+<b class="nc"><i>1118</i>&nbsp;        hidingTimer.play();</b>
+<i>1119</i>&nbsp;    }
+<i>1120</i>&nbsp;
+<i>1121</i>&nbsp;    /**
+<i>1122</i>&nbsp;     * This method sets the name of the opponent in CurrentTurn box
+<i>1123</i>&nbsp;     * @param playerTurnName Current player
+<i>1124</i>&nbsp;     */
+<i>1125</i>&nbsp;    public void setOpponentTurn(String playerTurnName){
+<b class="nc"><i>1126</i>&nbsp;        if(!playerView.currentTurn().getText().equals(playerTurnName + &quot;&#39;s Turn&quot;)) {</b>
+<b class="nc"><i>1127</i>&nbsp;            playerView.setCurrentTurn(playerTurnName + &quot;&#39;s Turn&quot;);</b>
+<i>1128</i>&nbsp;        }
+<i>1129</i>&nbsp;    }
+<i>1130</i>&nbsp;
+<i>1131</i>&nbsp;    /**
+<i>1132</i>&nbsp;     * This method creates and shows winner pane to winner player and loser pane to other players
+<i>1133</i>&nbsp;     * @param isWinner This variable tells if player is a winner or a loser
+<i>1134</i>&nbsp;     */
+<i>1135</i>&nbsp;    public void winner(boolean isWinner){
+<b class="nc"><i>1136</i>&nbsp;        winner.setPrefWidth(screenWidth);</b>
+<b class="nc"><i>1137</i>&nbsp;        winner.setPrefHeight(screenHeight);</b>
+<i>1138</i>&nbsp;
+<i>1139</i>&nbsp;        Image winnerImg;
+<i>1140</i>&nbsp;        ImageView winnerView;
+<i>1141</i>&nbsp;
+<i>1142</i>&nbsp;        Image winnerGoBackImg;
+<i>1143</i>&nbsp;        ImageView winnerGoBackView;
+<i>1144</i>&nbsp;
+<i>1145</i>&nbsp;
+<b class="nc"><i>1146</i>&nbsp;        if(isWinner) {</b>
+<b class="nc"><i>1147</i>&nbsp;            Image winnerGif = new Image(MatchScene.class.getResource(&quot;/img/matchPage/winner.gif&quot;).toString(), screenWidth, screenHeight, false, false);</b>
+<b class="nc"><i>1148</i>&nbsp;            ImageView winnerGifView = new ImageView(winnerGif);</b>
+<i>1149</i>&nbsp;
+<b class="nc"><i>1150</i>&nbsp;            winnerImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/winner.png&quot;).toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);</b>
+<b class="nc"><i>1151</i>&nbsp;            winnerView = new ImageView(winnerImg);</b>
 <i>1152</i>&nbsp;
-<i>1153</i>&nbsp;    /**
-<i>1154</i>&nbsp;     * This method creates and shows winner pane to winner player and loser pane to other players
-<i>1155</i>&nbsp;     * @param isWinner This variable tells if player is a winner or a loser
-<i>1156</i>&nbsp;     */
-<i>1157</i>&nbsp;    public void winner(boolean isWinner){
-<b class="nc"><i>1158</i>&nbsp;        winner.setPrefWidth(screenWidth);</b>
-<b class="nc"><i>1159</i>&nbsp;        winner.setPrefHeight(screenHeight);</b>
-<i>1160</i>&nbsp;
-<i>1161</i>&nbsp;        Image winnerImg;
-<i>1162</i>&nbsp;        ImageView winnerView;
-<i>1163</i>&nbsp;
-<i>1164</i>&nbsp;        Image winnerGoBackImg;
-<i>1165</i>&nbsp;        ImageView winnerGoBackView;
-<i>1166</i>&nbsp;
-<i>1167</i>&nbsp;
-<b class="nc"><i>1168</i>&nbsp;        if(isWinner) {</b>
-<b class="nc"><i>1169</i>&nbsp;            Image winnerGif = new Image(MatchScene.class.getResource(&quot;/img/matchPage/winner.gif&quot;).toString(), screenWidth, screenHeight, false, false);</b>
-<b class="nc"><i>1170</i>&nbsp;            ImageView winnerGifView = new ImageView(winnerGif);</b>
-<i>1171</i>&nbsp;
-<b class="nc"><i>1172</i>&nbsp;            winnerImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/winner.png&quot;).toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);</b>
-<b class="nc"><i>1173</i>&nbsp;            winnerView = new ImageView(winnerImg);</b>
-<i>1174</i>&nbsp;
-<b class="nc"><i>1175</i>&nbsp;            winnerGoBackImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/goBackWinner.png&quot;).toString(), screenWidth / 3, screenHeight / 3, false, false);</b>
-<b class="nc"><i>1176</i>&nbsp;            winnerGoBackView = new ImageView(winnerGoBackImg);</b>
-<i>1177</i>&nbsp;
-<b class="nc"><i>1178</i>&nbsp;            winner.getChildren().add(winnerGifView);</b>
-<b class="nc"><i>1179</i>&nbsp;            StackPane.setAlignment(winnerGifView, Pos.CENTER);</b>
-<b class="nc"><i>1180</i>&nbsp;        } else {</b>
-<b class="nc"><i>1181</i>&nbsp;            winnerImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/loser.png&quot;).toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);</b>
-<b class="nc"><i>1182</i>&nbsp;            winnerView = new ImageView(winnerImg);</b>
+<b class="nc"><i>1153</i>&nbsp;            winnerGoBackImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/goBackWinner.png&quot;).toString(), screenWidth / 3, screenHeight / 3, false, false);</b>
+<b class="nc"><i>1154</i>&nbsp;            winnerGoBackView = new ImageView(winnerGoBackImg);</b>
+<i>1155</i>&nbsp;
+<b class="nc"><i>1156</i>&nbsp;            winner.getChildren().add(winnerGifView);</b>
+<b class="nc"><i>1157</i>&nbsp;            StackPane.setAlignment(winnerGifView, Pos.CENTER);</b>
+<b class="nc"><i>1158</i>&nbsp;        } else {</b>
+<b class="nc"><i>1159</i>&nbsp;            winnerImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/loser.png&quot;).toString(), screenWidth / 1.2, screenHeight / 1.5, false, false);</b>
+<b class="nc"><i>1160</i>&nbsp;            winnerView = new ImageView(winnerImg);</b>
+<i>1161</i>&nbsp;
+<b class="nc"><i>1162</i>&nbsp;            winnerGoBackImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/goBackLoser.png&quot;).toString(), screenWidth / 3, screenHeight / 3, false, false);</b>
+<b class="nc"><i>1163</i>&nbsp;            winnerGoBackView = new ImageView(winnerGoBackImg);</b>
+<i>1164</i>&nbsp;
+<b class="nc"><i>1165</i>&nbsp;            if(isTimeoutLoser()){</b>
+<b class="nc"><i>1166</i>&nbsp;                Image timeoutImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/timeoutLoser.png&quot;).toString(), screenWidth / 2, screenHeight / 4, false, false);</b>
+<b class="nc"><i>1167</i>&nbsp;                ImageView timeoutView = new ImageView(timeoutImg);</b>
+<i>1168</i>&nbsp;
+<b class="nc"><i>1169</i>&nbsp;                winner.getChildren().add(timeoutView);</b>
+<b class="nc"><i>1170</i>&nbsp;                StackPane.setAlignment(timeoutView, Pos.TOP_CENTER);</b>
+<i>1171</i>&nbsp;            }
+<i>1172</i>&nbsp;        }
+<i>1173</i>&nbsp;
+<b class="nc"><i>1174</i>&nbsp;        winnerGoBackView.setOnMouseEntered(e -&gt; {</b>
+<b class="nc"><i>1175</i>&nbsp;            winnerGoBackView.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>1176</i>&nbsp;            winnerGoBackView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<i>1177</i>&nbsp;        });
+<b class="nc"><i>1178</i>&nbsp;        winnerGoBackView.setOnMouseExited(e -&gt; {</b>
+<b class="nc"><i>1179</i>&nbsp;            winnerGoBackView.setCursor(Cursor.DEFAULT);</b>
+<b class="nc"><i>1180</i>&nbsp;            winnerGoBackView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<i>1181</i>&nbsp;        });
+<b class="nc"><i>1182</i>&nbsp;        winnerGoBackView.setOnMouseClicked(e -&gt; backToMenu());</b>
 <i>1183</i>&nbsp;
-<b class="nc"><i>1184</i>&nbsp;            winnerGoBackImg = new Image(MatchScene.class.getResource(&quot;/img/buttons/goBackLoser.png&quot;).toString(), screenWidth / 3, screenHeight / 3, false, false);</b>
-<b class="nc"><i>1185</i>&nbsp;            winnerGoBackView = new ImageView(winnerGoBackImg);</b>
-<i>1186</i>&nbsp;
-<b class="nc"><i>1187</i>&nbsp;            if(isTimeoutLoser()){</b>
-<b class="nc"><i>1188</i>&nbsp;                Image timeoutImg = new Image(MatchScene.class.getResource(&quot;/img/matchPage/timeoutLoser.png&quot;).toString(), screenWidth / 2, screenHeight / 4, false, false);</b>
-<b class="nc"><i>1189</i>&nbsp;                ImageView timeoutView = new ImageView(timeoutImg);</b>
-<i>1190</i>&nbsp;
-<b class="nc"><i>1191</i>&nbsp;                winner.getChildren().add(timeoutView);</b>
-<b class="nc"><i>1192</i>&nbsp;                StackPane.setAlignment(timeoutView, Pos.TOP_CENTER);</b>
-<i>1193</i>&nbsp;            }
-<i>1194</i>&nbsp;        }
-<i>1195</i>&nbsp;
-<b class="nc"><i>1196</i>&nbsp;        winnerGoBackView.setOnMouseEntered(e -&gt; {</b>
-<b class="nc"><i>1197</i>&nbsp;            winnerGoBackView.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>1198</i>&nbsp;            winnerGoBackView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
-<i>1199</i>&nbsp;        });
-<b class="nc"><i>1200</i>&nbsp;        winnerGoBackView.setOnMouseExited(e -&gt; {</b>
-<b class="nc"><i>1201</i>&nbsp;            winnerGoBackView.setCursor(Cursor.DEFAULT);</b>
-<b class="nc"><i>1202</i>&nbsp;            winnerGoBackView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<i>1203</i>&nbsp;        });
-<b class="nc"><i>1204</i>&nbsp;        winnerGoBackView.setOnMouseClicked(e -&gt; {</b>
-<b class="nc"><i>1205</i>&nbsp;            backToMenu();</b>
-<i>1206</i>&nbsp;        });
+<i>1184</i>&nbsp;
+<b class="nc"><i>1185</i>&nbsp;        Image exitImage = new Image(MatchScene.class.getResource(&quot;/img/buttons/close.png&quot;).toString(), screenWidth/15, screenHeight/10, false, false);</b>
+<b class="nc"><i>1186</i>&nbsp;        ImageView exitButton = new ImageView(exitImage);</b>
+<i>1187</i>&nbsp;
+<b class="nc"><i>1188</i>&nbsp;        exitButton.setOnMouseEntered(e -&gt; {</b>
+<b class="nc"><i>1189</i>&nbsp;            exitButton.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>1190</i>&nbsp;            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<i>1191</i>&nbsp;        });
+<b class="nc"><i>1192</i>&nbsp;        exitButton.setOnMouseExited(e -&gt; {</b>
+<b class="nc"><i>1193</i>&nbsp;            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>1194</i>&nbsp;            exitButton.setCursor(Cursor.DEFAULT);</b>
+<i>1195</i>&nbsp;        });
+<b class="nc"><i>1196</i>&nbsp;        exitButton.setOnMouseClicked(e -&gt; closeWinnerOrSurrender(winner));</b>
+<i>1197</i>&nbsp;
+<i>1198</i>&nbsp;
+<b class="nc"><i>1199</i>&nbsp;        winner.getChildren().addAll(winnerView, winnerGoBackView, exitButton);</b>
+<b class="nc"><i>1200</i>&nbsp;        StackPane.setAlignment(winnerView, Pos.CENTER);</b>
+<b class="nc"><i>1201</i>&nbsp;        StackPane.setAlignment(winnerGoBackView, Pos.BOTTOM_CENTER);</b>
+<b class="nc"><i>1202</i>&nbsp;        StackPane.setAlignment(exitButton, Pos.TOP_LEFT);</b>
+<i>1203</i>&nbsp;
+<b class="nc"><i>1204</i>&nbsp;        playerView.endTimer();</b>
+<i>1205</i>&nbsp;
+<b class="nc"><i>1206</i>&nbsp;        showWinnerOrSurrender(&quot;winner&quot;);</b>
 <i>1207</i>&nbsp;
-<i>1208</i>&nbsp;
-<b class="nc"><i>1209</i>&nbsp;        Image exitImage = new Image(MatchScene.class.getResource(&quot;/img/buttons/close.png&quot;).toString(), screenWidth/15, screenHeight/10, false, false);</b>
-<b class="nc"><i>1210</i>&nbsp;        ImageView exitButton = new ImageView(exitImage);</b>
-<i>1211</i>&nbsp;
-<b class="nc"><i>1212</i>&nbsp;        exitButton.setOnMouseEntered(e -&gt; {</b>
-<b class="nc"><i>1213</i>&nbsp;            exitButton.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>1214</i>&nbsp;            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
-<i>1215</i>&nbsp;        });
-<b class="nc"><i>1216</i>&nbsp;        exitButton.setOnMouseExited(e -&gt; {</b>
-<b class="nc"><i>1217</i>&nbsp;            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
-<b class="nc"><i>1218</i>&nbsp;            exitButton.setCursor(Cursor.DEFAULT);</b>
-<i>1219</i>&nbsp;        });
-<b class="nc"><i>1220</i>&nbsp;        exitButton.setOnMouseClicked(e -&gt; {</b>
-<b class="nc"><i>1221</i>&nbsp;            closeWinnerOrSurrender(winner);</b>
-<i>1222</i>&nbsp;        });
-<i>1223</i>&nbsp;
-<i>1224</i>&nbsp;
-<b class="nc"><i>1225</i>&nbsp;        winner.getChildren().addAll(winnerView, winnerGoBackView, exitButton);</b>
-<b class="nc"><i>1226</i>&nbsp;        StackPane.setAlignment(winnerView, Pos.CENTER);</b>
-<b class="nc"><i>1227</i>&nbsp;        StackPane.setAlignment(winnerGoBackView, Pos.BOTTOM_CENTER);</b>
-<b class="nc"><i>1228</i>&nbsp;        StackPane.setAlignment(exitButton, Pos.TOP_LEFT);</b>
-<i>1229</i>&nbsp;
-<b class="nc"><i>1230</i>&nbsp;        playerView.endTimer();</b>
-<i>1231</i>&nbsp;
-<b class="nc"><i>1232</i>&nbsp;        showWinnerOrSurrender(&quot;winner&quot;);</b>
-<i>1233</i>&nbsp;
-<i>1234</i>&nbsp;    }
-<i>1235</i>&nbsp;
-<i>1236</i>&nbsp;    /**
-<i>1237</i>&nbsp;     * This method closes match page and shows menu page
-<i>1238</i>&nbsp;     */
-<i>1239</i>&nbsp;    public void backToMenu(){
-<b class="nc"><i>1240</i>&nbsp;        setCloseMatch();</b>
-<b class="nc"><i>1241</i>&nbsp;        gui.setNewMatch();</b>
-<b class="nc"><i>1242</i>&nbsp;        gui.playTransitionClouds();</b>
-<b class="nc"><i>1243</i>&nbsp;        FadeTransition matchFadeOut = new FadeTransition(Duration.millis(2000), matchPage);</b>
-<b class="nc"><i>1244</i>&nbsp;        matchFadeOut.setFromValue(1);</b>
-<b class="nc"><i>1245</i>&nbsp;        matchFadeOut.setToValue(0);</b>
-<b class="nc"><i>1246</i>&nbsp;        matchFadeOut.play();</b>
-<i>1247</i>&nbsp;
-<b class="nc"><i>1248</i>&nbsp;        Timeline menuTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>1249</i>&nbsp;                Duration.millis(1500),</b>
-<i>1250</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>1251</i>&nbsp;                    matchPage.setVisible(false);</b>
-<b class="nc"><i>1252</i>&nbsp;                    matchBackground.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1253</i>&nbsp;                    mapView.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1254</i>&nbsp;                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1255</i>&nbsp;                    guiMap.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1256</i>&nbsp;                    pausePane.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1257</i>&nbsp;                    activePowers.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1258</i>&nbsp;                    helper.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1259</i>&nbsp;                    turnStory.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1260</i>&nbsp;                    myTurn.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1261</i>&nbsp;                    chooseCardsBox.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1262</i>&nbsp;                    chooseCard.setEffect(new BoxBlur(0, 0, 0));</b>
-<i>1263</i>&nbsp;
-<b class="nc"><i>1264</i>&nbsp;                    FadeTransition menuFadeIn = new FadeTransition(Duration.millis(2000), gui.menuPage());</b>
-<b class="nc"><i>1265</i>&nbsp;                    menuFadeIn.setFromValue(0.0);</b>
-<b class="nc"><i>1266</i>&nbsp;                    menuFadeIn.setToValue(1.0);</b>
-<b class="nc"><i>1267</i>&nbsp;                    menuFadeIn.play();Platform.runLater(gui::primaryScene);</b>
-<i>1268</i>&nbsp;                }));
-<b class="nc"><i>1269</i>&nbsp;        menuTimer.play();</b>
-<i>1270</i>&nbsp;    }
-<i>1271</i>&nbsp;
-<i>1272</i>&nbsp;    /**
-<i>1273</i>&nbsp;     * This method hides winner or surrender pane
-<i>1274</i>&nbsp;     * @param pane Pane to hide
-<i>1275</i>&nbsp;     */
-<i>1276</i>&nbsp;    private void closeWinnerOrSurrender(StackPane pane){
-<b class="nc"><i>1277</i>&nbsp;        FadeTransition paneFadeOut = new FadeTransition(Duration.millis(500), pane);</b>
-<b class="nc"><i>1278</i>&nbsp;        paneFadeOut.setFromValue(1);</b>
-<b class="nc"><i>1279</i>&nbsp;        paneFadeOut.setToValue(0);</b>
-<b class="nc"><i>1280</i>&nbsp;        paneFadeOut.play();</b>
-<i>1281</i>&nbsp;
-<b class="nc"><i>1282</i>&nbsp;        Timeline closePaneTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>1283</i>&nbsp;                Duration.millis(500),</b>
-<i>1284</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>1285</i>&nbsp;                    pane.setVisible(false);</b>
-<b class="nc"><i>1286</i>&nbsp;                    matchBackground.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1287</i>&nbsp;                    mapView.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1288</i>&nbsp;                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1289</i>&nbsp;                    guiMap.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1290</i>&nbsp;                    pausePane.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1291</i>&nbsp;                    activePowers.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1292</i>&nbsp;                    helper.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1293</i>&nbsp;                    turnStory.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1294</i>&nbsp;                    myTurn.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1295</i>&nbsp;                    chooseCardsBox.setEffect(new BoxBlur(0, 0, 0));</b>
-<b class="nc"><i>1296</i>&nbsp;                    chooseCard.setEffect(new BoxBlur(0, 0, 0));</b>
-<i>1297</i>&nbsp;                }));
-<b class="nc"><i>1298</i>&nbsp;        closePaneTimer.play();</b>
-<i>1299</i>&nbsp;
-<b class="nc"><i>1300</i>&nbsp;        if(pane.equals(winner)) {</b>
-<b class="nc"><i>1301</i>&nbsp;            playerView.pauseView().setOnMouseClicked(e -&gt; {</b>
-<b class="nc"><i>1302</i>&nbsp;                showWinnerOrSurrender(&quot;winner&quot;);</b>
-<i>1303</i>&nbsp;            });
-<i>1304</i>&nbsp;        }
-<i>1305</i>&nbsp;    }
-<i>1306</i>&nbsp;
-<i>1307</i>&nbsp;    /**
-<i>1308</i>&nbsp;     * This method shows a pane (winner and surrender)
-<i>1309</i>&nbsp;     * @param paneName Pane to show
-<i>1310</i>&nbsp;     */
-<i>1311</i>&nbsp;    public void showWinnerOrSurrender(String paneName){
-<b class="nc"><i>1312</i>&nbsp;        StackPane pane = new StackPane();</b>
-<b class="nc"><i>1313</i>&nbsp;        if(paneName.equals(&quot;winner&quot;))</b>
-<b class="nc"><i>1314</i>&nbsp;            pane = winner;</b>
-<b class="nc"><i>1315</i>&nbsp;        else if(paneName.equals(&quot;surrender&quot;))</b>
-<b class="nc"><i>1316</i>&nbsp;            pane = surrender;</b>
-<b class="nc"><i>1317</i>&nbsp;        FadeTransition paneFadeIn = new FadeTransition(Duration.millis(500), pane);</b>
-<b class="nc"><i>1318</i>&nbsp;        paneFadeIn.setFromValue(0);</b>
-<b class="nc"><i>1319</i>&nbsp;        paneFadeIn.setToValue(1);</b>
-<b class="nc"><i>1320</i>&nbsp;        paneFadeIn.play();</b>
-<b class="nc"><i>1321</i>&nbsp;        pane.setVisible(true);</b>
-<i>1322</i>&nbsp;
-<b class="nc"><i>1323</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
-<b class="nc"><i>1324</i>&nbsp;                Duration.millis(500),</b>
-<i>1325</i>&nbsp;                ae -&gt; {
-<b class="nc"><i>1326</i>&nbsp;                    matchBackground.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1327</i>&nbsp;                    mapView.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1328</i>&nbsp;                    playerViewPane.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1329</i>&nbsp;                    guiMap.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1330</i>&nbsp;                    pausePane.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1331</i>&nbsp;                    activePowers.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1332</i>&nbsp;                    helper.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1333</i>&nbsp;                    turnStory.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1334</i>&nbsp;                    myTurn.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1335</i>&nbsp;                    chooseCardsBox.setEffect(new BoxBlur(5, 5, 5));</b>
-<b class="nc"><i>1336</i>&nbsp;                    chooseCard.setEffect(new BoxBlur(5, 5, 5));</b>
-<i>1337</i>&nbsp;                }));
-<b class="nc"><i>1338</i>&nbsp;        showingTimer.play();</b>
-<i>1339</i>&nbsp;    }
+<i>1208</i>&nbsp;    }
+<i>1209</i>&nbsp;
+<i>1210</i>&nbsp;    /**
+<i>1211</i>&nbsp;     * This method closes match page and shows menu page
+<i>1212</i>&nbsp;     */
+<i>1213</i>&nbsp;    public void backToMenu(){
+<b class="nc"><i>1214</i>&nbsp;        setCloseMatch();</b>
+<b class="nc"><i>1215</i>&nbsp;        gui.setNewMatch();</b>
+<b class="nc"><i>1216</i>&nbsp;        gui.playTransitionClouds();</b>
+<b class="nc"><i>1217</i>&nbsp;        FadeTransition matchFadeOut = new FadeTransition(Duration.millis(2000), matchPage);</b>
+<b class="nc"><i>1218</i>&nbsp;        matchFadeOut.setFromValue(1);</b>
+<b class="nc"><i>1219</i>&nbsp;        matchFadeOut.setToValue(0);</b>
+<b class="nc"><i>1220</i>&nbsp;        matchFadeOut.play();</b>
+<i>1221</i>&nbsp;
+<b class="nc"><i>1222</i>&nbsp;        Timeline menuTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>1223</i>&nbsp;                Duration.millis(1500),</b>
+<i>1224</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>1225</i>&nbsp;                    matchPage.setVisible(false);</b>
+<b class="nc"><i>1226</i>&nbsp;                    matchBackground.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1227</i>&nbsp;                    mapView.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1228</i>&nbsp;                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1229</i>&nbsp;                    guiMap.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1230</i>&nbsp;                    pausePane.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1231</i>&nbsp;                    activePowers.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1232</i>&nbsp;                    helper.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1233</i>&nbsp;                    turnStory.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1234</i>&nbsp;                    myTurn.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1235</i>&nbsp;                    chooseCardsBox.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1236</i>&nbsp;                    chooseCard.setEffect(new BoxBlur(0, 0, 0));</b>
+<i>1237</i>&nbsp;
+<b class="nc"><i>1238</i>&nbsp;                    FadeTransition menuFadeIn = new FadeTransition(Duration.millis(2000), gui.menuPage());</b>
+<b class="nc"><i>1239</i>&nbsp;                    menuFadeIn.setFromValue(0.0);</b>
+<b class="nc"><i>1240</i>&nbsp;                    menuFadeIn.setToValue(1.0);</b>
+<b class="nc"><i>1241</i>&nbsp;                    menuFadeIn.play();Platform.runLater(gui::primaryScene);</b>
+<i>1242</i>&nbsp;                }));
+<b class="nc"><i>1243</i>&nbsp;        menuTimer.play();</b>
+<i>1244</i>&nbsp;    }
+<i>1245</i>&nbsp;
+<i>1246</i>&nbsp;    /**
+<i>1247</i>&nbsp;     * This method hides winner or surrender pane
+<i>1248</i>&nbsp;     * @param pane Pane to hide
+<i>1249</i>&nbsp;     */
+<i>1250</i>&nbsp;    private void closeWinnerOrSurrender(StackPane pane){
+<b class="nc"><i>1251</i>&nbsp;        FadeTransition paneFadeOut = new FadeTransition(Duration.millis(500), pane);</b>
+<b class="nc"><i>1252</i>&nbsp;        paneFadeOut.setFromValue(1);</b>
+<b class="nc"><i>1253</i>&nbsp;        paneFadeOut.setToValue(0);</b>
+<b class="nc"><i>1254</i>&nbsp;        paneFadeOut.play();</b>
+<i>1255</i>&nbsp;
+<b class="nc"><i>1256</i>&nbsp;        Timeline closePaneTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>1257</i>&nbsp;                Duration.millis(500),</b>
+<i>1258</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>1259</i>&nbsp;                    pane.setVisible(false);</b>
+<b class="nc"><i>1260</i>&nbsp;                    matchBackground.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1261</i>&nbsp;                    mapView.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1262</i>&nbsp;                    playerViewPane.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1263</i>&nbsp;                    guiMap.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1264</i>&nbsp;                    pausePane.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1265</i>&nbsp;                    activePowers.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1266</i>&nbsp;                    helper.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1267</i>&nbsp;                    turnStory.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1268</i>&nbsp;                    myTurn.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1269</i>&nbsp;                    chooseCardsBox.setEffect(new BoxBlur(0, 0, 0));</b>
+<b class="nc"><i>1270</i>&nbsp;                    chooseCard.setEffect(new BoxBlur(0, 0, 0));</b>
+<i>1271</i>&nbsp;                }));
+<b class="nc"><i>1272</i>&nbsp;        closePaneTimer.play();</b>
+<i>1273</i>&nbsp;
+<b class="nc"><i>1274</i>&nbsp;        if(pane.equals(winner)) {</b>
+<b class="nc"><i>1275</i>&nbsp;            playerView.pauseView().setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>1276</i>&nbsp;                showWinnerOrSurrender(&quot;winner&quot;);</b>
+<i>1277</i>&nbsp;            });
+<i>1278</i>&nbsp;        }
+<i>1279</i>&nbsp;    }
+<i>1280</i>&nbsp;
+<i>1281</i>&nbsp;    /**
+<i>1282</i>&nbsp;     * This method shows a pane (winner and surrender)
+<i>1283</i>&nbsp;     * @param paneName Pane to show
+<i>1284</i>&nbsp;     */
+<i>1285</i>&nbsp;    public void showWinnerOrSurrender(String paneName){
+<b class="nc"><i>1286</i>&nbsp;        StackPane pane = new StackPane();</b>
+<b class="nc"><i>1287</i>&nbsp;        if(paneName.equals(&quot;winner&quot;))</b>
+<b class="nc"><i>1288</i>&nbsp;            pane = winner;</b>
+<b class="nc"><i>1289</i>&nbsp;        else if(paneName.equals(&quot;surrender&quot;))</b>
+<b class="nc"><i>1290</i>&nbsp;            pane = surrender;</b>
+<b class="nc"><i>1291</i>&nbsp;        FadeTransition paneFadeIn = new FadeTransition(Duration.millis(500), pane);</b>
+<b class="nc"><i>1292</i>&nbsp;        paneFadeIn.setFromValue(0);</b>
+<b class="nc"><i>1293</i>&nbsp;        paneFadeIn.setToValue(1);</b>
+<b class="nc"><i>1294</i>&nbsp;        paneFadeIn.play();</b>
+<b class="nc"><i>1295</i>&nbsp;        pane.setVisible(true);</b>
+<i>1296</i>&nbsp;
+<b class="nc"><i>1297</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>1298</i>&nbsp;                Duration.millis(500),</b>
+<i>1299</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>1300</i>&nbsp;                    matchBackground.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1301</i>&nbsp;                    mapView.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1302</i>&nbsp;                    playerViewPane.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1303</i>&nbsp;                    guiMap.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1304</i>&nbsp;                    pausePane.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1305</i>&nbsp;                    activePowers.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1306</i>&nbsp;                    helper.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1307</i>&nbsp;                    turnStory.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1308</i>&nbsp;                    myTurn.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1309</i>&nbsp;                    chooseCardsBox.setEffect(new BoxBlur(5, 5, 5));</b>
+<b class="nc"><i>1310</i>&nbsp;                    chooseCard.setEffect(new BoxBlur(5, 5, 5));</b>
+<i>1311</i>&nbsp;                }));
+<b class="nc"><i>1312</i>&nbsp;        showingTimer.play();</b>
+<i>1313</i>&nbsp;    }
+<i>1314</i>&nbsp;
+<i>1315</i>&nbsp;    /**
+<i>1316</i>&nbsp;     * This method creates surrender popup
+<i>1317</i>&nbsp;     */
+<i>1318</i>&nbsp;    public void createSurrenderPopup(){
+<b class="nc"><i>1319</i>&nbsp;        surrender.setPrefWidth(screenWidth/3);</b>
+<b class="nc"><i>1320</i>&nbsp;        surrender.setPrefHeight(screenHeight/3);</b>
+<i>1321</i>&nbsp;
+<b class="nc"><i>1322</i>&nbsp;        Image surrenderFrame = new Image(MatchScene.class.getResource(&quot;/img/loadingAndPopups/frame2.png&quot;).toString(), screenWidth/3, screenHeight/3, false, false);</b>
+<b class="nc"><i>1323</i>&nbsp;        ImageView surrenderView = new ImageView(surrenderFrame);</b>
+<i>1324</i>&nbsp;
+<b class="nc"><i>1325</i>&nbsp;        VBox confirmBox = new VBox();</b>
+<i>1326</i>&nbsp;
+<b class="nc"><i>1327</i>&nbsp;        Text questionPopup = new Text(&quot;Are you sure to lose and quit the game?&quot;);</b>
+<b class="nc"><i>1328</i>&nbsp;        questionPopup.setFont(lillybelleFont);</b>
+<b class="nc"><i>1329</i>&nbsp;        HBox answers = new HBox();</b>
+<i>1330</i>&nbsp;
+<b class="nc"><i>1331</i>&nbsp;        Button yesPopupButton = new Button(&quot;Yes&quot;);</b>
+<b class="nc"><i>1332</i>&nbsp;        Button noPopupButton = new Button(&quot;No&quot;);</b>
+<i>1333</i>&nbsp;
+<b class="nc"><i>1334</i>&nbsp;        yesPopupButton.setFont(lillybelleFont);</b>
+<b class="nc"><i>1335</i>&nbsp;        yesPopupButton.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>1336</i>&nbsp;        noPopupButton.setFont(lillybelleFont);</b>
+<b class="nc"><i>1337</i>&nbsp;        noPopupButton.setCursor(Cursor.HAND);</b>
+<i>1338</i>&nbsp;
+<i>1339</i>&nbsp;
 <i>1340</i>&nbsp;
-<i>1341</i>&nbsp;    /**
-<i>1342</i>&nbsp;     * This method creates surrender popup
-<i>1343</i>&nbsp;     */
-<i>1344</i>&nbsp;    public void createSurrenderPopup(){
-<b class="nc"><i>1345</i>&nbsp;        surrender.setPrefWidth(screenWidth/3);</b>
-<b class="nc"><i>1346</i>&nbsp;        surrender.setPrefHeight(screenHeight/3);</b>
-<i>1347</i>&nbsp;
-<b class="nc"><i>1348</i>&nbsp;        Image surrenderFrame = new Image(MatchScene.class.getResource(&quot;/img/loadingAndPopups/frame2.png&quot;).toString(), screenWidth/3, screenHeight/3, false, false);</b>
-<b class="nc"><i>1349</i>&nbsp;        ImageView surrenderView = new ImageView(surrenderFrame);</b>
-<i>1350</i>&nbsp;
-<b class="nc"><i>1351</i>&nbsp;        VBox confirmBox = new VBox();</b>
-<i>1352</i>&nbsp;
-<b class="nc"><i>1353</i>&nbsp;        Text questionPopup = new Text(&quot;Are you sure to lose and quit the game?&quot;);</b>
-<b class="nc"><i>1354</i>&nbsp;        questionPopup.setFont(lillybelleFont);</b>
-<b class="nc"><i>1355</i>&nbsp;        HBox answers = new HBox();</b>
+<b class="nc"><i>1341</i>&nbsp;        answers.getChildren().addAll(yesPopupButton, noPopupButton);</b>
+<b class="nc"><i>1342</i>&nbsp;        answers.setSpacing(50);</b>
+<b class="nc"><i>1343</i>&nbsp;        answers.setAlignment(Pos.CENTER);</b>
+<i>1344</i>&nbsp;
+<b class="nc"><i>1345</i>&nbsp;        yesPopupButton.setOnAction(e -&gt; {</b>
+<b class="nc"><i>1346</i>&nbsp;            gui.window().close();</b>
+<i>1347</i>&nbsp;            try {
+<b class="nc"><i>1348</i>&nbsp;                gui.client().end();</b>
+<b class="nc"><i>1349</i>&nbsp;                setCloseMatch();</b>
+<b class="nc"><i>1350</i>&nbsp;            } catch (ChannelClosedException channelClosedException) {</b>
+<b class="nc"><i>1351</i>&nbsp;                channelClosedException.printStackTrace();</b>
+<b class="nc"><i>1352</i>&nbsp;            }</b>
+<i>1353</i>&nbsp;        });
+<b class="nc"><i>1354</i>&nbsp;        noPopupButton.setOnAction(e -&gt; closeWinnerOrSurrender(surrender));</b>
+<i>1355</i>&nbsp;
 <i>1356</i>&nbsp;
-<b class="nc"><i>1357</i>&nbsp;        Button yesPopupButton = new Button(&quot;Yes&quot;);</b>
-<b class="nc"><i>1358</i>&nbsp;        Button noPopupButton = new Button(&quot;No&quot;);</b>
+<b class="nc"><i>1357</i>&nbsp;        confirmBox.setSpacing(10);</b>
+<b class="nc"><i>1358</i>&nbsp;        confirmBox.getChildren().addAll(questionPopup, answers);</b>
 <i>1359</i>&nbsp;
-<b class="nc"><i>1360</i>&nbsp;        yesPopupButton.setFont(lillybelleFont);</b>
-<b class="nc"><i>1361</i>&nbsp;        yesPopupButton.setCursor(Cursor.HAND);</b>
-<b class="nc"><i>1362</i>&nbsp;        noPopupButton.setFont(lillybelleFont);</b>
-<b class="nc"><i>1363</i>&nbsp;        noPopupButton.setCursor(Cursor.HAND);</b>
-<i>1364</i>&nbsp;
-<i>1365</i>&nbsp;
-<i>1366</i>&nbsp;
-<b class="nc"><i>1367</i>&nbsp;        answers.getChildren().addAll(yesPopupButton, noPopupButton);</b>
-<b class="nc"><i>1368</i>&nbsp;        answers.setSpacing(50);</b>
-<b class="nc"><i>1369</i>&nbsp;        answers.setAlignment(Pos.CENTER);</b>
-<i>1370</i>&nbsp;
-<b class="nc"><i>1371</i>&nbsp;        yesPopupButton.setOnAction(e -&gt; {</b>
-<b class="nc"><i>1372</i>&nbsp;            gui.window().close();</b>
-<i>1373</i>&nbsp;            try {
-<b class="nc"><i>1374</i>&nbsp;                gui.client().end();</b>
-<b class="nc"><i>1375</i>&nbsp;                setCloseMatch();</b>
-<b class="nc"><i>1376</i>&nbsp;            } catch (ChannelClosedException channelClosedException) {</b>
-<b class="nc"><i>1377</i>&nbsp;                channelClosedException.printStackTrace();</b>
-<b class="nc"><i>1378</i>&nbsp;            }</b>
-<i>1379</i>&nbsp;        });
-<b class="nc"><i>1380</i>&nbsp;        noPopupButton.setOnAction(e -&gt; {</b>
-<b class="nc"><i>1381</i>&nbsp;            closeWinnerOrSurrender(surrender);</b>
-<i>1382</i>&nbsp;        });
-<i>1383</i>&nbsp;
-<i>1384</i>&nbsp;
-<b class="nc"><i>1385</i>&nbsp;        confirmBox.setSpacing(10);</b>
-<b class="nc"><i>1386</i>&nbsp;        confirmBox.getChildren().addAll(questionPopup, answers);</b>
-<i>1387</i>&nbsp;
-<b class="nc"><i>1388</i>&nbsp;        surrender.getChildren().addAll(surrenderView, confirmBox);</b>
-<b class="nc"><i>1389</i>&nbsp;        surrender.setAlignment(Pos.CENTER);</b>
-<b class="nc"><i>1390</i>&nbsp;        confirmBox.setAlignment(Pos.CENTER);</b>
-<i>1391</i>&nbsp;    }
-<i>1392</i>&nbsp;}
+<b class="nc"><i>1360</i>&nbsp;        surrender.getChildren().addAll(surrenderView, confirmBox);</b>
+<b class="nc"><i>1361</i>&nbsp;        surrender.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>1362</i>&nbsp;        confirmBox.setAlignment(Pos.CENTER);</b>
+<i>1363</i>&nbsp;    }
+<i>1364</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 18:00</div>
+    <div style="float:right;">generated on 2020-07-03 19:52</div>
 </div>
 </body>
 </html>

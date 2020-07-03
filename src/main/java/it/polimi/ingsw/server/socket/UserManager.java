@@ -15,7 +15,7 @@ public class UserManager extends Thread {
         this.communicationChannel = communicationChannel;
     }
 
-    public DataBase dataBase() {
+    private DataBase dataBase() {
         return dataBase;
     }
 
@@ -27,12 +27,11 @@ public class UserManager extends Thread {
      * This method creates a user for a socket
      */
     public void run() {
-        String message = null;
+        String message;
         try {
             message = communicationChannel().askUsername();
         } catch (ChannelClosedException e) {
             e.printStackTrace();
-            //dataBase.deleteConnection(communicationChannel);
             return;
         }
         boolean valid = false;
@@ -42,7 +41,6 @@ public class UserManager extends Thread {
                     message = communicationChannel().askUniqueUsername();
                 } catch (ChannelClosedException e) {
                     e.printStackTrace();
-                    //dataBase.deleteConnection(communicationChannel);
                     return;
                 }
             }

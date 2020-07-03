@@ -23,11 +23,7 @@ public class CommunicationChannel {
     private List<String> buffer = new ArrayList<>();
     private boolean closed = false;
     private boolean ping = false;
-    static final public String SEPARATOR = "_CONTENT_";
-    final private int KEYINDEX = 0;
-    final private int CONTENTINDEX = 1;
-    final private int CURRENTMESSAGEINDEX = 0;
-    final private int EMPTYBUFFER = 0;
+    private static final String SEPARATOR = "_CONTENT_";
     private final int quit = -1;
 
     public CommunicationChannel(BufferedReader bufferedReader, PrintWriter printWriter) {
@@ -39,7 +35,7 @@ public class CommunicationChannel {
         return closed;
     }
 
-    public boolean isPinged() {
+    boolean isPinged() {
         return ping;
     }
 
@@ -47,7 +43,7 @@ public class CommunicationChannel {
         ping = true;
     }
 
-    public synchronized void resetPing() {
+    synchronized void resetPing() {
         ping = false;
     }
 
@@ -74,10 +70,9 @@ public class CommunicationChannel {
      * This method adds a message to the buffer
      * @param message, the message saved
      */
-    public synchronized void saveMessage(String message) {
+    private synchronized void saveMessage(String message) {
         buffer.add(message);
         notifyAll();
-       // System.out.println("Buffer non vuoto");
     }
 
     /**
@@ -85,27 +80,28 @@ public class CommunicationChannel {
      * @return false if not
      * @param key, key of communication
      */
-    public synchronized boolean hasMessages(CommunicationProtocol key) {
+    private synchronized boolean hasMessages(CommunicationProtocol key) {
         return buffer.stream().anyMatch(x -> getKey(x) == key);
-        /*
-        for (String message: buffer) {
-            if (getKey(message) == key)
-                return true;
-        }
-        return false;
-        */
     }
 
+    /**
+     * This method tells if the buffer contains a message
+     * @return Boolean
+     */
     public synchronized boolean isEmpty() {
         return buffer.isEmpty();
     }
 
+    /**
+     * This method returns the first key that was received from the ones contained in the buffer
+     * @return CommunicationProtocol key
+     * @throws ChannelClosedException if the connection is closed
+     */
     public synchronized CommunicationProtocol popKey() throws ChannelClosedException {
         while (!isClosed()) {
             if (!isEmpty())
                 return getKey(buffer.get(0));
             else {
-                //System.out.println("Buffer vuoto");
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -117,6 +113,11 @@ public class CommunicationChannel {
         throw new ChannelClosedException();
     }
 
+    /**
+     * This method pops the first message that was from the ones contained in the buffer
+     * @return String
+     * @throws ChannelClosedException if there's no connection
+     */
     public synchronized String popMessage() throws ChannelClosedException {
         while (!isClosed()) {
             if (!isEmpty()) {
@@ -125,7 +126,6 @@ public class CommunicationChannel {
                 return message;
             }
             else {
-                //System.out.println("Buffer vuoto");
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -143,7 +143,7 @@ public class CommunicationChannel {
      * @return The popped message
      * @throws ChannelClosedException if connection is lost
      */
-    public synchronized String nextMessage(CommunicationProtocol key) throws ChannelClosedException {
+    private synchronized String nextMessage(CommunicationProtocol key) throws ChannelClosedException {
         while (!isClosed()) {
             if (hasMessages(key)) {
                 String message;
@@ -153,17 +153,7 @@ public class CommunicationChannel {
                     buffer.remove(message);
                     return message;
                 }
-                /*
-                for (int i = 0; i < buffer.size(); i++) {
-                    message = buffer.get(i);
-                    if (getKey(message) == key) {
-                        buffer.remove(message);
-                        return message;
-                    }
-                }
-                */
             }
-            //System.out.println("Buffer vuoto");
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -181,7 +171,7 @@ public class CommunicationChannel {
      * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
      */
-    public synchronized String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeOutException {
+    private synchronized String nextGameMessage(CommunicationProtocol key) throws ChannelClosedException, TimeOutException {
         while (!isClosed()) {
             if(hasMessages(TIMEOUT)) {
                 nextMessage(TIMEOUT);
@@ -190,7 +180,6 @@ public class CommunicationChannel {
             if (hasMessages(key)) {
                 return nextMessage(key);
             }
-           // System.out.println("Buffer vuoto");
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -205,7 +194,7 @@ public class CommunicationChannel {
      * @param key keyword
      * @return related string
      */
-    public static String keyToString(CommunicationProtocol key) {
+    private static String keyToString(CommunicationProtocol key) {
         Type type = new TypeToken<CommunicationProtocol>() {}.getType();
         return new Gson().toJson(key, type);
     }
@@ -215,7 +204,7 @@ public class CommunicationChannel {
      * @param string unknown key
      * @return converted key
      */
-    public CommunicationProtocol stringToKey(String string) {
+    private CommunicationProtocol stringToKey(String string) {
         Type type = new TypeToken<CommunicationProtocol>() {}.getType();
         CommunicationProtocol key;
         try {
@@ -232,10 +221,11 @@ public class CommunicationChannel {
      * @param message string
      * @return recognized key
      */
-    public CommunicationProtocol getKey(String message) {
+    private CommunicationProtocol getKey(String message) {
         if (message != null) {
             String[] content = message.split(SEPARATOR);
-            return stringToKey(content[KEYINDEX]);
+            int keyIndex = 0;
+            return stringToKey(content[keyIndex]);
         }
         return INVALID;
     }
@@ -248,16 +238,13 @@ public class CommunicationChannel {
     public String getContent(String message) {
         if (message != null) {
             String[] content = message.split(SEPARATOR);
+            int contentIndex = 1;
             if (content.length == 2)
-                return content[CONTENTINDEX];
+                return content[contentIndex];
             if (content.length < 2)
                 return keyToString(EMPTY);
         }
         return keyToString(INVALID);
-    }
-
-    private boolean hasContent(String message) {
-        return stringToKey(getContent(message)) != EMPTY;
     }
 
     /**
@@ -269,7 +256,6 @@ public class CommunicationChannel {
     public CommunicationProtocol nextKey() throws IOException, ChannelClosedException {
         if(!closed) {
             String message = read();
-            //System.out.println("\nReceiving:\n" + message + "\n");
             CommunicationProtocol key = getKey(message);
 
             if (key != PING && key != PONG)
@@ -288,20 +274,19 @@ public class CommunicationChannel {
      * @return content
      * @throws JsonSyntaxException in case the content is invalid
      */
-    public int readNumber(String message) throws JsonSyntaxException {
+    private int readNumber(String message) throws JsonSyntaxException {
         Type type = new TypeToken<Integer>() {}.getType();
         return new Gson().fromJson(getContent(message), type);
     }
+
     /**
      * This method converts the content in a boolean value
      * @param message String
      * @return content
      */
-    public boolean readBoolean(String message) {
+    private boolean readBoolean(String message) {
         int answer = readNumber(message);
-        if (answer == 0)
-            return true;
-        return false;
+        return answer == 0;
     }
 
     /**
@@ -312,7 +297,6 @@ public class CommunicationChannel {
     public void write(String message) throws ChannelClosedException {
         synchronized (out) {
             if (!isClosed()) {
-                //System.out.println("\nSending:\n" + message + "\n");
                 out.println(message);
                 out.flush();
             } else
@@ -338,7 +322,6 @@ public class CommunicationChannel {
      */
     public String askUsername() throws ChannelClosedException {
         while (!isClosed()){
-            System.out.println("Chiedo Username");
             writeKeyWord(USERNAME);
             String message = nextMessage(USERNAME);
             if (message != null && getKey(message) == USERNAME)
@@ -378,7 +361,7 @@ public class CommunicationChannel {
      * @throws ChannelClosedException if there's no connection
      */
     public int askMatchType() throws ChannelClosedException {
-        while (!isClosed()){
+        if (!isClosed()){
             writeKeyWord(MATCH_TYPE);
             String message = nextMessage(MATCH_TYPE);
             return readNumber(message);
@@ -457,11 +440,23 @@ public class CommunicationChannel {
         return copy();
     }
 
+    /**
+     * This method sends the winner
+     * @param winner Sent player
+     * @return boolean
+     * @throws ChannelClosedException if there's no connection
+     */
     public boolean sendWinner(String winner) throws ChannelClosedException {
         write(keyToString(WINNER) + SEPARATOR + winner);
         return copy();
     }
 
+    /**
+     * This method sends a loser player
+     * @param loser Sent player
+     * @return boolean
+     * @throws ChannelClosedException if there's no connection
+     */
     public boolean sendLoser(String loser) throws ChannelClosedException {
         write(keyToString(LOSER) + SEPARATOR + loser);
         return copy();
@@ -577,6 +572,13 @@ public class CommunicationChannel {
         return -1;
     }
 
+    /**
+     * This method sends a list of cards and waits for a list index
+     * @param cards List of cards
+     * @return int
+     * @throws TimeOutException if the answer is TIMEOUT
+     * @throws ChannelClosedException if the connection is lost
+     */
     public int askCard(String cards) throws TimeOutException, ChannelClosedException {
         if (!isClosed()) {
             write(keyToString(CARD) + SEPARATOR + cards);
@@ -586,6 +588,13 @@ public class CommunicationChannel {
         return -1;
     }
 
+    /**
+     * This method sends a list of cards and waits for an array of list indexes
+     * @param deck List of cards
+     * @return int[]
+     * @throws TimeOutException if the answer is TIMEOUT
+     * @throws ChannelClosedException if the connection is lost
+     */
     public int[] askDeck(String deck) throws TimeOutException, ChannelClosedException {
         if (!isClosed()) {
             write(keyToString(DECK) + SEPARATOR + deck);
@@ -593,9 +602,9 @@ public class CommunicationChannel {
             Type listType = new TypeToken<int[]>() {}.getType();
             return new Gson().fromJson(getContent(message), listType);
         }
-        int[] quit = new int[1];
-        quit[0] = -1;
-        return quit;
+        int[] quitting = new int[1];
+        quitting[0] = -1;
+        return quitting;
     }
 
     /**
@@ -614,6 +623,12 @@ public class CommunicationChannel {
         throw new ChannelClosedException();
     }
 
+    /**
+     * This method answers a confirmation request
+     * @param key Request type
+     * @param confirmation Answer
+     * @throws ChannelClosedException if the connection is closed
+     */
     public void writeConfirmation(CommunicationProtocol key, int confirmation) throws ChannelClosedException {
         if (confirmation == quit)
             writeKeyWord(QUIT);

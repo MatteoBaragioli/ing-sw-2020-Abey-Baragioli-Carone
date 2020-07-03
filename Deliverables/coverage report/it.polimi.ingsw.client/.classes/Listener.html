@@ -50,7 +50,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 19)
+    (0/ 21)
   </span>
 </td>
 </tr>
@@ -88,7 +88,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 20)
+    (0/ 22)
   </span>
 </td>
 </tr>
@@ -118,42 +118,42 @@
 <b class="nc"><i>18</i>&nbsp;        this.view = view;</b>
 <i>19</i>&nbsp;    }
 <i>20</i>&nbsp;
-<i>21</i>&nbsp;    public void run() {
-<b class="nc"><i>22</i>&nbsp;        while (!communicationChannel.isClosed()) {</b>
-<i>23</i>&nbsp;            try {
-<b class="nc"><i>24</i>&nbsp;                CommunicationProtocol key = communicationChannel.nextKey();</b>
-<b class="nc"><i>25</i>&nbsp;                switch (key) {</b>
-<i>26</i>&nbsp;                    case PING:
-<i>27</i>&nbsp;                        try {
-<b class="nc"><i>28</i>&nbsp;                            communicationChannel.writeKeyWord(PONG);</b>
-<b class="nc"><i>29</i>&nbsp;                        } catch (ChannelClosedException e) {</b>
-<i>30</i>&nbsp;                            //e.printStackTrace();
-<b class="nc"><i>31</i>&nbsp;                            System.err.println(&quot;PING Error&quot;);</b>
-<b class="nc"><i>32</i>&nbsp;                        }</b>
-<b class="nc"><i>33</i>&nbsp;                        break;</b>
-<i>34</i>&nbsp;                    case CURRENT_PLAYER:
-<i>35</i>&nbsp;                    case LOSER:
-<i>36</i>&nbsp;                    case MATCH_STORY:
-<i>37</i>&nbsp;                    case MAP:
-<i>38</i>&nbsp;                    case MY_PLAYER:
-<i>39</i>&nbsp;                    case OPPONENTS:
-<i>40</i>&nbsp;                    case TIMEOUT:
-<i>41</i>&nbsp;                    case WINNER:
-<i>42</i>&nbsp;
-<i>43</i>&nbsp;                        try {
-<b class="nc"><i>44</i>&nbsp;                            communicationChannel.writeKeyWord(RECEIVED);</b>
-<b class="nc"><i>45</i>&nbsp;                        } catch (ChannelClosedException e) {</b>
-<i>46</i>&nbsp;                            //e.printStackTrace();
-<b class="nc"><i>47</i>&nbsp;                            System.err.println(&quot;RECEIVED Error&quot;);</b>
-<b class="nc"><i>48</i>&nbsp;                        }</b>
-<i>49</i>&nbsp;                        break;
-<i>50</i>&nbsp;                }
-<b class="nc"><i>51</i>&nbsp;            } catch (IOException | ChannelClosedException e) {</b>
-<i>52</i>&nbsp;                //e.printStackTrace();
-<b class="nc"><i>53</i>&nbsp;                view.connectionLost();</b>
-<b class="nc"><i>54</i>&nbsp;                communicationChannel.close();</b>
-<b class="nc"><i>55</i>&nbsp;            }</b>
-<i>56</i>&nbsp;        }
+<i>21</i>&nbsp;    @Override
+<i>22</i>&nbsp;    public void run() {
+<b class="nc"><i>23</i>&nbsp;        while (!communicationChannel.isClosed()) {</b>
+<i>24</i>&nbsp;            CommunicationProtocol key;
+<i>25</i>&nbsp;            try {
+<b class="nc"><i>26</i>&nbsp;                key = communicationChannel.nextKey();</b>
+<b class="nc"><i>27</i>&nbsp;            } catch (IOException | ChannelClosedException e) {</b>
+<b class="nc"><i>28</i>&nbsp;                view.connectionLost();</b>
+<b class="nc"><i>29</i>&nbsp;                communicationChannel.close();</b>
+<i>30</i>&nbsp;                return;
+<b class="nc"><i>31</i>&nbsp;            }</b>
+<b class="nc"><i>32</i>&nbsp;            switch (key) {</b>
+<i>33</i>&nbsp;                case PING:
+<i>34</i>&nbsp;                    try {
+<b class="nc"><i>35</i>&nbsp;                        communicationChannel.writeKeyWord(PONG);</b>
+<b class="nc"><i>36</i>&nbsp;                    } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>37</i>&nbsp;                        System.err.println(&quot;PING Error&quot;);</b>
+<b class="nc"><i>38</i>&nbsp;                    }</b>
+<b class="nc"><i>39</i>&nbsp;                    break;</b>
+<i>40</i>&nbsp;                case CURRENT_PLAYER:
+<i>41</i>&nbsp;                case LOSER:
+<i>42</i>&nbsp;                case MATCH_STORY:
+<i>43</i>&nbsp;                case MAP:
+<i>44</i>&nbsp;                case MY_PLAYER:
+<i>45</i>&nbsp;                case OPPONENTS:
+<i>46</i>&nbsp;                case TIMEOUT:
+<i>47</i>&nbsp;                case WINNER:
+<i>48</i>&nbsp;                    try {
+<b class="nc"><i>49</i>&nbsp;                        communicationChannel.writeKeyWord(RECEIVED);</b>
+<b class="nc"><i>50</i>&nbsp;                    } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>51</i>&nbsp;                        System.err.println(&quot;RECEIVED Error&quot;);</b>
+<b class="nc"><i>52</i>&nbsp;                    }</b>
+<b class="nc"><i>53</i>&nbsp;                    break;</b>
+<i>54</i>&nbsp;                default:
+<i>55</i>&nbsp;            }
+<b class="nc"><i>56</i>&nbsp;        }</b>
 <i>57</i>&nbsp;    }
 <i>58</i>&nbsp;}
 </div>
@@ -161,7 +161,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 18:00</div>
+    <div style="float:right;">generated on 2020-07-03 19:52</div>
 </div>
 </body>
 </html>

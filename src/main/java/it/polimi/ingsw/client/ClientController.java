@@ -38,7 +38,6 @@ class ClientController {
             else
                 communicationChannel.writeChoicesFromList(DECK, index);
         } catch (TimeOutException e) {
-            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -63,7 +62,6 @@ class ClientController {
                 communicationChannel.writeChoiceFromList(CARD, index);
 
         } catch (TimeOutException e) {
-            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -110,7 +108,6 @@ class ClientController {
             else
                 communicationChannel.writeChoiceFromList(key, index);
         } catch (TimeOutException e) {
-            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -170,7 +167,6 @@ class ClientController {
         try {
             communicationChannel.writeConfirmation(key, view.askConfirmation(key));
         } catch (TimeOutException e) {
-            //view.timeOut();
             communicationChannel.writeKeyWord(TIMEOUT);
         }
     }
@@ -185,10 +181,5 @@ class ClientController {
         String message = communicationChannel.popMessage();
         Type type = new TypeToken<List<String>>() {}.getType();
         view.tellStory(new Gson().fromJson(communicationChannel.getContent(message), type));
-    }
-
-    void manageTimeOut(CommunicationChannel communicationChannel, View view) throws ChannelClosedException {
-        communicationChannel.popMessage();
-        view.timeOut();
     }
 }

@@ -61,7 +61,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 69)
+    (0/ 68)
   </span>
 </td>
 </tr>
@@ -189,25 +189,24 @@
 <i>115</i>&nbsp;            try {
 <b class="nc"><i>116</i>&nbsp;                socket = serverSocket.accept();</b>
 <b class="nc"><i>117</i>&nbsp;            } catch(IOException e) {</b>
-<b class="nc"><i>118</i>&nbsp;                socket = null;</b>
-<b class="nc"><i>119</i>&nbsp;                closed = true;</b>
-<b class="nc"><i>120</i>&nbsp;                e.printStackTrace();</b>
-<b class="nc"><i>121</i>&nbsp;                System.err.println(&quot;ServerSocket is not accepting&quot;);</b>
-<b class="nc"><i>122</i>&nbsp;            }</b>
-<b class="nc"><i>123</i>&nbsp;            if(socket!=null) {</b>
-<b class="nc"><i>124</i>&nbsp;                System.out.println(socket + &quot; tried to connect&quot;);</b>
-<b class="nc"><i>125</i>&nbsp;                executor.submit(new ClientHandler(dataBase, socket));</b>
-<i>126</i>&nbsp;            }
-<b class="nc"><i>127</i>&nbsp;        }</b>
-<b class="nc"><i>128</i>&nbsp;        executor.shutdown();</b>
-<i>129</i>&nbsp;    }
-<i>130</i>&nbsp;}
+<b class="nc"><i>118</i>&nbsp;                closed = true;</b>
+<b class="nc"><i>119</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>120</i>&nbsp;                System.err.println(&quot;ServerSocket is not accepting&quot;);</b>
+<b class="nc"><i>121</i>&nbsp;            }</b>
+<b class="nc"><i>122</i>&nbsp;            if(socket!=null) {</b>
+<b class="nc"><i>123</i>&nbsp;                System.out.println(socket + &quot; tried to connect&quot;);</b>
+<b class="nc"><i>124</i>&nbsp;                executor.submit(new ClientHandler(dataBase, socket));</b>
+<i>125</i>&nbsp;            }
+<b class="nc"><i>126</i>&nbsp;        }</b>
+<b class="nc"><i>127</i>&nbsp;        executor.shutdown();</b>
+<i>128</i>&nbsp;    }
+<i>129</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 18:00</div>
+    <div style="float:right;">generated on 2020-07-03 19:52</div>
 </div>
 </body>
 </html>

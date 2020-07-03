@@ -50,7 +50,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 136)
+    (0/ 129)
   </span>
 </td>
 </tr>
@@ -88,7 +88,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 137)
+    (0/ 130)
   </span>
 </td>
 </tr>
@@ -146,247 +146,205 @@
 <i>46</i>&nbsp;            try {
 <b class="nc"><i>47</i>&nbsp;                out = new PrintWriter(socket.getOutputStream(), true);</b>
 <b class="nc"><i>48</i>&nbsp;            } catch (IOException e) {</b>
-<i>49</i>&nbsp;                //e.printStackTrace();
-<i>50</i>&nbsp;               // System.err.println(&quot;Couldn&#39;t get I/O for the printer&quot;);
-<b class="nc"><i>51</i>&nbsp;                System.exit(1);</b>
-<b class="nc"><i>52</i>&nbsp;            }</b>
-<i>53</i>&nbsp;
-<b class="nc"><i>54</i>&nbsp;            BufferedReader in = null;</b>
-<i>55</i>&nbsp;            try {
-<b class="nc"><i>56</i>&nbsp;                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));</b>
-<b class="nc"><i>57</i>&nbsp;            } catch (IOException e) {</b>
-<i>58</i>&nbsp;                //e.printStackTrace();
-<i>59</i>&nbsp;               // System.err.println(&quot;Couldn&#39;t get I/O for the buffer&quot;);
-<b class="nc"><i>60</i>&nbsp;                System.exit(1);</b>
-<b class="nc"><i>61</i>&nbsp;            }</b>
-<i>62</i>&nbsp;
-<b class="nc"><i>63</i>&nbsp;            ClientController clientController = new ClientController();</b>
-<i>64</i>&nbsp;
-<b class="nc"><i>65</i>&nbsp;            communicationChannel = new CommunicationChannel(in, out);</b>
-<i>66</i>&nbsp;            try {
-<b class="nc"><i>67</i>&nbsp;                communicationChannel.writeKeyWord(HI);</b>
-<b class="nc"><i>68</i>&nbsp;            } catch (ChannelClosedException e) {</b>
-<i>69</i>&nbsp;                //e.printStackTrace();
-<i>70</i>&nbsp;                // System.err.println(&quot;Connection lost&quot;);
-<b class="nc"><i>71</i>&nbsp;            }</b>
-<b class="nc"><i>72</i>&nbsp;            Listener listener = new Listener(communicationChannel, view);</b>
-<b class="nc"><i>73</i>&nbsp;            listener.start();</b>
-<i>74</i>&nbsp;
-<b class="nc"><i>75</i>&nbsp;            while (!communicationChannel.isClosed()) {</b>
-<b class="nc"><i>76</i>&nbsp;                CommunicationProtocol key = null;</b>
-<i>77</i>&nbsp;                try {
-<b class="nc"><i>78</i>&nbsp;                    key = communicationChannel.popKey();</b>
-<b class="nc"><i>79</i>&nbsp;                } catch (ChannelClosedException e) {</b>
-<i>80</i>&nbsp;                    ////e.printStackTrace();
-<i>81</i>&nbsp;                   // System.err.println(&quot;Connection lost&quot;);
-<b class="nc"><i>82</i>&nbsp;                    key = INVALID;</b>
-<b class="nc"><i>83</i>&nbsp;                }</b>
-<b class="nc"><i>84</i>&nbsp;                if(key != INVALID) {</b>
-<b class="nc"><i>85</i>&nbsp;                    view.prepareAdditionalCommunication(key);</b>
-<b class="nc"><i>86</i>&nbsp;                    switch (key) {</b>
-<i>87</i>&nbsp;                        case BUILD:
-<i>88</i>&nbsp;                        case DESTINATION:
-<i>89</i>&nbsp;                        case REMOVAL:
-<i>90</i>&nbsp;                        case START_POSITION:
-<i>91</i>&nbsp;                        case WORKER:
-<i>92</i>&nbsp;                            try {
-<b class="nc"><i>93</i>&nbsp;                                clientController.manageListOfPositions(key, communicationChannel, view);</b>
-<b class="nc"><i>94</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>95</i>&nbsp;                                //e.printStackTrace();
-<i>96</i>&nbsp;                                //System.err.println(&quot;Manage boxes error&quot;);
-<b class="nc"><i>97</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>98</i>&nbsp;                            }</b>
-<b class="nc"><i>99</i>&nbsp;                            break;</b>
-<i>100</i>&nbsp;                        case CARD:
+<b class="nc"><i>49</i>&nbsp;                System.exit(1);</b>
+<b class="nc"><i>50</i>&nbsp;            }</b>
+<i>51</i>&nbsp;
+<b class="nc"><i>52</i>&nbsp;            BufferedReader in = null;</b>
+<i>53</i>&nbsp;            try {
+<b class="nc"><i>54</i>&nbsp;                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));</b>
+<b class="nc"><i>55</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>56</i>&nbsp;                System.exit(1);</b>
+<b class="nc"><i>57</i>&nbsp;            }</b>
+<i>58</i>&nbsp;
+<b class="nc"><i>59</i>&nbsp;            ClientController clientController = new ClientController();</b>
+<i>60</i>&nbsp;
+<b class="nc"><i>61</i>&nbsp;            communicationChannel = new CommunicationChannel(in, out);</b>
+<i>62</i>&nbsp;            try {
+<b class="nc"><i>63</i>&nbsp;                communicationChannel.writeKeyWord(HI);</b>
+<b class="nc"><i>64</i>&nbsp;                Listener listener = new Listener(communicationChannel, view);</b>
+<b class="nc"><i>65</i>&nbsp;                listener.start();</b>
+<b class="nc"><i>66</i>&nbsp;            } catch (ChannelClosedException ignored) {</b>
+<b class="nc"><i>67</i>&nbsp;            }</b>
+<i>68</i>&nbsp;
+<b class="nc"><i>69</i>&nbsp;            while (!communicationChannel.isClosed()) {</b>
+<b class="nc"><i>70</i>&nbsp;                CommunicationProtocol key = null;</b>
+<i>71</i>&nbsp;                try {
+<b class="nc"><i>72</i>&nbsp;                    key = communicationChannel.popKey();</b>
+<b class="nc"><i>73</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>74</i>&nbsp;                    key = INVALID;</b>
+<b class="nc"><i>75</i>&nbsp;                }</b>
+<b class="nc"><i>76</i>&nbsp;                if(key != INVALID) {</b>
+<b class="nc"><i>77</i>&nbsp;                    view.prepareAdditionalCommunication(key);</b>
+<b class="nc"><i>78</i>&nbsp;                    switch (key) {</b>
+<i>79</i>&nbsp;                        case BUILD:
+<i>80</i>&nbsp;                        case DESTINATION:
+<i>81</i>&nbsp;                        case REMOVAL:
+<i>82</i>&nbsp;                        case START_POSITION:
+<i>83</i>&nbsp;                        case WORKER:
+<i>84</i>&nbsp;                            try {
+<b class="nc"><i>85</i>&nbsp;                                clientController.manageListOfPositions(key, communicationChannel, view);</b>
+<b class="nc"><i>86</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>87</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>88</i>&nbsp;                            }</b>
+<b class="nc"><i>89</i>&nbsp;                            break;</b>
+<i>90</i>&nbsp;                        case CARD:
+<i>91</i>&nbsp;                            try {
+<b class="nc"><i>92</i>&nbsp;                                clientController.manageListOfCards(communicationChannel, view);</b>
+<b class="nc"><i>93</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>94</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>95</i>&nbsp;                            }</b>
+<b class="nc"><i>96</i>&nbsp;                            break;</b>
+<i>97</i>&nbsp;                        case CURRENT_PLAYER:
+<i>98</i>&nbsp;                        case LOSER:
+<i>99</i>&nbsp;                        case MY_PLAYER:
+<i>100</i>&nbsp;                        case WINNER:
 <i>101</i>&nbsp;                            try {
-<b class="nc"><i>102</i>&nbsp;                                clientController.manageListOfCards(communicationChannel, view);</b>
+<b class="nc"><i>102</i>&nbsp;                                clientController.managePlayer(key, communicationChannel, view);</b>
 <b class="nc"><i>103</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>104</i>&nbsp;                                //e.printStackTrace();
-<i>105</i>&nbsp;                               // System.err.println(&quot;Connection closed Manage CARDS&quot;);
-<b class="nc"><i>106</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>107</i>&nbsp;                            }</b>
-<b class="nc"><i>108</i>&nbsp;                            break;</b>
-<i>109</i>&nbsp;                        case CURRENT_PLAYER:
-<i>110</i>&nbsp;                        case LOSER:
-<i>111</i>&nbsp;                        case MY_PLAYER:
-<i>112</i>&nbsp;                        case WINNER:
-<i>113</i>&nbsp;                            try {
-<b class="nc"><i>114</i>&nbsp;                                clientController.managePlayer(key, communicationChannel, view);</b>
-<b class="nc"><i>115</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>116</i>&nbsp;                                //e.printStackTrace();
-<i>117</i>&nbsp;                               // System.err.println(&quot;Connection closed Manage Player&quot;);
-<b class="nc"><i>118</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>119</i>&nbsp;                            }</b>
-<b class="nc"><i>120</i>&nbsp;                            break;</b>
-<i>121</i>&nbsp;                        case DECK:
-<i>122</i>&nbsp;                            try {
-<b class="nc"><i>123</i>&nbsp;                                clientController.manageDeck(communicationChannel, view);</b>
-<b class="nc"><i>124</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>125</i>&nbsp;                                //e.printStackTrace();
-<i>126</i>&nbsp;                               // System.err.println(&quot;Connection closed Manage DECK&quot;);
+<b class="nc"><i>104</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>105</i>&nbsp;                            }</b>
+<b class="nc"><i>106</i>&nbsp;                            break;</b>
+<i>107</i>&nbsp;                        case DECK:
+<i>108</i>&nbsp;                            try {
+<b class="nc"><i>109</i>&nbsp;                                clientController.manageDeck(communicationChannel, view);</b>
+<b class="nc"><i>110</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>111</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>112</i>&nbsp;                            }</b>
+<b class="nc"><i>113</i>&nbsp;                            break;</b>
+<i>114</i>&nbsp;                        case GOD_POWER:
+<i>115</i>&nbsp;                        case UNDO:
+<i>116</i>&nbsp;                            try {
+<b class="nc"><i>117</i>&nbsp;                                communicationChannel.popMessage();</b>
+<b class="nc"><i>118</i>&nbsp;                                clientController.manageConfirmation(key, communicationChannel, view);</b>
+<b class="nc"><i>119</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>120</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>121</i>&nbsp;                            }</b>
+<b class="nc"><i>122</i>&nbsp;                            break;</b>
+<i>123</i>&nbsp;                        case MAP:
+<i>124</i>&nbsp;                            try {
+<b class="nc"><i>125</i>&nbsp;                                clientController.manageMapAsListOfBoxes(communicationChannel, view);</b>
+<b class="nc"><i>126</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
 <b class="nc"><i>127</i>&nbsp;                                restart = true;</b>
 <b class="nc"><i>128</i>&nbsp;                            }</b>
 <b class="nc"><i>129</i>&nbsp;                            break;</b>
-<i>130</i>&nbsp;                        case GOD_POWER:
-<i>131</i>&nbsp;                        case UNDO:
-<i>132</i>&nbsp;                            try {
-<b class="nc"><i>133</i>&nbsp;                                communicationChannel.popMessage();</b>
-<b class="nc"><i>134</i>&nbsp;                                clientController.manageConfirmation(key, communicationChannel, view);</b>
-<b class="nc"><i>135</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>136</i>&nbsp;                                //e.printStackTrace();
-<i>137</i>&nbsp;                               // System.err.println(&quot;Connection closed Manage CONFIRMATION&quot;);
-<b class="nc"><i>138</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>139</i>&nbsp;                            }</b>
-<b class="nc"><i>140</i>&nbsp;                            break;</b>
-<i>141</i>&nbsp;                        case MAP:
-<i>142</i>&nbsp;                            try {
-<b class="nc"><i>143</i>&nbsp;                                clientController.manageMapAsListOfBoxes(communicationChannel, view);</b>
-<b class="nc"><i>144</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>145</i>&nbsp;                                //e.printStackTrace();
-<i>146</i>&nbsp;                               // System.err.println(&quot;Connection closed Manage MAP&quot;);
-<b class="nc"><i>147</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>148</i>&nbsp;                            }</b>
-<b class="nc"><i>149</i>&nbsp;                            break;</b>
-<i>150</i>&nbsp;                        case MATCH_STORY:
-<i>151</i>&nbsp;                            try {
-<b class="nc"><i>152</i>&nbsp;                                clientController.manageMatchStory(communicationChannel, view);</b>
-<b class="nc"><i>153</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>154</i>&nbsp;                                //e.printStackTrace();
-<i>155</i>&nbsp;                               // System.err.println(&quot;Connection closed Manage MATCH_STORY&quot;);
-<b class="nc"><i>156</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>157</i>&nbsp;                            }</b>
-<b class="nc"><i>158</i>&nbsp;                            break;</b>
-<i>159</i>&nbsp;                        case MATCH_TYPE:
-<i>160</i>&nbsp;                            try {
-<b class="nc"><i>161</i>&nbsp;                                communicationChannel.popMessage();</b>
-<b class="nc"><i>162</i>&nbsp;                                communicationChannel.writeMatchType(view.askMatchType());</b>
-<b class="nc"><i>163</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>164</i>&nbsp;                                //e.printStackTrace();
-<i>165</i>&nbsp;                               // System.err.println(&quot;Connection closed MATCH_TYPE&quot;);
+<i>130</i>&nbsp;                        case MATCH_STORY:
+<i>131</i>&nbsp;                            try {
+<b class="nc"><i>132</i>&nbsp;                                clientController.manageMatchStory(communicationChannel, view);</b>
+<b class="nc"><i>133</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>134</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>135</i>&nbsp;                            }</b>
+<b class="nc"><i>136</i>&nbsp;                            break;</b>
+<i>137</i>&nbsp;                        case MATCH_TYPE:
+<i>138</i>&nbsp;                            try {
+<b class="nc"><i>139</i>&nbsp;                                communicationChannel.popMessage();</b>
+<b class="nc"><i>140</i>&nbsp;                                communicationChannel.writeMatchType(view.askMatchType());</b>
+<b class="nc"><i>141</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>142</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>143</i>&nbsp;                            }</b>
+<b class="nc"><i>144</i>&nbsp;                            break;</b>
+<i>145</i>&nbsp;                        case OPPONENTS:
+<i>146</i>&nbsp;                            try {
+<b class="nc"><i>147</i>&nbsp;                                clientController.manageListOfOpponents(communicationChannel, view);</b>
+<b class="nc"><i>148</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>149</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>150</i>&nbsp;                            }</b>
+<b class="nc"><i>151</i>&nbsp;                            break;</b>
+<i>152</i>&nbsp;                        case UNIQUE_USERNAME:
+<i>153</i>&nbsp;                        case USERNAME:
+<i>154</i>&nbsp;                            try {
+<b class="nc"><i>155</i>&nbsp;                                communicationChannel.popMessage();</b>
+<b class="nc"><i>156</i>&nbsp;                                communicationChannel.writeUsername(view.askUserName(key));</b>
+<b class="nc"><i>157</i>&nbsp;                            } catch (IOException ignored) {</b>
+<b class="nc"><i>158</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>159</i>&nbsp;                                restart = true;</b>
+<b class="nc"><i>160</i>&nbsp;                            }</b>
+<b class="nc"><i>161</i>&nbsp;                            break;</b>
+<i>162</i>&nbsp;                        default:
+<i>163</i>&nbsp;                            try {
+<b class="nc"><i>164</i>&nbsp;                                communicationChannel.popMessage();</b>
+<b class="nc"><i>165</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
 <b class="nc"><i>166</i>&nbsp;                                restart = true;</b>
 <b class="nc"><i>167</i>&nbsp;                            }</b>
-<b class="nc"><i>168</i>&nbsp;                            break;</b>
-<i>169</i>&nbsp;                        case OPPONENTS:
-<i>170</i>&nbsp;                            try {
-<b class="nc"><i>171</i>&nbsp;                                clientController.manageListOfOpponents(communicationChannel, view);</b>
-<b class="nc"><i>172</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>173</i>&nbsp;                                //e.printStackTrace();
-<i>174</i>&nbsp;                               // System.err.println(&quot;Connection closed OPPONENTS&quot;);
-<b class="nc"><i>175</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>176</i>&nbsp;                            }</b>
-<b class="nc"><i>177</i>&nbsp;                            break;</b>
-<i>178</i>&nbsp;                        case TIMEOUT:
-<i>179</i>&nbsp;                            try {
-<b class="nc"><i>180</i>&nbsp;                                clientController.manageTimeOut(communicationChannel, view);</b>
-<b class="nc"><i>181</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>182</i>&nbsp;                                //e.printStackTrace();
-<b class="nc"><i>183</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>184</i>&nbsp;                            }</b>
-<b class="nc"><i>185</i>&nbsp;                            break;</b>
-<i>186</i>&nbsp;                        case UNIQUE_USERNAME:
-<i>187</i>&nbsp;                        case USERNAME:
-<i>188</i>&nbsp;                            try {
-<b class="nc"><i>189</i>&nbsp;                                communicationChannel.popMessage();</b>
-<b class="nc"><i>190</i>&nbsp;                                communicationChannel.writeUsername(view.askUserName(key));</b>
-<b class="nc"><i>191</i>&nbsp;                            } catch (IOException e) {</b>
-<i>192</i>&nbsp;                                //e.printStackTrace();
-<i>193</i>&nbsp;                               // System.err.println(&quot;View Error&quot;);
-<b class="nc"><i>194</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>195</i>&nbsp;                                //e.printStackTrace();
-<i>196</i>&nbsp;                               // System.err.println(&quot;Connection Lost&quot;);
-<b class="nc"><i>197</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>198</i>&nbsp;                            }</b>
-<b class="nc"><i>199</i>&nbsp;                            break;</b>
-<i>200</i>&nbsp;                        default:
-<i>201</i>&nbsp;                            try {
-<b class="nc"><i>202</i>&nbsp;                                communicationChannel.popMessage();</b>
-<b class="nc"><i>203</i>&nbsp;                            } catch (ChannelClosedException e) {</b>
-<i>204</i>&nbsp;                                //e.printStackTrace();
-<b class="nc"><i>205</i>&nbsp;                                restart = true;</b>
-<b class="nc"><i>206</i>&nbsp;                            }</b>
-<i>207</i>&nbsp;                    }
-<i>208</i>&nbsp;                }
-<b class="nc"><i>209</i>&nbsp;            }</b>
-<i>210</i>&nbsp;
-<i>211</i>&nbsp;            try {
-<b class="nc"><i>212</i>&nbsp;                in.close();</b>
-<b class="nc"><i>213</i>&nbsp;            } catch (IOException e) {</b>
-<i>214</i>&nbsp;                //e.printStackTrace();
-<i>215</i>&nbsp;               // System.err.println(&quot;Can&#39;t get close BufferReader Clientside&quot;);
-<b class="nc"><i>216</i>&nbsp;                System.exit(1);</b>
-<b class="nc"><i>217</i>&nbsp;            }</b>
-<i>218</i>&nbsp;
-<b class="nc"><i>219</i>&nbsp;            out.close();</b>
-<i>220</i>&nbsp;
-<i>221</i>&nbsp;            try {
-<b class="nc"><i>222</i>&nbsp;                socket.close();</b>
-<b class="nc"><i>223</i>&nbsp;            } catch (IOException e) {</b>
-<i>224</i>&nbsp;                //e.printStackTrace();
-<i>225</i>&nbsp;               // System.err.println(&quot;Can&#39;t get close socket Clientside&quot;);
-<b class="nc"><i>226</i>&nbsp;                System.exit(1);</b>
-<b class="nc"><i>227</i>&nbsp;            }</b>
-<b class="nc"><i>228</i>&nbsp;        }</b>
-<i>229</i>&nbsp;    }
-<i>230</i>&nbsp;
-<i>231</i>&nbsp;    private Socket setupSocket() {
-<b class="nc"><i>232</i>&nbsp;        Socket socket = null;</b>
-<b class="nc"><i>233</i>&nbsp;        boolean valid = false;</b>
-<b class="nc"><i>234</i>&nbsp;        String hostName = null;</b>
-<b class="nc"><i>235</i>&nbsp;        int portNumber = 0;</b>
-<b class="nc"><i>236</i>&nbsp;        while (!valid &amp;&amp; !close) {</b>
-<b class="nc"><i>237</i>&nbsp;            hostName = view.askIp();</b>
-<b class="nc"><i>238</i>&nbsp;            portNumber = view.askPort();</b>
-<i>239</i>&nbsp;            try {
-<b class="nc"><i>240</i>&nbsp;                socket = new Socket(hostName, portNumber);</b>
-<b class="nc"><i>241</i>&nbsp;                valid = true;</b>
-<b class="nc"><i>242</i>&nbsp;            } catch (IllegalArgumentException e) {</b>
-<b class="nc"><i>243</i>&nbsp;                valid = false;</b>
-<b class="nc"><i>244</i>&nbsp;            } catch (UnknownHostException | SocketException e) {</b>
-<b class="nc"><i>245</i>&nbsp;                view.connectionFailed(hostName);</b>
-<b class="nc"><i>246</i>&nbsp;                valid = false;</b>
-<b class="nc"><i>247</i>&nbsp;            } catch (IOException e) {</b>
-<b class="nc"><i>248</i>&nbsp;                e.printStackTrace();</b>
-<b class="nc"><i>249</i>&nbsp;                System.exit(1);</b>
-<b class="nc"><i>250</i>&nbsp;            }</b>
-<i>251</i>&nbsp;        }
-<b class="nc"><i>252</i>&nbsp;        return socket;</b>
-<i>253</i>&nbsp;    }
-<i>254</i>&nbsp;
-<i>255</i>&nbsp;    /**
-<i>256</i>&nbsp;     * This method closes the client
-<i>257</i>&nbsp;     * @throws ChannelClosedException If communicationChannel is already closed
-<i>258</i>&nbsp;     */
-<i>259</i>&nbsp;    public void end() throws ChannelClosedException {
-<b class="nc"><i>260</i>&nbsp;        close = true;</b>
-<b class="nc"><i>261</i>&nbsp;        restart = false;</b>
-<b class="nc"><i>262</i>&nbsp;        closeConnection();</b>
-<i>263</i>&nbsp;    }
-<i>264</i>&nbsp;
-<i>265</i>&nbsp;    /**
-<i>266</i>&nbsp;     * This method restarts the client
-<i>267</i>&nbsp;     * @throws ChannelClosedException If communicationChannel is already closed
-<i>268</i>&nbsp;     */
-<i>269</i>&nbsp;    public void restartClient() throws ChannelClosedException {
-<b class="nc"><i>270</i>&nbsp;        restart = true;</b>
-<b class="nc"><i>271</i>&nbsp;        closeConnection();</b>
-<i>272</i>&nbsp;    }
-<i>273</i>&nbsp;
-<i>274</i>&nbsp;    /**
-<i>275</i>&nbsp;     * This method closes the connection between client and server
-<i>276</i>&nbsp;     * @throws ChannelClosedException If communicationChannel is already closed
-<i>277</i>&nbsp;     */
-<i>278</i>&nbsp;    public void closeConnection()  throws ChannelClosedException {
-<b class="nc"><i>279</i>&nbsp;        if(communicationChannel!=null &amp;&amp; !communicationChannel.isClosed()) {</b>
-<b class="nc"><i>280</i>&nbsp;            communicationChannel.writeKeyWord(QUIT);</b>
-<i>281</i>&nbsp;        }
-<i>282</i>&nbsp;    }
-<i>283</i>&nbsp;}
+<i>168</i>&nbsp;                    }
+<i>169</i>&nbsp;                }
+<b class="nc"><i>170</i>&nbsp;            }</b>
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;            try {
+<b class="nc"><i>173</i>&nbsp;                in.close();</b>
+<b class="nc"><i>174</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>175</i>&nbsp;                System.exit(1);</b>
+<b class="nc"><i>176</i>&nbsp;            }</b>
+<i>177</i>&nbsp;
+<b class="nc"><i>178</i>&nbsp;            out.close();</b>
+<i>179</i>&nbsp;
+<i>180</i>&nbsp;            try {
+<b class="nc"><i>181</i>&nbsp;                socket.close();</b>
+<b class="nc"><i>182</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>183</i>&nbsp;                System.exit(1);</b>
+<b class="nc"><i>184</i>&nbsp;            }</b>
+<b class="nc"><i>185</i>&nbsp;        }</b>
+<i>186</i>&nbsp;    }
+<i>187</i>&nbsp;
+<i>188</i>&nbsp;    /**
+<i>189</i>&nbsp;     * This method constructs the socket that will be used
+<i>190</i>&nbsp;     * @return Socket
+<i>191</i>&nbsp;     */
+<i>192</i>&nbsp;    private Socket setupSocket() {
+<b class="nc"><i>193</i>&nbsp;        Socket socket = null;</b>
+<b class="nc"><i>194</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i>195</i>&nbsp;        int portNumber = 0;</b>
+<b class="nc"><i>196</i>&nbsp;        while (!valid &amp;&amp; !close) {</b>
+<b class="nc"><i>197</i>&nbsp;            String hostName = view.askIp();</b>
+<b class="nc"><i>198</i>&nbsp;            portNumber = view.askPort();</b>
+<i>199</i>&nbsp;            try {
+<b class="nc"><i>200</i>&nbsp;                socket = new Socket(hostName, portNumber);</b>
+<b class="nc"><i>201</i>&nbsp;                valid = true;</b>
+<b class="nc"><i>202</i>&nbsp;            } catch (IllegalArgumentException ignored) {</b>
+<b class="nc"><i>203</i>&nbsp;            } catch (UnknownHostException | SocketException e) {</b>
+<b class="nc"><i>204</i>&nbsp;                view.connectionFailed(hostName);</b>
+<b class="nc"><i>205</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>206</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>207</i>&nbsp;                System.exit(1);</b>
+<b class="nc"><i>208</i>&nbsp;            }</b>
+<b class="nc"><i>209</i>&nbsp;        }</b>
+<b class="nc"><i>210</i>&nbsp;        return socket;</b>
+<i>211</i>&nbsp;    }
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;    /**
+<i>214</i>&nbsp;     * This method closes the client
+<i>215</i>&nbsp;     * @throws ChannelClosedException If communicationChannel is already closed
+<i>216</i>&nbsp;     */
+<i>217</i>&nbsp;    public void end() throws ChannelClosedException {
+<b class="nc"><i>218</i>&nbsp;        close = true;</b>
+<b class="nc"><i>219</i>&nbsp;        restart = false;</b>
+<b class="nc"><i>220</i>&nbsp;        closeConnection();</b>
+<i>221</i>&nbsp;    }
+<i>222</i>&nbsp;
+<i>223</i>&nbsp;    /**
+<i>224</i>&nbsp;     * This method restarts the client
+<i>225</i>&nbsp;     * @throws ChannelClosedException If communicationChannel is already closed
+<i>226</i>&nbsp;     */
+<i>227</i>&nbsp;    public void restartClient() throws ChannelClosedException {
+<b class="nc"><i>228</i>&nbsp;        restart = true;</b>
+<b class="nc"><i>229</i>&nbsp;        closeConnection();</b>
+<i>230</i>&nbsp;    }
+<i>231</i>&nbsp;
+<i>232</i>&nbsp;    /**
+<i>233</i>&nbsp;     * This method closes the connection between client and server
+<i>234</i>&nbsp;     * @throws ChannelClosedException If communicationChannel is already closed
+<i>235</i>&nbsp;     */
+<i>236</i>&nbsp;    private void closeConnection()  throws ChannelClosedException {
+<b class="nc"><i>237</i>&nbsp;        if(communicationChannel!=null &amp;&amp; !communicationChannel.isClosed()) {</b>
+<b class="nc"><i>238</i>&nbsp;            communicationChannel.writeKeyWord(QUIT);</b>
+<i>239</i>&nbsp;        }
+<i>240</i>&nbsp;    }
+<i>241</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 18:00</div>
+    <div style="float:right;">generated on 2020-07-03 19:52</div>
 </div>
 </body>
 </html>

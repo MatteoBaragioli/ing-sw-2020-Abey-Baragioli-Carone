@@ -115,7 +115,6 @@ public class Server {
             try {
                 socket = serverSocket.accept();
             } catch(IOException e) {
-                socket = null;
                 closed = true;
                 e.printStackTrace();
                 System.err.println("ServerSocket is not accepting");

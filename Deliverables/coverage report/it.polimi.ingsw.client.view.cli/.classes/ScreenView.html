@@ -101,7 +101,7 @@
 <b class="nc"><i>27</i>&nbsp;        return this.infoMessageBox;</b>
 <i>28</i>&nbsp;    }
 <i>29</i>&nbsp;
-<i>30</i>&nbsp;    public void setInfoMessageBox(List&lt;String&gt; lines){
+<i>30</i>&nbsp;    private void setInfoMessageBox(List&lt;String&gt; lines){
 <b class="nc"><i>31</i>&nbsp;        this.infoMessageBox=boxMessage(lines);</b>
 <i>32</i>&nbsp;    }
 <i>33</i>&nbsp;
@@ -109,7 +109,7 @@
 <b class="nc"><i>35</i>&nbsp;        return this.infoMessage;</b>
 <i>36</i>&nbsp;    }
 <i>37</i>&nbsp;
-<i>38</i>&nbsp;    public void setInfoMessage(List&lt;String&gt; lines){
+<i>38</i>&nbsp;    void setInfoMessage(List&lt;String&gt; lines){
 <b class="nc"><i>39</i>&nbsp;            this.infoMessage = lines;</b>
 <b class="nc"><i>40</i>&nbsp;            setInfoMessageBox(lines);</b>
 <i>41</i>&nbsp;
@@ -119,7 +119,7 @@
 <b class="nc"><i>45</i>&nbsp;        return this.infoMessageBox;</b>
 <i>46</i>&nbsp;    }
 <i>47</i>&nbsp;
-<i>48</i>&nbsp;    public List&lt;String&gt; infoMessage(){
+<i>48</i>&nbsp;    List&lt;String&gt; infoMessage(){
 <b class="nc"><i>49</i>&nbsp;        return this.infoMessage;</b>
 <i>50</i>&nbsp;    }
 <i>51</i>&nbsp;
@@ -127,15 +127,15 @@
 <b class="nc"><i>53</i>&nbsp;        return this.turnMessageBox;</b>
 <i>54</i>&nbsp;    }
 <i>55</i>&nbsp;
-<i>56</i>&nbsp;    public void setTurnMessageBox(List&lt;String&gt; lines){
+<i>56</i>&nbsp;    private void setTurnMessageBox(List&lt;String&gt; lines){
 <b class="nc"><i>57</i>&nbsp;        this.turnMessageBox=boxMessage(lines);</b>
 <i>58</i>&nbsp;    }
 <i>59</i>&nbsp;
-<i>60</i>&nbsp;    public  List&lt;String&gt; getTurnMessage(){
+<i>60</i>&nbsp;    List&lt;String&gt; getTurnMessage(){
 <b class="nc"><i>61</i>&nbsp;        return this.turnMessage;</b>
 <i>62</i>&nbsp;    }
 <i>63</i>&nbsp;
-<i>64</i>&nbsp;    public void setTurnMessage(List&lt;String&gt; lines){
+<i>64</i>&nbsp;    void setTurnMessage(List&lt;String&gt; lines){
 <b class="nc"><i>65</i>&nbsp;            this.turnMessage = lines;</b>
 <b class="nc"><i>66</i>&nbsp;            setTurnMessageBox(lines);</b>
 <i>67</i>&nbsp;    }
@@ -204,7 +204,7 @@
 <i>130</i>&nbsp;     * @param message the message that has to be boxed
 <i>131</i>&nbsp;     * @return The same message framed
 <i>132</i>&nbsp;     */
-<i>133</i>&nbsp;    public List&lt;String&gt; boxMessage (List&lt;String&gt; message) {
+<i>133</i>&nbsp;    private List&lt;String&gt; boxMessage(List&lt;String&gt; message) {
 <b class="nc"><i>134</i>&nbsp;        List&lt;String&gt; messageBox=new ArrayList&lt;&gt;();</b>
 <b class="nc"><i>135</i>&nbsp;        int maxLength=0;</b>
 <i>136</i>&nbsp;        int i;
@@ -295,7 +295,7 @@
 <i>221</i>&nbsp;    /**
 <i>222</i>&nbsp;     * This method clears the screen in cli
 <i>223</i>&nbsp;     */
-<i>224</i>&nbsp;    public void clearScreen()
+<i>224</i>&nbsp;    void clearScreen()
 <i>225</i>&nbsp;    {
 <i>226</i>&nbsp;        //Clears Screen in java
 <i>227</i>&nbsp;        try {
@@ -319,7 +319,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-03 18:00</div>
+    <div style="float:right;">generated on 2020-07-03 19:52</div>
 </div>
 </body>
 </html>
