@@ -1,0 +1,146 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Pinger</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.network</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Pinger (it.polimi.ingsw.network)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Pinger</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.network;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import static it.polimi.ingsw.network.CommunicationProtocol.PING;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;public class Pinger extends Thread {
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;    final public CommunicationChannel communicationChannel;
+<b class="nc"><i>10</i>&nbsp;    private boolean ended = false;</b>
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;    public Pinger(CommunicationChannel communicationChannel) {</b>
+<b class="nc"><i>13</i>&nbsp;        this.communicationChannel = communicationChannel;</b>
+<i>14</i>&nbsp;    }
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    public boolean isEnded() {
+<b class="nc"><i>17</i>&nbsp;        return ended;</b>
+<i>18</i>&nbsp;    }
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    public synchronized void end() {
+<b class="nc"><i>21</i>&nbsp;        ended = true;</b>
+<b class="nc"><i>22</i>&nbsp;        notifyAll();</b>
+<i>23</i>&nbsp;    }
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /**
+<i>26</i>&nbsp;     * this thread pings the client every 5 seconds, if the client is no longer connected it closes the communication channel
+<i>27</i>&nbsp;     */
+<i>28</i>&nbsp;    public void run() {
+<b class="nc"><i>29</i>&nbsp;        while (!communicationChannel.isClosed()) {</b>
+<b class="nc"><i>30</i>&nbsp;            int countdown = 5;</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;            try {
+<b class="nc"><i>33</i>&nbsp;                communicationChannel.writeKeyWord(PING);</b>
+<b class="nc"><i>34</i>&nbsp;            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>35</i>&nbsp;                communicationChannel.close();</b>
+<b class="nc"><i>36</i>&nbsp;                break;</b>
+<b class="nc"><i>37</i>&nbsp;            }</b>
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;            while (countdown &gt; 0 &amp;&amp; !communicationChannel.isClosed() &amp;&amp; !communicationChannel.isPinged()) {</b>
+<i>40</i>&nbsp;                try {
+<b class="nc"><i>41</i>&nbsp;                    sleep(10000);</b>
+<b class="nc"><i>42</i>&nbsp;                    countdown--;</b>
+<b class="nc"><i>43</i>&nbsp;                } catch (InterruptedException e) {</b>
+<b class="nc"><i>44</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>45</i>&nbsp;                    countdown = 0;</b>
+<b class="nc"><i>46</i>&nbsp;                    communicationChannel.close();</b>
+<b class="nc"><i>47</i>&nbsp;                }</b>
+<b class="nc"><i>48</i>&nbsp;                if (!communicationChannel.isPinged())</b>
+<b class="nc"><i>49</i>&nbsp;                    System.out.println(countdown);</b>
+<i>50</i>&nbsp;            }
+<i>51</i>&nbsp;
+<b class="nc"><i>52</i>&nbsp;            if (!communicationChannel.isClosed() &amp;&amp; (countdown == 0 || !communicationChannel.isPinged())) {</b>
+<b class="nc"><i>53</i>&nbsp;                communicationChannel.close();</b>
+<b class="nc"><i>54</i>&nbsp;                end();</b>
+<b class="nc"><i>55</i>&nbsp;                System.out.println(&quot;Client non connesso&quot;);</b>
+<i>56</i>&nbsp;            }
+<i>57</i>&nbsp;            else {
+<b class="nc"><i>58</i>&nbsp;                communicationChannel.resetPing();</b>
+<b class="nc"><i>59</i>&nbsp;                System.out.println(&quot;Client connesso&quot;);</b>
+<i>60</i>&nbsp;            }
+<b class="nc"><i>61</i>&nbsp;        }</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

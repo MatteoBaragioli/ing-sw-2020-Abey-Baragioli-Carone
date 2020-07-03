@@ -1,0 +1,126 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TowerCountWin</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model.godPowers.winConditions</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TowerCountWin (it.polimi.ingsw.server.model.godPowers.winConditions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TowerCountWin</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model.godPowers.winConditions;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.model.Box;
+<i>4</i>&nbsp;import it.polimi.ingsw.server.model.Map;
+<i>5</i>&nbsp;import it.polimi.ingsw.server.model.Player;
+<i>6</i>&nbsp;import it.polimi.ingsw.server.model.WinCondition;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import static it.polimi.ingsw.server.model.Phase.*;
+<i>12</i>&nbsp;import static it.polimi.ingsw.server.model.Target.*;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;public class TowerCountWin extends WinCondition {
+<i>15</i>&nbsp;    private int numOfTowers;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    public TowerCountWin(int towers) {
+<b class="fc"><i>18</i>&nbsp;        super(BUILD, ALL);</b>
+<b class="fc"><i>19</i>&nbsp;        this.numOfTowers = towers;</b>
+<b class="fc"><i>20</i>&nbsp;    }</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    //Chronus Power
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * This method verifies if win condition is satisfied (if there is a specific number of complete towers in the map)
+<i>26</i>&nbsp;     * @param currentPlayer Current player
+<i>27</i>&nbsp;     * @param map Map of the match
+<i>28</i>&nbsp;     * @return Boolean that is true if win condition is satisfied
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    @Override
+<i>31</i>&nbsp;    public boolean establishWinCondition(Player currentPlayer, Map map) {
+<b class="fc"><i>32</i>&nbsp;        List&lt;Box&gt; countedTowers = new ArrayList&lt;&gt;();</b>
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;        for (Box builtOnBox:currentPlayer.turnSequence().builtOnBoxes()) {</b>
+<b class="fc"><i>35</i>&nbsp;            if (!countedTowers.contains(builtOnBox) &amp;&amp; builtOnBox.isCompleteTower())</b>
+<b class="fc"><i>36</i>&nbsp;                countedTowers.add(builtOnBox); //number of towers completed in turn ++</b>
+<b class="fc"><i>37</i>&nbsp;        }</b>
+<i>38</i>&nbsp;
+<b class="fc"><i>39</i>&nbsp;        int totalCompleteTowers = map.completeTowers() + countedTowers.size();</b>
+<i>40</i>&nbsp;
+<b class="fc"><i>41</i>&nbsp;        return totalCompleteTowers &gt;= numOfTowers;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

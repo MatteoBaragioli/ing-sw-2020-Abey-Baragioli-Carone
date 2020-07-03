@@ -1,0 +1,623 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Match</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Match (it.polimi.ingsw.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Match</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    67.6%
+  </span>
+  <span class="absValue">
+    (23/ 34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61.5%
+  </span>
+  <span class="absValue">
+    (185/ 301)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.network.exceptions.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.network.objects.MatchStory;
+<i>5</i>&nbsp;import it.polimi.ingsw.server.model.phases.*;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.*;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;public class Match extends Thread{
+<i>10</i>&nbsp;    private List&lt;User&gt; users;
+<b class="fc"><i>11</i>&nbsp;    private HashMap&lt;User, Player&gt; userToPlayer = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>12</i>&nbsp;    private List&lt;Player&gt; players = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>13</i>&nbsp;    private List&lt;Player&gt; gamePlayers = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>14</i>&nbsp;    private Map gameMap = new Map();</b>
+<b class="fc"><i>15</i>&nbsp;    private List&lt;GodCard&gt; cards = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>16</i>&nbsp;    private List&lt;WinCondition&gt; winConditions = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>17</i>&nbsp;    private ActionController actionController = new ActionController();</b>
+<b class="fc"><i>18</i>&nbsp;    private Player winner=null;</b>
+<i>19</i>&nbsp;    private CommunicationController communicationController;
+<b class="fc"><i>20</i>&nbsp;    private List&lt;TurnPhase&gt; phasesSequence = createPhaseSequence();</b>
+<i>21</i>&nbsp;
+<b class="nc"><i>22</i>&nbsp;    public Match(List&lt;User&gt;  users) {</b>
+<b class="nc"><i>23</i>&nbsp;        for (User user : users)</b>
+<b class="nc"><i>24</i>&nbsp;            addNewPlayer(user);</b>
+<b class="nc"><i>25</i>&nbsp;        communicationController = new CommunicationController(users, players);</b>
+<b class="nc"><i>26</i>&nbsp;        this.users = users;</b>
+<b class="nc"><i>27</i>&nbsp;    }</b>
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;    Match(List&lt;Player&gt; gamePlayers, CommunicationController communicationController) {</b>
+<b class="fc"><i>30</i>&nbsp;        this.gamePlayers = gamePlayers;</b>
+<b class="fc"><i>31</i>&nbsp;        this.players.addAll(gamePlayers);</b>
+<b class="fc"><i>32</i>&nbsp;        this.communicationController = communicationController;</b>
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    List&lt;Player&gt; gamePlayers() {
+<b class="fc"><i>36</i>&nbsp;        return gamePlayers;</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<b class="fc"><i>39</i>&nbsp;    public List&lt;GodCard&gt; getCards() { return cards; }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    public void setCards(List&lt;GodCard&gt; cards) {
+<b class="fc"><i>42</i>&nbsp;        this.cards = cards;</b>
+<b class="fc"><i>43</i>&nbsp;    }</b>
+<i>44</i>&nbsp;
+<b class="fc"><i>45</i>&nbsp;    public List&lt;WinCondition&gt; winConditions(){ return this.winConditions;}</b>
+<i>46</i>&nbsp;
+<b class="nc"><i>47</i>&nbsp;    public void setWinConditions(List&lt;WinCondition&gt; winConditions){ this.winConditions=winConditions; }</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    public void setActionController(ActionController actionController){
+<b class="nc"><i>50</i>&nbsp;        this.actionController=actionController;</b>
+<b class="nc"><i>51</i>&nbsp;    }</b>
+<i>52</i>&nbsp;
+<b class="nc"><i>53</i>&nbsp;    public Player winner(){return winner;}</b>
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    private void setWinner(Player winner){
+<b class="fc"><i>56</i>&nbsp;        if (this.winner == null)</b>
+<b class="fc"><i>57</i>&nbsp;            this.winner=winner;</b>
+<b class="fc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * This method is used in the Match constructor and adds one user to the match
+<i>62</i>&nbsp;     * @param user New player
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    private void addNewPlayer(User user) {
+<b class="nc"><i>65</i>&nbsp;        Player player = new Player(user);</b>
+<b class="nc"><i>66</i>&nbsp;        userToPlayer.put(user, player);</b>
+<b class="nc"><i>67</i>&nbsp;        players.add(player);</b>
+<b class="nc"><i>68</i>&nbsp;        gamePlayers.add(player);</b>
+<b class="nc"><i>69</i>&nbsp;    }</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * This method returns the opponents of the player given as a parameter
+<i>74</i>&nbsp;     * @param player Subject
+<i>75</i>&nbsp;     * @return List of players
+<i>76</i>&nbsp;     */
+<i>77</i>&nbsp;    public List&lt;Player&gt; getOpponents(Player player){
+<b class="fc"><i>78</i>&nbsp;        Iterator&lt;Player&gt; iterator= gamePlayers.iterator();</b>
+<b class="fc"><i>79</i>&nbsp;        List&lt;Player&gt; opponents=new ArrayList&lt;&gt;();</b>
+<i>80</i>&nbsp;        Player target;
+<b class="fc"><i>81</i>&nbsp;        while(iterator.hasNext()){</b>
+<b class="fc"><i>82</i>&nbsp;            target=iterator.next();</b>
+<b class="fc"><i>83</i>&nbsp;            if (!target.equals(player))</b>
+<b class="fc"><i>84</i>&nbsp;                opponents.add(target);</b>
+<i>85</i>&nbsp;        }
+<b class="fc"><i>86</i>&nbsp;        return opponents;</b>
+<i>87</i>&nbsp;    }
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * This method executes a match
+<i>92</i>&nbsp;     */
+<i>93</i>&nbsp;    public void match(){
+<i>94</i>&nbsp;        //START MATCH
+<b class="fc"><i>95</i>&nbsp;        assignColour();</b>
+<b class="fc"><i>96</i>&nbsp;        Collections.shuffle(gamePlayers);</b>
+<b class="fc"><i>97</i>&nbsp;        announceParticipants();</b>
+<b class="fc"><i>98</i>&nbsp;        chooseCards();</b>
+<b class="fc"><i>99</i>&nbsp;        assignCards();</b>
+<b class="fc"><i>100</i>&nbsp;        announceParticipants();</b>
+<b class="fc"><i>101</i>&nbsp;        setUpWorkers();</b>
+<b class="fc"><i>102</i>&nbsp;        setUpWinConditions();</b>
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;        //MATCH
+<i>105</i>&nbsp;
+<b class="fc"><i>106</i>&nbsp;        int currentPlayerIndex = drawFirstPlayer();</b>
+<b class="fc"><i>107</i>&nbsp;        while (gamePlayers.size()&gt;1 &amp;&amp; winner==null){</b>
+<b class="fc"><i>108</i>&nbsp;            Player currentPlayer = gamePlayers.get(currentPlayerIndex);</b>
+<b class="fc"><i>109</i>&nbsp;            announceCurrentPlayer(currentPlayer);</b>
+<i>110</i>&nbsp;            try {
+<b class="fc"><i>111</i>&nbsp;                takeTurn(currentPlayer);</b>
+<i>112</i>&nbsp;            }
+<b class="nc"><i>113</i>&nbsp;            catch (TimeOutException e) {</b>
+<b class="nc"><i>114</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>115</i>&nbsp;                currentPlayer.turnSequence().undo();</b>
+<b class="nc"><i>116</i>&nbsp;                removePlayer(currentPlayer);</b>
+<i>117</i>&nbsp;            }
+<b class="nc"><i>118</i>&nbsp;            catch (ChannelClosedException e) {</b>
+<b class="nc"><i>119</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>120</i>&nbsp;                currentPlayer.turnSequence().undo();</b>
+<b class="nc"><i>121</i>&nbsp;                removeUser(findUser(e.name()));</b>
+<b class="fc"><i>122</i>&nbsp;            }</b>
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;            try {
+<b class="fc"><i>125</i>&nbsp;                communicationController.updateView(players, gameMap.createProxy());</b>
+<b class="nc"><i>126</i>&nbsp;            } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>127</i>&nbsp;                removeUser(findUser(e.name()));</b>
+<b class="fc"><i>128</i>&nbsp;            }</b>
+<i>129</i>&nbsp;
+<b class="fc"><i>130</i>&nbsp;            setWinner(currentPlayer.turnSequence().possibleWinner());</b>
+<b class="fc"><i>131</i>&nbsp;            if(!currentPlayer.isInGame()){</b>
+<b class="nc"><i>132</i>&nbsp;                removePlayer(currentPlayer);</b>
+<b class="nc"><i>133</i>&nbsp;                currentPlayerIndex--;</b>
+<i>134</i>&nbsp;            }
+<b class="fc"><i>135</i>&nbsp;            currentPlayerIndex = nextPlayerIndex(currentPlayerIndex);</b>
+<b class="fc"><i>136</i>&nbsp;        }</b>
+<i>137</i>&nbsp;
+<b class="fc"><i>138</i>&nbsp;        if(winner==null &amp;&amp; gamePlayers.size()==1)</b>
+<b class="nc"><i>139</i>&nbsp;            setWinner(gamePlayers.get(0));</b>
+<i>140</i>&nbsp;
+<b class="fc"><i>141</i>&nbsp;        announceWinner();</b>
+<b class="fc"><i>142</i>&nbsp;    }</b>
+<i>143</i>&nbsp;
+<i>144</i>&nbsp;    /**
+<i>145</i>&nbsp;     * This method gets the next player index in the gamePlayers list
+<i>146</i>&nbsp;     * @param currentPlayerIndex Current index
+<i>147</i>&nbsp;     * @return Next player index
+<i>148</i>&nbsp;     */
+<i>149</i>&nbsp;    private int nextPlayerIndex(int currentPlayerIndex) {
+<b class="fc"><i>150</i>&nbsp;        if(currentPlayerIndex &lt; gamePlayers.size()-1)</b>
+<b class="fc"><i>151</i>&nbsp;            return currentPlayerIndex + 1;</b>
+<b class="fc"><i>152</i>&nbsp;        return 0;</b>
+<i>153</i>&nbsp;    }
+<i>154</i>&nbsp;
+<i>155</i>&nbsp;    /**
+<i>156</i>&nbsp;     * This method extracts a random index to draw the first player
+<i>157</i>&nbsp;     * @return Index of the first player
+<i>158</i>&nbsp;     */
+<i>159</i>&nbsp;    private int drawFirstPlayer() {
+<b class="fc"><i>160</i>&nbsp;        if (gamePlayers.size()&gt;1)</b>
+<b class="fc"><i>161</i>&nbsp;            return new Random().nextInt(gamePlayers.size()-1);</b>
+<b class="nc"><i>162</i>&nbsp;        return 0;</b>
+<i>163</i>&nbsp;    }
+<i>164</i>&nbsp;
+<i>165</i>&nbsp;    /**
+<i>166</i>&nbsp;     * This method handles the execution of one whole game turn
+<i>167</i>&nbsp;     * @param player The current player
+<i>168</i>&nbsp;     * @throws ChannelClosedException Exception thrown when communication channel is closed
+<i>169</i>&nbsp;     * @throws TimeOutException Exception thrown when the time to do an action runs out
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    private void takeTurn(Player player) throws ChannelClosedException, TimeOutException {
+<b class="fc"><i>172</i>&nbsp;        int undoCounter = 0;</b>
+<b class="fc"><i>173</i>&nbsp;        MatchStory matchStory = new MatchStory(player);</b>
+<b class="fc"><i>174</i>&nbsp;        int phaseIndex = 0;</b>
+<b class="fc"><i>175</i>&nbsp;        while (phaseIndex &lt; phasesSequence.size() &amp;&amp; player.isInGame() &amp;&amp; gamePlayers.size()&gt;1){</b>
+<b class="fc"><i>176</i>&nbsp;            boolean confirm = true;</b>
+<b class="fc"><i>177</i>&nbsp;            phasesSequence.get(phaseIndex).executePhase(player, communicationController, actionController, gameMap, getOpponents(player), winConditions, matchStory);</b>
+<b class="fc"><i>178</i>&nbsp;            if(undoCounter&lt;3 &amp;&amp; phaseIndex==2)</b>
+<b class="fc"><i>179</i>&nbsp;                confirm = communicationController.confirmPhase(player);</b>
+<b class="fc"><i>180</i>&nbsp;            if(!confirm){</b>
+<b class="fc"><i>181</i>&nbsp;                player.turnSequence().undo();</b>
+<b class="fc"><i>182</i>&nbsp;                matchStory.clear();</b>
+<b class="fc"><i>183</i>&nbsp;                communicationController.updateView(player, gameMap.createProxy());</b>
+<b class="fc"><i>184</i>&nbsp;                undoCounter++;</b>
+<b class="fc"><i>185</i>&nbsp;                phaseIndex = 0;</b>
+<i>186</i>&nbsp;            }
+<i>187</i>&nbsp;            else
+<b class="fc"><i>188</i>&nbsp;                if (player.equals(player.turnSequence().possibleWinner()))</b>
+<b class="fc"><i>189</i>&nbsp;                    phaseIndex = phasesSequence.size();</b>
+<i>190</i>&nbsp;                else
+<b class="fc"><i>191</i>&nbsp;                    phaseIndex++;</b>
+<b class="fc"><i>192</i>&nbsp;        }</b>
+<b class="fc"><i>193</i>&nbsp;        if (gamePlayers.size()&gt;1)</b>
+<b class="fc"><i>194</i>&nbsp;            tellMatchStory(matchStory);</b>
+<b class="fc"><i>195</i>&nbsp;    }</b>
+<i>196</i>&nbsp;
+<i>197</i>&nbsp;    /**
+<i>198</i>&nbsp;     * This method handles the sending of the latest in-game events
+<i>199</i>&nbsp;     * @param matchStory Latest turn events
+<i>200</i>&nbsp;     */
+<i>201</i>&nbsp;    private void tellMatchStory(MatchStory matchStory) {
+<b class="fc"><i>202</i>&nbsp;        List&lt;Player&gt; receivers = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>203</i>&nbsp;        for (int i = 0; i&lt;players.size() &amp;&amp; gamePlayers.size()&gt;1; i++) {</b>
+<b class="fc"><i>204</i>&nbsp;            Player player = players.get(i);</b>
+<b class="fc"><i>205</i>&nbsp;            if (!receivers.contains(player))</b>
+<i>206</i>&nbsp;                try {
+<b class="fc"><i>207</i>&nbsp;                    communicationController.tellMatchStory(player, matchStory);</b>
+<b class="fc"><i>208</i>&nbsp;                    receivers.add(player);</b>
+<b class="nc"><i>209</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>210</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>211</i>&nbsp;                    removeUser(findUser(e.name()));</b>
+<b class="nc"><i>212</i>&nbsp;                    i = -1;</b>
+<b class="fc"><i>213</i>&nbsp;                }</b>
+<i>214</i>&nbsp;        }
+<b class="fc"><i>215</i>&nbsp;    }</b>
+<i>216</i>&nbsp;
+<i>217</i>&nbsp;    /**
+<i>218</i>&nbsp;     * This method constructs the turn sequence
+<i>219</i>&nbsp;     * @return list of turnphases
+<i>220</i>&nbsp;     */
+<i>221</i>&nbsp;    private List&lt;TurnPhase&gt; createPhaseSequence() {
+<b class="fc"><i>222</i>&nbsp;        List&lt;TurnPhase&gt; turnPhases = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>223</i>&nbsp;        turnPhases.add(new Start());</b>
+<b class="fc"><i>224</i>&nbsp;        turnPhases.add(new Move());</b>
+<b class="fc"><i>225</i>&nbsp;        turnPhases.add(new Build());</b>
+<b class="fc"><i>226</i>&nbsp;        turnPhases.add(new End());</b>
+<b class="fc"><i>227</i>&nbsp;        return turnPhases;</b>
+<i>228</i>&nbsp;    }
+<i>229</i>&nbsp;
+<i>230</i>&nbsp;    /**
+<i>231</i>&nbsp;     * This method handles the announcement of the currently in-game players
+<i>232</i>&nbsp;     */
+<i>233</i>&nbsp;    public void announceParticipants() {
+<b class="fc"><i>234</i>&nbsp;        List&lt;Player&gt; receivers = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>235</i>&nbsp;        for (int i = 0; i&lt;players.size() &amp;&amp; gamePlayers.size()&gt;1; i++) {</b>
+<b class="fc"><i>236</i>&nbsp;            Player player = players.get(i);</b>
+<b class="fc"><i>237</i>&nbsp;            if (!receivers.contains(player))</b>
+<i>238</i>&nbsp;                try {
+<b class="fc"><i>239</i>&nbsp;                    communicationController.announceParticipants(player, gamePlayers);</b>
+<b class="fc"><i>240</i>&nbsp;                    receivers.add(player);</b>
+<b class="nc"><i>241</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>242</i>&nbsp;                    removeUser(findUser(e.name()));</b>
+<b class="nc"><i>243</i>&nbsp;                    i = -1;</b>
+<b class="fc"><i>244</i>&nbsp;                }</b>
+<i>245</i>&nbsp;        }
+<b class="fc"><i>246</i>&nbsp;    }</b>
+<i>247</i>&nbsp;
+<i>248</i>&nbsp;    /**
+<i>249</i>&nbsp;     * This method manages the communication of the current player
+<i>250</i>&nbsp;     * @param currentPlayer Player
+<i>251</i>&nbsp;     */
+<i>252</i>&nbsp;    private void announceCurrentPlayer(Player currentPlayer) {
+<b class="fc"><i>253</i>&nbsp;        List&lt;Player&gt; receivers = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>254</i>&nbsp;        for (int i = 0; i&lt;players.size() &amp;&amp; gamePlayers.size()&gt;1; i++) {</b>
+<b class="fc"><i>255</i>&nbsp;            Player player = players.get(i);</b>
+<b class="fc"><i>256</i>&nbsp;            if (!receivers.contains(player))</b>
+<i>257</i>&nbsp;                try {
+<b class="fc"><i>258</i>&nbsp;                    communicationController.announceCurrentPlayer(player, currentPlayer);</b>
+<b class="fc"><i>259</i>&nbsp;                    receivers.add(player);</b>
+<b class="nc"><i>260</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>261</i>&nbsp;                    removeUser(findUser(e.name()));</b>
+<b class="nc"><i>262</i>&nbsp;                    i = -1;</b>
+<b class="fc"><i>263</i>&nbsp;                }</b>
+<i>264</i>&nbsp;        }
+<b class="fc"><i>265</i>&nbsp;    }</b>
+<i>266</i>&nbsp;
+<i>267</i>&nbsp;    /**
+<i>268</i>&nbsp;     * This method handles the announcement of the winner
+<i>269</i>&nbsp;     */
+<i>270</i>&nbsp;    private void announceWinner() {
+<b class="fc"><i>271</i>&nbsp;        while (!players.isEmpty() &amp;&amp; winner != null) {</b>
+<b class="fc"><i>272</i>&nbsp;            Player player = players.get(0);</b>
+<b class="fc"><i>273</i>&nbsp;            if (communicationController.playerIsUser(player)) {</b>
+<i>274</i>&nbsp;                try {
+<b class="nc"><i>275</i>&nbsp;                    if (communicationController.announceWinner(player, winner)) {</b>
+<b class="nc"><i>276</i>&nbsp;                        removeUser(findUser(player.name()));</b>
+<i>277</i>&nbsp;                    }
+<b class="nc"><i>278</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>279</i>&nbsp;                    removeUser(findUser(e.name()));</b>
+<b class="nc"><i>280</i>&nbsp;                }</b>
+<i>281</i>&nbsp;            }
+<i>282</i>&nbsp;            else {
+<b class="fc"><i>283</i>&nbsp;                removePlayer(player);</b>
+<b class="fc"><i>284</i>&nbsp;                players.remove(0);</b>
+<i>285</i>&nbsp;            }
+<b class="fc"><i>286</i>&nbsp;        }</b>
+<b class="fc"><i>287</i>&nbsp;    }</b>
+<i>288</i>&nbsp;
+<i>289</i>&nbsp;    /**
+<i>290</i>&nbsp;     * This method handles the announcement of the loser
+<i>291</i>&nbsp;     * @param loser,the player that has lost
+<i>292</i>&nbsp;     */
+<i>293</i>&nbsp;    private void announceLoser(Player loser) {
+<b class="nc"><i>294</i>&nbsp;        List&lt;Player&gt; receivers = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>295</i>&nbsp;        for (int i = 0; i&lt;players.size() &amp;&amp; !players.isEmpty(); i++) {</b>
+<b class="nc"><i>296</i>&nbsp;            Player player = players.get(i);</b>
+<b class="nc"><i>297</i>&nbsp;            if (!receivers.contains(player))</b>
+<i>298</i>&nbsp;                try {
+<b class="nc"><i>299</i>&nbsp;                    communicationController.announceLoser(player, loser);</b>
+<b class="nc"><i>300</i>&nbsp;                    receivers.add(player);</b>
+<b class="nc"><i>301</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>302</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>303</i>&nbsp;                    removeUser(findUser(e.name()));</b>
+<b class="nc"><i>304</i>&nbsp;                }</b>
+<i>305</i>&nbsp;        }
+<b class="nc"><i>306</i>&nbsp;    }</b>
+<i>307</i>&nbsp;
+<i>308</i>&nbsp;    /**
+<i>309</i>&nbsp;     * This method handles the announcement of a player removed due to external causes
+<i>310</i>&nbsp;     * @param player, the one that has been removed
+<i>311</i>&nbsp;     */
+<i>312</i>&nbsp;    public void announceRemovedPlayer(Player player) {
+<i>313</i>&nbsp;        try {
+<b class="nc"><i>314</i>&nbsp;            communicationController.updateView(players, gameMap.createProxy());</b>
+<b class="nc"><i>315</i>&nbsp;        } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>316</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>317</i>&nbsp;            removeUser(findUser(e.name()));</b>
+<b class="nc"><i>318</i>&nbsp;        }</b>
+<b class="nc"><i>319</i>&nbsp;        if (!player.equals(winner))</b>
+<b class="nc"><i>320</i>&nbsp;            announceLoser(player);</b>
+<b class="nc"><i>321</i>&nbsp;    }</b>
+<i>322</i>&nbsp;
+<i>323</i>&nbsp;    /**
+<i>324</i>&nbsp;     * This method assigns a colour to every player
+<i>325</i>&nbsp;     */
+<i>326</i>&nbsp;    public void assignColour(){
+<b class="fc"><i>327</i>&nbsp;        List&lt;Colour&gt; colours = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>328</i>&nbsp;        colours.add(Colour.BLUE);</b>
+<b class="fc"><i>329</i>&nbsp;        colours.add(Colour.WHITE);</b>
+<b class="fc"><i>330</i>&nbsp;        colours.add(Colour.GREY);</b>
+<i>331</i>&nbsp;
+<b class="fc"><i>332</i>&nbsp;        for (Player gamePlayer : gamePlayers) {</b>
+<b class="fc"><i>333</i>&nbsp;            int randomIndex = new Random().nextInt(colours.size());</b>
+<b class="fc"><i>334</i>&nbsp;            Colour randomElement = colours.get(randomIndex);</b>
+<b class="fc"><i>335</i>&nbsp;            colours.remove(randomIndex);</b>
+<b class="fc"><i>336</i>&nbsp;            gamePlayer.setColour(randomElement);</b>
+<b class="fc"><i>337</i>&nbsp;        }</b>
+<b class="fc"><i>338</i>&nbsp;    }</b>
+<i>339</i>&nbsp;
+<i>340</i>&nbsp;    /**
+<i>341</i>&nbsp;     * This method makes the challenger choose the match cards
+<i>342</i>&nbsp;     */
+<i>343</i>&nbsp;    protected void chooseCards()  {
+<b class="fc"><i>344</i>&nbsp;        CardConstructor cardConstructor = new CardConstructor();</b>
+<b class="fc"><i>345</i>&nbsp;        List&lt;GodCard&gt; deck = cardConstructor.cards();</b>
+<b class="fc"><i>346</i>&nbsp;        boolean valid = false;</b>
+<b class="fc"><i>347</i>&nbsp;        while (!valid &amp;&amp; gamePlayers.size()&gt;1) {</b>
+<b class="fc"><i>348</i>&nbsp;            Player challenger = gamePlayers.get(0);</b>
+<b class="fc"><i>349</i>&nbsp;            if (communicationController.playerIsUser(challenger)) {</b>
+<i>350</i>&nbsp;                try {
+<b class="nc"><i>351</i>&nbsp;                    cards = communicationController.chooseDeck(challenger, deck);</b>
+<b class="nc"><i>352</i>&nbsp;                    valid = true;</b>
+<b class="nc"><i>353</i>&nbsp;                } catch (TimeOutException e) {</b>
+<b class="nc"><i>354</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>355</i>&nbsp;                    if (gamePlayers.size()&gt;1)</b>
+<b class="nc"><i>356</i>&nbsp;                        removePlayer(challenger);</b>
+<b class="nc"><i>357</i>&nbsp;                    valid = false;</b>
+<b class="nc"><i>358</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>359</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>360</i>&nbsp;                    removeUser(findUser(e.name()));</b>
+<b class="nc"><i>361</i>&nbsp;                    valid = false;</b>
+<b class="nc"><i>362</i>&nbsp;                }</b>
+<i>363</i>&nbsp;            }
+<i>364</i>&nbsp;            else {
+<b class="fc"><i>365</i>&nbsp;                for (int i = 0; i &lt; gamePlayers.size(); i++) {</b>
+<b class="fc"><i>366</i>&nbsp;                    int index = new Random().nextInt(deck.size());</b>
+<b class="fc"><i>367</i>&nbsp;                    cards.add(deck.get(index));</b>
+<b class="fc"><i>368</i>&nbsp;                    deck.remove(index);</b>
+<i>369</i>&nbsp;                }
+<b class="fc"><i>370</i>&nbsp;                valid = true;</b>
+<i>371</i>&nbsp;            }
+<b class="fc"><i>372</i>&nbsp;        }</b>
+<b class="fc"><i>373</i>&nbsp;    }</b>
+<i>374</i>&nbsp;
+<i>375</i>&nbsp;    /**
+<i>376</i>&nbsp;     * This method makes every player choose their own GodCard
+<i>377</i>&nbsp;     */
+<i>378</i>&nbsp;    protected void assignCards() {
+<b class="fc"><i>379</i>&nbsp;        List&lt;GodCard&gt; availableCards = new ArrayList&lt;&gt;(cards);</b>
+<b class="fc"><i>380</i>&nbsp;        for(int i = gamePlayers.size()-1; i&gt;=0 &amp;&amp; gamePlayers.size()&gt;1; i--) {</b>
+<b class="fc"><i>381</i>&nbsp;            Player player = gamePlayers.get(i);</b>
+<i>382</i>&nbsp;
+<b class="fc"><i>383</i>&nbsp;            if (player.godCard()==null) {</b>
+<b class="fc"><i>384</i>&nbsp;                announceCurrentPlayer(player);</b>
+<i>385</i>&nbsp;                try {
+<b class="fc"><i>386</i>&nbsp;                    GodCard chosenCard = communicationController.chooseCard(player, availableCards);</b>
+<b class="fc"><i>387</i>&nbsp;                    player.assignCard(chosenCard);</b>
+<b class="fc"><i>388</i>&nbsp;                    availableCards.remove(chosenCard);</b>
+<b class="nc"><i>389</i>&nbsp;                } catch (TimeOutException e) {</b>
+<b class="nc"><i>390</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>391</i>&nbsp;                    if (gamePlayers.size()&gt;1)</b>
+<b class="nc"><i>392</i>&nbsp;                        removePlayer(player);</b>
+<b class="nc"><i>393</i>&nbsp;                } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>394</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>395</i>&nbsp;                    removeUser(findUser(e.name()));</b>
+<b class="fc"><i>396</i>&nbsp;                }</b>
+<i>397</i>&nbsp;            }
+<i>398</i>&nbsp;        }
+<b class="fc"><i>399</i>&nbsp;    }</b>
+<i>400</i>&nbsp;
+<i>401</i>&nbsp;
+<i>402</i>&nbsp;    /**
+<i>403</i>&nbsp;     * This method assigns two workers to every player. Every player chooses the starting position of their workers
+<i>404</i>&nbsp;     */
+<i>405</i>&nbsp;    protected void setUpWorkers(){
+<i>406</i>&nbsp;        List&lt;Box&gt; possibleSetUpPosition;
+<i>407</i>&nbsp;        Box position;
+<i>408</i>&nbsp;
+<b class="fc"><i>409</i>&nbsp;        List&lt;Player&gt; setUpOrder = new ArrayList&lt;&gt;(gamePlayers);</b>
+<b class="fc"><i>410</i>&nbsp;        for (Player player : gamePlayers)</b>
+<b class="fc"><i>411</i>&nbsp;            if (player.godCard() != null)</b>
+<b class="fc"><i>412</i>&nbsp;                player.godCard().setUpCondition().modifySetUpOrder(player, setUpOrder);</b>
+<i>413</i>&nbsp;
+<b class="fc"><i>414</i>&nbsp;        List&lt;Player&gt; readyPlayers = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>415</i>&nbsp;        for (int j = 0; j &lt; gamePlayers.size() &amp;&amp; gamePlayers.size() &gt; 1; j++) {</b>
+<b class="fc"><i>416</i>&nbsp;            Player player = gamePlayers.get(j);</b>
+<b class="fc"><i>417</i>&nbsp;            if (!readyPlayers.contains(player)) {</b>
+<b class="fc"><i>418</i>&nbsp;                List&lt;Box&gt; freeMap = new ArrayList&lt;&gt;(gameMap.freePositions());</b>
+<b class="fc"><i>419</i>&nbsp;                for (int i = 0; i &lt; 2 &amp;&amp; player.isInGame() &amp;&amp; gamePlayers.size() &gt; 1; i++) {</b>
+<b class="fc"><i>420</i>&nbsp;                    possibleSetUpPosition = player.godCard().setUpCondition().applySetUpCondition(player, freeMap);</b>
+<b class="fc"><i>421</i>&nbsp;                    announceCurrentPlayer(player);</b>
+<i>422</i>&nbsp;                    try {
+<i>423</i>&nbsp;                        Worker worker;
+<b class="fc"><i>424</i>&nbsp;                        position = communicationController.chooseStartPosition(player, possibleSetUpPosition);</b>
+<b class="fc"><i>425</i>&nbsp;                        worker = new Worker(position, player.colour(), new Random().nextBoolean());</b>
+<b class="fc"><i>426</i>&nbsp;                        freeMap.remove(position);</b>
+<b class="fc"><i>427</i>&nbsp;                        player.assignWorker(worker);</b>
+<b class="fc"><i>428</i>&nbsp;                        readyPlayers.add(player);</b>
+<b class="nc"><i>429</i>&nbsp;                    } catch (TimeOutException e) {</b>
+<b class="nc"><i>430</i>&nbsp;                        e.printStackTrace();</b>
+<b class="nc"><i>431</i>&nbsp;                        if (gamePlayers.size()&gt;1) {</b>
+<b class="nc"><i>432</i>&nbsp;                            removePlayer(player);</b>
+<b class="nc"><i>433</i>&nbsp;                            j = -1;</b>
+<i>434</i>&nbsp;                        }
+<b class="nc"><i>435</i>&nbsp;                    } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>436</i>&nbsp;                        e.printStackTrace();</b>
+<b class="nc"><i>437</i>&nbsp;                        removeUser(findUser(e.name()));</b>
+<b class="nc"><i>438</i>&nbsp;                        j = -1;</b>
+<b class="fc"><i>439</i>&nbsp;                    }</b>
+<i>440</i>&nbsp;
+<i>441</i>&nbsp;                    try {
+<b class="fc"><i>442</i>&nbsp;                        communicationController.updateView(players, gameMap.createProxy());</b>
+<b class="nc"><i>443</i>&nbsp;                    } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>444</i>&nbsp;                        e.printStackTrace();</b>
+<b class="nc"><i>445</i>&nbsp;                        removeUser(findUser(e.name()));</b>
+<b class="fc"><i>446</i>&nbsp;                    }</b>
+<i>447</i>&nbsp;                }
+<i>448</i>&nbsp;            }
+<i>449</i>&nbsp;        }
+<b class="fc"><i>450</i>&nbsp;    }</b>
+<i>451</i>&nbsp;
+<i>452</i>&nbsp;    /**
+<i>453</i>&nbsp;     * This method removes a player from the list of gamePlayers
+<i>454</i>&nbsp;     * @param loser Loser player
+<i>455</i>&nbsp;     */
+<i>456</i>&nbsp;    private void removePlayer(Player loser){
+<b class="fc"><i>457</i>&nbsp;        for(Worker worker : loser.workers()){</b>
+<b class="fc"><i>458</i>&nbsp;            worker.position().removeOccupier();</b>
+<b class="fc"><i>459</i>&nbsp;        }</b>
+<b class="fc"><i>460</i>&nbsp;        loser.workers().clear();</b>
+<b class="fc"><i>461</i>&nbsp;        loser.setInGame(false);</b>
+<b class="fc"><i>462</i>&nbsp;        if (gamePlayers.size()&gt;1) {</b>
+<b class="fc"><i>463</i>&nbsp;            gamePlayers.remove(loser);</b>
+<b class="fc"><i>464</i>&nbsp;            if (winner == null)</b>
+<b class="nc"><i>465</i>&nbsp;                announceRemovedPlayer(loser);</b>
+<i>466</i>&nbsp;        } else
+<b class="fc"><i>467</i>&nbsp;            setWinner(gamePlayers.get(0));</b>
+<i>468</i>&nbsp;
+<b class="fc"><i>469</i>&nbsp;    }</b>
+<i>470</i>&nbsp;
+<i>471</i>&nbsp;    /**
+<i>472</i>&nbsp;     * This method tells if a user is in this match
+<i>473</i>&nbsp;     * @param user User
+<i>474</i>&nbsp;     * @return Boolean that is true id user is in this match
+<i>475</i>&nbsp;     */
+<i>476</i>&nbsp;    public boolean userIsPlayer(User user) {
+<b class="nc"><i>477</i>&nbsp;        return users.contains(user);</b>
+<i>478</i>&nbsp;    }
+<i>479</i>&nbsp;
+<i>480</i>&nbsp;    /**
+<i>481</i>&nbsp;     * This method finds the player related to a user (null if the user isn&#39;t part of the match)
+<i>482</i>&nbsp;     * @param user User
+<i>483</i>&nbsp;     * @return Player related to user
+<i>484</i>&nbsp;     */
+<i>485</i>&nbsp;    public Player findPlayer(User user) {
+<b class="nc"><i>486</i>&nbsp;        if (userIsPlayer(user))</b>
+<b class="nc"><i>487</i>&nbsp;            return userToPlayer.get(user);</b>
+<b class="nc"><i>488</i>&nbsp;        return null;</b>
+<i>489</i>&nbsp;    }
+<i>490</i>&nbsp;
+<i>491</i>&nbsp;    /**
+<i>492</i>&nbsp;     * This method finds the user with the matching username if he&#39;s in this match
+<i>493</i>&nbsp;     * @param name Username
+<i>494</i>&nbsp;     * @return User with the matching username
+<i>495</i>&nbsp;     */
+<i>496</i>&nbsp;    private User findUser(String name) {
+<b class="nc"><i>497</i>&nbsp;        for (User user: users)</b>
+<b class="nc"><i>498</i>&nbsp;            if (user.name().equals(name))</b>
+<b class="nc"><i>499</i>&nbsp;                return user;</b>
+<b class="nc"><i>500</i>&nbsp;        return null;</b>
+<i>501</i>&nbsp;    }
+<i>502</i>&nbsp;
+<i>503</i>&nbsp;    /**
+<i>504</i>&nbsp;     * This method removes a user from the match
+<i>505</i>&nbsp;     * @param user Quitting user
+<i>506</i>&nbsp;     */
+<i>507</i>&nbsp;    public synchronized void removeUser(User user) {
+<b class="nc"><i>508</i>&nbsp;        if (userIsPlayer(user)) {</b>
+<b class="nc"><i>509</i>&nbsp;            Player player = findPlayer(user);</b>
+<i>510</i>&nbsp;
+<b class="nc"><i>511</i>&nbsp;            if (player.godCard()!=null) //if the player lost after choosing a card</b>
+<b class="nc"><i>512</i>&nbsp;                cards.add(player.godCard());</b>
+<i>513</i>&nbsp;
+<b class="nc"><i>514</i>&nbsp;            if (player.isInGame()) { //if the user was in game and is quitting or has lost connection</b>
+<b class="nc"><i>515</i>&nbsp;                players.remove(player);</b>
+<b class="nc"><i>516</i>&nbsp;                removePlayer(player);</b>
+<i>517</i>&nbsp;            }
+<i>518</i>&nbsp;
+<b class="nc"><i>519</i>&nbsp;            communicationController.removeUser(player);</b>
+<b class="nc"><i>520</i>&nbsp;            userToPlayer.remove(user);</b>
+<b class="nc"><i>521</i>&nbsp;            users.remove(user);</b>
+<i>522</i>&nbsp;        }
+<b class="nc"><i>523</i>&nbsp;    }</b>
+<i>524</i>&nbsp;
+<i>525</i>&nbsp;    /**
+<i>526</i>&nbsp;     * This method adds every Non-Standard win condition to the list of WinConditions
+<i>527</i>&nbsp;     */
+<i>528</i>&nbsp;    protected void setUpWinConditions(){
+<b class="fc"><i>529</i>&nbsp;        for(GodCard godCard : cards){</b>
+<b class="fc"><i>530</i>&nbsp;            if(godCard.winCondition()!=null){</b>
+<b class="fc"><i>531</i>&nbsp;                winConditions.add(godCard.winCondition());</b>
+<i>532</i>&nbsp;            }
+<b class="fc"><i>533</i>&nbsp;        }</b>
+<b class="fc"><i>534</i>&nbsp;    }</b>
+<i>535</i>&nbsp;
+<i>536</i>&nbsp;    @Override
+<i>537</i>&nbsp;    public void run() {
+<b class="nc"><i>538</i>&nbsp;        match();</b>
+<b class="nc"><i>539</i>&nbsp;    }</b>
+<i>540</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

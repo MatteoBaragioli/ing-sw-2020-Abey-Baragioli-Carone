@@ -1,0 +1,344 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DataBase</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DataBase (it.polimi.ingsw.server.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataBase</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 84)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.network.CommunicationChannel;
+<i>4</i>&nbsp;import it.polimi.ingsw.network.exceptions.ChannelClosedException;
+<i>5</i>&nbsp;import it.polimi.ingsw.server.model.User;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.ArrayList;
+<i>8</i>&nbsp;import java.util.HashMap;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;import java.util.Map;
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;public class DataBase {</b>
+<i>13</i>&nbsp;
+<b class="nc"><i>14</i>&nbsp;    private List&lt;CommunicationChannel&gt; connections = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>15</i>&nbsp;    private Map&lt;CommunicationChannel, String&gt; connectionToUser = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>16</i>&nbsp;    private List&lt;String&gt; userNames = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>17</i>&nbsp;    private Map&lt;String, User&gt; users = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>18</i>&nbsp;    private Map&lt;User, Lobby&gt; lobbies = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>19</i>&nbsp;    private List&lt;Lobby&gt; completeLobbies = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>20</i>&nbsp;    private List&lt;Lobby&gt; openLobbies = new ArrayList&lt;&gt;();</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     * This method tells if a connection is registered
+<i>24</i>&nbsp;     * @param communicationChannel Communication channel
+<i>25</i>&nbsp;     * @return Boolean that is true if the connection is registered
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public boolean hasConnection(CommunicationChannel communicationChannel) {
+<b class="nc"><i>28</i>&nbsp;        return connections.contains(communicationChannel);</b>
+<i>29</i>&nbsp;    }
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    /**
+<i>32</i>&nbsp;     * This method registers a new connection
+<i>33</i>&nbsp;     * @param communicationChannel Communication channel
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    public synchronized void addConnection(CommunicationChannel communicationChannel) {
+<b class="nc"><i>36</i>&nbsp;        if (!hasConnection(communicationChannel))</b>
+<b class="nc"><i>37</i>&nbsp;            connections.add(communicationChannel);</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * This method tells if a user has registered from this connection
+<i>42</i>&nbsp;     * @param communicationChannel Communication channel
+<i>43</i>&nbsp;     * @return Boolean that is true if the user has registered from this connection
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    public boolean connectionHasUser(CommunicationChannel communicationChannel) {
+<b class="nc"><i>46</i>&nbsp;        return connectionToUser.containsKey(communicationChannel);</b>
+<i>47</i>&nbsp;    }
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * This method tells if a userName is contained in the userNames List
+<i>51</i>&nbsp;     * @param username User username
+<i>52</i>&nbsp;     * @return Boolean that is true if username is contained in the userNames list
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public boolean userNameExists(String username) {
+<b class="nc"><i>55</i>&nbsp;        return userNames.contains(username);</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * This method adds a new name to the list of usernames
+<i>60</i>&nbsp;     * @param name Username to add
+<i>61</i>&nbsp;     * @return boolean that indicates the existence of that username in the databasee
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    public synchronized boolean addUserName(String name) {
+<b class="nc"><i>64</i>&nbsp;        boolean exists = userNameExists(name);</b>
+<b class="nc"><i>65</i>&nbsp;        if (!exists)</b>
+<b class="nc"><i>66</i>&nbsp;            userNames.add(name);</b>
+<b class="nc"><i>67</i>&nbsp;        return !exists;</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * This method deletes a name from the list of usernames
+<i>72</i>&nbsp;     * @param name Username to delete
+<i>73</i>&nbsp;     */
+<i>74</i>&nbsp;    private synchronized void deleteUserName(String name) {
+<b class="nc"><i>75</i>&nbsp;        if (userNameExists(name))</b>
+<b class="nc"><i>76</i>&nbsp;            userNames.remove(name);</b>
+<i>77</i>&nbsp;    }
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * This method finds a user related to an existing userName
+<i>81</i>&nbsp;     * @param username Username to find
+<i>82</i>&nbsp;     * @return User related to username
+<i>83</i>&nbsp;     */
+<i>84</i>&nbsp;    public User findUser(String username) {
+<b class="nc"><i>85</i>&nbsp;        if (userNameExists(username))</b>
+<b class="nc"><i>86</i>&nbsp;            return users.get(username);</b>
+<b class="nc"><i>87</i>&nbsp;        return null;</b>
+<i>88</i>&nbsp;    }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * This method tells which user has registered from this connection
+<i>92</i>&nbsp;     * @param communicationChannel Communication channel
+<i>93</i>&nbsp;     * @return User that has registered from this connection
+<i>94</i>&nbsp;     */
+<i>95</i>&nbsp;    public User findUser(CommunicationChannel communicationChannel) {
+<b class="nc"><i>96</i>&nbsp;        if (connectionHasUser(communicationChannel))</b>
+<b class="nc"><i>97</i>&nbsp;            return findUser(connectionToUser.get(communicationChannel));</b>
+<i>98</i>&nbsp;        else
+<b class="nc"><i>99</i>&nbsp;            return null;</b>
+<i>100</i>&nbsp;    }
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;    /**
+<i>103</i>&nbsp;     * This method adds a user to the DB
+<i>104</i>&nbsp;     * @param user New user
+<i>105</i>&nbsp;     * @return boolean indicates if the user has been correctly added to the lobby
+<i>106</i>&nbsp;     */
+<i>107</i>&nbsp;    public synchronized boolean addUser(User user) {
+<b class="nc"><i>108</i>&nbsp;        boolean done = false;</b>
+<b class="nc"><i>109</i>&nbsp;        if (user != null) {</b>
+<b class="nc"><i>110</i>&nbsp;            done = addUserName(user.name());</b>
+<b class="nc"><i>111</i>&nbsp;            if (done) {</b>
+<b class="nc"><i>112</i>&nbsp;                users.put(user.name(), user);</b>
+<b class="nc"><i>113</i>&nbsp;                connectionToUser.put(user.communicationChannel(), user.name());</b>
+<i>114</i>&nbsp;            }
+<i>115</i>&nbsp;        }
+<b class="nc"><i>116</i>&nbsp;        return done;</b>
+<i>117</i>&nbsp;    }
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    /**
+<i>120</i>&nbsp;     * This method removes a user to the DB
+<i>121</i>&nbsp;     * @param username New user
+<i>122</i>&nbsp;     */
+<i>123</i>&nbsp;    public synchronized void removeUser(String username) {
+<b class="nc"><i>124</i>&nbsp;        users.remove(username);</b>
+<i>125</i>&nbsp;    }
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    /**
+<i>128</i>&nbsp;     * This method tells if a user is assigned to a Lobby
+<i>129</i>&nbsp;     * @param user User
+<i>130</i>&nbsp;     * @return Boolean that is true if user is assigned to a lobby
+<i>131</i>&nbsp;     */
+<i>132</i>&nbsp;    public boolean userHasLobby(User user) {
+<b class="nc"><i>133</i>&nbsp;        return lobbies.containsKey(user);</b>
+<i>134</i>&nbsp;    }
+<i>135</i>&nbsp;
+<i>136</i>&nbsp;    /**
+<i>137</i>&nbsp;     * This method removes a user from his lobby
+<i>138</i>&nbsp;     * @param user Quitting user
+<i>139</i>&nbsp;     */
+<i>140</i>&nbsp;    public void userQuitLobby(User user) {
+<b class="nc"><i>141</i>&nbsp;        if (userHasLobby(user)) {</b>
+<b class="nc"><i>142</i>&nbsp;            Lobby lobby = findLobby(user);</b>
+<b class="nc"><i>143</i>&nbsp;            lobby.removeUser(user);</b>
+<b class="nc"><i>144</i>&nbsp;            if (lobby.users().isEmpty())</b>
+<b class="nc"><i>145</i>&nbsp;                removeLobby(lobby);</b>
+<b class="nc"><i>146</i>&nbsp;            lobbies.remove(user);</b>
+<i>147</i>&nbsp;        }
+<i>148</i>&nbsp;    }
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;    /**
+<i>151</i>&nbsp;     * This method removes a lobby from the lobby lists
+<i>152</i>&nbsp;     * @param lobby Lobby to remove
+<i>153</i>&nbsp;     */
+<i>154</i>&nbsp;    private synchronized void removeLobby(Lobby lobby) {
+<b class="nc"><i>155</i>&nbsp;        if (lobby.hasMatch())</b>
+<b class="nc"><i>156</i>&nbsp;            completeLobbies.remove(lobby);</b>
+<i>157</i>&nbsp;        else
+<b class="nc"><i>158</i>&nbsp;            openLobbies.remove(lobby);</b>
+<i>159</i>&nbsp;    }
+<i>160</i>&nbsp;
+<i>161</i>&nbsp;    /**
+<i>162</i>&nbsp;     * This method removes a user from the DB
+<i>163</i>&nbsp;     * @param user Leaving user
+<i>164</i>&nbsp;     */
+<i>165</i>&nbsp;    public synchronized void deleteUser(User user) {
+<b class="nc"><i>166</i>&nbsp;        if (user != null) {</b>
+<b class="nc"><i>167</i>&nbsp;            userQuitLobby(user);</b>
+<b class="nc"><i>168</i>&nbsp;            removeUser(user.name());</b>
+<b class="nc"><i>169</i>&nbsp;            deleteUserName(user.name());</b>
+<b class="nc"><i>170</i>&nbsp;            connectionToUser.remove(user.communicationChannel());</b>
+<b class="nc"><i>171</i>&nbsp;            System.out.println(&quot;Removed &quot; + user.name());</b>
+<i>172</i>&nbsp;        }
+<i>173</i>&nbsp;    }
+<i>174</i>&nbsp;
+<i>175</i>&nbsp;    /**
+<i>176</i>&nbsp;     * This method removes a user from the DB
+<i>177</i>&nbsp;     * @param communicationChannel Leaving user communication channel
+<i>178</i>&nbsp;     */
+<i>179</i>&nbsp;    public synchronized void deleteConnection(CommunicationChannel communicationChannel) {
+<b class="nc"><i>180</i>&nbsp;        deleteUser(findUser(communicationChannel));</b>
+<b class="nc"><i>181</i>&nbsp;        connections.remove(communicationChannel);</b>
+<i>182</i>&nbsp;    }
+<i>183</i>&nbsp;
+<i>184</i>&nbsp;    /**
+<i>185</i>&nbsp;     * This method finds the lobby the user has joined (null if the user hasn&#39;t joined a lobby yet)
+<i>186</i>&nbsp;     * @param user User
+<i>187</i>&nbsp;     * @return Lobby the user has joined
+<i>188</i>&nbsp;     */
+<i>189</i>&nbsp;    public Lobby findLobby(User user) {
+<b class="nc"><i>190</i>&nbsp;        if (user != null &amp;&amp; userNameExists(user.name()) &amp;&amp; userHasLobby(user))</b>
+<b class="nc"><i>191</i>&nbsp;            return lobbies.get(user);</b>
+<b class="nc"><i>192</i>&nbsp;        return null;</b>
+<i>193</i>&nbsp;    }
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;    /**
+<i>196</i>&nbsp;     * This method adds assigns a lobby to a user in the hash-map
+<i>197</i>&nbsp;     * @param user Joining user
+<i>198</i>&nbsp;     * @param lobby Joined lobby
+<i>199</i>&nbsp;     */
+<i>200</i>&nbsp;    public synchronized void joinLobby(User user, Lobby lobby) {
+<b class="nc"><i>201</i>&nbsp;        if (!userHasLobby(user)) {</b>
+<b class="nc"><i>202</i>&nbsp;            lobbies.put(user, lobby);</b>
+<b class="nc"><i>203</i>&nbsp;            lobby.addUser(user);</b>
+<b class="nc"><i>204</i>&nbsp;            if (lobby.isReady()) {</b>
+<b class="nc"><i>205</i>&nbsp;                System.out.println(&quot;We can start this match &quot; + lobby.toString());</b>
+<b class="nc"><i>206</i>&nbsp;                registerCompleteLobby(lobby);</b>
+<b class="nc"><i>207</i>&nbsp;                lobby.createMatch();</b>
+<i>208</i>&nbsp;            }
+<i>209</i>&nbsp;        }
+<i>210</i>&nbsp;    }
+<i>211</i>&nbsp;
+<i>212</i>&nbsp;    /**
+<i>213</i>&nbsp;     * This method creates a new lobby with n players
+<i>214</i>&nbsp;     * @param user User that is creating the new lobby
+<i>215</i>&nbsp;     * @param nPlayers Number of player for this lobby
+<i>216</i>&nbsp;     */
+<i>217</i>&nbsp;    public synchronized void createNewLobby(User user, int nPlayers) {
+<b class="nc"><i>218</i>&nbsp;        Lobby lobby = new Lobby(user, nPlayers);</b>
+<b class="nc"><i>219</i>&nbsp;        joinLobby(user, lobby);</b>
+<b class="nc"><i>220</i>&nbsp;        System.out.println(&quot;New lobby &quot; + lobby + &quot; with &quot; + nPlayers + &quot; players has been created for &quot; + user.name());</b>
+<b class="nc"><i>221</i>&nbsp;        openLobbies.add(lobby);</b>
+<i>222</i>&nbsp;    }
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;    /**
+<i>225</i>&nbsp;     * This method moves the lobby from the incomplete openLobbies list to the complete ones
+<i>226</i>&nbsp;     * @param lobby The lobby created by this user manager
+<i>227</i>&nbsp;     */
+<i>228</i>&nbsp;    public synchronized void registerCompleteLobby(Lobby lobby) {
+<b class="nc"><i>229</i>&nbsp;        openLobbies.remove(lobby);</b>
+<b class="nc"><i>230</i>&nbsp;        completeLobbies.add(lobby);</b>
+<i>231</i>&nbsp;    }
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;    /**
+<i>234</i>&nbsp;     * This method puts a user in the queue chosen by him
+<i>235</i>&nbsp;     * @param user User
+<i>236</i>&nbsp;     */
+<i>237</i>&nbsp;    public void assignUserToLobby(User user) {
+<b class="nc"><i>238</i>&nbsp;        boolean found = false;</b>
+<b class="nc"><i>239</i>&nbsp;        int nPlayers = 0;</b>
+<i>240</i>&nbsp;        try {
+<b class="nc"><i>241</i>&nbsp;            nPlayers = user.askMatchType();</b>
+<b class="nc"><i>242</i>&nbsp;        } catch (ChannelClosedException e) {</b>
+<b class="nc"><i>243</i>&nbsp;            user.communicationChannel().close();</b>
+<b class="nc"><i>244</i>&nbsp;            deleteUser(user);</b>
+<b class="nc"><i>245</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>246</i>&nbsp;            System.err.println(&quot;Can&#39;t ask matchtype to &quot; + user.name());</b>
+<i>247</i>&nbsp;            return;
+<b class="nc"><i>248</i>&nbsp;        }</b>
+<b class="nc"><i>249</i>&nbsp;        System.out.println(&quot;Looking for a lobby with &quot; + nPlayers + &quot; players for &quot; + user.name());</b>
+<i>250</i>&nbsp;        Lobby lobby;
+<b class="nc"><i>251</i>&nbsp;        for (int i = 0; i &lt; openLobbies.size() &amp;&amp; !found; i++) {</b>
+<b class="nc"><i>252</i>&nbsp;            lobby = openLobbies.get(i);</b>
+<b class="nc"><i>253</i>&nbsp;            if (lobby.isOpen() &amp;&amp; lobby.nPlayers()==nPlayers) {</b>
+<b class="nc"><i>254</i>&nbsp;                found = true;</b>
+<b class="nc"><i>255</i>&nbsp;                joinLobby(user, lobby);</b>
+<i>256</i>&nbsp;            }
+<i>257</i>&nbsp;        }
+<b class="nc"><i>258</i>&nbsp;        if (!found)</b>
+<b class="nc"><i>259</i>&nbsp;            createNewLobby(user, nPlayers);</b>
+<i>260</i>&nbsp;    }
+<i>261</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

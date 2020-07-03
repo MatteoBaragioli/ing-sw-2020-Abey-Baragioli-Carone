@@ -1,0 +1,160 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ProtoCard</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ProtoCard (it.polimi.ingsw.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProtoCard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.8%
+  </span>
+  <span class="absValue">
+    (11/ 24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.model.godPowers.fx.GodFX;
+<i>4</i>&nbsp;import it.polimi.ingsw.server.model.godPowers.setUpConditions.GodSetup;
+<i>5</i>&nbsp;import it.polimi.ingsw.server.model.godPowers.winConditions.GodWin;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;public class ProtoCard {
+<i>8</i>&nbsp;    final private String name;
+<i>9</i>&nbsp;    final private int id;
+<i>10</i>&nbsp;    final private GodFX[] actions;
+<i>11</i>&nbsp;    final private GodWin winCondition;
+<i>12</i>&nbsp;    final private int winParameter;
+<i>13</i>&nbsp;    final private GodSetup setUpCondition;
+<i>14</i>&nbsp;    final private GodFX[] fxOnOpponent;
+<i>15</i>&nbsp;    final private String description;
+<i>16</i>&nbsp;    final private String winDescription;
+<i>17</i>&nbsp;    final private String setUpDescription;
+<i>18</i>&nbsp;    final private String opponentsFxDescription;
+<i>19</i>&nbsp;
+<b class="nc"><i>20</i>&nbsp;    public ProtoCard(String name, int id, GodFX[] actions, GodWin winCondition, int winParameter, GodSetup setUpCondition, GodFX[] fxOnOpponent, String description, String winDescription, String setUpDescription, String opponentsFxDescription) {</b>
+<b class="nc"><i>21</i>&nbsp;        this.name = name;</b>
+<b class="nc"><i>22</i>&nbsp;        this.id = id;</b>
+<b class="nc"><i>23</i>&nbsp;        this.actions = actions;</b>
+<b class="nc"><i>24</i>&nbsp;        this.winCondition = winCondition;</b>
+<b class="nc"><i>25</i>&nbsp;        this.winParameter = winParameter;</b>
+<b class="nc"><i>26</i>&nbsp;        this.setUpCondition = setUpCondition;</b>
+<b class="nc"><i>27</i>&nbsp;        this.fxOnOpponent = fxOnOpponent;</b>
+<b class="nc"><i>28</i>&nbsp;        this.description = description;</b>
+<b class="nc"><i>29</i>&nbsp;        this.winDescription = winDescription;</b>
+<b class="nc"><i>30</i>&nbsp;        this.setUpDescription = setUpDescription;</b>
+<b class="nc"><i>31</i>&nbsp;        this.opponentsFxDescription = opponentsFxDescription;</b>
+<b class="nc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public String name() {
+<b class="fc"><i>35</i>&nbsp;        return name;</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public int id() {
+<b class="fc"><i>39</i>&nbsp;        return id;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    public GodFX[] actions() {
+<b class="fc"><i>43</i>&nbsp;        return actions;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    GodWin winCondition() {
+<b class="fc"><i>47</i>&nbsp;        return winCondition;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    int winParameter() {
+<b class="fc"><i>51</i>&nbsp;        return winParameter;</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    GodSetup setUpCondition() {
+<b class="fc"><i>55</i>&nbsp;        return setUpCondition;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    GodFX[] fxOnOpponent() {
+<b class="fc"><i>59</i>&nbsp;        return fxOnOpponent;</b>
+<i>60</i>&nbsp;    }
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    String description() {
+<b class="fc"><i>63</i>&nbsp;        return description;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    String winDescription() {
+<b class="fc"><i>67</i>&nbsp;        return winDescription;</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    String setUpDescription() {
+<b class="fc"><i>71</i>&nbsp;        return setUpDescription;</b>
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    String opponentsFxDescription() {
+<b class="fc"><i>75</i>&nbsp;        return opponentsFxDescription;</b>
+<i>76</i>&nbsp;    }
+<i>77</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

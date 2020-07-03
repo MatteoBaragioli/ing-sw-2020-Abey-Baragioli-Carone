@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GodCard</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GodCard (it.polimi.ingsw.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GodCard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.8%
+  </span>
+  <span class="absValue">
+    (9/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.9%
+  </span>
+  <span class="absValue">
+    (32/ 36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.network.objects.GodCardProxy;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.ArrayList;
+<i>6</i>&nbsp;import java.util.List;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public class GodCard {
+<i>9</i>&nbsp;    private String name;
+<i>10</i>&nbsp;    final public int id;
+<b class="fc"><i>11</i>&nbsp;    private List&lt;TurnSequenceModifier&gt; actions = new ArrayList&lt;&gt;();</b>
+<i>12</i>&nbsp;    private WinCondition winCondition;
+<i>13</i>&nbsp;    private SetUpCondition setUpCondition;
+<i>14</i>&nbsp;    private List&lt;TurnSequenceModifier&gt; effectsOnOpponents;
+<i>15</i>&nbsp;    final public String description;
+<i>16</i>&nbsp;    final public String winDescription;
+<i>17</i>&nbsp;    final public String setUpDescription;
+<i>18</i>&nbsp;    final public String opponentsFxDescription;
+<i>19</i>&nbsp;
+<b class="fc"><i>20</i>&nbsp;    public GodCard(String name, int id, List&lt;TurnSequenceModifier&gt; actions, WinCondition winCondition, SetUpCondition setUpCondition, List&lt;TurnSequenceModifier&gt; effectsOnOpponents, String description, String winDescription, String setUpDescription, String opponentsFxDescription) {</b>
+<b class="fc"><i>21</i>&nbsp;        this.name = name;</b>
+<b class="fc"><i>22</i>&nbsp;        this.id = id;</b>
+<b class="fc"><i>23</i>&nbsp;        this.actions = actions;</b>
+<b class="fc"><i>24</i>&nbsp;        this.winCondition = winCondition;</b>
+<b class="fc"><i>25</i>&nbsp;        this.setUpCondition = setUpCondition;</b>
+<b class="fc"><i>26</i>&nbsp;        this.effectsOnOpponents = effectsOnOpponents;</b>
+<b class="fc"><i>27</i>&nbsp;        this.description = description;</b>
+<b class="fc"><i>28</i>&nbsp;        this.winDescription = winDescription;</b>
+<b class="fc"><i>29</i>&nbsp;        this.setUpDescription = setUpDescription;</b>
+<b class="fc"><i>30</i>&nbsp;        this.opponentsFxDescription = opponentsFxDescription;</b>
+<b class="fc"><i>31</i>&nbsp;    }</b>
+<i>32</i>&nbsp;
+<b class="fc"><i>33</i>&nbsp;    public GodCard(String name, int id, List&lt;TurnSequenceModifier&gt; actions, WinCondition winCondition, SetUpCondition setUpCondition, List&lt;TurnSequenceModifier&gt; effectsOnOpponents) {</b>
+<b class="fc"><i>34</i>&nbsp;        this.name = name;</b>
+<b class="fc"><i>35</i>&nbsp;        this.id = id;</b>
+<b class="fc"><i>36</i>&nbsp;        this.actions = actions;</b>
+<b class="fc"><i>37</i>&nbsp;        this.winCondition = winCondition;</b>
+<b class="fc"><i>38</i>&nbsp;        this.setUpCondition = setUpCondition;</b>
+<b class="fc"><i>39</i>&nbsp;        this.effectsOnOpponents = effectsOnOpponents;</b>
+<b class="fc"><i>40</i>&nbsp;        description = null;</b>
+<b class="fc"><i>41</i>&nbsp;        winDescription = null;</b>
+<b class="fc"><i>42</i>&nbsp;        setUpDescription = null;</b>
+<b class="fc"><i>43</i>&nbsp;        opponentsFxDescription = null;</b>
+<b class="fc"><i>44</i>&nbsp;    }</b>
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    public void setName(String name) {
+<b class="nc"><i>47</i>&nbsp;        this.name = name;</b>
+<b class="nc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    public void setActions(List&lt;TurnSequenceModifier&gt; actions) {
+<b class="nc"><i>51</i>&nbsp;        this.actions = actions;</b>
+<b class="nc"><i>52</i>&nbsp;    }</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    public String name() {
+<b class="fc"><i>55</i>&nbsp;        return name;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    public int id() {
+<b class="fc"><i>59</i>&nbsp;        return id;</b>
+<i>60</i>&nbsp;    }
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    public List&lt;TurnSequenceModifier&gt; actions() {
+<b class="fc"><i>63</i>&nbsp;        return actions;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    public WinCondition winCondition() {
+<b class="fc"><i>67</i>&nbsp;        return winCondition;</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    public SetUpCondition setUpCondition() {
+<b class="fc"><i>71</i>&nbsp;        return setUpCondition;</b>
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    public List&lt;TurnSequenceModifier&gt; effectOnOpponent() {
+<b class="fc"><i>75</i>&nbsp;        return effectsOnOpponents;</b>
+<i>76</i>&nbsp;    }
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    public GodCardProxy createProxy() {
+<b class="fc"><i>79</i>&nbsp;        return new GodCardProxy(name(), id(), description, winDescription, setUpDescription, opponentsFxDescription);</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

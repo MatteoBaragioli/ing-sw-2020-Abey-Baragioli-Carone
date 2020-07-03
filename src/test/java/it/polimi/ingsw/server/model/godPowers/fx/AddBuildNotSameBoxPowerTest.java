@@ -67,15 +67,17 @@ public class AddBuildNotSameBoxPowerTest {
             assertTrue(player.turnSequence().builtOnBoxes().contains(player.turnSequence().chosenBox()));
             assertTrue(player.turnSequence().builtOnBoxes().contains(firstBuild));
             assertEquals(2, player.turnSequence().builtOnBoxes().size());
-            assertEquals(firstLevel+1, firstBuild.level());
+            if (firstLevel<3)
+                assertEquals(firstLevel+1, firstBuild.level());
+            else {
+                assertEquals(firstLevel, firstBuild.level());
+                assertTrue(firstBuild.hasDome());
+            }
             player.turnSequence().clearBuiltOnBoxes();
             firstBuild.removeBlock();
             position.removeBlock();
         }
     }
-
-
-
 
     @Test
     public void executePower() {

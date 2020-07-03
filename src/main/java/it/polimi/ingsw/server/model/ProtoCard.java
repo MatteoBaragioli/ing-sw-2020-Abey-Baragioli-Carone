@@ -43,35 +43,35 @@ public class ProtoCard {
         return actions;
     }
 
-    public GodWin winCondition() {
+    GodWin winCondition() {
         return winCondition;
     }
 
-    public int winParameter() {
+    int winParameter() {
         return winParameter;
     }
 
-    public GodSetup setUpCondition() {
+    GodSetup setUpCondition() {
         return setUpCondition;
     }
 
-    public GodFX[] fxOnOpponent() {
+    GodFX[] fxOnOpponent() {
         return fxOnOpponent;
     }
 
-    public String description() {
+    String description() {
         return description;
     }
 
-    public String winDescription() {
+    String winDescription() {
         return winDescription;
     }
 
-    public String setUpDescription() {
+    String setUpDescription() {
         return setUpDescription;
     }
 
-    public String opponentsFxDescription() {
+    String opponentsFxDescription() {
         return opponentsFxDescription;
     }
 }

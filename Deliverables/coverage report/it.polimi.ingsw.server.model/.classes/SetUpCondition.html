@@ -1,0 +1,68 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SetUpCondition</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SetUpCondition (it.polimi.ingsw.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">SetUpCondition</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.List;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;public interface SetUpCondition {
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;    /**
+<i>8</i>&nbsp;     * This method changes the players order for set up based on the power
+<i>9</i>&nbsp;     * @param currentPlayer Current player
+<i>10</i>&nbsp;     * @param players All players of the match
+<i>11</i>&nbsp;     */
+<i>12</i>&nbsp;    void modifySetUpOrder(Player currentPlayer, List&lt;Player&gt; players);
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * This method adds or removes possible destination for the stating box of the workers based on the power
+<i>16</i>&nbsp;     * @param currentPlayer Current player
+<i>17</i>&nbsp;     * @param possibleBoxes Possible destinations
+<i>18</i>&nbsp;     * @return List of possible destination based on the power
+<i>19</i>&nbsp;     */
+<i>20</i>&nbsp;    List&lt;Box&gt; applySetUpCondition(Player currentPlayer, List&lt;Box&gt; possibleBoxes);
+<i>21</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

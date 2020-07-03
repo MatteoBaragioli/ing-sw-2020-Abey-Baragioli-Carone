@@ -1,0 +1,815 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MenuScene</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MenuScene (it.polimi.ingsw.client.view.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MenuScene</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 54)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 371)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.animation.FadeTransition;
+<i>4</i>&nbsp;import javafx.animation.KeyFrame;
+<i>5</i>&nbsp;import javafx.animation.ScaleTransition;
+<i>6</i>&nbsp;import javafx.animation.Timeline;
+<i>7</i>&nbsp;import javafx.event.Event;
+<i>8</i>&nbsp;import javafx.geometry.Insets;
+<i>9</i>&nbsp;import javafx.geometry.Pos;
+<i>10</i>&nbsp;import javafx.scene.Cursor;
+<i>11</i>&nbsp;import javafx.scene.Group;
+<i>12</i>&nbsp;import javafx.scene.control.Button;
+<i>13</i>&nbsp;import javafx.scene.control.RadioButton;
+<i>14</i>&nbsp;import javafx.scene.control.TextField;
+<i>15</i>&nbsp;import javafx.scene.control.ToggleGroup;
+<i>16</i>&nbsp;import javafx.scene.effect.BlurType;
+<i>17</i>&nbsp;import javafx.scene.effect.DropShadow;
+<i>18</i>&nbsp;import javafx.scene.image.Image;
+<i>19</i>&nbsp;import javafx.scene.image.ImageView;
+<i>20</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>21</i>&nbsp;import javafx.scene.layout.*;
+<i>22</i>&nbsp;import javafx.scene.paint.Color;
+<i>23</i>&nbsp;import javafx.scene.text.Font;
+<i>24</i>&nbsp;import javafx.scene.text.Text;
+<i>25</i>&nbsp;import javafx.scene.text.TextAlignment;
+<i>26</i>&nbsp;import javafx.util.Duration;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;import java.util.concurrent.atomic.AtomicBoolean;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;import static javafx.scene.paint.Color.BLACK;
+<i>31</i>&nbsp;import static javafx.scene.paint.Color.WHITE;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;public class MenuScene {
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    //fonts
+<i>36</i>&nbsp;    private final Font lillybelleFont;
+<i>37</i>&nbsp;    private final Font pageNumberFont;
+<i>38</i>&nbsp;    private final Font errorFont;
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    //variable that contains the Gui reference
+<i>41</i>&nbsp;    private final Gui gui;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    //menu page divided in 3 columns -- it&#39;s created in Gui and passed in the constructor
+<i>44</i>&nbsp;    private final HBox menuPage;
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    //width of the menu scene
+<i>47</i>&nbsp;    private final double screenWidth;
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    //height of the menu scene
+<i>50</i>&nbsp;    private final double screenHeight;
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    //loading page
+<i>53</i>&nbsp;    private final StackPane loadingPage;
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    //How to play box
+<i>56</i>&nbsp;    private final StackPane howToPlayBox;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    //text that says what server asks (ip, port, nickname)
+<b class="nc"><i>59</i>&nbsp;    private final Text formText = new Text();</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    //text that says what server asks (number of players)
+<b class="nc"><i>62</i>&nbsp;    private final Text matchTypeText = new Text(&quot;Number of players&quot;);</b>
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    //error text
+<b class="nc"><i>65</i>&nbsp;    private final Text errorMessage = new Text();</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    //answer of the user
+<b class="nc"><i>68</i>&nbsp;    private final TextField formField = new TextField();</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    //next button of the form
+<b class="nc"><i>71</i>&nbsp;    private final Button confirmButton = new Button(&quot;Next&quot;);</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    //group that contains match type options
+<i>74</i>&nbsp;    private ToggleGroup numberOfPlayersGroup;
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    //column that contains the match type request form
+<b class="nc"><i>77</i>&nbsp;    private final VBox matchTypeNumber = new VBox();</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    //column that contains the form
+<i>80</i>&nbsp;    private VBox formView;
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    //box that contains play button
+<i>83</i>&nbsp;    private VBox playGroup;
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    //play button
+<i>86</i>&nbsp;    private ImageView playView;
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    //user nickname answer
+<i>89</i>&nbsp;    private String nickname;
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    //user number of players answer
+<i>92</i>&nbsp;    private int numberOfPlayers;
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    //loading icon (during connection to server)
+<i>95</i>&nbsp;    private ImageView loadingIcon;
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    //page to show of the how to play
+<i>98</i>&nbsp;    private int howToPlayPage;
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    //variable that is true if user gives an answer
+<b class="nc"><i>101</i>&nbsp;    private AtomicBoolean clicked = new AtomicBoolean(false);</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    //variable that is true if user quits
+<b class="nc"><i>104</i>&nbsp;    private AtomicBoolean close = new AtomicBoolean(false);</b>
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    //variable that is true if user restarts the game
+<b class="nc"><i>107</i>&nbsp;    private AtomicBoolean restart = new AtomicBoolean(false);</b>
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;
+<b class="nc"><i>111</i>&nbsp;    public MenuScene(Gui gui, HBox menuPage, double screenWidth, double screenHeight, StackPane loadingPage, StackPane howToPlayBox) {</b>
+<b class="nc"><i>112</i>&nbsp;        lillybelleFont = Font.loadFont(MenuScene.class.getResourceAsStream(&quot;/fonts/LillyBelle.ttf&quot;), screenWidth/80);</b>
+<b class="nc"><i>113</i>&nbsp;        pageNumberFont = Font.loadFont(MenuScene.class.getResourceAsStream(&quot;/fonts/LillyBelle.ttf&quot;), screenWidth/50);</b>
+<b class="nc"><i>114</i>&nbsp;        errorFont = Font.loadFont(MenuScene.class.getResourceAsStream(&quot;/fonts/LillyBelle.ttf&quot;), screenWidth/120);</b>
+<b class="nc"><i>115</i>&nbsp;        this.gui = gui;</b>
+<b class="nc"><i>116</i>&nbsp;        this.menuPage = menuPage;</b>
+<b class="nc"><i>117</i>&nbsp;        this.screenWidth = screenWidth;</b>
+<b class="nc"><i>118</i>&nbsp;        this.screenHeight = screenHeight;</b>
+<b class="nc"><i>119</i>&nbsp;        this.loadingPage = loadingPage;</b>
+<b class="nc"><i>120</i>&nbsp;        this.howToPlayBox = howToPlayBox;</b>
+<b class="nc"><i>121</i>&nbsp;        menuPage.setPrefWidth(screenWidth);</b>
+<b class="nc"><i>122</i>&nbsp;        menuPage.setPrefHeight(screenHeight);</b>
+<i>123</i>&nbsp;    }
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    //-------------------------------------------------SETTER-----------------------------------------------------------
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    private void setNickname(String nickname) {
+<b class="nc"><i>129</i>&nbsp;        this.nickname = nickname;</b>
+<i>130</i>&nbsp;    }
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    private void setNumberOfPlayers(int numberOfPlayers) {
+<b class="nc"><i>133</i>&nbsp;        this.numberOfPlayers = numberOfPlayers;</b>
+<i>134</i>&nbsp;    }
+<i>135</i>&nbsp;
+<i>136</i>&nbsp;    public void setErrorMessage(String message){
+<b class="nc"><i>137</i>&nbsp;        errorMessage.setText(message);</b>
+<b class="nc"><i>138</i>&nbsp;        errorMessage.setVisible(true);</b>
+<b class="nc"><i>139</i>&nbsp;        errorMessage.setManaged(true);</b>
+<i>140</i>&nbsp;    }
+<i>141</i>&nbsp;
+<i>142</i>&nbsp;    //-----------------------------------------------END SETTER---------------------------------------------------------
+<i>143</i>&nbsp;
+<i>144</i>&nbsp;
+<i>145</i>&nbsp;    //-------------------------------------------------GETTER-----------------------------------------------------------
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    public String nickname() {
+<b class="nc"><i>148</i>&nbsp;        return nickname;</b>
+<i>149</i>&nbsp;    }
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;    public int numberOfPlayers() {
+<b class="nc"><i>152</i>&nbsp;        return numberOfPlayers;</b>
+<i>153</i>&nbsp;    }
+<i>154</i>&nbsp;
+<i>155</i>&nbsp;    //------------------------------------------------END GETTER--------------------------------------------------------
+<i>156</i>&nbsp;
+<i>157</i>&nbsp;    //-------------------------------------------SYNCHRONIZATION METHODS------------------------------------------------
+<i>158</i>&nbsp;
+<i>159</i>&nbsp;    /**
+<i>160</i>&nbsp;     * This method notifies clicked when user clicks on confirm button or play button
+<i>161</i>&nbsp;     */
+<i>162</i>&nbsp;    private synchronized void setClicked(){
+<b class="nc"><i>163</i>&nbsp;        clicked.set(true);</b>
+<b class="nc"><i>164</i>&nbsp;        notifyAll();</b>
+<i>165</i>&nbsp;    }
+<i>166</i>&nbsp;
+<i>167</i>&nbsp;    /**
+<i>168</i>&nbsp;     * This method notifies close when user clicks on quit button or connection is lost and user clicks on &quot;ok&quot; in the connection error pane
+<i>169</i>&nbsp;     */
+<i>170</i>&nbsp;    public synchronized void setClose(){
+<b class="nc"><i>171</i>&nbsp;        close.set(true);</b>
+<b class="nc"><i>172</i>&nbsp;        notifyAll();</b>
+<i>173</i>&nbsp;    }
+<i>174</i>&nbsp;
+<i>175</i>&nbsp;    //-----------------------------------------END SYNCHRONIZATION METHODS----------------------------------------------
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    /**
+<i>178</i>&nbsp;     * This method creates the menu page
+<i>179</i>&nbsp;     */
+<i>180</i>&nbsp;    public void setMenuScene() {
+<i>181</i>&nbsp;        //Menu Box Background
+<b class="nc"><i>182</i>&nbsp;        StackPane menuBox = menuGroup();</b>
+<i>183</i>&nbsp;
+<i>184</i>&nbsp;        //form
+<b class="nc"><i>185</i>&nbsp;        Group formGroup = new Group();</b>
+<b class="nc"><i>186</i>&nbsp;        formGroup.prefHeight(screenHeight / 2);</b>
+<b class="nc"><i>187</i>&nbsp;        formText.setFont(lillybelleFont);</b>
+<b class="nc"><i>188</i>&nbsp;        formField.setCursor(Cursor.TEXT);</b>
+<b class="nc"><i>189</i>&nbsp;        formField.setPrefWidth(screenWidth / 8);</b>
+<b class="nc"><i>190</i>&nbsp;        formField.setPrefHeight(screenHeight / 30);</b>
+<b class="nc"><i>191</i>&nbsp;        formField.setFont(lillybelleFont);</b>
+<b class="nc"><i>192</i>&nbsp;        confirmButton.setPrefWidth(screenWidth / 8);</b>
+<b class="nc"><i>193</i>&nbsp;        confirmButton.setPrefHeight(screenHeight / 20);</b>
+<b class="nc"><i>194</i>&nbsp;        confirmButton.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>195</i>&nbsp;        confirmButton.setFont(lillybelleFont);</b>
+<b class="nc"><i>196</i>&nbsp;        errorMessage.setFont(errorFont);</b>
+<b class="nc"><i>197</i>&nbsp;        errorMessage.setFill(Color.DARKRED);</b>
+<b class="nc"><i>198</i>&nbsp;        errorMessage.setTextAlignment(TextAlignment.CENTER);</b>
+<b class="nc"><i>199</i>&nbsp;        Image loadingImg = new Image(MenuScene.class.getResource(&quot;/img/loadingAndPopups/loadingIcon.gif&quot;).toString(), screenWidth / 20, screenHeight / 16, false, false);</b>
+<b class="nc"><i>200</i>&nbsp;        loadingIcon = new ImageView(loadingImg);</b>
+<i>201</i>&nbsp;
+<b class="nc"><i>202</i>&nbsp;        formView = new VBox();</b>
+<b class="nc"><i>203</i>&nbsp;        formView.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>204</i>&nbsp;        formView.setSpacing(20);</b>
+<b class="nc"><i>205</i>&nbsp;        formView.setPadding(new Insets(0, 0, screenHeight / 9, 0));</b>
+<b class="nc"><i>206</i>&nbsp;        formView.getChildren().addAll(formText, formField, confirmButton, loadingIcon, errorMessage);</b>
+<b class="nc"><i>207</i>&nbsp;        formGroup.getChildren().add(formView);</b>
+<b class="nc"><i>208</i>&nbsp;        errorMessage.setVisible(false);</b>
+<b class="nc"><i>209</i>&nbsp;        errorMessage.setManaged(false);</b>
+<b class="nc"><i>210</i>&nbsp;        loadingIcon.setVisible(false);</b>
+<b class="nc"><i>211</i>&nbsp;        loadingIcon.setManaged(false);</b>
+<i>212</i>&nbsp;
+<b class="nc"><i>213</i>&nbsp;        matchTypeText.setFont(lillybelleFont);</b>
+<b class="nc"><i>214</i>&nbsp;        RadioButton twoPlayers = new RadioButton(&quot;2&quot;);</b>
+<b class="nc"><i>215</i>&nbsp;        RadioButton threePlayers = new RadioButton(&quot;3&quot;);</b>
+<b class="nc"><i>216</i>&nbsp;        twoPlayers.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>217</i>&nbsp;        threePlayers.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>218</i>&nbsp;        twoPlayers.setFont(lillybelleFont);</b>
+<b class="nc"><i>219</i>&nbsp;        threePlayers.setFont(lillybelleFont);</b>
+<i>220</i>&nbsp;
+<b class="nc"><i>221</i>&nbsp;        numberOfPlayersGroup = new ToggleGroup();</b>
+<b class="nc"><i>222</i>&nbsp;        twoPlayers.setToggleGroup(numberOfPlayersGroup);</b>
+<b class="nc"><i>223</i>&nbsp;        twoPlayers.setSelected(true);</b>
+<b class="nc"><i>224</i>&nbsp;        threePlayers.setToggleGroup(numberOfPlayersGroup);</b>
+<b class="nc"><i>225</i>&nbsp;        threePlayers.setSelected(false);</b>
+<b class="nc"><i>226</i>&nbsp;        HBox numberOfPlayersOptions = new HBox();</b>
+<b class="nc"><i>227</i>&nbsp;        numberOfPlayersOptions.getChildren().addAll(twoPlayers, threePlayers);</b>
+<b class="nc"><i>228</i>&nbsp;        numberOfPlayersOptions.setSpacing(60);</b>
+<b class="nc"><i>229</i>&nbsp;        numberOfPlayersOptions.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>230</i>&nbsp;        matchTypeNumber.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>231</i>&nbsp;        matchTypeNumber.setSpacing(20);</b>
+<b class="nc"><i>232</i>&nbsp;        matchTypeNumber.setPadding(new Insets(0, 0, screenHeight / 8, 0));</b>
+<b class="nc"><i>233</i>&nbsp;        matchTypeNumber.getChildren().addAll(matchTypeText, numberOfPlayersOptions);</b>
+<b class="nc"><i>234</i>&nbsp;        matchTypeNumber.setVisible(false);</b>
+<b class="nc"><i>235</i>&nbsp;        errorMessage.setWrappingWidth(screenWidth/8);</b>
+<i>236</i>&nbsp;
+<b class="nc"><i>237</i>&nbsp;        VBox leftButtons = leftButtons();</b>
+<b class="nc"><i>238</i>&nbsp;        playGroup = playColumn();</b>
+<b class="nc"><i>239</i>&nbsp;        menuBox.getChildren().addAll(formGroup, matchTypeNumber);</b>
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;
+<b class="nc"><i>244</i>&nbsp;        menuPage.getChildren().addAll(leftButtons, menuBox, playGroup);</b>
+<b class="nc"><i>245</i>&nbsp;        menuPage.setBackground(background());</b>
+<b class="nc"><i>246</i>&nbsp;        menuPage.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>247</i>&nbsp;        playGroup.setVisible(false);</b>
+<b class="nc"><i>248</i>&nbsp;        FadeTransition menuFade = new FadeTransition(Duration.millis(1000), menuPage);</b>
+<b class="nc"><i>249</i>&nbsp;        menuFade.setFromValue(0.0);</b>
+<b class="nc"><i>250</i>&nbsp;        menuFade.setToValue(1.0);</b>
+<b class="nc"><i>251</i>&nbsp;        menuFade.play();</b>
+<i>252</i>&nbsp;
+<b class="nc"><i>253</i>&nbsp;        Timeline pageTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>254</i>&nbsp;                Duration.millis(100),</b>
+<i>255</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>256</i>&nbsp;                    menuPage.setVisible(true);</b>
+<i>257</i>&nbsp;                }));
+<b class="nc"><i>258</i>&nbsp;        pageTimer.play();</b>
+<i>259</i>&nbsp;    }
+<i>260</i>&nbsp;
+<i>261</i>&nbsp;
+<i>262</i>&nbsp;    /**
+<i>263</i>&nbsp;     * This method creates and returns menu page background
+<i>264</i>&nbsp;     * @return Background (Menu page background)
+<i>265</i>&nbsp;     */
+<i>266</i>&nbsp;    private Background background() {
+<b class="nc"><i>267</i>&nbsp;        BackgroundImage backgroundImage = new BackgroundImage(new Image(MenuScene.class.getResource(&quot;/img/menuPage/background.png&quot;).toString(), screenWidth, screenHeight, false, false), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);</b>
+<b class="nc"><i>268</i>&nbsp;        return new Background(backgroundImage);</b>
+<i>269</i>&nbsp;    }
+<i>270</i>&nbsp;
+<i>271</i>&nbsp;
+<i>272</i>&nbsp;    /**
+<i>273</i>&nbsp;     * This method creates the form container
+<i>274</i>&nbsp;     * @return StackPane (Form container)
+<i>275</i>&nbsp;     */
+<i>276</i>&nbsp;    private StackPane menuGroup() {
+<b class="nc"><i>277</i>&nbsp;        Image menuBoxImg = new Image(MenuScene.class.getResource(&quot;/img/menuPage/menu_box_background.png&quot;).toString(), screenWidth / 2, screenHeight / 1.1, false, false);</b>
+<b class="nc"><i>278</i>&nbsp;        ImageView menuBoxView = new ImageView(menuBoxImg);</b>
+<b class="nc"><i>279</i>&nbsp;        menuBoxView.setEffect(new DropShadow(10, BLACK));</b>
+<b class="nc"><i>280</i>&nbsp;        StackPane menuBox = new StackPane();</b>
+<b class="nc"><i>281</i>&nbsp;        menuBox.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>282</i>&nbsp;        menuBox.getChildren().add(menuBoxView);</b>
+<b class="nc"><i>283</i>&nbsp;        return menuBox;</b>
+<i>284</i>&nbsp;    }
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;    //-----------------------------------------------Play Button------------------------------------------------------------
+<i>287</i>&nbsp;
+<i>288</i>&nbsp;    /**
+<i>289</i>&nbsp;     * This method creates play button
+<i>290</i>&nbsp;     * @return ImageView (Play button)
+<i>291</i>&nbsp;     */
+<i>292</i>&nbsp;    private ImageView playButton(){
+<b class="nc"><i>293</i>&nbsp;        Image playImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/play.png&quot;).toString(), screenWidth/8, screenHeight/4, false, false);</b>
+<b class="nc"><i>294</i>&nbsp;        playView = new ImageView(playImg);</b>
+<b class="nc"><i>295</i>&nbsp;        playView.setEffect(new DropShadow(10, BLACK));</b>
+<b class="nc"><i>296</i>&nbsp;        playView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -&gt; {</b>
+<b class="nc"><i>297</i>&nbsp;            playView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>298</i>&nbsp;            playView.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>299</i>&nbsp;            event.consume();</b>
+<i>300</i>&nbsp;        });
+<b class="nc"><i>301</i>&nbsp;        playView.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -&gt; {</b>
+<b class="nc"><i>302</i>&nbsp;            playView.setEffect(new DropShadow(10, BLACK));</b>
+<b class="nc"><i>303</i>&nbsp;            event.consume();</b>
+<i>304</i>&nbsp;        });
+<b class="nc"><i>305</i>&nbsp;        return playView;</b>
+<i>306</i>&nbsp;    }
+<i>307</i>&nbsp;
+<i>308</i>&nbsp;    /**
+<i>309</i>&nbsp;     * This method creates play button container
+<i>310</i>&nbsp;     * @return Group (Play button container)
+<i>311</i>&nbsp;     */
+<i>312</i>&nbsp;    private VBox playColumn(){
+<b class="nc"><i>313</i>&nbsp;        ImageView playView = playButton();</b>
+<i>314</i>&nbsp;
+<b class="nc"><i>315</i>&nbsp;        VBox playButton = new VBox();</b>
+<b class="nc"><i>316</i>&nbsp;        playButton.getChildren().addAll(playView);</b>
+<b class="nc"><i>317</i>&nbsp;        playButton.prefHeight(screenHeight/2);</b>
+<b class="nc"><i>318</i>&nbsp;        playButton.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>319</i>&nbsp;        return playButton;</b>
+<i>320</i>&nbsp;    }
+<i>321</i>&nbsp;
+<i>322</i>&nbsp;    //-----------------------------------------------END Play Button----------------------------------------------------
+<i>323</i>&nbsp;
+<i>324</i>&nbsp;    //-----------------------------------------------Quit and How to play Buttons---------------------------------------
+<i>325</i>&nbsp;
+<i>326</i>&nbsp;    /**
+<i>327</i>&nbsp;     * This method creates quit button
+<i>328</i>&nbsp;     * @return ImageView (Quit button)
+<i>329</i>&nbsp;     */
+<i>330</i>&nbsp;    private ImageView quitButton(){
+<b class="nc"><i>331</i>&nbsp;        Image quitImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/quit.png&quot;).toString(), screenWidth/8, screenHeight/4, false, false);</b>
+<b class="nc"><i>332</i>&nbsp;        ImageView quitView = new ImageView(quitImg);</b>
+<i>333</i>&nbsp;
+<b class="nc"><i>334</i>&nbsp;        quitView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -&gt; {</b>
+<b class="nc"><i>335</i>&nbsp;            quitView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>336</i>&nbsp;            quitView.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>337</i>&nbsp;            event.consume();</b>
+<i>338</i>&nbsp;        });
+<i>339</i>&nbsp;
+<b class="nc"><i>340</i>&nbsp;        quitView.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -&gt; {</b>
+<b class="nc"><i>341</i>&nbsp;            quitView.setEffect(new DropShadow(10, BLACK));</b>
+<b class="nc"><i>342</i>&nbsp;            event.consume();</b>
+<i>343</i>&nbsp;        });
+<i>344</i>&nbsp;
+<b class="nc"><i>345</i>&nbsp;        quitView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<b class="nc"><i>346</i>&nbsp;            gui.closeProgram();</b>
+<b class="nc"><i>347</i>&nbsp;            event.consume();</b>
+<i>348</i>&nbsp;        });
+<i>349</i>&nbsp;
+<b class="nc"><i>350</i>&nbsp;        return quitView;</b>
+<i>351</i>&nbsp;    }
+<i>352</i>&nbsp;
+<i>353</i>&nbsp;    /**
+<i>354</i>&nbsp;     * This method creates how to play button
+<i>355</i>&nbsp;     * @return ImageView (How to play button)
+<i>356</i>&nbsp;     */
+<i>357</i>&nbsp;    private ImageView howToPlayButton(){
+<b class="nc"><i>358</i>&nbsp;        Image howToPlayImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/howToPlay.png&quot;).toString(), screenWidth/8, screenHeight/4, false, false);</b>
+<b class="nc"><i>359</i>&nbsp;        ImageView howToPlayView = new ImageView(howToPlayImg);</b>
+<i>360</i>&nbsp;
+<b class="nc"><i>361</i>&nbsp;        howToPlayView.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -&gt; {</b>
+<b class="nc"><i>362</i>&nbsp;            howToPlayView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>363</i>&nbsp;            howToPlayView.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>364</i>&nbsp;            event.consume();</b>
+<i>365</i>&nbsp;        });
+<i>366</i>&nbsp;
+<b class="nc"><i>367</i>&nbsp;        howToPlayView.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -&gt; {</b>
+<b class="nc"><i>368</i>&nbsp;            howToPlayView.setEffect(new DropShadow(10, BLACK));</b>
+<b class="nc"><i>369</i>&nbsp;            event.consume();</b>
+<i>370</i>&nbsp;        });
+<i>371</i>&nbsp;
+<b class="nc"><i>372</i>&nbsp;        howToPlayView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<b class="nc"><i>373</i>&nbsp;            showHowToPlay();</b>
+<b class="nc"><i>374</i>&nbsp;            event.consume();</b>
+<i>375</i>&nbsp;        });
+<b class="nc"><i>376</i>&nbsp;        return howToPlayView;</b>
+<i>377</i>&nbsp;    }
+<i>378</i>&nbsp;
+<i>379</i>&nbsp;
+<i>380</i>&nbsp;    /**
+<i>381</i>&nbsp;     * This method creates quit button and how to play button container
+<i>382</i>&nbsp;     * @return Group (Quit button and how to play container)
+<i>383</i>&nbsp;     */
+<i>384</i>&nbsp;    private VBox leftButtons(){
+<b class="nc"><i>385</i>&nbsp;        ImageView quitView = quitButton();</b>
+<b class="nc"><i>386</i>&nbsp;        ImageView howToPlayView = howToPlayButton();</b>
+<b class="nc"><i>387</i>&nbsp;        quitView.setEffect(new DropShadow(10, BLACK));</b>
+<b class="nc"><i>388</i>&nbsp;        howToPlayView.setEffect(new DropShadow(10, BLACK));</b>
+<b class="nc"><i>389</i>&nbsp;        VBox buttons = new VBox();</b>
+<b class="nc"><i>390</i>&nbsp;        buttons.getChildren().addAll(howToPlayView, quitView);</b>
+<b class="nc"><i>391</i>&nbsp;        buttons.setSpacing(20);</b>
+<b class="nc"><i>392</i>&nbsp;        buttons.setPrefHeight(screenHeight/2);</b>
+<b class="nc"><i>393</i>&nbsp;        buttons.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>394</i>&nbsp;        return buttons;</b>
+<i>395</i>&nbsp;    }
+<i>396</i>&nbsp;
+<i>397</i>&nbsp;    /**
+<i>398</i>&nbsp;     * This method creates how to play box and all the rules
+<i>399</i>&nbsp;     */
+<i>400</i>&nbsp;    private void createHowToPlay(){
+<b class="nc"><i>401</i>&nbsp;        Image howToPlayBackground = new Image(MenuScene.class.getResource(&quot;/img/howToPlay/howToPlayBackground.png&quot;).toString(), screenWidth/1.2, screenHeight/1.2, false, false);</b>
+<b class="nc"><i>402</i>&nbsp;        ImageView howToPlayBackgroundView = new ImageView(howToPlayBackground);</b>
+<i>403</i>&nbsp;
+<b class="nc"><i>404</i>&nbsp;        Image backImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/backArrow.png&quot;).toString(), screenWidth/25, screenHeight/20, false, false);</b>
+<b class="nc"><i>405</i>&nbsp;        Image backInactiveImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/backArrowInactive.png&quot;).toString(), screenWidth/25, screenHeight/20, false, false);</b>
+<b class="nc"><i>406</i>&nbsp;        ImageView backView = new ImageView(backInactiveImg);</b>
+<b class="nc"><i>407</i>&nbsp;        Image nextImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/nextArrow.png&quot;).toString(), screenWidth/25, screenHeight/20, false, false);</b>
+<b class="nc"><i>408</i>&nbsp;        Image nextInactiveImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/nextArrowInactive.png&quot;).toString(), screenWidth/25, screenHeight/20, false, false);</b>
+<b class="nc"><i>409</i>&nbsp;        ImageView nextView = new ImageView(nextImg);</b>
+<i>410</i>&nbsp;
+<b class="nc"><i>411</i>&nbsp;        Image howToPlayImage = new Image(MenuScene.class.getResource(&quot;/img/howToPlay/howToPlay1.png&quot;).toString(), screenWidth/1.2, screenHeight/1.2, false, false);</b>
+<b class="nc"><i>412</i>&nbsp;        ImageView howToPlayView = new ImageView(howToPlayImage);</b>
+<i>413</i>&nbsp;
+<b class="nc"><i>414</i>&nbsp;        Image exitImage = new Image(MenuScene.class.getResource(&quot;/img/buttons/close.png&quot;).toString(), screenWidth/15, screenHeight/10, false, false);</b>
+<b class="nc"><i>415</i>&nbsp;        ImageView exitButton = new ImageView(exitImage);</b>
+<b class="nc"><i>416</i>&nbsp;        exitButton.setOnMouseEntered(e -&gt; {</b>
+<b class="nc"><i>417</i>&nbsp;            exitButton.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>418</i>&nbsp;            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<i>419</i>&nbsp;        });
+<b class="nc"><i>420</i>&nbsp;        exitButton.setOnMouseExited(e -&gt; {</b>
+<b class="nc"><i>421</i>&nbsp;            exitButton.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>422</i>&nbsp;            exitButton.setCursor(Cursor.DEFAULT);</b>
+<i>423</i>&nbsp;        });
+<b class="nc"><i>424</i>&nbsp;        exitButton.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>425</i>&nbsp;            hideHowToPlay();</b>
+<i>426</i>&nbsp;        });
+<i>427</i>&nbsp;
+<b class="nc"><i>428</i>&nbsp;        howToPlayPage = 1;</b>
+<b class="nc"><i>429</i>&nbsp;        Text pageNumber = new Text(String.valueOf(howToPlayPage));</b>
+<b class="nc"><i>430</i>&nbsp;        pageNumber.setFont(pageNumberFont);</b>
+<i>431</i>&nbsp;
+<i>432</i>&nbsp;
+<b class="nc"><i>433</i>&nbsp;        backView.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>434</i>&nbsp;            if(howToPlayPage==2){</b>
+<i>435</i>&nbsp;                //deactivate back button
+<b class="nc"><i>436</i>&nbsp;                backView.setImage(backInactiveImg);</b>
+<b class="nc"><i>437</i>&nbsp;                backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>438</i>&nbsp;                backView.setOnMouseEntered(f -&gt; {</b>
+<b class="nc"><i>439</i>&nbsp;                    backView.setCursor(Cursor.DEFAULT);</b>
+<i>440</i>&nbsp;                });
+<b class="nc"><i>441</i>&nbsp;                backView.setOnMouseExited(Event::consume);</b>
+<b class="nc"><i>442</i>&nbsp;            } else if(howToPlayPage==4){</b>
+<i>443</i>&nbsp;                //activate next button
+<b class="nc"><i>444</i>&nbsp;                nextView.setImage(nextImg);</b>
+<b class="nc"><i>445</i>&nbsp;                nextView.setOnMouseEntered(f -&gt; {</b>
+<b class="nc"><i>446</i>&nbsp;                    nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>447</i>&nbsp;                    nextView.setCursor(Cursor.HAND);</b>
+<i>448</i>&nbsp;                });
+<b class="nc"><i>449</i>&nbsp;                nextView.setOnMouseExited(f -&gt; {</b>
+<b class="nc"><i>450</i>&nbsp;                    nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>451</i>&nbsp;                    nextView.setCursor(Cursor.DEFAULT);</b>
+<i>452</i>&nbsp;                });
+<i>453</i>&nbsp;            }
+<b class="nc"><i>454</i>&nbsp;            if(howToPlayPage!=1) {</b>
+<b class="nc"><i>455</i>&nbsp;                howToPlayPage--;</b>
+<b class="nc"><i>456</i>&nbsp;                howToPlayView.setImage(new Image(MenuScene.class.getResource(&quot;/img/howToPlay/howToPlay&quot; + howToPlayPage + &quot;.png&quot;).toString(), screenWidth / 1.2, screenHeight / 1.2, false, false));</b>
+<b class="nc"><i>457</i>&nbsp;                pageNumber.setText(String.valueOf(howToPlayPage));</b>
+<i>458</i>&nbsp;            }
+<i>459</i>&nbsp;        });
+<b class="nc"><i>460</i>&nbsp;        nextView.setOnMouseEntered(e -&gt; {</b>
+<b class="nc"><i>461</i>&nbsp;            nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>462</i>&nbsp;            nextView.setCursor(Cursor.HAND);</b>
+<i>463</i>&nbsp;        });
+<b class="nc"><i>464</i>&nbsp;        nextView.setOnMouseExited(e -&gt; {</b>
+<b class="nc"><i>465</i>&nbsp;            nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>466</i>&nbsp;            nextView.setCursor(Cursor.DEFAULT);</b>
+<i>467</i>&nbsp;        });
+<b class="nc"><i>468</i>&nbsp;        nextView.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>469</i>&nbsp;            if(howToPlayPage==1){</b>
+<i>470</i>&nbsp;                //activate back button
+<b class="nc"><i>471</i>&nbsp;                backView.setImage(backImg);</b>
+<b class="nc"><i>472</i>&nbsp;                backView.setOnMouseEntered(f -&gt; {</b>
+<b class="nc"><i>473</i>&nbsp;                    backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>474</i>&nbsp;                    backView.setCursor(Cursor.HAND);</b>
+<i>475</i>&nbsp;                });
+<b class="nc"><i>476</i>&nbsp;                backView.setOnMouseExited(f -&gt; {</b>
+<b class="nc"><i>477</i>&nbsp;                    backView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>478</i>&nbsp;                    backView.setCursor(Cursor.DEFAULT);</b>
+<i>479</i>&nbsp;                });
+<b class="nc"><i>480</i>&nbsp;            } else if(howToPlayPage==3){</b>
+<i>481</i>&nbsp;                //deactivate next button
+<b class="nc"><i>482</i>&nbsp;                nextView.setImage(nextInactiveImg);</b>
+<b class="nc"><i>483</i>&nbsp;                nextView.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>484</i>&nbsp;                nextView.setOnMouseEntered(f -&gt; {</b>
+<b class="nc"><i>485</i>&nbsp;                    nextView.setCursor(Cursor.DEFAULT);</b>
+<i>486</i>&nbsp;                });
+<b class="nc"><i>487</i>&nbsp;                nextView.setOnMouseExited(Event::consume);</b>
+<i>488</i>&nbsp;            }
+<b class="nc"><i>489</i>&nbsp;            if(howToPlayPage!=4){</b>
+<b class="nc"><i>490</i>&nbsp;                howToPlayPage++;</b>
+<b class="nc"><i>491</i>&nbsp;                howToPlayView.setImage(new Image(MenuScene.class.getResource(&quot;/img/howToPlay/howToPlay&quot; + howToPlayPage + &quot;.png&quot;).toString(), screenWidth/1.2, screenHeight/1.2, false, false));</b>
+<b class="nc"><i>492</i>&nbsp;                pageNumber.setText(String.valueOf(howToPlayPage));</b>
+<i>493</i>&nbsp;            }
+<i>494</i>&nbsp;        });
+<i>495</i>&nbsp;
+<i>496</i>&nbsp;
+<b class="nc"><i>497</i>&nbsp;        VBox back = new VBox();</b>
+<b class="nc"><i>498</i>&nbsp;        back.setAlignment(Pos.CENTER_LEFT);</b>
+<b class="nc"><i>499</i>&nbsp;        back.getChildren().add(backView);</b>
+<b class="nc"><i>500</i>&nbsp;        back.setPrefWidth(screenWidth/4.5);</b>
+<i>501</i>&nbsp;
+<b class="nc"><i>502</i>&nbsp;        VBox page = new VBox();</b>
+<b class="nc"><i>503</i>&nbsp;        page.getChildren().add(pageNumber);</b>
+<b class="nc"><i>504</i>&nbsp;        page.setAlignment(Pos.BOTTOM_CENTER);</b>
+<b class="nc"><i>505</i>&nbsp;        page.setPrefWidth(screenWidth/3.6);</b>
+<b class="nc"><i>506</i>&nbsp;        page.setPadding(new Insets(0,0,screenHeight/10,0));</b>
+<i>507</i>&nbsp;
+<i>508</i>&nbsp;
+<i>509</i>&nbsp;
+<i>510</i>&nbsp;
+<b class="nc"><i>511</i>&nbsp;        VBox next = new VBox();</b>
+<b class="nc"><i>512</i>&nbsp;        next.setAlignment(Pos.CENTER_RIGHT);</b>
+<b class="nc"><i>513</i>&nbsp;        next.getChildren().add(nextView);</b>
+<b class="nc"><i>514</i>&nbsp;        next.setPrefWidth(screenWidth/4.5);</b>
+<b class="nc"><i>515</i>&nbsp;        HBox howToPlayRaw = new HBox();</b>
+<b class="nc"><i>516</i>&nbsp;        howToPlayRaw.getChildren().addAll(back, page, next);</b>
+<b class="nc"><i>517</i>&nbsp;        howToPlayRaw.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>518</i>&nbsp;        howToPlayBox.getChildren().addAll(howToPlayBackgroundView, howToPlayView, howToPlayRaw, exitButton);</b>
+<b class="nc"><i>519</i>&nbsp;        StackPane.setAlignment(exitButton, Pos.TOP_LEFT);</b>
+<i>520</i>&nbsp;    }
+<i>521</i>&nbsp;
+<i>522</i>&nbsp;    /**
+<i>523</i>&nbsp;     * This method shows How to play box
+<i>524</i>&nbsp;     */
+<i>525</i>&nbsp;    public void showHowToPlay(){
+<b class="nc"><i>526</i>&nbsp;        createHowToPlay();</b>
+<b class="nc"><i>527</i>&nbsp;        FadeTransition howToPlayFadeIn = new FadeTransition(Duration.millis(700), howToPlayBox);</b>
+<b class="nc"><i>528</i>&nbsp;        howToPlayFadeIn.setFromValue(0);</b>
+<b class="nc"><i>529</i>&nbsp;        howToPlayFadeIn.setToValue(1);</b>
+<i>530</i>&nbsp;
+<b class="nc"><i>531</i>&nbsp;        ScaleTransition howToPlayZoomIn1 = new ScaleTransition(Duration.millis(700), howToPlayBox);</b>
+<b class="nc"><i>532</i>&nbsp;        howToPlayZoomIn1.setFromX(0);</b>
+<b class="nc"><i>533</i>&nbsp;        howToPlayZoomIn1.setToX(1);</b>
+<b class="nc"><i>534</i>&nbsp;        howToPlayZoomIn1.setFromY(0.01);</b>
+<b class="nc"><i>535</i>&nbsp;        howToPlayZoomIn1.setToY(0.01);</b>
+<i>536</i>&nbsp;
+<b class="nc"><i>537</i>&nbsp;        ScaleTransition howToPlayZoomIn2 = new ScaleTransition(Duration.millis(700), howToPlayBox);</b>
+<b class="nc"><i>538</i>&nbsp;        howToPlayZoomIn2.setFromY(0.01);</b>
+<b class="nc"><i>539</i>&nbsp;        howToPlayZoomIn2.setToY(1);</b>
+<i>540</i>&nbsp;
+<b class="nc"><i>541</i>&nbsp;        howToPlayFadeIn.play();</b>
+<b class="nc"><i>542</i>&nbsp;        howToPlayBox.setVisible(true);</b>
+<b class="nc"><i>543</i>&nbsp;        howToPlayZoomIn1.play();</b>
+<i>544</i>&nbsp;
+<b class="nc"><i>545</i>&nbsp;        Timeline showingTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>546</i>&nbsp;                Duration.millis(700),</b>
+<i>547</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>548</i>&nbsp;                    howToPlayZoomIn2.play();</b>
+<i>549</i>&nbsp;                }));
+<b class="nc"><i>550</i>&nbsp;        showingTimer.play();</b>
+<i>551</i>&nbsp;
+<i>552</i>&nbsp;    }
+<i>553</i>&nbsp;
+<i>554</i>&nbsp;    /**
+<i>555</i>&nbsp;     * This method hides How to play box
+<i>556</i>&nbsp;     */
+<i>557</i>&nbsp;    private void hideHowToPlay(){
+<b class="nc"><i>558</i>&nbsp;        FadeTransition howToPlayFadeOut = new FadeTransition(Duration.millis(700), howToPlayBox);</b>
+<b class="nc"><i>559</i>&nbsp;        howToPlayFadeOut.setFromValue(1);</b>
+<b class="nc"><i>560</i>&nbsp;        howToPlayFadeOut.setToValue(0);</b>
+<i>561</i>&nbsp;
+<b class="nc"><i>562</i>&nbsp;        ScaleTransition howToPlayZoomOut1 = new ScaleTransition(Duration.millis(700), howToPlayBox);</b>
+<b class="nc"><i>563</i>&nbsp;        howToPlayZoomOut1.setFromY(1);</b>
+<b class="nc"><i>564</i>&nbsp;        howToPlayZoomOut1.setToY(0.01);</b>
+<b class="nc"><i>565</i>&nbsp;        howToPlayZoomOut1.setFromX(1);</b>
+<b class="nc"><i>566</i>&nbsp;        howToPlayZoomOut1.setToX(1);</b>
+<i>567</i>&nbsp;
+<b class="nc"><i>568</i>&nbsp;        ScaleTransition howToPlayZoomIn2 = new ScaleTransition(Duration.millis(700), howToPlayBox);</b>
+<b class="nc"><i>569</i>&nbsp;        howToPlayZoomIn2.setFromX(1);</b>
+<b class="nc"><i>570</i>&nbsp;        howToPlayZoomIn2.setToX(0);</b>
+<i>571</i>&nbsp;
+<b class="nc"><i>572</i>&nbsp;        howToPlayZoomOut1.play();</b>
+<i>573</i>&nbsp;
+<b class="nc"><i>574</i>&nbsp;        Timeline hidingTimer1 = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>575</i>&nbsp;                Duration.millis(700),</b>
+<i>576</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>577</i>&nbsp;                    howToPlayZoomIn2.play();</b>
+<b class="nc"><i>578</i>&nbsp;                    howToPlayFadeOut.play();</b>
+<i>579</i>&nbsp;                }));
+<b class="nc"><i>580</i>&nbsp;        hidingTimer1.play();</b>
+<b class="nc"><i>581</i>&nbsp;        Timeline hidingTimer2 = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>582</i>&nbsp;                Duration.millis(1400),</b>
+<i>583</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>584</i>&nbsp;                    howToPlayBox.setVisible(false);</b>
+<i>585</i>&nbsp;                }));
+<b class="nc"><i>586</i>&nbsp;        hidingTimer2.play();</b>
+<i>587</i>&nbsp;    }
+<i>588</i>&nbsp;
+<i>589</i>&nbsp;
+<i>590</i>&nbsp;    //-----------------------------------------------END Quit and How to play Buttons-----------------------------------
+<i>591</i>&nbsp;
+<i>592</i>&nbsp;    //-----------------------------------------------Form and Communication---------------------------------------------
+<i>593</i>&nbsp;
+<i>594</i>&nbsp;
+<i>595</i>&nbsp;    /**
+<i>596</i>&nbsp;     * This method is called by the client and shows the nickname request form. It waits for the user to insert a nickname and returns it to the client
+<i>597</i>&nbsp;     * @return String (User nickname)
+<i>598</i>&nbsp;     */
+<i>599</i>&nbsp;    public synchronized String askNickname() {
+<b class="nc"><i>600</i>&nbsp;        if(nickname!=null){</b>
+<b class="nc"><i>601</i>&nbsp;            setErrorMessage(&quot;Nickname already used&quot;);</b>
+<i>602</i>&nbsp;        }
+<b class="nc"><i>603</i>&nbsp;        loadingIcon.setVisible(false);</b>
+<b class="nc"><i>604</i>&nbsp;        loadingIcon.setManaged(false);</b>
+<b class="nc"><i>605</i>&nbsp;        confirmButton.setVisible(true);</b>
+<b class="nc"><i>606</i>&nbsp;        confirmButton.setManaged(true);</b>
+<b class="nc"><i>607</i>&nbsp;        clicked.set(false);</b>
+<b class="nc"><i>608</i>&nbsp;        formText.setText(&quot;Nickname&quot;);</b>
+<b class="nc"><i>609</i>&nbsp;        formField.clear();</b>
+<b class="nc"><i>610</i>&nbsp;        confirmButton.setOnMouseClicked(e -&gt; {</b>
+<b class="nc"><i>611</i>&nbsp;            if(formField.getText().isEmpty()){</b>
+<b class="nc"><i>612</i>&nbsp;                formField.clear();</b>
+<b class="nc"><i>613</i>&nbsp;                setErrorMessage(&quot;Write a nickname&quot;);</b>
+<b class="nc"><i>614</i>&nbsp;            } else if(formField.getText().contains(&quot; &quot;)){</b>
+<b class="nc"><i>615</i>&nbsp;                formField.clear();</b>
+<b class="nc"><i>616</i>&nbsp;                setErrorMessage(&quot;Space not allowed&quot;);</b>
+<i>617</i>&nbsp;            } else {
+<b class="nc"><i>618</i>&nbsp;                setNickname(formField.getText());</b>
+<b class="nc"><i>619</i>&nbsp;                setClicked();</b>
+<b class="nc"><i>620</i>&nbsp;                errorMessage.setVisible(false);</b>
+<b class="nc"><i>621</i>&nbsp;                errorMessage.setManaged(false);</b>
+<i>622</i>&nbsp;            }
+<i>623</i>&nbsp;        });
+<b class="nc"><i>624</i>&nbsp;        while (!clicked.get() &amp;&amp; !close.get()){</b>
+<i>625</i>&nbsp;            try {
+<b class="nc"><i>626</i>&nbsp;                wait();</b>
+<b class="nc"><i>627</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>628</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>629</i>&nbsp;            }</b>
+<i>630</i>&nbsp;        }
+<b class="nc"><i>631</i>&nbsp;        return nickname();</b>
+<i>632</i>&nbsp;    }
+<i>633</i>&nbsp;
+<i>634</i>&nbsp;
+<i>635</i>&nbsp;    /**
+<i>636</i>&nbsp;     * This method is called by the client and shows the match type request form. It waits for the user to insert the number of players for the match and returns the match type
+<i>637</i>&nbsp;     * @return int (match type, 1 if the user chooses 2 players, 2 if the user chooses 3 players)
+<i>638</i>&nbsp;     */
+<i>639</i>&nbsp;    public synchronized int askNumberOfPlayers() {
+<b class="nc"><i>640</i>&nbsp;        clicked.set(false);</b>
+<b class="nc"><i>641</i>&nbsp;        formView.setVisible(false);</b>
+<b class="nc"><i>642</i>&nbsp;        loadingIcon.setVisible(false);</b>
+<b class="nc"><i>643</i>&nbsp;        loadingIcon.setManaged(false);</b>
+<b class="nc"><i>644</i>&nbsp;        confirmButton.setVisible(false);</b>
+<b class="nc"><i>645</i>&nbsp;        confirmButton.setManaged(false);</b>
+<b class="nc"><i>646</i>&nbsp;        matchTypeNumber.setVisible(true);</b>
+<b class="nc"><i>647</i>&nbsp;        playGroup.setVisible(true);</b>
+<b class="nc"><i>648</i>&nbsp;        playView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<b class="nc"><i>649</i>&nbsp;            setLoadingPage();</b>
+<b class="nc"><i>650</i>&nbsp;            RadioButton selectedRadioButton = (RadioButton) numberOfPlayersGroup.getSelectedToggle();</b>
+<b class="nc"><i>651</i>&nbsp;            String number = selectedRadioButton.getText();</b>
+<b class="nc"><i>652</i>&nbsp;            setNumberOfPlayers(Integer.parseInt(number));</b>
+<b class="nc"><i>653</i>&nbsp;            Timeline readyTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>654</i>&nbsp;                    Duration.millis(6000),</b>
+<i>655</i>&nbsp;                    ae -&gt; {
+<b class="nc"><i>656</i>&nbsp;                        setClicked();</b>
+<i>657</i>&nbsp;                    }));
+<b class="nc"><i>658</i>&nbsp;            readyTimer.play();</b>
+<b class="nc"><i>659</i>&nbsp;            event.consume();</b>
+<i>660</i>&nbsp;        });
+<b class="nc"><i>661</i>&nbsp;        while (!clicked.get() &amp;&amp; !close.get() &amp;&amp; !restart.get()){</b>
+<i>662</i>&nbsp;            try {
+<b class="nc"><i>663</i>&nbsp;                wait();</b>
+<b class="nc"><i>664</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>665</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>666</i>&nbsp;            }</b>
+<i>667</i>&nbsp;        }
+<i>668</i>&nbsp;
+<b class="nc"><i>669</i>&nbsp;        if(close.get() || restart.get()){</b>
+<b class="nc"><i>670</i>&nbsp;            return -1;</b>
+<i>671</i>&nbsp;        }
+<b class="nc"><i>672</i>&nbsp;        return numberOfPlayers();</b>
+<i>673</i>&nbsp;    }
+<i>674</i>&nbsp;
+<i>675</i>&nbsp;    //-----------------------------------------------End Form and Communication-----------------------------------------
+<i>676</i>&nbsp;
+<i>677</i>&nbsp;
+<i>678</i>&nbsp;    //-----------------------------------------------Loading Page-------------------------------------------------------
+<i>679</i>&nbsp;
+<i>680</i>&nbsp;    /**
+<i>681</i>&nbsp;     * This method creates and shows the loading page
+<i>682</i>&nbsp;     */
+<i>683</i>&nbsp;    private void setLoadingPage(){
+<b class="nc"><i>684</i>&nbsp;        Image loadingGif = new Image(MenuScene.class.getResource(&quot;/img/loadingAndPopups/loading.gif&quot;).toString(), screenWidth/4, screenHeight/4, false, false);</b>
+<b class="nc"><i>685</i>&nbsp;        ImageView loadingImageGif = new ImageView(loadingGif);</b>
+<b class="nc"><i>686</i>&nbsp;        Image loadingImg = new Image(MenuScene.class.getResource(&quot;/img/loadingAndPopups/loading.png&quot;).toString(), screenWidth, screenHeight, false, false);</b>
+<b class="nc"><i>687</i>&nbsp;        ImageView loadingImageView = new ImageView(loadingImg);</b>
+<b class="nc"><i>688</i>&nbsp;        loadingPage.setBackground(new Background(new BackgroundFill(WHITE, CornerRadii.EMPTY, Insets.EMPTY)));</b>
+<b class="nc"><i>689</i>&nbsp;        Image quitLoadingImg = new Image(MenuScene.class.getResource(&quot;/img/buttons/quit.png&quot;).toString(), screenWidth/12, screenHeight/8, false, false);</b>
+<b class="nc"><i>690</i>&nbsp;         ImageView quitLoading = new ImageView(quitLoadingImg);</b>
+<i>691</i>&nbsp;
+<b class="nc"><i>692</i>&nbsp;        quitLoading.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -&gt; {</b>
+<b class="nc"><i>693</i>&nbsp;            quitLoading.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 5, 5, 0, 0));</b>
+<b class="nc"><i>694</i>&nbsp;            quitLoading.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>695</i>&nbsp;            event.consume();</b>
+<i>696</i>&nbsp;        });
+<i>697</i>&nbsp;
+<b class="nc"><i>698</i>&nbsp;        quitLoading.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -&gt; {</b>
+<b class="nc"><i>699</i>&nbsp;            quitLoading.setEffect(new DropShadow(BlurType.GAUSSIAN,BLACK, 0, 0, 0, 0));</b>
+<b class="nc"><i>700</i>&nbsp;            event.consume();</b>
+<i>701</i>&nbsp;        });
+<i>702</i>&nbsp;
+<b class="nc"><i>703</i>&nbsp;        quitLoading.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<b class="nc"><i>704</i>&nbsp;            gui.closeProgram();</b>
+<b class="nc"><i>705</i>&nbsp;            event.consume();</b>
+<i>706</i>&nbsp;        });
+<b class="nc"><i>707</i>&nbsp;        StackPane quitPane = new StackPane();</b>
+<b class="nc"><i>708</i>&nbsp;        quitPane.setAlignment(Pos.TOP_LEFT);</b>
+<b class="nc"><i>709</i>&nbsp;        quitPane.getChildren().add(quitLoading);</b>
+<b class="nc"><i>710</i>&nbsp;        loadingPage.getChildren().clear();</b>
+<b class="nc"><i>711</i>&nbsp;        loadingPage.getChildren().addAll(loadingImageGif, loadingImageView, quitPane);</b>
+<b class="nc"><i>712</i>&nbsp;        gui.playTransitionClouds();</b>
+<b class="nc"><i>713</i>&nbsp;        FadeTransition menuFadeOut = new FadeTransition(Duration.millis(1500), menuPage);</b>
+<b class="nc"><i>714</i>&nbsp;        menuFadeOut.setFromValue(1);</b>
+<b class="nc"><i>715</i>&nbsp;        menuFadeOut.setToValue(0);</b>
+<b class="nc"><i>716</i>&nbsp;        menuFadeOut.play();</b>
+<i>717</i>&nbsp;
+<b class="nc"><i>718</i>&nbsp;        Timeline loadingTimer = new Timeline(new KeyFrame(</b>
+<b class="nc"><i>719</i>&nbsp;                Duration.millis(1500),</b>
+<i>720</i>&nbsp;                ae -&gt; {
+<b class="nc"><i>721</i>&nbsp;                    menuPage.setVisible(false);</b>
+<b class="nc"><i>722</i>&nbsp;                    FadeTransition loadingFade = new FadeTransition(Duration.millis(2000), loadingPage);</b>
+<b class="nc"><i>723</i>&nbsp;                    loadingFade.setFromValue(0.0);</b>
+<b class="nc"><i>724</i>&nbsp;                    loadingFade.setToValue(1.0);</b>
+<b class="nc"><i>725</i>&nbsp;                    loadingFade.play();</b>
+<b class="nc"><i>726</i>&nbsp;                    loadingPage.setVisible(true);</b>
+<i>727</i>&nbsp;                }));
+<b class="nc"><i>728</i>&nbsp;        loadingTimer.play();</b>
+<i>729</i>&nbsp;    }
+<i>730</i>&nbsp;
+<i>731</i>&nbsp;    //-----------------------------------------------End Loading Page---------------------------------------------------
+<i>732</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

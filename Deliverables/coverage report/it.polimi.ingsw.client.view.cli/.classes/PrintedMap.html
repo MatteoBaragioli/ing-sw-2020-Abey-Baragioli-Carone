@@ -1,0 +1,114 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PrintedMap</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PrintedMap (it.polimi.ingsw.client.view.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PrintedMap</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;public class PrintedMap {
+<i>4</i>&nbsp;        private static final int mapDim=5;
+<b class="nc"><i>5</i>&nbsp;        private PrintedBlock printedMap[][]=new PrintedBlock[mapDim][mapDim];</b>
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;    /**
+<i>8</i>&nbsp;     * This constructor method initialises a map with all ground floor blocks
+<i>9</i>&nbsp;     */
+<b class="nc"><i>10</i>&nbsp;        public PrintedMap() {</b>
+<b class="nc"><i>11</i>&nbsp;            for (int i = 0; i &lt; mapDim; i++)</b>
+<b class="nc"><i>12</i>&nbsp;                for (int j = 0; j &lt; mapDim; j++) {</b>
+<b class="nc"><i>13</i>&nbsp;                    this.printedMap[i][j] = new PrintedBlock(i, j);</b>
+<i>14</i>&nbsp;                }
+<i>15</i>&nbsp;        }
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;        /**
+<i>19</i>&nbsp;         * This method returns a printedblock depending on the given coordinates
+<i>20</i>&nbsp;         * @param x Longitude
+<i>21</i>&nbsp;         * @param y Latitude
+<i>22</i>&nbsp;         * @return PrintedBlock
+<i>23</i>&nbsp;         */
+<i>24</i>&nbsp;        public PrintedBlock position(int x, int y) {
+<b class="nc"><i>25</i>&nbsp;            if (x&gt;=0 &amp;&amp; x&lt;mapDim &amp;&amp; y&gt;=0 &amp;&amp; y&lt;mapDim)</b>
+<b class="nc"><i>26</i>&nbsp;                return printedMap[x][y];</b>
+<b class="nc"><i>27</i>&nbsp;            return null;</b>
+<i>28</i>&nbsp;        }
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 18:00</div>
+</div>
+</body>
+</html>

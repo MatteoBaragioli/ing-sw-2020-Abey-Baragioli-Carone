@@ -20,6 +20,7 @@
 
 
 ##How to start the jar:
+The jar can be generated through maven package (select the one located in the folder called "shade")
 - ###Server
     Write "-server" as the first command line arg. <br>
     You can set a port by adding "-port" and the port number as the second and third args.
