@@ -666,7 +666,7 @@ public class MatchScene {
      * @param removeGodImg Remove button image
      * @param removeGodInactiveImg Remove button inactive image
      * @param removeGod Remove button
-     * @param cardsIndexes Indexes of all cards -> it saves index in order to show or hide the right card in the list of all cards (left side of chooseCardsPane
+     * @param cardsIndexes Indexes of all cards, it saves index in order to show or hide the right card in the list of all cards (left side of chooseCardsPane
      * @param godCards All god cards (list of godCardProxy)
      */
     private void activateAddCardsButton(Image addGodImg, Image addGodInactiveImg, ImageView addGod, Image removeGodImg, Image removeGodInactiveImg, ImageView removeGod, int[] cardsIndexes, List<GodCardProxy> godCards){
@@ -1056,6 +1056,7 @@ public class MatchScene {
      * This method waits for player to choose to undo or confirm his turn and returns the answer
      * It shows confirmTurn popup
      * @return Undo or Confirm turn answer
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     public synchronized int showConfirmTurnPopup() throws TimeOutException {
         clickedConfirmation.set(false);

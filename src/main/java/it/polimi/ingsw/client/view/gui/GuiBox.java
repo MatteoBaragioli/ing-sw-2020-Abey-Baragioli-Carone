@@ -126,7 +126,7 @@ public class GuiBox extends Button {
 
     /**
      * This method sets chosable box effects
-     * @param match Match -> this method needs the match to have access to chosable boxes list
+     * @param match Match, this method needs the match to have access to chosable boxes list
      */
     public void setEffects(MatchScene match){
         addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
@@ -172,7 +172,7 @@ public class GuiBox extends Button {
 
     /**
      * This method sets box as chosable
-     * @param match MatchScene -> I need it to access to box list saved in matchScene
+     * @param match MatchScene, is needed to access to box list saved in matchScene
      */
     public void setAsChosable(MatchScene match){
         setBlue();

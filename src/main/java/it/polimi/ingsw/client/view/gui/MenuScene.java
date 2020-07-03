@@ -634,7 +634,7 @@ public class MenuScene {
 
     /**
      * This method is called by the client and shows the match type request form. It waits for the user to insert the number of players for the match and returns the match type
-     * @return int (match type -> 1 if the user chooses 2 players, 2 if the user chooses 3 players)
+     * @return int (match type, 1 if the user chooses 2 players, 2 if the user chooses 3 players)
      */
     public synchronized int askNumberOfPlayers() {
         clicked.set(false);

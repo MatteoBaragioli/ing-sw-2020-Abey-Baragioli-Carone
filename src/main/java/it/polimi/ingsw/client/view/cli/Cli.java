@@ -180,7 +180,7 @@ public class Cli implements View {
      *@param needCountDown boolean, represents the need for the ask to have a count down
      * @return int, the answer expected
      * @throws TimeOutException Exception thrown when the time to do an action runs out
-     * @throws NumberFormatException
+     * @throws NumberFormatException exception thrown when the string does not contain a number that can be parsed
      */
     public int askNumber(boolean needCountDown) throws NumberFormatException, TimeOutException {
         String answer = askAnswer(needCountDown);
@@ -580,7 +580,7 @@ public class Cli implements View {
 
     /**
      * this method stores the data of the UI's player
-     * @param player
+     * @param player set as the current cli user
      */
     @Override
     public void setMyPlayer(PlayerProxy player) {
@@ -592,7 +592,7 @@ public class Cli implements View {
 
     /**
      * this method stores the data of the opponents (just their color, name and card)
-     * @param players
+     * @param players the opponents registered
      */
     @Override
     public void setOpponentsInfo(List<PlayerProxy> players) {

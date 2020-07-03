@@ -30,7 +30,7 @@ public class Client extends Thread {
     }
 
     /**
-     * This method creates a socket after getting the ip & port from the user
+     * This method creates a socket after getting the ip and port from the user
      */
     @Override
     public void run(){

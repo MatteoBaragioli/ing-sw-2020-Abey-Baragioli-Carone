@@ -72,7 +72,7 @@ public class CommunicationChannel {
 
     /**
      * This method adds a message to the buffer
-     * @param message
+     * @param message, the message saved
      */
     public synchronized void saveMessage(String message) {
         buffer.add(message);
@@ -83,7 +83,7 @@ public class CommunicationChannel {
     /**
      * This method tells if the has a message containing the key isn't empty
      * @return false if not
-     * @param key
+     * @param key, key of communication
      */
     public synchronized boolean hasMessages(CommunicationProtocol key) {
         return buffer.stream().anyMatch(x -> getKey(x) == key);
@@ -139,6 +139,7 @@ public class CommunicationChannel {
 
     /**
      * This method pops the first message in the buffer
+     * @param key, key of communication
      * @return The popped message
      * @throws ChannelClosedException if connection is lost
      */
@@ -179,6 +180,7 @@ public class CommunicationChannel {
 
     /**
      * This method pops the first message in the buffer if it arrives in time
+     * @param key, key of communication
      * @return The popped message
      * @throws TimeOutException if the time is out
      * @throws ChannelClosedException if there's no connection
@@ -368,7 +370,7 @@ public class CommunicationChannel {
     /**
      * This method writes USERNAME followed by the content
      * @param userName string
-     * @throws ChannelClosedException
+     * @throws ChannelClosedException if there's no connection
      */
     public synchronized void writeUsername(String userName) throws ChannelClosedException {
         write(keyToString(USERNAME) + SEPARATOR + userName);
@@ -471,9 +473,9 @@ public class CommunicationChannel {
 
     /**
      * this method sends to the user the map and tells if it was received
-     * @param map
-     * @return
-     * @throws ChannelClosedException
+     * @param map, map that has to be sent
+     * @return boolean, indicates if the receiver has received the map
+     * @throws ChannelClosedException if there's no connection
      */
     public boolean sendMap(String map)throws ChannelClosedException {
         write(keyToString(MAP) + SEPARATOR + map);
@@ -483,8 +485,8 @@ public class CommunicationChannel {
     /**
      * this method sends to the user the map and tells if it was received
      * @param story String list
-     * @return
-     * @throws ChannelClosedException
+     * @return boolean, indicates if the receiver actually received the story
+     * @throws ChannelClosedException if there's no connection
      */
     public boolean sendStory(String story) throws ChannelClosedException {
         write(keyToString(MATCH_STORY) + SEPARATOR + story);
@@ -605,6 +607,7 @@ public class CommunicationChannel {
      * @param key key of Communication Protocol
      * @return boolean value of confirmation
      * @throws ChannelClosedException if there's no connection
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     public boolean askConfirmation(CommunicationProtocol key) throws TimeOutException, ChannelClosedException {
         if (!isClosed()) {

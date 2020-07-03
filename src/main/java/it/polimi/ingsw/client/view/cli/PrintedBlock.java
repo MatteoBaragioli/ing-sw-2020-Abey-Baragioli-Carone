@@ -8,7 +8,7 @@ import static it.polimi.ingsw.client.view.cli.Colors.*;
 
 /**
  * class used to represent a block on the game map
- * attributes x & y represent the block's coordinates
+ * attributes x and y represent the block's coordinates
  */
 public class PrintedBlock {
     private int x;
@@ -18,8 +18,8 @@ public class PrintedBlock {
 
     /**
      * this constructor method initialises a block as a ground level block
-     * @param x
-     * @param y
+     * @param x coordinate x
+     * @param y coordinate y
      */
     public PrintedBlock(int x,int y){ // this method creates a list of strings that if printed, print a ground level block
         this.x=x;
@@ -148,12 +148,12 @@ public class PrintedBlock {
      * @param color worker's colour
      */
     public void groundFloorWithWorker(boolean gender, Colour color){
-        char genderChar;
+        String genderChar;
         if (gender==true){
-            genderChar='♀';
+            genderChar="♀";
         }
         else
-            genderChar='♂';
+            genderChar="♂";
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("|                 ");
@@ -170,12 +170,12 @@ public class PrintedBlock {
      */
     public void firstFloorWithWorker(boolean gender, Colour color){
         this.lines.clear();
-        char genderChar;
+        String genderChar;
         if (gender==true){
-            genderChar='♀';
+            genderChar="♀";
         }
         else
-            genderChar='♂';
+            genderChar="♂";
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"    1°level    "+CYAN_BRIGHT+" ");
         this.lines.add("| "+LIGHTGRAY_BACKGROUND+"    "+getActualColor(color)+WHITE_BOLD_BRIGHT+"   W   "+LIGHTGRAY_BACKGROUND+"    "+CYAN_BRIGHT+" ");
@@ -190,12 +190,12 @@ public class PrintedBlock {
      * @param color worker's colour
      */
     public void secondFloorWithWorker(boolean gender, Colour color){
-        char genderChar;
+        String genderChar;
         if (gender==true){
-            genderChar='♀';
+            genderChar="♀";
         }
         else
-            genderChar='♂';
+            genderChar="♂";
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  2°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -212,12 +212,12 @@ public class PrintedBlock {
      * @param color worker's colour
      */
     public void thirdFloorWithWorker(boolean gender, Colour color){
-        char genderChar;
+        String genderChar;
         if (gender==true){
-            genderChar='♀';
+            genderChar="♀";
         }
         else
-            genderChar='♂';
+            genderChar="♂";
         this.lines.clear();
         this.lines.add(CYAN_BOLD_BRIGHT+"+-----------------");
         this.lines.add("| "+DARKGRAY_BACKGROUND+"  "+LIGHTGRAY_BACKGROUND+BLACK_BOLD_BRIGHT+"  3°level  "+DARKGRAY_BACKGROUND+"  "+CYAN_BRIGHT+" ");
@@ -229,8 +229,8 @@ public class PrintedBlock {
 
     /**
      * this method, depending on the case, uses the three previous methods to display a worker on a generic block
-     * @param gender
-     * @param color
+     * @param gender the gender of the worker
+     * @param color the color of the worker
      */
     public void withWorker(boolean gender, Colour color) {
         if (getLines().get(1).contains("2°level")) {

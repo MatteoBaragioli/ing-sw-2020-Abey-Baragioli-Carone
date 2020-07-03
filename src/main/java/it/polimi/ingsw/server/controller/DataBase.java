@@ -58,6 +58,7 @@ public class DataBase {
     /**
      * This method adds a new name to the list of usernames
      * @param name Username to add
+     * @return boolean that indicates the existence of that username in the databasee
      */
     public synchronized boolean addUserName(String name) {
         boolean exists = userNameExists(name);
@@ -101,6 +102,7 @@ public class DataBase {
     /**
      * This method adds a user to the DB
      * @param user New user
+     * @return boolean indicates if the user has been correctly added to the lobby
      */
     public synchronized boolean addUser(User user) {
         boolean done = false;

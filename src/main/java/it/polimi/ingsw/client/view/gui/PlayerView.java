@@ -1121,6 +1121,7 @@ public class PlayerView extends StackPane {
     /**
      * This method waits for player to chose to use power or not and sends the answer to server
      * @return Answer chosen by the player and sent to server
+     * @throws TimeOutException Exception thrown when the time to do an action runs out
      */
     public synchronized int askUsePower() throws TimeOutException {
         activateUsePower();

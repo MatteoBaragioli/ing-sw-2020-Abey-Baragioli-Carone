@@ -127,7 +127,7 @@ public class ScreenView {
 
     /**
      * This method given a list of strings puts a frame around it for it to be printed in cli
-     * @param message
+     * @param message the message that has to be boxed
      * @return The same message framed
      */
     public List<String> boxMessage (List<String> message) {
@@ -165,29 +165,29 @@ public class ScreenView {
             messageBox.add(RESET + RED + "+----");
 
             for (i = 0; i < maxLength; i++) {
-                buffer = messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "-";
+                buffer = messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char on the next line;
                 buffer = buffer.concat("-");
                 messageBox.set(0, buffer);
 
-                buffer = messageBox.get(1); //adding to the second string in the list, which is an empty line, the char " ";
+                buffer = messageBox.get(1); //adding to the second string in the list, which is an empty line, the char on the next line;
                 buffer = buffer.concat(" ");
                 messageBox.set(1, buffer);
 
-                buffer = messageBox.get(j); //adding to the second last string in the list, which is an empty line, the char " ";
+                buffer = messageBox.get(j); //adding to the second last string in the list, which is an empty line, the char on the next line
                 buffer = buffer.concat(" ");
                 messageBox.set(j, buffer);
 
-                buffer = messageBox.get(j + 1); //adding to the last string in the list, which is the down frame, the char "-";
+                buffer = messageBox.get(j + 1); //adding to the last string in the list, which is the down frame, the char on the next line;
                 buffer = buffer.concat("-");
                 messageBox.set(j + 1, buffer);
 
             }
 
-            buffer = messageBox.get(0); //adding to the first string in the list, which is the upper frame, the char "┐";
+            buffer = messageBox.get(0); //adding to the first string in the list, which is the upper frame,the char on the next line;
             buffer = buffer.concat("+" + RESET);
             messageBox.set(0, buffer);
 
-            buffer = messageBox.get(j + 1); //adding to the last string in the list, which is the down frame, the char "┘";
+            buffer = messageBox.get(j + 1); //adding to the last string in the list, which is the down frame, the char on the next line;
             buffer = buffer.concat("+" + RESET);
             messageBox.set(j + 1, buffer);
 

@@ -4,7 +4,7 @@ public class Coordinates{
 
     /**
      * This method converts numeric server coordinates into letter-number coordinates
-     * For example (0,0) -> A1
+     * For example (0,0) is A1
      * @param coordinates Numeric coordinates to convert
      * @return Converted coordinates
      */
@@ -16,7 +16,7 @@ public class Coordinates{
 
     /**
      * This method converts letter-number coordinates into server's numeric coordinates
-     * For example A1 -> (0,0)
+     * For example A1 is (0,0)
      * @param coordinates Coordinates to convert
      * @return Converted coordinates
      */

@@ -216,6 +216,7 @@ public class Match extends Thread{
 
     /**
      * This method constructs the turn sequence
+     * @return list of turnphases
      */
     private List<TurnPhase> createPhaseSequence() {
         List<TurnPhase> turnPhases = new ArrayList<>();
@@ -287,6 +288,7 @@ public class Match extends Thread{
 
     /**
      * This method handles the announcement of the loser
+     * @param loser,the player that has lost
      */
     private void announceLoser(Player loser) {
         List<Player> receivers = new ArrayList<>();
@@ -305,6 +307,7 @@ public class Match extends Thread{
 
     /**
      * This method handles the announcement of a player removed due to external causes
+     * @param player, the one that has been removed
      */
     public void announceRemovedPlayer(Player player) {
         try {
