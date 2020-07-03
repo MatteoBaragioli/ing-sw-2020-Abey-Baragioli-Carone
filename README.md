@@ -30,6 +30,7 @@ The jar can be generated through maven package (select the one located in the fo
 
 - ###Gui
     Just execute the jar without adding args.
+    ####The jar has never been tested on MacOs devices.
 <!--
 [![RED](https://placehold.it/15/f03c15/f03c15)](#)
 [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#)
