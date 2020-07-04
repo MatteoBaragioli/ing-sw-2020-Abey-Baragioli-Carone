@@ -15,22 +15,22 @@
 | GUI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Undo | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Advanced Gods | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Multiple games | [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#) |
+| Multiple games | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Persistence | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
 
 
-##How to start the jar:
+## How to start the jar:
 The jar can be generated through maven package (select the one located in the folder called "shade")
-- ###Server
+- ### Server
     Write "-server" as the first command line arg. <br>
     You can set a port by adding "-port" and the port number as the second and third args.
 
-- ###Cli
+- ### Cli
     Write "-cli" as the first command line arg.
 
-- ###Gui
+- ### Gui
     Just execute the jar without adding args.
-    ####The jar has never been tested on MacOs devices.
+    #### The jar has never been tested on MacOs devices.
 <!--
 [![RED](https://placehold.it/15/f03c15/f03c15)](#)
 [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#)
